@@ -1,0 +1,15 @@
+{
+  "registry_version": "0.1.0-draft",
+  "terms": {
+    "amendment": "An authoritative legal event affecting legal text or its operation; textual difference alone is not a materiality or applicability decision.",
+    "materiality": "The legal significance of an amendment, represented separately from any one scenario outcome.",
+    "temporal_applicability": "An expert-supported determination of which provision version governs a scenario at a reference date.",
+    "compliance_consequence": "The implication of the temporally applicable provision for the facts and legal question in a specific scenario.",
+    "provision_lineage": "The stable identity relationship connecting versions of the same legal provision through amendment events.",
+    "false_stability": "ExpectedChange equals 1 while ModelChange equals 0.",
+    "false_instability": "ExpectedChange equals 0 while ModelChange equals 1.",
+    "citation_drift": "A citation is incorrect, superseded, temporally inapplicable, or inconsistently propagated across legal conditions.",
+    "explanation_drift": "A conclusion may be correct while its rationale relies on an incorrect version, date, amendment, materiality analysis, or consequence."
+  }
+}
+

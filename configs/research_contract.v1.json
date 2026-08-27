@@ -1,0 +1,82 @@
+{
+  "contract_version": "0.1.0-draft",
+  "status": "draft_gate_not_passed",
+  "project_title": "Temporal Legal Drift in the Indian Code",
+  "trl": {
+    "current": 2,
+    "target": 4
+  },
+  "primary_research_question": "Do LLM-based compliance systems correctly propagate legally applicable changes in Indian law over time?",
+  "research_questions": {
+    "RQ1": "Can Indian legislative history be reconstructed accurately enough to determine which provision version governs a scenario at a specified date?",
+    "RQ2": "Can legally material changes be distinguished from non-material textual changes using structured amendment representations?",
+    "RQ3": "Do LLM compliance assertions appropriately update when the legally applicable Indian provision changes?",
+    "RQ4": "Can evidence-grounded explanations identify the correct legal version, amendment, materiality, and compliance consequence?"
+  },
+  "core_novelty_position": "A temporally versioned India Code benchmark and evaluation framework that tests whether LLM compliance reasoning correctly propagates legally material legislative changes, while distinguishing genuine legal drift from non-material textual change and grounding conclusions in authoritative evidence.",
+  "materiality": {
+    "role": "intermediate_component",
+    "levels": ["High", "Medium", "Low", "None"],
+    "dimensions_status": "unresolved_phase_0_decision",
+    "candidate_dimensions": [
+      "obligation",
+      "right",
+      "prohibition",
+      "scope",
+      "definition",
+      "threshold",
+      "time",
+      "liability",
+      "procedure",
+      "exemption"
+    ],
+    "compliance_consequence_is_separate": true
+  },
+  "corpus": {
+    "jurisdiction": "India",
+    "primary_source_family": "India Code and other authoritative Indian legal sources",
+    "legal_domains": null,
+    "instrument_types": null,
+    "date_range": null,
+    "central_state_scope": null,
+    "redistribution_constraints": null
+  },
+  "benchmark_targets": {
+    "pilot_pairs": 50,
+    "minimum_target": null,
+    "desired_target": null,
+    "class_coverage": null,
+    "domain_coverage": null,
+    "amendment_coverage": null,
+    "temporal_complexity_coverage": null
+  },
+  "optional_agent": {
+    "is_core_completion_requirement": false,
+    "implementation_phase": 12
+  },
+  "novelty_audit": {
+    "status": "pending_primary_source_verification",
+    "required_comparators": [
+      "RegTrack",
+      "closest legal change and materiality benchmarks",
+      "recent temporal legal reasoning and changing-law benchmarks"
+    ]
+  },
+  "required_approvals": [
+    "research_lead",
+    "qualified_legal_reviewer"
+  ],
+  "gate": {
+    "phase": 0,
+    "passed": false,
+    "blockers": [
+      "novelty audit not verified",
+      "corpus scope not frozen",
+      "minimum and desired benchmark targets not set",
+      "materiality dimension count not formally approved",
+      "success thresholds not approved",
+      "legal reviewer approval not recorded"
+    ]
+  }
+}
+

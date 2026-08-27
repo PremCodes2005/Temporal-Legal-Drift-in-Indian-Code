@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "temporal-legal-drift"
+version = "0.1.0"
+description = "Phase 0-2 research infrastructure for Temporal Legal Drift in the Indian Code"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{ name = "Temporal Legal Drift research team" }]
+dependencies = []
+
+[project.optional-dependencies]
+dev = []
+pdf = ["pypdf>=5.0"]
+
+[project.scripts]
+tldrift = "temporal_legal_drift.cli:main"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.coverage.run]
+source = ["temporal_legal_drift"]

@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/research_contract.schema.json",
+  "title": "Research Contract",
+  "type": "object",
+  "required": [
+    "contract_version",
+    "status",
+    "project_title",
+    "trl",
+    "primary_research_question",
+    "research_questions",
+    "core_novelty_position",
+    "materiality",
+    "corpus",
+    "benchmark_targets",
+    "optional_agent",
+    "novelty_audit",
+    "gate"
+  ],
+  "properties": {
+    "contract_version": { "type": "string", "minLength": 1 },
+    "status": { "type": "string", "minLength": 1 },
+    "project_title": { "const": "Temporal Legal Drift in the Indian Code" },
+    "trl": {
+      "type": "object",
+      "required": ["current", "target"],
+      "properties": {
+        "current": { "const": 2 },
+        "target": { "const": 4 }
+      },
+      "additionalProperties": false
+    },
+    "research_questions": {
+      "type": "object",
+      "required": ["RQ1", "RQ2", "RQ3", "RQ4"],
+      "additionalProperties": false
+    },
+    "materiality": {
+      "type": "object",
+      "required": ["role", "levels", "dimensions_status", "compliance_consequence_is_separate"],
+      "properties": {
+        "role": { "const": "intermediate_component" },
+        "levels": {
+          "type": "array",
+          "prefixItems": [
+            { "const": "High" },
+            { "const": "Medium" },
+            { "const": "Low" },
+            { "const": "None" }
+          ],
+          "items": false
+        },
+        "compliance_consequence_is_separate": { "const": true }
+      }
+    },
+    "optional_agent": {
+      "type": "object",
+      "required": ["is_core_completion_requirement", "implementation_phase"],
+      "properties": {
+        "is_core_completion_requirement": { "const": false },
+        "implementation_phase": { "const": 12 }
+      }
+    },
+    "gate": {
+      "type": "object",
+      "required": ["phase", "passed", "blockers"],
+      "properties": {
+        "phase": { "const": 0 },
+        "passed": { "type": "boolean" },
+        "blockers": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}
+

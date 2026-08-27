@@ -1,0 +1,48 @@
+\documentclass[11pt,a4paper]{report}
+
+% --- Core encoding / fonts ---------------------------------------------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+% --- Tables --------------------------------------------------------------
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{pdflscape}
+% Tighter horizontal cell padding -- column widths in literature_review.tex
+% are sized to fill the line assuming this value, so keep the two in sync.
+\setlength{\tabcolsep}{4pt}
+
+% --- Citations -------------------------------------------------------------
+\usepackage[numbers,sort&compress]{natbib}
+\bibliographystyle{unsrtnat}
+
+% --- Clickable cross-references / citations (load after natbib) -----------
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue}
+
+% Numbered depth: chapter/section/subsection get numbers; subsubsection
+% (used for the unnumbered "Gap N: ..." headings) and below do not.
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+
+% This chapter is Chapter 2 of the thesis; set the counter so numbering
+% (2.1, 2.2, ... and Table 2.1, 2.2, ...) matches the surrounding document.
+\setcounter{chapter}{1}
+
+\title{Temporal Legal Drift in the Indian Code: Materiality Classification of
+Legislative Amendments and Explainable LLM-Based Compliance Reasoning \\
+\large Chapter 2 --- Literature Review}
+\author{}
+\date{}
+
+\begin{document}
+
+\input{literature_review}
+
+\bibliography{references}
+
+\end{document}

@@ -1,0 +1,26 @@
+{
+  "registry_version": "0.1.0-draft",
+  "status": "pending_qualified_legal_review",
+  "temporal_fact_types": [
+    "publication",
+    "enactment_or_assent",
+    "commencement",
+    "applicability",
+    "legal_effect",
+    "retrospective_effect",
+    "transitional_provision",
+    "deferred_commencement",
+    "partial_commencement"
+  ],
+  "required_fact_properties": [
+    "fact_type",
+    "date_or_condition",
+    "source_artifact_id",
+    "evidence_locator",
+    "review_status",
+    "uncertainty"
+  ],
+  "legal_hierarchy": "not_encoded",
+  "resolution_policy": "ambiguous or unsupported temporal claims remain unresolved and require escalation"
+}
+

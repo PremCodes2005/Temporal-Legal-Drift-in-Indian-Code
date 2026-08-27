@@ -1,0 +1,20 @@
+{
+  "policy_version": "0.1.0-draft",
+  "status": "deny_by_default_pending_phase_1_approval",
+  "allowed_schemes": ["https"],
+  "approved_hosts": [],
+  "candidate_hosts_requiring_review": [
+    "indiacode.nic.in",
+    "www.indiacode.nic.in"
+  ],
+  "maximum_response_bytes": 52428800,
+  "request_timeout_seconds": 30,
+  "required_request_fields": [
+    "url",
+    "official_identifier",
+    "instrument_type"
+  ],
+  "legal_hierarchy": "not_encoded_pending_qualified_legal_review",
+  "redirect_policy": "redirect target must also satisfy the approved host policy"
+}
+

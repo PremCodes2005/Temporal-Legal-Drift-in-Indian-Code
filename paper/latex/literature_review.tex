@@ -1,0 +1,629 @@
+\chapter{Literature Review}
+
+\label{chap:literature-review}
+
+\section{Introduction}
+
+\label{sec:2-1}
+
+The digitisation of legal information and the development of Artificial Intelligence (AI), Natural Language Processing (NLP), and Large Language Models (LLMs) have created new opportunities for legal research, statutory interpretation, regulatory monitoring, compliance management, and legal decision support. Legal information systems can now process large volumes of legislation, judicial decisions, rules, notifications, and legal documents. However, the reliability of AI-supported legal systems remains dependent on the accuracy, completeness, jurisdictional relevance, and temporal validity of the legal information used.
+
+Legislation is not static. Legal provisions are regularly amended through the insertion, substitution, omission, repeal, or modification of statutory text. Such amendments may alter legal rights, obligations, definitions, thresholds, procedures, penalties, exemptions, or compliance requirements. Therefore, a legal assertion that was correct under an earlier version of a statute may become inaccurate or incomplete after an amendment.
+
+This problem is particularly relevant to LLM-based legal systems. LLMs may generate fluent and apparently well-reasoned legal responses while relying on outdated legal knowledge, incomplete statutory context, or legally irrelevant information. In compliance applications, such errors may result in incorrect reporting, failure to identify new obligations, inaccurate risk assessments, or inappropriate organisational decisions.
+
+The present research introduces the concept of temporal legal drift to describe the divergence between an LLM-derived legal or compliance assertion and the legally applicable position after legislative change. The research focuses on the India Code as the principal legal corpus and investigates the classification of legislative amendments according to their material legal and compliance effects.
+
+The proposed study is titled:
+
+\begin{quote}\itshape Temporal Legal Drift in the Indian Code: Materiality Classification of Legislative Amendments and Explainable LLM-Based Compliance Reasoning\end{quote}
+
+The principal novelty is the integration of Explainable Artificial Intelligence (XAI) for materiality justification. The proposed system will not only classify an amendment as material or non-material but will also explain which provision changed, what legal dimension was affected, why the change is considered material, and how the amendment may alter a compliance outcome.
+
+An Agentic AI framework for autonomous compliance monitoring is retained as a secondary research extension. The agentic component may monitor legislative sources, detect amendments, retrieve relevant legal versions, classify materiality, generate compliance alerts, and refer uncertain or high-impact changes to human experts.
+
+The research is aligned primarily with: Sustainable Development Goal 9: Industry, Innovation and Infrastructure; and Sustainable Development Goal 16: Peace, Justice and Strong Institutions.
+
+The remainder of this chapter reviews prior work across seven areas relevant to this problem — legal natural language processing, retrieval-augmented generation for law, temporal legal reasoning, explainable AI for legal decision support, legislative change detection, compliance automation, and Indian legal technology — before identifying, in Sections 2.12 and 2.13, the specific gap this research addresses.
+
+\section{The Indian Legal Information Ecosystem}
+
+\label{sec:2-2}
+
+\subsection{Characteristics of Indian Legislation}
+
+\label{sec:2-2-1}
+
+The Indian legal system contains multiple layers of legal authority, including the Constitution, Central legislation, State legislation, delegated legislation, rules, regulations, notifications, circulars, judicial decisions, and administrative instruments. The legal effect of a provision may depend on its statutory wording, the date of commencement, subsequent amendments, related rules, judicial interpretation, and jurisdictional applicability.
+
+Legislative changes may be introduced through amendment Acts that add, substitute, omit, or modify statutory provisions. A single amendment may affect multiple sections, definitions, schedules, procedural requirements, or legal relationships. Consequently, computational analysis of Indian legislation requires more than the retrieval of a current statutory text. It requires the identification of legal versions and the reconstruction of legislative changes over time.
+
+The temporal complexity of Indian legislation creates challenges for AI-based legal systems. A model must determine: the relevant legal instrument; the legally applicable version; the date from which an amendment became effective; the legal provision affected; the nature of the legislative change; the legal consequences of the change; and the resulting impact on a compliance scenario.
+
+The proposed research addresses these requirements through a temporal legislative framework.
+
+\subsection{India Code as the Primary Legal Corpus}
+
+\label{sec:2-2-2}
+
+India Code \cite{indiacode} is an official digital repository containing Central enactments in force and relevant subordinate legislation. It also provides access to legislation enacted by States and Union Territory administrations. The repository supports searches using attributes such as: short title; Act number; Act year; enactment date; ministry; department; and free-text search.
+
+India Code provides an important foundation for computational legal research because it enables access to structured legislative information and updated statutory content. It can support legal information retrieval, statutory text analysis, provision-level processing, legal question answering, and the development of Indian Legal AI systems.
+
+However, India Code should not be treated as a complete temporal version-control system. The availability of an updated statutory text does not necessarily provide a complete machine-readable history of every previous legal version or a structured record of the legal consequences of each amendment.
+
+Therefore, the proposed research adopts a multi-source approach:
+
+\small
+\begin{longtable}[l]{>{\raggedright\arraybackslash}p{0.33\linewidth} >{\raggedright\arraybackslash}p{0.62\linewidth}}
+\caption{Multi-source legal data strategy adopted in this research}\label{tab:lit-1}\\
+\toprule
+\textbf{Legal Source} & \textbf{Primary Function in the Proposed Research} \\
+\midrule
+\endfirsthead
+\multicolumn{2}{l}{\small\itshape (Table \thetable{} continued)}\\
+\toprule
+\textbf{Legal Source} & \textbf{Primary Function in the Proposed Research} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{2}{r}{\small\itshape Continued on next page}\\
+\endfoot
+\bottomrule
+\endlastfoot
+India Code & Principal corpus for statutory provisions and updated legislative text \\
+Amendment Acts & Identification of insertions, substitutions, omissions, and modifications \\
+Gazette publications & Validation of publication, commencement, and legal timing \\
+Rules and subordinate legislation & Analysis of operational and delegated compliance requirements \\
+Legislative metadata & Identification of legal instrument, date, ministry, and jurisdiction \\
+Expert legal annotations & Establishment of materiality labels and explanation ground truth \\
+\end{longtable}
+\normalsize
+
+The combination of these sources will support the creation of a version-aware Indian legislative corpus.
+
+\subsection{Limitations of Existing Digital Legal Repositories}
+
+\label{sec:2-2-3}
+
+Digital legal repositories improve access to legislation but do not necessarily provide the semantic infrastructure required for AI-based temporal reasoning. The following limitations are relevant:
+
+\small
+\begin{longtable}[l]{>{\raggedright\arraybackslash}p{0.33\linewidth} >{\raggedright\arraybackslash}p{0.62\linewidth}}
+\caption{Limitations of existing digital legal repositories for AI-based temporal reasoning}\label{tab:lit-2}\\
+\toprule
+\textbf{Limitation} & \textbf{Implication for AI-Based Legal Analysis} \\
+\midrule
+\endfirsthead
+\multicolumn{2}{l}{\small\itshape (Table \thetable{} continued)}\\
+\toprule
+\textbf{Limitation} & \textbf{Implication for AI-Based Legal Analysis} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{2}{r}{\small\itshape Continued on next page}\\
+\endfoot
+\bottomrule
+\endlastfoot
+Current-text orientation & Previous legal versions may be difficult to reconstruct \\
+Fragmented amendment information & Amendments may need to be linked manually to affected provisions \\
+Limited semantic annotation & Legal obligations and consequences are not explicitly represented \\
+Unstructured legislative changes & Insertions and substitutions may require specialised parsing \\
+Complex commencement rules & The enactment date may differ from the effective date \\
+Cross-references & A change in one provision may affect other provisions \\
+Delegated legislation & Compliance effects may depend on rules or notifications \\
+Limited materiality information & Repositories do not normally identify whether a change is legally significant \\
+\end{longtable}
+\normalsize
+
+These limitations demonstrate the need for a specialised temporal legal benchmark.
+
+\section{Legal Natural Language Processing and Indian Legal Language Models}
+
+\label{sec:2-3}
+
+\subsection{Legal Language Models and Statutory Text Understanding}
+
+\label{sec:2-3-1}
+
+General-purpose language models trained on ordinary text handle legal drafting conventions, cross-references, defined terms, and provisos poorly, which motivated domain-adapted legal language models. Chalkidis et al. \cite{chalkidis2020legalbert} introduced LEGAL-BERT, pre-trained on contracts, court decisions, and legislation, and showed that continued or from-scratch pre-training on legal corpora outperforms simply fine-tuning general-purpose BERT on most legal tasks. This established that domain adaptation, and not model scale alone, matters for legal text.
+
+For long statutory and judicial documents that exceed standard transformer input limits, Xiao et al. \cite{xiao2021lawformer} proposed Lawformer, a Longformer-style model pre-trained on Chinese legal corpora, reporting improvements on judgment prediction, similar-case retrieval, and legal reading comprehension. Lawformer shows that architecture choice — sparse, long-range attention — is a separate axis of improvement from domain pre-training, but the model is trained and evaluated only on Chinese law, leaving open whether the same architecture transfers to Indian statutory drafting, which is structured differently (sections, sub-sections, provisos, explanations) from codified Chinese law.
+
+Indian law introduces domain shift beyond what English legal corpora drawn mainly from United States and European Union sources capture. Paul et al. \cite{paul2023inlegalbert} re-trained LEGAL-BERT and CaseLawBERT on approximately 5.4 million Indian court judgments to produce InLegalBERT and InCaseLawBERT, and reported improvements over the original LEGAL-BERT on statute retrieval, rhetorical-role labelling, and judgment prediction. Kalamkar et al. \cite{kalamkar2021survey}, in a survey of Indian legal NLP benchmarks later extended into a fuller survey of tasks, challenges, and future directions, made a related point at the benchmark level: models and resources built on non-Indian legal corpora do not reliably generalise to Indian statutory terminology, institutional structure, or multilingual legal material.
+
+Taken together, this line of work shows that a legal language model must be adapted twice — once to legal language in general, and again to the jurisdiction in question. None of these models, however, represents time. InLegalBERT, Lawformer, and LEGAL-BERT are each trained on a snapshot of legal text; none encodes which statutory provision was in force on a given date, or whether a document reflects a pre- or post-amendment version of the law. A model can therefore be well adapted to Indian legal language and still return an answer grounded in a superseded provision.
+
+\subsection{IL-TUR: Benchmark for Indian Legal Text Understanding and Reasoning}
+
+\label{sec:2-3-2}
+
+Joshi et al. \cite{joshi2024iltur} introduced IL-TUR, a benchmark for Indian legal text understanding and reasoning spanning monolingual tasks in English and Hindi and multilingual tasks across nine Indian languages, with baselines from conventional language models and LLMs.
+
+IL-TUR's contribution is largely one of scope and jurisdiction specificity: it argues, with results rather than assertion, that Indian legal NLP evaluation should not be reduced to translated or repurposed Western legal-NLP tasks. It covers named-entity recognition, rhetorical-role prediction, judgment prediction, legal reasoning, information retrieval, statute identification, and multilingual understanding.
+
+IL-TUR's task suite, however, evaluates a document or a query against a single, fixed statutory or judicial text. None of its tasks requires a model to compare two versions of the same provision, or to recognise that a statute cited in an older judgment may since have been amended. IL-TUR therefore establishes that Indian legal NLP needs jurisdiction-specific benchmarks, but does not extend that argument to the temporal dimension; the present research treats IL-TUR as the closest available foundation to build on, not as a benchmark that already covers amendment materiality or temporal drift.
+
+\subsection{Indian Legal AI Systems: Judgment Prediction, Retrieval-Augmented Reasoning, and Explanation}
+
+\label{sec:2-3-3}
+
+Beyond benchmark construction, a cluster of recent systems papers applies LLMs directly to Indian judicial tasks. Malik et al. \cite{malik2021ildc} introduced ILDC, a corpus of roughly 35,000 Indian Supreme Court judgments annotated with case outcomes and, for a subset, expert explanations, to support court judgment prediction and explanation. It remains the standard large-scale resource for Indian judgment-outcome prediction, though it addresses judicial decisions rather than legislative text.
+
+Juvekar et al. \cite{juvekar2025courtready} evaluated frontier and open LLMs on multiple years of Indian legal examinations, including lawyer-graded, long-form Advocate-on-Record responses, and found that models perform strongly on objective questions but do not yet match the strongest human performance on long-form legal reasoning. This is useful evidence of general legal competence, but examination performance is measured against a fixed body of law at a fixed point in time; it does not test whether a model recognises that the applicable law has since changed.
+
+More recent systems attempt to ground Indian legal reasoning in retrieved statutes and precedents rather than parametric knowledge alone. Nigam et al. \cite{nigam2025nyayarag} proposed NyayaRAG, which supplies an LLM with factual case descriptions, retrieved statutory provisions, and semantically similar prior judgments before predicting an outcome, arguing that earlier Indian judgment-prediction work under-used statutory and precedent context. The same research group \cite{nigam2025tathyanyaya} separately introduced TathyaNyaya, the largest fact-based judgment-prediction-and-explanation dataset for the Indian context, together with FactLegalLlama, an instruction-tuned model for generating explanations restricted to factual case content. Bose \cite{bose2026falkorirac} took a related but architecturally distinct approach with Falkor-IRAC, which stores Indian court judgments as an Issue-Rule-Analysis-Conclusion graph and accepts an LLM-generated answer only if it can be traced through a verified path in that graph, reported as a way of reducing hallucinated precedents and unsupported citations.
+
+These systems share a structural feature relevant to this proposal: each retrieves or verifies against the applicable statute or precedent as it exists in the corpus at query time. None of them models the statute itself as something that changes — there is no notion, in NyayaRAG, TathyaNyaya, or Falkor-IRAC, of a provision having a “before” and “after” state, and consequently no mechanism for asking whether a retrieved or graph-verified provision is the version that was actually in force when the underlying facts arose, or whether an amendment since that date would change the answer. This is a different failure mode from the citation hallucination these systems are built to reduce: a model can cite a real, correctly quoted, graph-verified provision and still be wrong because the provision was later amended. The Indian legal AI literature reviewed here therefore reduces hallucination and improves grounding at a single point in time without yet addressing drift across time — precisely the problem this research isolates.
+
+\section{General Legal NLP Benchmarks}
+
+\label{sec:2-4}
+
+\subsection{LexGLUE}
+
+\label{sec:2-4-1}
+
+Chalkidis et al. \cite{chalkidis2022lexglue} assembled LexGLUE, a GLUE-style suite aggregating seven existing legal NLP datasets — including ECtHR case classification, SCOTUS, EUR-Lex, and CaseHOLD — to standardise legal language-understanding evaluation, and showed that further-pretrained legal-domain models outperform general-purpose ones on most of the constituent tasks.
+
+All seven LexGLUE tasks, however, are single-snapshot classification or entailment problems; none compares two versions of the same legal text, and none is built on Indian sources.
+
+\subsection{LegalBench}
+
+\label{sec:2-4-2}
+
+Guha et al. \cite{guha2023legalbench} built LegalBench collaboratively with legal professionals, organising more than 160 tasks (later extended past 230) into categories of legal reasoning — issue-spotting, rule-recall, rule-application, rule-conclusion, interpretation, and rhetorical understanding — evaluated across open and commercial LLMs. Its main contribution is showing that “legal reasoning” is not one capability: performance varies substantially by category, and strong performance on one type of legal task does not predict strong performance on another.
+
+A review of LegalBench's published task list finds no task requiring cross-version comparison of a statute; the closest tangential item, a policy-change-disclosure task drawn from the OPP-115 privacy-policy corpus, measures whether a document discloses that it changed, not whether the change is legally material. LegalBench is also not built on Indian legal sources.
+
+\subsection{CUAD}
+
+\label{sec:2-4-3}
+
+Hendrycks et al. \cite{hendrycks2021cuad} released CUAD, more than 13,000 expert annotations spanning 41 clause categories across 510 commercial contracts, to support automated identification of legally important contract clauses.
+
+CUAD is useful to this proposal less as a competing task than as a scale precedent: it shows that a few hundred documents, annotated by legal experts against a defensible taxonomy, constitute an academically credible benchmark — relevant because expert annotation of amendment materiality will not scale to millions of examples the way Wikipedia- or news-edit labelling does. CUAD's ground truth is clause importance within a single contract version, not change between two versions of the same instrument, and it addresses contracts rather than legislation.
+
+\subsection{LegalBench-RAG and Retrieval Evaluation}
+
+\label{sec:2-4-4}
+
+Pipitone and Alami \cite{pipitone2024legalbenchrag} observed that LegalBench and similar suites evaluate the generation step of legal LLM pipelines but not the retrieval step, and introduced LegalBench-RAG specifically to score whether a RAG system retrieves the precise, minimal span of legal text needed to answer a query, rather than an oversized or loosely relevant chunk.
+
+This is a useful precedent for evaluating the retrieval half of any legal RAG pipeline used as a baseline in this research, but LegalBench-RAG evaluates retrieval precision against a single, fixed corpus snapshot; it has no mechanism for scoring whether the retrieved span is the version of the provision applicable on a given date.
+
+\section{Large Language Models in Legal Reasoning and Compliance}
+
+\label{sec:2-5}
+
+\subsection{LLM Capabilities}
+
+\label{sec:2-5-1}
+
+LLMs have demonstrated capabilities in: legal question answering; legal document summarisation; legal information retrieval; contract analysis; legal drafting; issue identification; legal classification; statutory interpretation; and legal reasoning.
+
+The ability of LLMs to process long legal documents has increased interest in their use within legal services, regulatory technology, and compliance operations.
+
+LLMs can potentially reduce the time required to review legal documents and identify relevant provisions. They can also support legal professionals by generating summaries, identifying issues, comparing documents, and retrieving relevant legal information.
+
+\subsection{Hallucination and the Limits of Zero-Shot Legal Reasoning}
+
+\label{sec:2-5-2}
+
+The generic risks listed in early LLM-legal commentary — hallucinated authorities, outdated knowledge, unsupported conclusions — have since been measured directly rather than only asserted. Dahl et al. \cite{dahl2024legalfictions} tested general-purpose LLMs against verifiable questions about real, randomly sampled federal court cases and found hallucination rates from 58\% (GPT-4) to 88\% (Llama 2), with models frequently unable to recognise when they were hallucinating and prone to accepting a user's incorrect legal premise rather than correcting it.
+
+Retrieval was proposed, including by commercial legal-AI vendors, as a fix for this. Magesh et al. \cite{magesh2025hallucinationfree}, in a preregistered Stanford RegLab study, tested three commercial RAG-based legal research tools marketed as hallucination-free and found hallucination or unsupported-citation rates of 17–33\% — substantially lower than general-purpose chatbots, but far from the advertised guarantee. Their finding is methodological as much as empirical: retrieval reduces hallucination without eliminating it, and the residual failures were concentrated in cases requiring reasoning about which version of a rule or precedent applied.
+
+These results motivate the temporal-drift evaluation proposed in this research. If commercial, RAG-grounded legal research tools still fail on version-sensitive questions, an ungrounded compliance assertion generated by a general-purpose LLM should be expected to fail at least as often, and undetectably so unless it is specifically tested against pre- and post-amendment text.
+
+\subsection{Retrieval-Augmented Legal Reasoning}
+
+\label{sec:2-5-3}
+
+Retrieval-augmented generation is the most direct proposed fix to the hallucination problem documented above, and a growing legal-AI literature has begun building infrastructure to do this over versioned legal text specifically. de Martim \cite{demartim2025satgraph} proposed an ontology-driven Graph RAG for legal norms, evaluated on Brazilian constitutional law, that distinguishes an abstract legal “Work” from its versioned “Expressions,” representing amendments and repeals as queryable graph events, and reports being able to reconstruct the text of a norm exactly as it existed on a specified date. A companion paper \cite{demartim2025lrmoo} extends this with a component-level, event-centric “Temporal Version” model for finer-grained, date-precise reconstruction of amended provisions.
+
+This is a genuine solution to point-in-time addressing — knowing which version of a provision applied on a given date — but it is not a solution to materiality classification. The graph records that an amendment occurred and when; it does not classify whether that amendment changed the legal outcome of a given scenario. In a related analysis, de Martim \cite{demartim2026beyondprobabilistic} argues more broadly that standard vector-similarity RAG is architecturally mismatched to legal knowledge, because legal knowledge is hierarchical, temporally layered under strict rules of what is currently in force, and traceable to an institutional source of authority — properties that a similarity search over embeddings does not represent. That paper's proposed fix is again architectural (graph structure, event modelling, bitemporal correctness), not a classifier that judges the legal significance of a detected change.
+
+The proposed research treats this infrastructure as complementary rather than competing: a system that can locate the applicable version of a provision, as in \cite{demartim2025satgraph,demartim2025lrmoo}, still needs a downstream judgement of whether the transition to that version matters for a given compliance question — the materiality classification problem this proposal addresses.
+
+\section{Legislative Amendments and Legal Change}
+
+\label{sec:2-6}
+
+\subsection{Nature of Legislative Amendments}
+
+\label{sec:2-6-1}
+
+The task of detecting that a legal text changed is older, and more mature outside law, than the task of judging whether the change matters. Daxenberger and Gurevych \cite{daxenberger2013wikipedia} trained a classifier over Wikipedia edit diffs to categorise an edit into one of 21 types (for example, spelling correction, vandalism, content addition), reporting a micro-averaged F1 of 0.62, and Spangher et al. \cite{spangher2022newsedits} later built NewsEdits, a corpus of 1.2 million news articles and 4.6 million revisions, to study how and why news text is revised, finding that added or deleted sentences disproportionately contain the substantive “updating events” in a story. Both papers show that edit-significance classification is learnable at scale in domains where the ground truth — did the encyclopaedic fact or the reported event change — is comparatively checkable.
+
+Legal text does not offer that comparatively checkable ground truth. The one paper to attempt amendment detection specifically on legislative and political text, Hermansson and Cross's DocuToads \cite{hermansson2016docutoads}, types changes purely syntactically — as insertions, deletions, substitutions, and transpositions via minimum edit distance — and its own authors note that automated detection identifies changes that human coders miss, and vice versa. DocuToads cannot, by construction, distinguish a renumbered subsection (large edit distance, no legal effect) from a narrowed numerical threshold such as ‘30 days’ changed to ‘15 days’ (tiny edit distance, high legal effect). No published legal-domain work has since layered a semantic materiality judgment on top of this syntactic foundation.
+
+A separate strand of recent legal-AI work addresses not detection but consequence: given that the applicable law has changed, how a reasoning system should respond. Fan et al. \cite{fan2026legalsearchr1} trained a reinforcement-learning search agent, LegalSearch-R1, on temporally indexed legal data spanning multiple amendment periods, reporting substantial gains on temporal-consistency measures over specialised legal models, on the basis that identical facts can yield opposite legal conclusions depending on which version of a statute governs. Bonatti et al.'s earlier PrOnto/OWL2 system \cite{bonatti2020pronto} took an older, formally sound approach to a related problem — real-time GDPR compliance reasoning via a hand-encoded ontology — which remains a useful baseline for what full logical rigour costs, at the price of being brittle to any legislative change not manually re-encoded.
+
+LegalSearch-R1 solves temporal consistency proactively, at the moment a query is answered, by retrieving and reasoning over the currently correct version of the law. It does not solve the reactive problem this proposal addresses: given a specific, already-observed amendment and an assertion generated before it, deciding whether that particular assertion is now materially wrong. The two problems are close enough in framing that this distinction is stated explicitly here rather than left implicit.
+
+Legislative amendments may perform different legal functions. They may: insert new provisions; substitute existing provisions; omit provisions; modify definitions; change legal thresholds; alter the scope of applicability; introduce new obligations; remove existing obligations; change penalties; revise procedures; modify time limits; introduce exemptions; or correct drafting or cross-referencing errors.
+
+The legal significance of an amendment cannot be determined solely by the quantity of text changed. A minor textual change may substantially alter legal obligations, while a large textual revision may have limited legal effect.
+
+Therefore, amendment analysis requires semantic and legal interpretation.
+
+\subsection{Legal Materiality}
+
+\label{sec:2-6-2}
+
+In the proposed research, legislative materiality is defined as:
+
+\begin{quote}\itshape The extent to which a legislative amendment changes the legal rights, obligations, scope, conditions, liabilities, procedures, or compliance consequences associated with a legal provision.\end{quote}
+
+Materiality will be evaluated using multiple legal dimensions.
+
+\small
+\begin{longtable}[l]{>{\raggedright\arraybackslash}p{0.30\linewidth} >{\raggedright\arraybackslash}p{0.65\linewidth}}
+\caption{Legal dimensions used to evaluate amendment materiality}\label{tab:lit-3}\\
+\toprule
+\textbf{Legal Dimension} & \textbf{Materiality Question} \\
+\midrule
+\endfirsthead
+\multicolumn{2}{l}{\small\itshape (Table \thetable{} continued)}\\
+\toprule
+\textbf{Legal Dimension} & \textbf{Materiality Question} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{2}{r}{\small\itshape Continued on next page}\\
+\endfoot
+\bottomrule
+\endlastfoot
+Obligation & Does the amendment create, remove, or modify a legal duty? \\
+Right & Does the amendment alter a legal entitlement? \\
+Prohibition & Does the amendment make conduct lawful or unlawful? \\
+Scope & Does the amendment expand or restrict applicability? \\
+Definition & Does the amendment change the meaning of a legal term? \\
+Threshold & Does the amendment alter a numerical or qualifying condition? \\
+Time & Does the amendment modify a deadline, duration, or commencement rule? \\
+Liability & Does the amendment change penalties or legal exposure? \\
+Procedure & Does the amendment modify filing, approval, reporting, or enforcement requirements? \\
+Exemption & Does the amendment introduce, remove, or modify an exception? \\
+Compliance outcome & Would the amendment alter the result of a compliance assessment? \\
+\end{longtable}
+\normalsize
+
+The proposed materiality taxonomy contains four preliminary classes.
+
+\small
+\begin{longtable}[l]{>{\raggedright\arraybackslash}p{0.20\linewidth} >{\raggedright\arraybackslash}p{0.75\linewidth}}
+\caption{Proposed materiality taxonomy}\label{tab:lit-4}\\
+\toprule
+\textbf{Materiality Level} & \textbf{Description} \\
+\midrule
+\endfirsthead
+\multicolumn{2}{l}{\small\itshape (Table \thetable{} continued)}\\
+\toprule
+\textbf{Materiality Level} & \textbf{Description} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{2}{r}{\small\itshape Continued on next page}\\
+\endfoot
+\bottomrule
+\endlastfoot
+High & Substantially changes obligations, rights, liability, legal scope, or compliance status \\
+Medium & Changes conditions, thresholds, definitions, procedures, or deadlines with identifiable effects \\
+Low & Produces limited legal effects, such as minor cross-reference or terminology changes \\
+None & Editorial, formatting, or stylistic change without identifiable legal consequences \\
+\end{longtable}
+\normalsize
+
+The final taxonomy will be validated through legal-expert annotation.
+
+\section{Temporal Legal Drift}
+
+\label{sec:2-7}
+
+\subsection{Definition}
+
+\label{sec:2-7-1}
+
+Temporal legal drift refers to the loss of legal validity, accuracy, or applicability of an AI-generated legal or compliance assertion following a change in the underlying law.
+
+Let: $L_t$ represent the legal text applicable at time $t$; $A_t$ represent an LLM-derived legal or compliance assertion based on $L_t$; $L_{t+1}$ represent the amended legal text; and $A_{t+1}$ represent the assertion generated using the amended legal context.
+
+Temporal legal drift occurs when the legal validity of $A_t$ changes after the transition from $L_t$ to $L_{t+1}$.
+
+The concept does not assume that every legislative amendment produces drift. Drift should occur primarily when an amendment materially affects the legal conclusion associated with a particular scenario.
+
+\subsection{Types of Temporal Legal Drift}
+
+\label{sec:2-7-2}
+
+The proposed benchmark will measure the following forms of drift.
+
+\small
+\begin{longtable}[l]{>{\raggedright\arraybackslash}p{0.30\linewidth} >{\raggedright\arraybackslash}p{0.65\linewidth}}
+\caption{Types of temporal legal drift}\label{tab:lit-5}\\
+\toprule
+\textbf{Drift Type} & \textbf{Description} \\
+\midrule
+\endfirsthead
+\multicolumn{2}{l}{\small\itshape (Table \thetable{} continued)}\\
+\toprule
+\textbf{Drift Type} & \textbf{Description} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{2}{r}{\small\itshape Continued on next page}\\
+\endfoot
+\bottomrule
+\endlastfoot
+Assertion drift & The model changes its legal or compliance answer after an amendment \\
+Legal-validity drift & An earlier answer becomes legally incorrect \\
+Compliance-outcome drift & The compliance status of a scenario changes \\
+Citation drift & The model cites an outdated or incorrect legal provision \\
+Explanation drift & The model’s explanation remains based on an outdated legal position \\
+False stability & The model incorrectly retains the same answer after a material amendment \\
+False instability & The model changes its answer despite a non-material amendment \\
+\end{longtable}
+\normalsize
+
+The distinction between false stability and false instability is important. A reliable model should change its answer when a material legal change affects the scenario but should remain stable when an amendment does not alter the applicable legal outcome.
+
+\subsection{Proposed Temporal Evaluation Metrics}
+
+\label{sec:2-7-3}
+
+\small
+\begin{longtable}[l]{>{\raggedright\arraybackslash}p{0.35\linewidth} >{\raggedright\arraybackslash}p{0.60\linewidth}}
+\caption{Proposed temporal evaluation metrics}\label{tab:lit-6}\\
+\toprule
+\textbf{Metric} & \textbf{Purpose} \\
+\midrule
+\endfirsthead
+\multicolumn{2}{l}{\small\itshape (Table \thetable{} continued)}\\
+\toprule
+\textbf{Metric} & \textbf{Purpose} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{2}{r}{\small\itshape Continued on next page}\\
+\endfoot
+\bottomrule
+\endlastfoot
+Materiality Classification Accuracy & Measures correct identification of amendment materiality \\
+Precision & Measures the proportion of predicted material amendments that are truly material \\
+Recall & Measures the proportion of truly material amendments detected \\
+Macro-F1 & Evaluates performance across materiality classes \\
+Temporal Consistency & Measures consistency with the legally applicable version \\
+Legal Validity Retention & Measures whether the model remains legally correct after change \\
+Materiality Sensitivity & Measures whether the model responds appropriately to material amendments \\
+False Stability Rate & Measures failure to update an answer after material change \\
+False Instability Rate & Measures unnecessary answer changes after non-material amendments \\
+Citation Accuracy & Measures correct identification of legal provisions and versions \\
+Explanation Faithfulness & Measures whether explanations reflect the actual decision basis \\
+Evidence Sufficiency & Measures whether the explanation provides adequate legal evidence \\
+\end{longtable}
+\normalsize
+
+\section{Explainable Artificial Intelligence for Materiality Justification}
+
+\label{sec:2-8}
+
+\subsection{Need for Explainability}
+
+\label{sec:2-8-1}
+
+Explainability requirements in law are not simply a usability preference. Richmond et al. \cite{richmond2024xaisurvey}, in an evidential survey of explainable AI across legal and administrative decision-making, argue that legal adjudication draws on stored, often implicit professional experience, and that this makes opacity a structural obstacle — not merely an inconvenience — wherever an automated system's output must be accountable to a legal standard. Collenette, Atkinson, and Bench-Capon \cite{collenette2023ecthr} built and evaluated an explainable decision-support tool for European Court of Human Rights Article 6 cases using computational argumentation, and reported that argumentation-based explanations were both grounded in recognisable legal reasoning and usable by the tool's intended audience — evidence that legally structured explanation, rather than generic natural-language rationale, is what legal users can act on.
+
+Within Indian legal AI specifically, the TathyaNyaya/FactLegalLlama work reviewed in Section~\ref{sec:2-3-3} \cite{nigam2025tathyanyaya} is the clearest existing attempt at explanation generation, producing rationales alongside predicted judgment outcomes. Its explanations, however, are generated for a judgment-prediction task from case facts; they are not built to answer a different, more specific question — which statutory provision changed, along which legal dimension, and why that change alters a compliance conclusion. No system surveyed in this chapter, Indian or otherwise, evaluates an explanation against that specific structure.
+
+The proposed research therefore treats explanation as a core research contribution rather than an optional interface feature.
+
+\subsection{Explainable Materiality Justification}
+
+\label{sec:2-8-2}
+
+The proposed system will produce structured explanations containing: the legal instrument; the affected section, subsection, clause, or schedule; the pre-amendment legal text; the post-amendment legal text; the amendment operation; the legal dimension affected; the predicted materiality level; the reason for the materiality decision; the expected compliance consequence; the supporting legal evidence; and the confidence or uncertainty associated with the prediction.
+
+An example explanation structure is presented below.
+
+\small
+\begin{longtable}[l]{>{\raggedright\arraybackslash}p{0.32\linewidth} >{\raggedright\arraybackslash}p{0.63\linewidth}}
+\caption{Explainable materiality justification structure}\label{tab:lit-7}\\
+\toprule
+\textbf{Explanation Element} & \textbf{Expected System Output} \\
+\midrule
+\endfirsthead
+\multicolumn{2}{l}{\small\itshape (Table \thetable{} continued)}\\
+\toprule
+\textbf{Explanation Element} & \textbf{Expected System Output} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{2}{r}{\small\itshape Continued on next page}\\
+\endfoot
+\bottomrule
+\endlastfoot
+Legal provision & Relevant section or subsection \\
+Amendment operation & Insertion, substitution, omission, or modification \\
+Legal concept & Obligation, threshold, definition, scope, liability, or procedure \\
+Materiality classification & High, Medium, Low, or None \\
+Legal justification & Explanation of the legal effect \\
+Compliance consequence & Expected effect on the compliance scenario \\
+Evidence & Relevant pre-amendment and post-amendment text \\
+Confidence & Confidence or uncertainty score \\
+\end{longtable}
+\normalsize
+
+The explanation should be legally grounded rather than merely generated as a general natural-language rationale.
+
+\subsection{Evaluation of Explanations}
+
+\label{sec:2-8-3}
+
+\small
+\begin{longtable}[l]{>{\raggedright\arraybackslash}p{0.30\linewidth} >{\raggedright\arraybackslash}p{0.65\linewidth}}
+\caption{Evaluation criteria for generated explanations}\label{tab:lit-8}\\
+\toprule
+\textbf{Evaluation Criterion} & \textbf{Evaluation Question} \\
+\midrule
+\endfirsthead
+\multicolumn{2}{l}{\small\itshape (Table \thetable{} continued)}\\
+\toprule
+\textbf{Evaluation Criterion} & \textbf{Evaluation Question} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{2}{r}{\small\itshape Continued on next page}\\
+\endfoot
+\bottomrule
+\endlastfoot
+Faithfulness & Does the explanation reflect the actual basis of the model prediction? \\
+Legal relevance & Does it identify the legally important change? \\
+Completeness & Does it explain both legal and compliance effects? \\
+Evidence sufficiency & Does it provide adequate statutory support? \\
+Temporal correctness & Does it distinguish previous and amended legal versions? \\
+Consistency & Are similar amendments explained consistently? \\
+Human usefulness & Can legal experts use the explanation to verify the decision? \\
+Contestability & Can users identify and challenge an incorrect conclusion? \\
+\end{longtable}
+\normalsize
+
+The explanation framework will be assessed through automated measures and legal-expert evaluation.
+
+\section{Agentic AI for Autonomous Compliance Monitoring}
+
+\label{sec:2-9}
+
+\subsection{Concept of Agentic AI}
+
+\label{sec:2-9-1}
+
+Continuous, rather than one-off, compliance monitoring has an established literature and industry practice under the RegTech label, though most of it predates, or exists alongside, LLM-based methods. Bonatti et al.'s PrOnto/OWL2 system \cite{bonatti2020pronto} is the clearest formal precedent: sound, real-time GDPR compliance reasoning over a hand-encoded ontology, at the cost of requiring manual re-encoding whenever the regulation itself changes — a brittleness that motivates the shift toward text-adaptive, LLM-based approaches.
+
+More recent work applies LLMs directly to continuous compliance checking. Li and Maiti \cite{li2025regtech} proposed an LLM-and-backend-web-service architecture for continuous regulatory compliance checks in agriculture, arguing that compliance checking should be an ongoing automated process between producers, an LLM-driven analysis layer, and regulators, rather than a periodic manual review. Hassani \cite{hassani2024llmcompliance} similarly frames legal-compliance and regulation analysis with LLMs as a continuous requirements-engineering problem, in which regulatory obligations must be kept synchronised with a changing body of law.
+
+Both papers treat the underlying regulation as an input to be monitored for change, but neither classifies the significance of a detected change; the LLM's role in each system is to interpret or apply a regulation, not to judge whether a new version of it differs materially from the one an organisation was already complying with. An agentic monitoring layer built without that classification step would either alert on every amendment regardless of consequence, or rely on a human to make the materiality judgment the system itself was meant to automate.
+
+In a legal-compliance context, an agentic system may continuously monitor legal sources and perform preliminary impact analysis.
+
+\subsection{Proposed Agentic Compliance Workflow}
+
+\label{sec:2-9-2}
+
+The proposed agentic extension may perform the following functions: monitor India Code and official legislative sources; identify newly published amendments; retrieve relevant previous and updated legal provisions; compare legislative versions; classify amendment materiality; identify potentially affected compliance obligations; generate an explainable compliance-impact report; assign a risk or confidence score; and refer uncertain or high-impact cases to legal experts.
+
+The agentic system will not be designed to make final legal decisions without human oversight. Its primary function will be monitoring, preliminary analysis, evidence organisation, and escalation.
+
+\subsection{Risks and Governance}
+
+\label{sec:2-9-3}
+
+Agentic systems may introduce additional risks because they can perform actions autonomously. These include: incorrect retrieval; propagation of inaccurate information; unsupported legal conclusions; inappropriate automated actions; weak accountability; insufficient human oversight; and difficulty auditing multi-step reasoning.
+
+Therefore, the agentic component will incorporate: human-in-the-loop review; evidence logging; source provenance; confidence thresholds; escalation rules; restricted action permissions; and audit trails.
+
+Agentic AI is treated as a secondary research extension, while Explainable AI for materiality justification remains the primary novelty.
+
+\section{Comparative Review of Existing Research}
+
+\label{sec:2-10}
+
+\begin{landscape}
+\footnotesize
+\begin{longtable}[l]{>{\raggedright\arraybackslash}p{0.04\linewidth} >{\raggedright\arraybackslash}p{0.20\linewidth} >{\raggedright\arraybackslash}p{0.14\linewidth} >{\raggedright\arraybackslash}p{0.18\linewidth} >{\raggedright\arraybackslash}p{0.18\linewidth} >{\raggedright\arraybackslash}p{0.17\linewidth}}
+\caption{Comparative literature review and research-gap analysis}\label{tab:lit-9}\\
+\toprule
+\textbf{S. No.} & \textbf{Research Paper / System} & \textbf{Author(s)} & \textbf{Methodology and Input Used} & \textbf{Main Outcome} & \textbf{Research Gap Relevant to the Proposed Study} \\
+\midrule
+\endfirsthead
+\multicolumn{6}{l}{\small\itshape (Table \thetable{} continued)}\\
+\toprule
+\textbf{S. No.} & \textbf{Research Paper / System} & \textbf{Author(s)} & \textbf{Methodology and Input Used} & \textbf{Main Outcome} & \textbf{Research Gap Relevant to the Proposed Study} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{6}{r}{\small\itshape Continued on next page}\\
+\endfoot
+\bottomrule
+\endlastfoot
+1 & LEGAL-BERT: The Muppets Straight Out of Law School & Chalkidis, Fergadiotis, Malakasiotis, Aletras, Androutsopoulos (2020) & Domain-adaptive pre-training of BERT on contracts, judgments, and legislation & Established that further pre-training on legal corpora outperforms fine-tuning general BERT & Not jurisdiction-specific; no temporal/versioning dimension \\
+2 & Lawformer: A Pre-trained Language Model for Chinese Legal Long Documents & Xiao, Hu, Liu, Tu, Sun (2021) & Longformer-style long-document pre-training on Chinese legal corpora & Gains on judgment prediction, case retrieval, and legal reading comprehension & Chinese-only; no version comparison or Indian applicability \\
+3 & Pre-trained Language Models for the Legal Domain: A Case Study on Indian Law & Paul, Mandal, Goyal, Ghosh (2023) & Re-trained LEGAL-BERT/CaseLawBERT on \textasciitilde{}5.4M Indian judgments (InLegalBERT/InCaseLawBERT) & Outperforms LEGAL-BERT on Indian statute retrieval, rhetorical roles, judgment prediction & Single-snapshot training corpus; no representation of amendment history \\
+4 & Legal NLP in India: A Comprehensive Survey of Tasks, Challenges, and Future Directions & Kalamkar, Venugopalan, Raghavan (2021; extended 2025) & Survey of Indian legal NLP benchmarks, tasks, and resource gaps & Establishes that non-Indian legal corpora do not generalise to Indian legal language & Does not identify temporal/amendment modelling as a benchmark gap \\
+5 & IL-TUR: Benchmark for Indian Legal Text Understanding and Reasoning & Joshi, Paul, Sharma, Goyal, Ghosh, Modi (2024) & Monolingual (English, Hindi) and multilingual (9 languages) Indian legal NLP benchmark & First broad jurisdiction-specific Indian legal understanding/reasoning benchmark & Fixed-snapshot tasks; no amendment, versioning, or drift evaluation \\
+6 & ILDC for CJPE: Indian Legal Documents Corpus for Court Judgment Prediction and Explanation & Malik, Sanjay, Nigam, Ghosh, Guha, Bhattacharya, Modi (2021) & 35,000 Indian Supreme Court judgments annotated with outcomes and expert explanations & Standard large-scale resource for Indian judgment prediction and explanation & Judicial decisions, not legislative text; no version history \\
+7 & Are LLMs Court-Ready? Evaluating Frontier Models on Indian Legal Reasoning & Juvekar, Bhattacharya, Khadloya, Saxena (2025) & Frontier/open LLMs evaluated on Indian legal examinations and lawyer-graded responses & Strong objective-exam performance; gap remains on long-form legal reasoning & Evaluates competence against fixed law, not temporal validity after amendment \\
+8 & NyayaRAG: Realistic Legal Judgment Prediction with RAG under the Indian Common Law System & Nigam, Patnaik, Mishra, Thomas, Shallum, Ghosh, Bhattacharya (2025) & RAG over statutes and precedents combined with case facts for judgment prediction & Improves realism of Indian judgment prediction by grounding in retrieved statutes/precedents & Retrieves current corpus text only; no notion of pre-/post-amendment provisions \\
+9 & TathyaNyaya and FactLegalLlama: Advancing Factual Judgment Prediction and Explanation in the Indian Legal Context & Nigam et al. (2025) & Large fact-based judgment-prediction dataset + instruction-tuned explanation model & Largest Indian FJPE resource; generates case-outcome explanations & Explanations target case facts, not amendment materiality or compliance consequence \\
+10 & Falkor-IRAC: Graph-Constrained Generation for Verified Legal Reasoning in Indian Judicial AI & Bose (2026) & IRAC knowledge graph over Indian judgments; answers verified via traceable graph paths & Reduces hallucinated precedents and unsupported citations & Verifies against current graph state; no temporal-version modelling \\
+11 & LegalBench: A Collaboratively Built Benchmark for Measuring Legal Reasoning in Large Language Models & Guha et al. (2023) & 230+ tasks across six legal-reasoning categories, built with legal professionals & Shows legal reasoning is multi-dimensional; performance varies sharply by category & No amendment-classification or cross-version task in the published taxonomy \\
+12 & LexGLUE: A Benchmark Dataset for Legal Language Understanding in English & Chalkidis, Jana, Hartung, Bommarito, Androutsopoulos, Katz, Aletras (2022) & Seven aggregated legal-NLU datasets in a GLUE-style suite & Confirms legal-domain models outperform general models on legal NLU & All tasks are single-snapshot; none Indian; no change detection \\
+13 & CUAD: An Expert-Annotated NLP Dataset for Legal Contract Review & Hendrycks, Burns, Chen, Ball (2021) & 13,000+ expert annotations across 41 clause categories, 510 contracts & Shows expert-annotated, moderately sized legal benchmarks are academically credible & Contracts, not legislation; single-version clause importance, not change \\
+14 & LegalBench-RAG: A Benchmark for Retrieval-Augmented Generation in the Legal Domain & Pipitone, Alami (2024) & Evaluates retrieval precision (minimal relevant span) in legal RAG pipelines & First benchmark isolating the retrieval step of legal RAG systems & Evaluates a fixed corpus snapshot; no date-specific version scoring \\
+15 & Large Legal Fictions: Profiling Legal Hallucinations in Large Language Models & Dahl, Magesh, Suzgun, Ho (2024) & General-purpose LLMs tested against verifiable federal case-law questions & Hallucination rates of 58\% (GPT-4) to 88\% (Llama 2) on legal questions & Measures general hallucination, not version-sensitivity specifically \\
+16 & Hallucination-Free? Assessing the Reliability of Leading AI Legal Research Tools & Magesh, Surani, Dahl, Suzgun, Manning, Ho (2025) & Preregistered evaluation of three commercial RAG-based legal research tools & 17-33\% hallucination/unsupported-citation rate despite “hallucination-free” marketing & Residual failures cluster on version-sensitive questions; no materiality classifier \\
+17 & An Ontology-Driven Graph RAG for Legal Norms: A Structural, Temporal, and Deterministic Approach & de Martim (2025) & Work/Expression ontology; amendments and repeals as queryable graph events & Reconstructs a norm's exact text as it existed on a specified date & Solves version addressing only; no significance/materiality classification \\
+18 & Modeling the Diachronic Evolution of Legal Norms: An LRMoo-Based, Component-Level, Event-Centric Approach & de Martim (2025/26) & Component-level “Temporal Version” model extending \cite{demartim2025satgraph} & Finer-grained, date-precise reconstruction of amended provisions & Same limitation as \cite{demartim2025satgraph}: addressing infrastructure, not materiality \\
+19 & Beyond Probabilistic Similarity: Structural, Temporal, and Causal Limitations of RAG in the Legal Domain & de Martim (2026) & Architectural critique of vector-similarity RAG against legal knowledge's structure & Identifies mereological, diachronic, and causal blindness in standard legal RAG & Diagnoses the problem architecturally; no classifier for amendment materiality \\
+20 & Automatically Classifying Edit Categories in Wikipedia Revisions & Daxenberger, Gurevych (2013) & Supervised classifier over Wikipedia edit diffs, 21-category taxonomy & Micro-F1 = 0.62; established edit-significance classification as a task & Checkable, non-legal ground truth; pre-transformer methods \\
+21 & NewsEdits: A News Article Revision Dataset and a Document-Level Reasoning Challenge & Spangher, Ren, May, Peng (2022) & 1.2M articles, 4.6M revisions; edit-type and reasoning tasks & Shows substantive “updating events” concentrate at edit locations & News domain; edit-type is structural, not a legal-materiality judgment \\
+22 & Tracking Amendments to Legislation and Other Political Texts: DocuToads & Hermansson, Cross (2016) & Minimum-edit-distance typing of legislative/political-text amendments & Only direct legal-domain amendment-detection precedent & Purely syntactic; cannot distinguish cosmetic from substantive changes \\
+23 & Can LLMs Time Travel? Enhancing Temporal Consistency in Legal Agentic Search through RL & Fan et al. (2026) & RL-trained retrieval/search agent over temporally indexed legal data & 12.9-29.8\% and 57.7-80.3\% gains on capability/temporal-consistency measures & Proactive retrieval-time correctness, not reactive materiality classification \\
+24 & Real-Time Reasoning in OWL2 for GDPR Compliance & Bonatti, Ioffredo, Petrova, Sauro, Siahaan (2020) & Hand-encoded OWL2 ontology (PrOnto) with a specialised reasoner & Sound, real-time GDPR compliance reasoning & Static and brittle; requires manual re-encoding on legislative change \\
+25 & Explainable AI and Law: An Evidential Survey & Richmond, Muddamsetty, Gammeltoft-Hansen, Olsen, Moeslund (2024) & Evidential survey of explainability across legal/administrative AI & Establishes explainability as a structural, not optional, legal-AI requirement & No framework specific to amendment materiality explanation \\
+26 & Explainable AI Tools for Legal Reasoning about Cases: A Study on the ECtHR & Collenette, Atkinson, Bench-Capon (2023) & Computational-argumentation decision-support tool for ECtHR Article 6 cases & Legally grounded explanations shown usable by the intended legal audience & Case-level argumentation, not amendment/compliance-consequence explanation \\
+27 & Applying LLM Analysis and Backend Web Services in RegTech for Continuous Compliance Checks & Li, Maiti (2025) & LLM + backend web-service architecture for continuous compliance checking & Frames compliance checking as continuous rather than periodic & Monitors for the fact of change; does not classify its materiality \\
+28 & Enhancing Legal Compliance and Regulation Analysis with Large Language Models & Hassani (2024) & LLM-based continuous requirements-engineering framing of regulatory compliance & Frames regulatory obligations as requirements to be kept synchronised with changing law & Same limitation as \cite{li2025regtech}: change-monitoring, not materiality classification \\
+\end{longtable}
+\normalsize
+\end{landscape}
+
+\section{Synthesis of the Literature}
+
+\label{sec:2-11}
+
+Read together, the literature reviewed in this chapter divides into work that solves adjacent problems well and work that has not yet been attempted. Legal language modelling, including its Indian-specific branch, is comparatively mature: InLegalBERT \cite{paul2023inlegalbert}, IL-TUR \cite{joshi2024iltur}, ILDC \cite{malik2021ildc}, and the newer NyayaRAG \cite{nigam2025nyayarag}, TathyaNyaya \cite{nigam2025tathyanyaya}, and Falkor-IRAC \cite{bose2026falkorirac} systems collectively show that Indian legal AI can represent Indian legal language, retrieve relevant statutes and precedents, and generate case-outcome explanations with decreasing rates of hallucinated citation.
+
+Retrieval-augmented generation is similarly an active and increasingly rigorous area: LegalBench-RAG \cite{pipitone2024legalbenchrag} evaluates retrieval precision directly, and the Stanford RegLab studies \cite{dahl2024legalfictions,magesh2025hallucinationfree} have moved the field from marketing claims of “hallucination-free” retrieval to measured, still non-zero hallucination rates. Separately, the legal knowledge-graph literature \cite{demartim2025satgraph,demartim2025lrmoo} has solved point-in-time addressing to the level of exact, date-specific reconstruction of a norm's text.
+
+None of these three literatures, however, has been extended to ask whether a specific, already-detected amendment changes a legal or compliance outcome. The one legal-domain amendment-detection paper, DocuToads \cite{hermansson2016docutoads}, answers a syntactic version of that question and explicitly falls short of a semantic one; the general-purpose edit-classification literature \cite{daxenberger2013wikipedia,spangher2022newsedits} answers the semantic version of that question in domains with cheap, checkable ground truth that legal materiality does not have; and the explainability literature \cite{richmond2024xaisurvey,collenette2023ecthr} establishes that any such classification would need to be explained in a legally usable way, without yet specifying what that explanation should contain for an amendment specifically.
+
+Compliance-automation and RegTech work \cite{bonatti2020pronto,li2025regtech,hassani2024llmcompliance} closes the loop from the opposite direction, treating “a regulation changed” as an input to be monitored, but assumes rather than determines that a detected change matters. The proposed research sits at the intersection these four literatures leave open: an India Code-specific benchmark that classifies amendment materiality, evaluates whether that materiality is reflected in LLM-derived compliance assertions before and after the amendment, and explains the classification in the structured form the explainable-AI-for-law literature argues legal users require.
+
+\section{Research Gap}
+
+\label{sec:2-12}
+
+The literature reviewed above identifies the following major research gaps, each grounded in the specific sources discussed in Sections~\ref{sec:2-3}~to~\ref{sec:2-9}.
+
+\subsubsection{Gap 1: Limited Temporal Representation of Indian Legislation}
+
+Indian legal NLP resources — IL-TUR \cite{joshi2024iltur}, ILDC \cite{malik2021ildc}, and the judgment-focused systems built on them \cite{nigam2025nyayarag,nigam2025tathyanyaya,bose2026falkorirac} — evaluate a model against a fixed snapshot of statutory or judicial text. None represents a provision's history of amendment, and none tests whether a system correctly identifies which version of a provision was in force on a given date. This persists because building such a resource requires linking India Code text to amendment Acts and Gazette commencement dates at the provision level, a data-engineering cost the existing benchmarks did not need to bear for their stated tasks.
+
+\subsubsection{Gap 2: Lack of Legislative Materiality Classification}
+
+Legal-NLP benchmarks reviewed in this chapter — LegalBench \cite{guha2023legalbench}, LexGLUE \cite{chalkidis2022lexglue}, and CUAD \cite{hendrycks2021cuad} — were checked directly against their published task lists and confirmed to contain no task requiring a materiality judgment about a change between two versions of a legal text. The nearest legal-domain precedent, DocuToads \cite{hermansson2016docutoads}, types amendments syntactically and explicitly does not attempt this judgment. This persists because materiality is a contested legal-interpretive judgment rather than a checkable fact, unlike the edit categories used in the Wikipedia and news-revision literature \cite{daxenberger2013wikipedia,spangher2022newsedits}, which makes expert-annotated ground truth comparatively expensive to construct.
+
+\subsubsection{Gap 3: Limited Evaluation of Temporal Legal Drift}
+
+LegalSearch-R1 \cite{fan2026legalsearchr1} and the legal knowledge-graph literature \cite{demartim2025satgraph,demartim2025lrmoo} address temporal correctness at the point a query is answered, by retrieving or reasoning over the currently applicable version of the law. Neither evaluates the reactive case this proposal is concerned with: whether an assertion generated before an amendment remains valid, and whether a model changes its answer only when the amendment is material, avoiding both false stability and false instability. This persists because it requires paired pre- and post-amendment prompting of a model against the same scenario, an evaluation design not present in any benchmark reviewed in this chapter.
+
+\subsubsection{Gap 4: Limited Integration of Legal Change and Compliance Reasoning}
+
+RegTech and LLM-compliance systems \cite{bonatti2020pronto,li2025regtech,hassani2024llmcompliance} treat a detected regulatory change as an input requiring a response, but none classifies the significance of that change as part of the system; the compliance action is triggered by the fact of change, not by its materiality. This persists because compliance-automation research has, to date, been organised around monitoring and enforcement rather than the antecedent legal-interpretive judgment of whether a given amendment should trigger a response at all.
+
+\subsubsection{Gap 5: Insufficient Explainability for Legislative Materiality}
+
+The explainable-AI-and-law literature \cite{richmond2024xaisurvey,collenette2023ecthr} and the Indian explanation-generation work reviewed in Section~\ref{sec:2-8-1} \cite{nigam2025tathyanyaya} establish, respectively, that legal explanation must be accountable to legal reasoning structures, and that Indian judgment-prediction systems can already generate case-outcome rationales. Neither specifies an explanation structure for a different question: which provision changed, along which legal dimension, why the change is or is not material, and what compliance consequence follows. Existing XAI research does not provide a structured framework that explains: which legal provision changed; what amendment operation occurred; which legal dimension was affected; why the amendment is material; and how the amendment changes a compliance outcome.
+
+\subsubsection{Gap 6: Limited Agentic Legislative Monitoring}
+
+There is limited research on agentic systems capable of monitoring Indian legislative changes, assessing materiality, generating evidence-grounded compliance alerts, and escalating uncertain cases to human experts. The closest existing work \cite{bonatti2020pronto,li2025regtech,hassani2024llmcompliance} monitors for the fact of regulatory change rather than its materiality, and does so outside the Indian statutory context.
+
+\section{Central Research Gap}
+
+\label{sec:2-13}
+
+The literature reviewed above establishes, on one hand, a maturing Indian legal-NLP and legal-AI ecosystem, an active legal-RAG and legal-knowledge-graph literature, and an established case for legal explainability; and, on the other hand, three specific absences: no legal-domain classifier for amendment materiality, no evaluation of whether LLM-derived compliance assertions remain valid across an amendment, and no explanation framework built specifically for a materiality judgment. The central research gap is therefore stated as follows:
+
+\begin{quote}\itshape There is a lack of an India Code-based temporal legal benchmark that systematically identifies legislative amendments, classifies their materiality, evaluates temporal drift in LLM-derived compliance assertions, and generates explainable, evidence-grounded justifications for materiality and compliance assessments.\end{quote}

@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/normalized_document.schema.json",
+  "title": "Normalized Document",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "normalized_document_id",
+    "source_artifact_id",
+    "source_sha256",
+    "parser_name",
+    "parser_version",
+    "media_type",
+    "encoding",
+    "blocks",
+    "transformations",
+    "warnings"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "normalized_document_id": { "type": "string", "pattern": "^doc_[a-f0-9]{24}$" },
+    "source_artifact_id": { "type": "string" },
+    "source_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "parser_name": { "type": "string" },
+    "parser_version": { "type": "string" },
+    "media_type": { "type": "string" },
+    "encoding": { "type": ["string", "null"] },
+    "blocks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["block_id", "ordinal", "block_type", "raw_text", "normalized_text", "structural_path", "source_anchor"],
+        "properties": {
+          "block_id": { "type": "string" },
+          "ordinal": { "type": "integer", "minimum": 0 },
+          "block_type": { "enum": ["title", "heading", "paragraph", "list_item", "table_text", "unknown"] },
+          "raw_text": { "type": "string" },
+          "normalized_text": { "type": "string" },
+          "structural_path": { "type": "array", "items": { "type": "string" } },
+          "source_anchor": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "transformations": { "type": "array", "items": { "type": "string" } },
+    "warnings": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": false
+}
+

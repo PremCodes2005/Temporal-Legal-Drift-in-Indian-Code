@@ -1,0 +1,19 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+.venv/
+dist/
+build/
+*.egg-info/
+
+# Runtime artifacts. Directory sentinels remain tracked.
+data/raw/**
+!data/raw/.gitkeep
+data/normalized/**
+!data/normalized/.gitkeep
+data/quarantine/**
+!data/quarantine/.gitkeep
+

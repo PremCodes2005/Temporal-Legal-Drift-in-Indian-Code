@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/quarantine_record.schema.json",
+  "title": "Quarantine Record",
+  "type": "object",
+  "required": ["schema_version", "quarantine_id", "created_at", "stage", "reason_code", "message"],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "quarantine_id": { "type": "string" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "stage": { "enum": ["acquisition", "parsing", "normalization"] },
+    "reason_code": { "type": "string" },
+    "message": { "type": "string" },
+    "source_artifact_id": { "type": ["string", "null"] },
+    "source_sha256": { "type": ["string", "null"] },
+    "details": { "type": "object" }
+  },
+  "additionalProperties": false
+}
+

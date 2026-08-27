@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/source_artifact.schema.json",
+  "title": "Source Artifact",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "source_artifact_id",
+    "request_url",
+    "final_url",
+    "official_identifier",
+    "instrument_type",
+    "retrieved_at",
+    "media_type",
+    "byte_length",
+    "sha256",
+    "blob_path",
+    "acquisition_method"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "source_artifact_id": { "type": "string", "pattern": "^src_[a-f0-9]{24}$" },
+    "request_url": { "type": "string", "format": "uri" },
+    "final_url": { "type": "string", "format": "uri" },
+    "official_identifier": { "type": "string", "minLength": 1 },
+    "instrument_type": { "type": "string", "minLength": 1 },
+    "retrieved_at": { "type": "string", "format": "date-time" },
+    "media_type": { "type": "string", "minLength": 1 },
+    "byte_length": { "type": "integer", "minimum": 0 },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "blob_path": { "type": "string", "minLength": 1 },
+    "acquisition_method": { "type": "string", "minLength": 1 },
+    "response_headers": { "type": "object", "additionalProperties": { "type": "string" } },
+    "notes": { "type": ["string", "null"] }
+  },
+  "additionalProperties": false
+}
+
