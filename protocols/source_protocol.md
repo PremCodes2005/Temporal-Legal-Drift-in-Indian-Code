@@ -1,11 +1,11 @@
 # Phase 1 Authoritative Source Protocol
 
-**Status:** Draft; gate not passed.
+**Status:** Approved by the user for a bounded India Code technical pilot; qualified legal-review gate not passed.
 
 ## Acceptance
 
 1. A source request must provide an HTTPS URL, official identifier, and instrument type.
-2. The URL host must be explicitly approved in `configs/source_policy.v1.json`.
+2. The URL host must be explicitly approved in `configs/source_policy.v1.json`. The current bounded pilot permits only `www.indiacode.nic.in`.
 3. Host approval is an acquisition-control decision, not a claim of legal hierarchy or sufficiency.
 4. Redirect targets must independently satisfy the same host policy.
 5. Every response is size-limited and hashed with SHA-256 before storage.
@@ -31,5 +31,4 @@
 
 ## Gate
 
-The Phase 1 gate remains pending until a qualified reviewer approves the source policy and a pilot source sample is manually verified end to end.
-
+The user has authorized the bounded technical pilot. The Phase 1 legal/research gate remains pending until a qualified reviewer accepts the source sufficiency, temporal evidence, and corpus scope.

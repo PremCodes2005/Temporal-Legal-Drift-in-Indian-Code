@@ -2,7 +2,7 @@
 
 Research software foundation for evaluating whether LLM-based compliance systems correctly propagate legally applicable changes in Indian law over time.
 
-The repository is at TRL 2. Phases 0–2 provide configuration, source provenance, immutable acquisition storage, and deterministic parsing/normalization. They do not contain a legal corpus, benchmark, version graph, applicability resolver, model, experimental result, or monitoring agent.
+The repository is at TRL 2. Phases 0–2 provide configuration, source provenance, immutable acquisition storage, and deterministic parsing/normalization. A four-document India Code technical pilot can be downloaded locally, but it is not a legally validated corpus or benchmark. The repository does not contain a version graph, applicability resolver, model, experimental result, or monitoring agent.
 
 ## Implemented boundary
 
@@ -29,9 +29,14 @@ The package requires no third-party dependency for text, HTML, or XML processing
 tldrift validate-contract
 tldrift acquire --url URL --official-id ID --instrument-type TYPE
 tldrift normalize --metadata PATH_TO_SOURCE_METADATA
+tldrift download-corpus
+tldrift normalize-corpus
+tldrift corpus-report
 ```
 
-Acquisition is deny-by-default. `configs/source_policy.v1.json` contains no approved hosts until the Phase 1 source protocol receives legal/research approval.
+Acquisition is deny-by-default. The user-approved bounded pilot permits only `www.indiacode.nic.in`; every other host remains blocked. `download-corpus` is resumable through an integrity-checked checkpoint. The pilot manifest is not legal gold and does not establish sufficient benchmark coverage.
+
+Raw and normalized corpus artifacts are local runtime data and are ignored by version control. `corpus-report` writes a deterministic lock report containing the authoritative URLs, identifiers, SHA-256 hashes, sizes, parser provenance, and known extraction risks.
 
 ## Safety and scope
 
@@ -42,4 +47,3 @@ Acquisition is deny-by-default. `configs/source_policy.v1.json` contains no appr
 - This is research infrastructure, not legal advice.
 
 See `plan.md` for the definitive implementation and research plan.
-

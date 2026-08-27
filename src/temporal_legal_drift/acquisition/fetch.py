@@ -106,6 +106,14 @@ class AcquisitionService:
             validate_url=self.policy.validate_url,
         )
         self.policy.validate_url(response.final_url)
+        actual_media_type = response.media_type.split(";", 1)[0].strip().lower()
+        expected_media_type = (request.expected_media_type or "").strip().lower()
+        if expected_media_type and actual_media_type != expected_media_type:
+            raise AcquisitionError(
+                f"Expected media type {expected_media_type!r}, received {actual_media_type!r}"
+            )
+        if expected_media_type == "application/pdf" and not response.payload.startswith(b"%PDF-"):
+            raise AcquisitionError("Response claims to be PDF but does not begin with a PDF signature")
 
         retrieved_at = self.clock()
         content_hash, blob_path = self.store.store_blob(response.payload, response.media_type)
@@ -123,6 +131,8 @@ class AcquisitionService:
             acquisition_method=type(self.transport).__name__,
             response_headers=response.headers,
             notes=request.notes,
+            corpus_entry_id=request.corpus_entry_id,
+            parent_reference_url=request.parent_reference_url,
         )
         self.store.store_metadata(artifact)
         self.store.verify(artifact)

@@ -13,14 +13,15 @@
 - Immutable normalized documents.
 - Quarantine records for malformed, unsupported, unreadable, or integrity-invalid input.
 - Synthetic unit and integration tests.
+- Normalization of all four pilot PDFs into 120 page-level blocks with source hashes and parser provenance.
 
 ## Gate blockers
 
-- Phase 1 pilot corpus is not approved or available.
+- The Phase 1 pilot corpus is available locally but is not legally approved.
 - No hand-checked fixtures derived from authoritative Indian legal sources exist.
 - Parsing and fidelity thresholds are not approved.
 - OCR policy has no implemented OCR engine and requires later method/version review.
+- The 2008 IT Amendment PDF has legacy/garbled extracted glyphs and requires OCR or manual fidelity review before downstream legal use.
 - Cross-reference and legal-structure fidelity have not received expert validation.
 
 The parsers do not implement provision lineage, temporal applicability, materiality, compliance scenarios, modelling, or agents.
-

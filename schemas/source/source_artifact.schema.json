@@ -31,8 +31,9 @@
     "blob_path": { "type": "string", "minLength": 1 },
     "acquisition_method": { "type": "string", "minLength": 1 },
     "response_headers": { "type": "object", "additionalProperties": { "type": "string" } },
-    "notes": { "type": ["string", "null"] }
+    "notes": { "type": ["string", "null"] },
+    "corpus_entry_id": { "type": ["string", "null"] },
+    "parent_reference_url": { "type": ["string", "null"], "format": "uri" }
   },
   "additionalProperties": false
 }
-

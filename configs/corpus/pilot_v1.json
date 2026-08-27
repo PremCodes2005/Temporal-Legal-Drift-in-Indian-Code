@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0.0",
+  "manifest_id": "india-code-temporal-pilot-v1",
+  "status": "bounded_technical_pilot_not_legal_gold",
+  "description": "A bounded India Code pilot for testing acquisition, provenance, PDF extraction, amendment representation readiness, and temporal-complexity capture. Inclusion does not establish legal sufficiency or benchmark coverage.",
+  "entries": [
+    {
+      "entry_id": "it-act-2000-consolidated",
+      "url": "https://www.indiacode.nic.in/indiacode/bitstream/123456789/13116/1/it_act_2000_updated.pdf",
+      "parent_reference_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/13116",
+      "official_identifier": "IndiaCode:123456789/13116",
+      "instrument_type": "consolidated_central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "current consolidated text for an Act with major amendment history"
+    },
+    {
+      "entry_id": "it-amendment-act-2008",
+      "url": "https://www.indiacode.nic.in/indiacode/bitstream/123456789/15386/1/it_amendment_act2008.pdf",
+      "parent_reference_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/15386?view_type=browse",
+      "official_identifier": "IndiaCode:123456789/15386",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "explicit amending instrument for provision-difference and lineage experiments",
+      "known_extraction_risk": "The source PDF contains legacy or garbled glyph encoding in extracted text and requires OCR or manual fidelity review before legal use."
+    },
+    {
+      "entry_id": "consumer-protection-act-2019",
+      "url": "https://www.indiacode.nic.in/indiacode/bitstream/123456789/15256/1/eng201935.pdf",
+      "parent_reference_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/15256?view_type=browse",
+      "official_identifier": "IndiaCode:201935",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "compliance-oriented Act with partial commencement metadata requiring later legal validation"
+    },
+    {
+      "entry_id": "digital-personal-data-protection-act-2023",
+      "url": "https://www.indiacode.nic.in/indiacode/bitstream/123456789/22037/1/a2023-22.pdf",
+      "parent_reference_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/22037?view_type=browse",
+      "official_identifier": "IndiaCode:2023-22",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "compliance-oriented Act with deferred and partial commencement complexity"
+    }
+  ]
+}

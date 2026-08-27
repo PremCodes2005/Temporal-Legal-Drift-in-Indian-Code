@@ -5,7 +5,7 @@
 **Status:** Research specification; TRL 2  
 **Target:** Lab-validated research prototype; TRL 4  
 **Core orientation:** Temporal legal reasoning and compliance-drift evaluation over versioned Indian law  
-**Implementation status:** The Phase 0-2 software foundation now exists: draft research-contract validation, deny-by-default provenance-controlled acquisition, immutable raw storage, parsing/normalization, quarantine, tests, and CI. The Phase 0-2 research/legal/data gates remain open. No approved corpus, benchmark, provision-version graph, applicability resolver, model, evaluation result, or monitoring agent exists.
+**Implementation status:** The Phase 0-2 software foundation now exists: draft research-contract validation, deny-by-default provenance-controlled acquisition, immutable raw storage, parsing/normalization, quarantine, tests, and CI. A four-document India Code technical pilot has been downloaded and normalized locally, but it is not a legally validated corpus or benchmark. The Phase 0-2 research/legal/data gates remain open. No approved corpus, benchmark, provision-version graph, applicability resolver, model, evaluation result, or monitoring agent exists.
 
 This plan defines intended work. It does not report completed implementation, collected data, model performance, legal validation, or experimental results.
 

@@ -42,3 +42,16 @@ def atomic_write_new(path: Path, payload: bytes) -> None:
     finally:
         temporary.unlink(missing_ok=True)
 
+
+def atomic_replace(path: Path, payload: bytes) -> None:
+    """Atomically replace mutable coordination state such as a download checkpoint."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with NamedTemporaryFile(dir=path.parent, prefix=f".{path.name}.", delete=False) as handle:
+        temporary = Path(handle.name)
+        handle.write(payload)
+        handle.flush()
+        os.fsync(handle.fileno())
+    try:
+        os.replace(temporary, path)
+    finally:
+        temporary.unlink(missing_ok=True)

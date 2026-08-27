@@ -9,6 +9,9 @@ from pathlib import Path
 
 from .acquisition import AcquisitionService, RawArtifactStore, SourcePolicy, SourceRequest
 from .acquisition.models import SourceArtifact
+from .corpus import CorpusDownloader, CorpusManifest
+from .corpus.normalize import normalize_corpus
+from .corpus.report import build_corpus_report, write_corpus_report
 from .errors import TemporalLegalDriftError
 from .jsonio import load_json
 from .parsing.service import NormalizationService
@@ -37,6 +40,30 @@ def build_parser() -> argparse.ArgumentParser:
 
     normalize = subparsers.add_parser("normalize")
     normalize.add_argument("--metadata", type=Path, required=True)
+
+    download_corpus = subparsers.add_parser("download-corpus")
+    download_corpus.add_argument(
+        "--manifest", type=Path, default=Path("configs/corpus/pilot_v1.json")
+    )
+    download_corpus.add_argument(
+        "--policy", type=Path, default=Path("configs/source_policy.v1.json")
+    )
+    download_corpus.add_argument("--refresh", action="store_true")
+
+    normalize_corpus_parser = subparsers.add_parser("normalize-corpus")
+    normalize_corpus_parser.add_argument(
+        "--manifest", type=Path, default=Path("configs/corpus/pilot_v1.json")
+    )
+
+    corpus_report = subparsers.add_parser("corpus-report")
+    corpus_report.add_argument(
+        "--manifest", type=Path, default=Path("configs/corpus/pilot_v1.json")
+    )
+    corpus_report.add_argument(
+        "--output",
+        type=Path,
+        default=Path("reports/corpus/india-code-temporal-pilot-v1.lock.json"),
+    )
     return parser
 
 
@@ -81,6 +108,40 @@ def run(args: argparse.Namespace) -> int:
         print(json.dumps(document.to_dict(), indent=2, ensure_ascii=False))
         return 0
 
+    if args.command == "download-corpus":
+        manifest = CorpusManifest.from_file(_resolve(root, args.manifest))
+        policy = SourcePolicy.from_file(_resolve(root, args.policy))
+        store = RawArtifactStore(root / "data" / "raw")
+        summary = CorpusDownloader(
+            AcquisitionService(policy, store),
+            store,
+        ).download(manifest, refresh=args.refresh)
+        print(json.dumps(summary.to_dict(), indent=2, ensure_ascii=False))
+        return 0
+
+    if args.command == "normalize-corpus":
+        manifest = CorpusManifest.from_file(_resolve(root, args.manifest))
+        raw_store = RawArtifactStore(root / "data" / "raw")
+        service = NormalizationService(
+            NormalizedDocumentStore(root / "data" / "normalized"),
+            QuarantineStore(root / "data" / "quarantine"),
+        )
+        summary = normalize_corpus(manifest, raw_store, service)
+        print(json.dumps(summary.to_dict(), indent=2, ensure_ascii=False))
+        return 0
+
+    if args.command == "corpus-report":
+        manifest = CorpusManifest.from_file(_resolve(root, args.manifest))
+        report = build_corpus_report(
+            manifest,
+            RawArtifactStore(root / "data" / "raw"),
+            root / "data" / "normalized",
+        )
+        output = _resolve(root, args.output)
+        write_corpus_report(output, report)
+        print(json.dumps({"output": str(output), **report}, indent=2, ensure_ascii=False))
+        return 0
+
     raise AssertionError(f"Unhandled command: {args.command}")
 
 
@@ -96,4 +157,3 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

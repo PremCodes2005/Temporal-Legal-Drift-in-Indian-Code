@@ -14,6 +14,9 @@ class SourceRequest:
     official_identifier: str
     instrument_type: str
     notes: str | None = None
+    corpus_entry_id: str | None = None
+    parent_reference_url: str | None = None
+    expected_media_type: str | None = None
 
 
 @dataclass(frozen=True)
@@ -31,6 +34,8 @@ class SourceArtifact:
     acquisition_method: str
     response_headers: Mapping[str, str] = field(default_factory=dict)
     notes: str | None = None
+    corpus_entry_id: str | None = None
+    parent_reference_url: str | None = None
     schema_version: str = "1.0.0"
 
     def to_dict(self) -> dict[str, object]:
@@ -56,4 +61,3 @@ def make_source_artifact_id(
         [request.url, request.official_identifier, request.instrument_type, content_hash, retrieved_at]
     ).encode("utf-8")
     return f"src_{sha256(identity).hexdigest()[:24]}"
-
