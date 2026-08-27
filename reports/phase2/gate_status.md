@@ -1,7 +1,8 @@
 # Phase 2 Gate Status
 
-**Software foundation: IMPLEMENTED**  
-**Research/legal/data gate: NOT PASSED**
+**Engineering/automated gate: PASSED**
+
+**Fidelity and qualified legal-review gate: PENDING**
 
 ## Implemented
 
@@ -15,7 +16,7 @@
 - Synthetic unit and integration tests.
 - Normalization of all four pilot PDFs into 120 page-level blocks with source hashes and parser provenance.
 
-## Gate blockers
+## Human-review and fidelity blockers
 
 - The Phase 1 pilot corpus is available locally but is not legally approved.
 - No hand-checked fixtures derived from authoritative Indian legal sources exist.

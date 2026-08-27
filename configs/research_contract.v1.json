@@ -55,7 +55,7 @@
     "implementation_phase": 12
   },
   "novelty_audit": {
-    "status": "pending_primary_source_verification",
+    "status": "initial_primary_source_audit_complete_refresh_required_before_paper",
     "required_comparators": [
       "RegTrack",
       "closest legal change and materiality benchmarks",
@@ -70,7 +70,6 @@
     "phase": 0,
     "passed": false,
     "blockers": [
-      "novelty audit not verified",
       "corpus scope not frozen",
       "minimum and desired benchmark targets not set",
       "materiality dimension count not formally approved",
@@ -79,4 +78,3 @@
     ]
   }
 }
-

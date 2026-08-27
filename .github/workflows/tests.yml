@@ -22,6 +22,7 @@ jobs:
         run: python -m pip install --no-deps -e .
       - name: Validate research contract
         run: tldrift validate-contract
+      - name: Check Phase 0-2 engineering gates
+        run: tldrift check-gates
       - name: Run Phase 0-2 tests
         run: python -m unittest discover -s tests -v
-

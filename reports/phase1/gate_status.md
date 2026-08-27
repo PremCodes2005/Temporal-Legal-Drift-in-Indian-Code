@@ -1,7 +1,8 @@
 # Phase 1 Gate Status
 
-**Software foundation: IMPLEMENTED**  
-**Research/legal gate: NOT PASSED**
+**Engineering/automated gate: PASSED**
+
+**Qualified legal-review gate: PENDING**
 
 ## Implemented
 
@@ -16,7 +17,7 @@
 - A resumable, manifest-driven four-document India Code technical pilot.
 - Four locally downloaded PDFs reconciled by SHA-256 in the corpus lock report.
 
-## Gate blockers
+## Human-review blockers
 
 - `www.indiacode.nic.in` is approved by the user for this bounded technical pilot, but not yet accepted as legally sufficient by a qualified reviewer.
 - Corpus domains, instruments, date range, and central/state scope are not frozen.

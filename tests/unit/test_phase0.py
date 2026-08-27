@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 class ResearchContractTests(unittest.TestCase):
-    def test_repository_contract_is_structurally_valid_but_gate_is_open(self) -> None:
+    def test_repository_contract_is_valid_but_human_review_gate_is_open(self) -> None:
         result = validate_contract_file(ROOT / "configs" / "research_contract.v1.json")
         self.assertTrue(result.structurally_valid, result.errors)
         self.assertFalse(result.gate_passed)
@@ -37,4 +37,3 @@ class ResearchContractTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

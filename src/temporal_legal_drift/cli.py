@@ -13,6 +13,7 @@ from .corpus import CorpusDownloader, CorpusManifest
 from .corpus.normalize import normalize_corpus
 from .corpus.report import build_corpus_report, write_corpus_report
 from .errors import TemporalLegalDriftError
+from .gates import check_engineering_gates
 from .jsonio import load_json
 from .parsing.service import NormalizationService
 from .parsing.store import NormalizedDocumentStore, QuarantineStore
@@ -64,6 +65,8 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         default=Path("reports/corpus/india-code-temporal-pilot-v1.lock.json"),
     )
+
+    subparsers.add_parser("check-gates")
     return parser
 
 
@@ -79,9 +82,10 @@ def run(args: argparse.Namespace) -> int:
             json.dumps(
                 {
                     "structurally_valid": result.structurally_valid,
-                    "gate_passed": result.gate_passed,
+                    "engineering_check_passed": result.structurally_valid,
+                    "research_legal_gate_passed": result.gate_passed,
                     "errors": list(result.errors),
-                    "blockers": list(result.blockers),
+                    "human_review_blockers": list(result.blockers),
                 },
                 indent=2,
             )
@@ -141,6 +145,24 @@ def run(args: argparse.Namespace) -> int:
         write_corpus_report(output, report)
         print(json.dumps({"output": str(output), **report}, indent=2, ensure_ascii=False))
         return 0
+
+    if args.command == "check-gates":
+        results = check_engineering_gates(root)
+        passed = all(result.engineering_passed for result in results)
+        print(
+            json.dumps(
+                {
+                    "engineering_gates_passed": passed,
+                    "qualified_review_complete": all(
+                        result.review_status == "approved" for result in results
+                    ),
+                    "phases": [result.to_dict() for result in results],
+                },
+                indent=2,
+                ensure_ascii=False,
+            )
+        )
+        return 0 if passed else 2
 
     raise AssertionError(f"Unhandled command: {args.command}")
 

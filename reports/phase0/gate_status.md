@@ -1,8 +1,10 @@
 # Phase 0 Gate Status
 
-**Status: NOT PASSED**
+**Engineering/automated gate: PASSED**
 
-The repository now contains a machine-readable draft research contract and registries, but Phase 0 requires research-lead and qualified legal-review approval before benchmark construction.
+**Research-lead and qualified legal-review gate: PENDING**
+
+The executable Phase 0 checks pass: the research contract is structurally valid, required registries exist, and an initial primary-source novelty audit is recorded. Human approval remains a separate gate before benchmark construction.
 
 ## Implemented foundation
 
@@ -14,9 +16,9 @@ The repository now contains a machine-readable draft research contract and regis
 - Optional agent excluded from core completion.
 - Contract validation available through the CLI.
 
-## Blocking decisions
+## Human-review decisions still required
 
-- Verify RegTrack and the closest work from primary sources.
+- Refresh and extend the initial novelty audit before paper submission.
 - Freeze corpus domains, instrument types, date range, and central/state scope.
 - Set justified minimum and desired benchmark sizes and coverage targets.
 - Formally approve whether there are ten materiality dimensions and keep compliance consequence separate.
@@ -25,4 +27,3 @@ The repository now contains a machine-readable draft research contract and regis
 - Record research-lead and qualified legal-review approval.
 
 No dataset, result, or completed legal validation is claimed.
-
