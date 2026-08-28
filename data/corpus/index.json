@@ -1,0 +1,150 @@
+{
+  "entries": [
+    {
+      "byte_length": 832355,
+      "entry_id": "it-act-2000-consolidated",
+      "filename": "it-act-2000-consolidated.pdf",
+      "official_identifier": "IndiaCode:123456789/13116",
+      "parent_reference_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/13116",
+      "sha256": "e71725fa32e892f887308816046c42275fc855b5cbb4ee1063cdbd518f165140",
+      "source_artifact_id": "src_ac34e30e3da4e32b49b5b274",
+      "source_url": "https://www.indiacode.nic.in/indiacode/bitstream/123456789/13116/1/it_act_2000_updated.pdf"
+    },
+    {
+      "byte_length": 3172599,
+      "entry_id": "it-amendment-act-2008",
+      "filename": "it-amendment-act-2008.pdf",
+      "official_identifier": "IndiaCode:123456789/15386",
+      "parent_reference_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/15386?view_type=browse",
+      "sha256": "f623743ebe88795caa83e8506319e53963005512f43c451fb61698e65fb4293d",
+      "source_artifact_id": "src_fabeae7d026d8fec9e806c10",
+      "source_url": "https://www.indiacode.nic.in/indiacode/bitstream/123456789/15386/1/it_amendment_act2008.pdf"
+    },
+    {
+      "byte_length": 450383,
+      "entry_id": "consumer-protection-act-2019",
+      "filename": "consumer-protection-act-2019.pdf",
+      "official_identifier": "IndiaCode:201935",
+      "parent_reference_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/15256?view_type=browse",
+      "sha256": "414fb1edd9b0f7fbc2839ad92fb2b29ebfa3b557e70e928ab4a535802199e3e7",
+      "source_artifact_id": "src_fad6829bc076ea4dea6185cb",
+      "source_url": "https://www.indiacode.nic.in/indiacode/bitstream/123456789/15256/1/eng201935.pdf"
+    },
+    {
+      "byte_length": 382467,
+      "entry_id": "digital-personal-data-protection-act-2023",
+      "filename": "digital-personal-data-protection-act-2023.pdf",
+      "official_identifier": "IndiaCode:2023-22",
+      "parent_reference_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/22037?view_type=browse",
+      "sha256": "d8d9a3dda426b315a034ac84f4162020bb73520349bd49442d028ce8aef725db",
+      "source_artifact_id": "src_65d297767054fc7af07b33c5",
+      "source_url": "https://www.indiacode.nic.in/indiacode/bitstream/123456789/22037/1/a2023-22.pdf"
+    },
+    {
+      "byte_length": 3281971,
+      "entry_id": "companies-act-2013",
+      "filename": "companies-act-2013.pdf",
+      "official_identifier": "IndiaCode:2013-18",
+      "parent_reference_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/2114?view_type=browse",
+      "sha256": "d6e286d2a3feec89a7d432a5a572e91af9f0135411b03e57f72b7a8ef72139af",
+      "source_artifact_id": "src_16b1c0f2d1da3c6bf098efa1",
+      "source_url": "https://www.indiacode.nic.in/indiacode/bitstream/123456789/2114/5/A2013-18.pdf"
+    },
+    {
+      "byte_length": 355456,
+      "entry_id": "right-to-information-act-2005",
+      "filename": "right-to-information-act-2005.pdf",
+      "official_identifier": "IndiaCode:2005-22",
+      "parent_reference_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/2065?view_type=browse",
+      "sha256": "8956eaba5db4079674bc16e50c14b210e8872c28e8a18f458f01a8fbcdde1479",
+      "source_artifact_id": "src_0b834c21b1fc9d702a6ace88",
+      "source_url": "https://www.indiacode.nic.in/indiacode/bitstream/123456789/2065/1/aa2005.pdf"
+    },
+    {
+      "byte_length": 560458,
+      "entry_id": "aadhaar-act-2016",
+      "filename": "aadhaar-act-2016.pdf",
+      "official_identifier": "IndiaCode:2016-18",
+      "parent_reference_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/21418?view_type=browse",
+      "sha256": "75b5627b0c47ca885365ff82379063f33de3fb4bcc6ce657c569e654f35454d4",
+      "source_artifact_id": "src_203c20c1dc80222dfa5989d6",
+      "source_url": "https://www.indiacode.nic.in/indiacode/bitstream/123456789/21418/1/aadhaar_act_2016_as_amended.pdf"
+    },
+    {
+      "byte_length": 523245,
+      "entry_id": "competition-act-2002",
+      "filename": "competition-act-2002.pdf",
+      "official_identifier": "IndiaCode:2003-12",
+      "parent_reference_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/2010?view_type=browse",
+      "sha256": "374897436b4edb2cef9ad2bb3f1b62ff667011260a514daf0dc152552f2d8f16",
+      "source_artifact_id": "src_fbad489dab1ecb0196aeab56",
+      "source_url": "https://www.indiacode.nic.in/indiacode/bitstream/123456789/2010/7/A2003-12.pdf"
+    },
+    {
+      "byte_length": 504120,
+      "entry_id": "prevention-money-laundering-act-2002",
+      "filename": "prevention-money-laundering-act-2002.pdf",
+      "official_identifier": "IndiaCode:2003-15",
+      "parent_reference_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/2036?view_type=browse",
+      "sha256": "d3699f0228f7b9cdf8311f9e8998032fb15e6570070b99a578eca3cb8fcd6413",
+      "source_artifact_id": "src_46d569613dcd41d75a36f35f",
+      "source_url": "https://www.indiacode.nic.in/indiacode/bitstream/123456789/2036/5/A2003-15.pdf"
+    },
+    {
+      "byte_length": 1324694,
+      "entry_id": "insolvency-bankruptcy-code-2016",
+      "filename": "insolvency-bankruptcy-code-2016.pdf",
+      "official_identifier": "IndiaCode:2016-31",
+      "parent_reference_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/2154?view_type=browse",
+      "sha256": "d13ef44426184e496133029f601b63412dea188bc36a23f90b0b719c16c5f000",
+      "source_artifact_id": "src_11904b65043477e7e664fe54",
+      "source_url": "https://www.indiacode.nic.in/indiacode/bitstream/123456789/2154/1/A201631.pdf"
+    },
+    {
+      "byte_length": 1270266,
+      "entry_id": "central-goods-services-tax-act-2017",
+      "filename": "central-goods-services-tax-act-2017.pdf",
+      "official_identifier": "IndiaCode:2017-12",
+      "parent_reference_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/15689?view_type=browse",
+      "sha256": "c4dbd51f0355360e63d8a25560547f9e7e00b3af349d8666265ab60b4610cf24",
+      "source_artifact_id": "src_22f0427bf5880437962e0789",
+      "source_url": "https://www.indiacode.nic.in/indiacode/bitstream/123456789/15689/1/A2017-12.pdf"
+    },
+    {
+      "byte_length": 344445,
+      "entry_id": "environment-protection-act-1986",
+      "filename": "environment-protection-act-1986.pdf",
+      "official_identifier": "IndiaCode:1986-29",
+      "parent_reference_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/5334?view_type=browse",
+      "sha256": "e28388b68b88c54fc5f83416f6baab9a08155ef79d4a5f2639c6c010f16fe9e0",
+      "source_artifact_id": "src_115fa498d89ab855ec1ba484",
+      "source_url": "https://www.indiacode.nic.in/indiacode/bitstream/123456789/5334/1/environment_protection_act_1986.pdf"
+    },
+    {
+      "byte_length": 506705,
+      "entry_id": "factories-act-1948",
+      "filename": "factories-act-1948.pdf",
+      "official_identifier": "IndiaCode:1948-63",
+      "parent_reference_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/22105?view_type=browse",
+      "sha256": "0253953018f06d1444fa67bad11ea44cc83e47df372aec216ca477f61ecceced",
+      "source_artifact_id": "src_f2a585e6346c8e20924ac947",
+      "source_url": "https://www.indiacode.nic.in/indiacode/bitstream/123456789/22105/1/the_factories_act%2C_1948.pdf"
+    },
+    {
+      "byte_length": 593425,
+      "entry_id": "copyright-act-1957",
+      "filename": "copyright-act-1957.pdf",
+      "official_identifier": "IndiaCode:1957-14",
+      "parent_reference_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/1367?view_type=browse",
+      "sha256": "da4144b68419cf81bbf10979183ed1cf3fbe3795188995d1efc85fd7d65713bd",
+      "source_artifact_id": "src_47d7eccb277840092b6bdda8",
+      "source_url": "https://www.indiacode.nic.in/indiacode/bitstream/123456789/1367/1/A195714.pdf"
+    }
+  ],
+  "manifest_id": "india-code-temporal-pilot-v1",
+  "manifest_status": "bounded_technical_pilot_not_legal_gold",
+  "notice": "Readable local copies of verified raw evidence; this index does not imply legal validation or benchmark-gold status.",
+  "schema_version": "1.0.0",
+  "total_bytes": 14102589,
+  "total_documents": 14
+}

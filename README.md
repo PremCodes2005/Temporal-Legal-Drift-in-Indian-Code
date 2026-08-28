@@ -43,7 +43,7 @@ tldrift check-gates
 
 Acquisition is deny-by-default. The user-approved bounded pilot permits only `www.indiacode.nic.in`; every other host remains blocked. `download-corpus` is resumable through an integrity-checked checkpoint. The pilot manifest is not legal gold and does not establish sufficient benchmark coverage.
 
-Raw and normalized corpus artifacts are local runtime data and are ignored by version control. `materialize-corpus` creates integrity-checked copies with readable filenames under `data/corpus/pdfs` while leaving immutable raw evidence unchanged. `corpus-report` writes a deterministic lock report containing the authoritative URLs, identifiers, SHA-256 hashes, sizes, parser provenance, and known extraction risks.
+Raw and normalized processing artifacts are local runtime data and are ignored by version control. `materialize-corpus` creates integrity-checked, Git-trackable copies with readable filenames under `data/corpus/pdfs` while leaving immutable raw evidence unchanged. `corpus-report` writes a deterministic lock report containing the authoritative URLs, identifiers, SHA-256 hashes, sizes, parser provenance, and known extraction risks.
 
 `check-gates` is the executable Phase 0–4 engineering acceptance check used by CI. It reports qualified research/legal review separately; passing software checks never fabricates human approval.
 
