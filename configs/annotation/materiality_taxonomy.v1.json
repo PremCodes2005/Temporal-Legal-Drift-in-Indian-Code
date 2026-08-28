@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0.0",
+  "guideline_version": "1.0.0-draft",
+  "status": "complete_draft_not_frozen_pending_annotation_study",
+  "role": "intermediate_component",
+  "compliance_consequence_is_separate": true,
+  "levels": [
+    {
+      "label": "High",
+      "definition": "A change that alters a fundamental legal duty, prohibition, right, protected scope, liability exposure, core exception, or sanction in a way likely to require substantial legal or compliance reassessment.",
+      "inclusion": ["creates or removes a core duty or prohibition", "materially expands or narrows regulated scope", "materially changes liability, sanctions, or a controlling exception"],
+      "exclusion": ["pure formatting", "non-operative wording cleanup", "scenario-specific outcome change without amendment-level significance"],
+      "positive_patterns": ["a previously permitted class becomes prohibited", "a controlling exemption is removed"],
+      "negative_patterns": ["punctuation changes without operative effect", "renumbering with preserved cross-references"]
+    },
+    {
+      "label": "Medium",
+      "definition": "A change that modifies an operative procedure, reporting duty, deadline, threshold, evidentiary requirement, or implementation mechanism without clearly transforming the law's fundamental allocation of rights or duties.",
+      "inclusion": ["changes an operative filing or reporting process", "changes a deadline or threshold with practical compliance effect", "changes procedural conditions for satisfying an existing duty"],
+      "exclusion": ["fundamental duty or liability changes classified High", "textual clarification with no demonstrated operative effect"],
+      "positive_patterns": ["an existing filing deadline is changed", "the required method of submitting an existing report changes"],
+      "negative_patterns": ["a heading changes while the operative rule remains identical", "a citation is corrected without changing the referenced rule"]
+    },
+    {
+      "label": "Low",
+      "definition": "A legally relevant but limited clarification, terminology update, cross-reference repair, or narrow procedural refinement expected to have minor compliance significance.",
+      "inclusion": ["clarifies existing wording without changing the core rule", "repairs a reference while preserving its legal target", "makes a narrow administrative refinement"],
+      "exclusion": ["no legally relevant change", "changes with material scope, duty, threshold, liability, or deadline effects"],
+      "positive_patterns": ["an ambiguous term is clarified without changing covered conduct", "a cross-reference is repaired to point to the intended provision"],
+      "negative_patterns": ["a new sanction is introduced", "only typography changes"]
+    },
+    {
+      "label": "None",
+      "definition": "A textual or presentation change for which the evidence supports no legal or compliance significance.",
+      "inclusion": ["formatting, punctuation, spelling, or layout only", "non-operative editorial correction", "mechanical renumbering with complete preservation of legal references"],
+      "exclusion": ["any supported change to legal meaning, scope, operation, procedure, or effect"],
+      "positive_patterns": ["whitespace and typography only", "a misspelling is corrected without changing meaning"],
+      "negative_patterns": ["a defined term changes", "an operative date changes"]
+    }
+  ],
+  "dimensions": ["obligation", "right", "prohibition", "scope", "definition", "threshold", "time", "liability", "procedure", "exemption"],
+  "dimension_count_status": "ten_dimension_technical_draft_not_phase0_approved",
+  "boundary_rules": [
+    "Rate amendment-level legal significance independently of any one scenario outcome.",
+    "If evidence is insufficient to distinguish adjacent levels, mark the workflow record unresolved rather than forcing a label.",
+    "Where multiple dimensions are affected, assign the level supported by the most legally significant evidenced effect and record every supported dimension.",
+    "Do not infer temporal applicability or compliance consequence from materiality."
+  ],
+  "adjudication_rules": [
+    "Preserve both individual annotations before adjudication.",
+    "Require cited before and after evidence for every resolved label.",
+    "Record the reason for disagreement and the adjudicator's evidence-based resolution.",
+    "Re-annotate affected records after a substantive guideline change."
+  ],
+  "disallowed_legacy_labels": ["cosmetic", "substantive", "contested"]
+}

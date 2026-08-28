@@ -1,4 +1,4 @@
-"""Command-line entry point for the Phase 0-4 foundation."""
+"""Command-line entry point for the Phase 0-7 research foundation."""
 
 from __future__ import annotations
 
@@ -16,15 +16,18 @@ from .applicability.cross_validation import (
     validate_cross_source_consistency,
     write_cross_validation_and_lock,
 )
+from .benchmark import build_technical_release, write_technical_release_and_lock
 from .corpus import CorpusDownloader, CorpusManifest, materialize_corpus
 from .corpus.normalize import normalize_corpus
 from .corpus.report import build_corpus_report, write_corpus_report
 from .errors import TemporalLegalDriftError
 from .gates import check_engineering_gates
 from .jsonio import load_json
+from .materiality import build_annotation_workload, write_annotation_workload_and_lock
 from .parsing.service import NormalizationService
 from .parsing.store import NormalizedDocumentStore, QuarantineStore
 from .phase0 import validate_contract_file
+from .scenarios import build_scenario_scaffolds, write_scenarios_and_lock
 from .versioning import VersionGraph, VersionGraphBuilder
 from .versioning.builder import write_graph_and_lock
 
@@ -150,6 +153,71 @@ def build_parser() -> argparse.ArgumentParser:
         "--lock",
         type=Path,
         default=Path("reports/phase4/cross_version_validation.lock.json"),
+    )
+
+    phase5 = subparsers.add_parser("build-annotation-workload")
+    phase5.add_argument(
+        "--graph", type=Path, default=Path("data/interim/version_graph.v1.json")
+    )
+    phase5.add_argument(
+        "--cross-validation",
+        type=Path,
+        default=Path("data/interim/cross_version_validation.v1.json"),
+    )
+    phase5.add_argument(
+        "--taxonomy",
+        type=Path,
+        default=Path("configs/annotation/materiality_taxonomy.v1.json"),
+    )
+    phase5.add_argument("--pilot-size", type=int, default=50)
+    phase5.add_argument(
+        "--output", type=Path, default=Path("data/annotations/phase5_workload.v1.json")
+    )
+    phase5.add_argument(
+        "--lock", type=Path, default=Path("reports/phase5/annotation_workload.lock.json")
+    )
+
+    phase6 = subparsers.add_parser("build-scenario-scaffolds")
+    phase6.add_argument(
+        "--workload", type=Path, default=Path("data/annotations/phase5_workload.v1.json")
+    )
+    phase6.add_argument(
+        "--cross-validation",
+        type=Path,
+        default=Path("data/interim/cross_version_validation.v1.json"),
+    )
+    phase6.add_argument(
+        "--coverage",
+        type=Path,
+        default=Path("configs/scenarios/coverage_requirements.v1.json"),
+    )
+    phase6.add_argument(
+        "--output", type=Path, default=Path("data/scenarios/phase6_scaffolds.v1.json")
+    )
+    phase6.add_argument(
+        "--lock", type=Path, default=Path("reports/phase6/scenario_scaffolds.lock.json")
+    )
+
+    phase7 = subparsers.add_parser("build-technical-release")
+    phase7.add_argument(
+        "--workload", type=Path, default=Path("data/annotations/phase5_workload.v1.json")
+    )
+    phase7.add_argument(
+        "--scenarios", type=Path, default=Path("data/scenarios/phase6_scaffolds.v1.json")
+    )
+    phase7.add_argument(
+        "--graph", type=Path, default=Path("data/interim/version_graph.v1.json")
+    )
+    phase7.add_argument(
+        "--config", type=Path, default=Path("configs/benchmark/release.v1.json")
+    )
+    phase7.add_argument(
+        "--output",
+        type=Path,
+        default=Path("data/releases/tech-preview-v0.1.0/manifest.json"),
+    )
+    phase7.add_argument(
+        "--lock", type=Path, default=Path("reports/phase7/release.lock.json")
     )
     return parser
 
@@ -325,6 +393,44 @@ def run(args: argparse.Namespace) -> int:
             validation,
             _resolve(root, args.output),
             _resolve(root, args.lock),
+        )
+        print(json.dumps(lock, indent=2, ensure_ascii=False))
+        return 0
+
+    if args.command == "build-annotation-workload":
+        workload = build_annotation_workload(
+            VersionGraph.from_dict(load_json(_resolve(root, args.graph))),
+            load_json(_resolve(root, args.cross_validation)),
+            load_json(_resolve(root, args.taxonomy)),
+            pilot_size=args.pilot_size,
+        )
+        lock = write_annotation_workload_and_lock(
+            workload, _resolve(root, args.output), _resolve(root, args.lock)
+        )
+        print(json.dumps(lock, indent=2, ensure_ascii=False))
+        return 0
+
+    if args.command == "build-scenario-scaffolds":
+        scenarios = build_scenario_scaffolds(
+            load_json(_resolve(root, args.workload)),
+            load_json(_resolve(root, args.cross_validation)),
+            load_json(_resolve(root, args.coverage)),
+        )
+        lock = write_scenarios_and_lock(
+            scenarios, _resolve(root, args.output), _resolve(root, args.lock)
+        )
+        print(json.dumps(lock, indent=2, ensure_ascii=False))
+        return 0
+
+    if args.command == "build-technical-release":
+        release = build_technical_release(
+            load_json(_resolve(root, args.workload)),
+            load_json(_resolve(root, args.scenarios)),
+            VersionGraph.from_dict(load_json(_resolve(root, args.graph))),
+            load_json(_resolve(root, args.config)),
+        )
+        lock = write_technical_release_and_lock(
+            release, _resolve(root, args.output), _resolve(root, args.lock)
         )
         print(json.dumps(lock, indent=2, ensure_ascii=False))
         return 0

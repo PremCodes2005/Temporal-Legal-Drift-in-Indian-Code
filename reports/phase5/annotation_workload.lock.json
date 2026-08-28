@@ -1,0 +1,19 @@
+{
+  "all_materiality_labels_unassigned": true,
+  "all_tasks_evidence_linked": true,
+  "complete_before_after_pair_count": 0,
+  "compliance_consequence_separate": true,
+  "double_annotated_pair_count": 0,
+  "input_fingerprints": {
+    "cross_validation_sha256": "cd64f02f38dd9b53d0502ee7f4fd4710d97b1c8c1cf1031adde1db9445bda7eb",
+    "taxonomy_sha256": "9481a7d9b29637828ca17e9e5bc7a462585f0ef66499a22543cf581b11596c41",
+    "version_graph_sha256": "364bf11a3334f1b426281c5596f975bf70cd2ae4054f3cee09cf9b5b1bcf27d0"
+  },
+  "research_gate_passed": false,
+  "schema_version": "1.0.0",
+  "status": "annotation_workload_not_gold",
+  "task_count": 50,
+  "taxonomy_frozen": false,
+  "unique_pair_count": 50,
+  "workload_sha256": "c8cbd269a27f80cb022b721740dd2cf72c334a91806c6b77b8d80567ace81b9b"
+}

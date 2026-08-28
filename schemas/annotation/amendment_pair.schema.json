@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/temporal-legal-drift/amendment-pair.schema.json",
+  "title": "Phase 5 amendment annotation task",
+  "type": "object",
+  "required": [
+    "pair_id", "amendment_event_id", "target_lineage_id", "operation",
+    "before_version_id", "after_version_id", "before_text", "after_text",
+    "amendment_instruction_text", "reconstruction_status", "evidence",
+    "materiality", "compliance_consequence", "annotations",
+    "required_independent_annotations", "guideline_version"
+  ],
+  "properties": {
+    "pair_id": {"type": "string"},
+    "amendment_event_id": {"type": "string"},
+    "target_lineage_id": {"type": ["string", "null"]},
+    "operation": {"type": "string"},
+    "before_version_id": {"type": ["string", "null"]},
+    "after_version_id": {"type": ["string", "null"]},
+    "before_text": {"type": ["string", "null"]},
+    "after_text": {"type": ["string", "null"]},
+    "amendment_instruction_text": {"type": "string"},
+    "reconstruction_status": {"enum": ["complete", "missing_historical_before_version", "unresolved_target"]},
+    "evidence": {"type": "object"},
+    "materiality": {
+      "type": "object",
+      "required": ["label", "dimensions", "status"],
+      "properties": {
+        "label": {"enum": ["High", "Medium", "Low", "None", null]},
+        "dimensions": {"type": "array", "items": {"type": "string"}},
+        "status": {"const": "unannotated"}
+      }
+    },
+    "compliance_consequence": {"type": "null"},
+    "annotations": {"type": "array"},
+    "required_independent_annotations": {"const": 2},
+    "guideline_version": {"type": "string"}
+  },
+  "additionalProperties": false
+}

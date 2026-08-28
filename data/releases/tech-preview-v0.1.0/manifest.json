@@ -1,0 +1,252 @@
+{
+  "benchmark_frozen": false,
+  "input_checksums": {
+    "annotation_workload_sha256": "c8cbd269a27f80cb022b721740dd2cf72c334a91806c6b77b8d80567ace81b9b",
+    "release_config_sha256": "204cb585e1d3a9ddc828a9e08511a57fabb2613de9ee99b0d98e8756407411a5",
+    "scenario_scaffolds_sha256": "926d99932f3a87f2b91b926bc087460d3b1ebfaa3fc4a6a06ec76a5335ba4bcf",
+    "version_graph_sha256": "364bf11a3334f1b426281c5596f975bf70cd2ae4054f3cee09cf9b5b1bcf27d0"
+  },
+  "leakage_audit": {
+    "exact_duplicate_group_count": 7,
+    "feasible_claimed_splits_have_no_group_leakage": true,
+    "near_duplicate_pair_count": 0,
+    "near_duplicate_pairs": [],
+    "same_source_artifact_across_records": 2
+  },
+  "limitations": [
+    "Materiality labels are unassigned and the annotation taxonomy is not frozen.",
+    "No historical before versions are reconstructed for the Phase 5 workload.",
+    "Scenario facts, legal questions, expected answers, consequences and change labels are not authored.",
+    "Act-held-out, temporal-holdout and domain-held-out evaluation are infeasible in this pilot.",
+    "Independent legal validation was not performed because no qualified reviewer is available.",
+    "This artifact is a technical dry run and must not be used for model-performance claims."
+  ],
+  "object_counts": {
+    "annotation_tasks": 50,
+    "complete_amendment_pairs": 0,
+    "gold_compliance_scenarios": 0,
+    "gold_materiality_labels": 0,
+    "scenario_scaffolds": 13
+  },
+  "release_id": "tech-preview-v0.1.0",
+  "schema_version": "1.0.0",
+  "split_strategies": [
+    {
+      "assignments": {
+        "test": [
+          "pair_15651fe59b37869adf988286",
+          "pair_53a7fb984d56e1dbb9bfe6bd",
+          "pair_8b8fa88615d3b2649ce5a976",
+          "pair_a86fe80cba720c6f120bfbf7",
+          "pair_b18b5e81c0e01ec4a2dba1b4",
+          "pair_d543c367de5d88a164f3261f"
+        ],
+        "train": [
+          "pair_1524142d113396313bf501ab",
+          "pair_16ac9c20df18b3437edf24ab",
+          "pair_208717a68116ca2157c46a91",
+          "pair_2b2539674e13d282bfceca85",
+          "pair_2c7ac07d92765ef75f6f5101",
+          "pair_2e85492ad94a2ea68f2ff056",
+          "pair_34244d2ac9a5f98bf0f3b3bc",
+          "pair_41114e3770a437ee15eec5e4",
+          "pair_4c83d4070a393b1c78596f03",
+          "pair_516112d68b1c4e150c600d27",
+          "pair_526d17fa3e9d0ca6c6357e28",
+          "pair_54fa7db6aaa811c5473c5662",
+          "pair_65a84f9f09440bbd55fe616e",
+          "pair_693025741e6e725bb4c2fe66",
+          "pair_7577d313b43ae9fdf32ea03d",
+          "pair_8156bd9d923dc55c34609ccc",
+          "pair_9481c09e4d55eed2f452a4c4",
+          "pair_96c772e3850b7c2866748802",
+          "pair_9708417fe8436817bf2f9be4",
+          "pair_97ecf461c281764fea8ba8a8",
+          "pair_a176d5c8271272a6a9de30ac",
+          "pair_a89132ade3c19c57dc117dcc",
+          "pair_b1258e4f5cd6609d8dfc55d9",
+          "pair_b3e5a0f2c761d22982326857",
+          "pair_bbd956d2f17c49351fb80d5c",
+          "pair_becabf6b1ffd44e0818ccdb4",
+          "pair_c034f8c46be3c02b04fdecdf",
+          "pair_d6a5cd3942108d915b1478a2",
+          "pair_d72ad7774b521ab04a88ebee",
+          "pair_e0b7ffcbcfacaa904a0e0548",
+          "pair_e42f401ab4f901a99efd4f26",
+          "pair_e96b3d25f4e103ad375d8191",
+          "pair_f0e2db6aadfc856aec332bf8",
+          "pair_f2a13cebc839f5396fb03163"
+        ],
+        "validation": [
+          "pair_1b298cc20aae3de6af55f800",
+          "pair_2723036b35a4463039742860",
+          "pair_43277bb9236081ae2ce1921d",
+          "pair_5b675702b4e650e1b4541a33",
+          "pair_5b820055e785fd63e0ec80ac",
+          "pair_5e12622b92b694172c6e301e",
+          "pair_7858a499a0c7296189d1c207",
+          "pair_96cc0e894a99b16d7e62e26d",
+          "pair_bd2139bf814ba07d5156db7f",
+          "pair_fca228a9c3836dc66165c5be"
+        ]
+      },
+      "feasible": true,
+      "group_leakage_count": 0,
+      "name": "random",
+      "reason": null
+    },
+    {
+      "assignments": {
+        "test": [
+          "pair_15651fe59b37869adf988286",
+          "pair_53a7fb984d56e1dbb9bfe6bd",
+          "pair_8b8fa88615d3b2649ce5a976",
+          "pair_a86fe80cba720c6f120bfbf7",
+          "pair_b18b5e81c0e01ec4a2dba1b4",
+          "pair_d543c367de5d88a164f3261f"
+        ],
+        "train": [
+          "pair_1524142d113396313bf501ab",
+          "pair_16ac9c20df18b3437edf24ab",
+          "pair_208717a68116ca2157c46a91",
+          "pair_2b2539674e13d282bfceca85",
+          "pair_2c7ac07d92765ef75f6f5101",
+          "pair_2e85492ad94a2ea68f2ff056",
+          "pair_34244d2ac9a5f98bf0f3b3bc",
+          "pair_41114e3770a437ee15eec5e4",
+          "pair_4c83d4070a393b1c78596f03",
+          "pair_516112d68b1c4e150c600d27",
+          "pair_526d17fa3e9d0ca6c6357e28",
+          "pair_54fa7db6aaa811c5473c5662",
+          "pair_65a84f9f09440bbd55fe616e",
+          "pair_693025741e6e725bb4c2fe66",
+          "pair_7577d313b43ae9fdf32ea03d",
+          "pair_8156bd9d923dc55c34609ccc",
+          "pair_9481c09e4d55eed2f452a4c4",
+          "pair_96c772e3850b7c2866748802",
+          "pair_9708417fe8436817bf2f9be4",
+          "pair_97ecf461c281764fea8ba8a8",
+          "pair_a176d5c8271272a6a9de30ac",
+          "pair_a89132ade3c19c57dc117dcc",
+          "pair_b1258e4f5cd6609d8dfc55d9",
+          "pair_b3e5a0f2c761d22982326857",
+          "pair_bbd956d2f17c49351fb80d5c",
+          "pair_becabf6b1ffd44e0818ccdb4",
+          "pair_c034f8c46be3c02b04fdecdf",
+          "pair_d6a5cd3942108d915b1478a2",
+          "pair_d72ad7774b521ab04a88ebee",
+          "pair_e0b7ffcbcfacaa904a0e0548",
+          "pair_e42f401ab4f901a99efd4f26",
+          "pair_e96b3d25f4e103ad375d8191",
+          "pair_f0e2db6aadfc856aec332bf8",
+          "pair_f2a13cebc839f5396fb03163"
+        ],
+        "validation": [
+          "pair_1b298cc20aae3de6af55f800",
+          "pair_2723036b35a4463039742860",
+          "pair_43277bb9236081ae2ce1921d",
+          "pair_5b675702b4e650e1b4541a33",
+          "pair_5b820055e785fd63e0ec80ac",
+          "pair_5e12622b92b694172c6e301e",
+          "pair_7858a499a0c7296189d1c207",
+          "pair_96cc0e894a99b16d7e62e26d",
+          "pair_bd2139bf814ba07d5156db7f",
+          "pair_fca228a9c3836dc66165c5be"
+        ]
+      },
+      "feasible": true,
+      "group_leakage_count": 0,
+      "name": "amendment_event_held_out",
+      "reason": null
+    },
+    {
+      "assignments": {
+        "test": [
+          "pair_16ac9c20df18b3437edf24ab",
+          "pair_2c7ac07d92765ef75f6f5101",
+          "pair_4c83d4070a393b1c78596f03",
+          "pair_8b8fa88615d3b2649ce5a976",
+          "pair_96cc0e894a99b16d7e62e26d",
+          "pair_a86fe80cba720c6f120bfbf7",
+          "pair_b3e5a0f2c761d22982326857",
+          "pair_bbd956d2f17c49351fb80d5c",
+          "pair_becabf6b1ffd44e0818ccdb4",
+          "pair_e42f401ab4f901a99efd4f26"
+        ],
+        "train": [
+          "pair_15651fe59b37869adf988286",
+          "pair_208717a68116ca2157c46a91",
+          "pair_41114e3770a437ee15eec5e4",
+          "pair_516112d68b1c4e150c600d27",
+          "pair_526d17fa3e9d0ca6c6357e28",
+          "pair_53a7fb984d56e1dbb9bfe6bd",
+          "pair_65a84f9f09440bbd55fe616e",
+          "pair_7577d313b43ae9fdf32ea03d",
+          "pair_9708417fe8436817bf2f9be4",
+          "pair_a89132ade3c19c57dc117dcc",
+          "pair_b1258e4f5cd6609d8dfc55d9",
+          "pair_b18b5e81c0e01ec4a2dba1b4",
+          "pair_d543c367de5d88a164f3261f",
+          "pair_d6a5cd3942108d915b1478a2",
+          "pair_d72ad7774b521ab04a88ebee",
+          "pair_e0b7ffcbcfacaa904a0e0548",
+          "pair_e96b3d25f4e103ad375d8191"
+        ],
+        "validation": [
+          "pair_1524142d113396313bf501ab",
+          "pair_1b298cc20aae3de6af55f800",
+          "pair_2723036b35a4463039742860",
+          "pair_2b2539674e13d282bfceca85",
+          "pair_2e85492ad94a2ea68f2ff056",
+          "pair_34244d2ac9a5f98bf0f3b3bc",
+          "pair_43277bb9236081ae2ce1921d",
+          "pair_54fa7db6aaa811c5473c5662",
+          "pair_5b675702b4e650e1b4541a33",
+          "pair_5b820055e785fd63e0ec80ac",
+          "pair_5e12622b92b694172c6e301e",
+          "pair_693025741e6e725bb4c2fe66",
+          "pair_7858a499a0c7296189d1c207",
+          "pair_8156bd9d923dc55c34609ccc",
+          "pair_9481c09e4d55eed2f452a4c4",
+          "pair_96c772e3850b7c2866748802",
+          "pair_97ecf461c281764fea8ba8a8",
+          "pair_a176d5c8271272a6a9de30ac",
+          "pair_bd2139bf814ba07d5156db7f",
+          "pair_c034f8c46be3c02b04fdecdf",
+          "pair_f0e2db6aadfc856aec332bf8",
+          "pair_f2a13cebc839f5396fb03163",
+          "pair_fca228a9c3836dc66165c5be"
+        ]
+      },
+      "feasible": true,
+      "group_leakage_count": 0,
+      "name": "provision_lineage_held_out",
+      "reason": null
+    },
+    {
+      "assignments": {},
+      "feasible": false,
+      "group_leakage_count": null,
+      "name": "act_held_out",
+      "reason": "only one represented target Act",
+      "record_count": 50
+    },
+    {
+      "assignments": {},
+      "feasible": false,
+      "group_leakage_count": null,
+      "name": "temporal_holdout",
+      "reason": "only one represented effective date",
+      "record_count": 50
+    },
+    {
+      "assignments": {},
+      "feasible": false,
+      "group_leakage_count": null,
+      "name": "domain_held_out",
+      "reason": "domain labels are not approved",
+      "record_count": 50
+    }
+  ],
+  "status": "technical_dry_run_not_frozen_benchmark"
+}

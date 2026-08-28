@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/temporal-legal-drift/materiality-annotation.schema.json",
+  "title": "Independent materiality annotation",
+  "type": "object",
+  "required": ["annotation_id", "pair_id", "annotator_id", "label", "dimensions", "rationale", "before_evidence_span", "after_evidence_span", "confidence", "guideline_version"],
+  "properties": {
+    "annotation_id": {"type": "string"},
+    "pair_id": {"type": "string"},
+    "annotator_id": {"type": "string"},
+    "label": {"enum": ["High", "Medium", "Low", "None"]},
+    "dimensions": {"type": "array", "items": {"type": "string"}},
+    "rationale": {"type": "string", "minLength": 1},
+    "before_evidence_span": {"type": "string", "minLength": 1},
+    "after_evidence_span": {"type": "string", "minLength": 1},
+    "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+    "guideline_version": {"type": "string"},
+    "temporal_concerns": {"type": "array", "items": {"type": "string"}},
+    "compliance_consequence_note": {"type": ["string", "null"]}
+  },
+  "additionalProperties": false
+}

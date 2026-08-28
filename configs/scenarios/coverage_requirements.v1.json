@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0.0",
+  "status": "coverage_plan_not_achieved",
+  "required_categories": [
+    "material_amendment_outcome_changes",
+    "material_amendment_outcome_stable",
+    "non_material_amendment_answer_stable",
+    "temporal_trap",
+    "transitional_rule",
+    "deferred_or_partial_commencement",
+    "retrospective_or_applicability",
+    "citation_trap",
+    "explanation_drift"
+  ],
+  "required_expected_change_values": [0, 1],
+  "facts_must_be_constant_across_pre_post_pair": true,
+  "model_outputs_must_not_create_gold": true
+}

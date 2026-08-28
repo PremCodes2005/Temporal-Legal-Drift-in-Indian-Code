@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/temporal-legal-drift/compliance-scenario.schema.json",
+  "title": "Controlled pre/post compliance scenario pair",
+  "type": "object",
+  "required": [
+    "scenario_id", "scenario_schema_version", "source_pair_id", "facts",
+    "legal_question", "pre_reference_date", "post_reference_date",
+    "pre_applicable_version_id", "post_applicable_version_id", "expected_answer",
+    "expected_compliance_consequence", "expected_change", "supporting_legal_evidence",
+    "expert_rationale", "category_labels", "fact_control_status", "review_status"
+  ],
+  "properties": {
+    "scenario_id": {"type": "string"},
+    "scenario_schema_version": {"const": "1.0.0"},
+    "source_pair_id": {"type": "string"},
+    "facts": {"type": "array", "items": {"type": "string"}},
+    "legal_question": {"type": ["string", "null"]},
+    "pre_reference_date": {"type": ["string", "null"], "format": "date"},
+    "post_reference_date": {"type": ["string", "null"], "format": "date"},
+    "pre_applicable_version_id": {"type": ["string", "null"]},
+    "post_applicable_version_id": {"type": ["string", "null"]},
+    "expected_answer": {"type": "null"},
+    "expected_compliance_consequence": {"type": "null"},
+    "expected_change": {"type": "null"},
+    "supporting_legal_evidence": {"type": "object"},
+    "expert_rationale": {"type": "null"},
+    "category_labels": {"type": "array", "items": {"type": "string"}},
+    "fact_control_status": {"const": "not_authored"},
+    "review_status": {"const": "authoring_and_validation_required"}
+  },
+  "additionalProperties": false
+}

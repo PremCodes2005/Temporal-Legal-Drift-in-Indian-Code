@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/temporal-legal-drift/benchmark-release.schema.json",
+  "title": "Phase 7 technical release manifest",
+  "type": "object",
+  "required": ["schema_version", "release_id", "status", "input_checksums", "object_counts", "split_strategies", "leakage_audit", "limitations", "benchmark_frozen"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "release_id": {"type": "string"},
+    "status": {"const": "technical_dry_run_not_frozen_benchmark"},
+    "input_checksums": {"type": "object", "additionalProperties": {"type": "string", "pattern": "^[0-9a-f]{64}$"}},
+    "object_counts": {"type": "object"},
+    "split_strategies": {"type": "array"},
+    "leakage_audit": {"type": "object"},
+    "limitations": {"type": "array", "items": {"type": "string"}},
+    "benchmark_frozen": {"const": false}
+  },
+  "additionalProperties": false
+}

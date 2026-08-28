@@ -1,0 +1,634 @@
+{
+  "coverage_plan": [
+    "material_amendment_outcome_changes",
+    "material_amendment_outcome_stable",
+    "non_material_amendment_answer_stable",
+    "temporal_trap",
+    "transitional_rule",
+    "deferred_or_partial_commencement",
+    "retrospective_or_applicability",
+    "citation_trap",
+    "explanation_drift"
+  ],
+  "input_fingerprints": {
+    "annotation_workload_sha256": "c8cbd269a27f80cb022b721740dd2cf72c334a91806c6b77b8d80567ace81b9b",
+    "coverage_config_sha256": "cbe18961348f4b25e56ff63f26b697afdbcc052eb15a508920ddb359d450064f",
+    "cross_validation_sha256": "cd64f02f38dd9b53d0502ee7f4fd4710d97b1c8c1cf1031adde1db9445bda7eb"
+  },
+  "scenarios": [
+    {
+      "category_labels": [],
+      "expected_answer": null,
+      "expected_change": null,
+      "expected_compliance_consequence": null,
+      "expert_rationale": null,
+      "fact_control_status": "not_authored",
+      "facts": [],
+      "legal_question": null,
+      "post_applicable_version_id": "ver_6124d366e24292b9161f3f12",
+      "post_reference_date": "2009-10-27",
+      "pre_applicable_version_id": null,
+      "pre_reference_date": "2009-10-26",
+      "review_status": "authoring_and_validation_required",
+      "scenario_id": "scenario_1f02f95d109087097680f8a5",
+      "scenario_schema_version": "1.0.0",
+      "source_pair_id": "pair_b1258e4f5cd6609d8dfc55d9",
+      "supporting_legal_evidence": {
+        "amendment_event_id": "amd_75c7e125c692299b3e0a50db",
+        "cross_validation_id": "xval_b05567bb895b47a6a3efbf77",
+        "evidence": {
+          "amendment_event": {
+            "block_id": "blk_822495262bc3e0f7e8088097",
+            "exact_text_sha256": "8e9c9ea2d51ad5376c50c10d661d72c3aca114911c4fb52dbf8728b0f0ee8813",
+            "locator": "pdf:page:16:line:66",
+            "normalized_document_id": "doc_41556448fa565871ae34cdb5",
+            "source_artifact_id": "src_fabeae7d026d8fec9e806c10",
+            "source_sha256": "f623743ebe88795caa83e8506319e53963005512f43c451fb61698e65fb4293d"
+          },
+          "expected_effective_date": "2009-10-27",
+          "target_version": {
+            "block_id": "blk_b8712fd9d6b04fe4591e9e5e",
+            "exact_text_sha256": "3494672d1e2f46353f06646b45168bb1436bd05d7f6f444b3a769324715f9546",
+            "locator": "pdf:page:31:line:43",
+            "normalized_document_id": "doc_88352f07b1993a274671a7e0",
+            "source_artifact_id": "src_ac34e30e3da4e32b49b5b274",
+            "source_sha256": "e71725fa32e892f887308816046c42275fc855b5cbb4ee1063cdbd518f165140"
+          },
+          "target_version_id": "ver_6124d366e24292b9161f3f12",
+          "temporal_fact_ids": [
+            "tmp_723c45714b03b2a677ceb324",
+            "tmp_84327235fce17c499a53374f"
+          ]
+        }
+      }
+    },
+    {
+      "category_labels": [],
+      "expected_answer": null,
+      "expected_change": null,
+      "expected_compliance_consequence": null,
+      "expert_rationale": null,
+      "fact_control_status": "not_authored",
+      "facts": [],
+      "legal_question": null,
+      "post_applicable_version_id": "ver_ab0f316563bbaad9a88fb469",
+      "post_reference_date": "2009-10-27",
+      "pre_applicable_version_id": null,
+      "pre_reference_date": "2009-10-26",
+      "review_status": "authoring_and_validation_required",
+      "scenario_id": "scenario_241ac2b98552005e4410f9d8",
+      "scenario_schema_version": "1.0.0",
+      "source_pair_id": "pair_16ac9c20df18b3437edf24ab",
+      "supporting_legal_evidence": {
+        "amendment_event_id": "amd_3909aad16d90c2e0ac4f44ad",
+        "cross_validation_id": "xval_e9724a656026a6a03659ef28",
+        "evidence": {
+          "amendment_event": {
+            "block_id": "blk_c393e35f54c7abe3d62745cc",
+            "exact_text_sha256": "2e5369ab5597d12b7fdafc31378931d57701ad3fd3383f9aaa17586b4961b45a",
+            "locator": "pdf:page:18:line:44",
+            "normalized_document_id": "doc_41556448fa565871ae34cdb5",
+            "source_artifact_id": "src_fabeae7d026d8fec9e806c10",
+            "source_sha256": "f623743ebe88795caa83e8506319e53963005512f43c451fb61698e65fb4293d"
+          },
+          "expected_effective_date": "2009-10-27",
+          "target_version": {
+            "block_id": "blk_341b3279558c7490e0af323d",
+            "exact_text_sha256": "0148e30002957c3798bf7261f08b88b39c350bef1dbdc88df22bbb4670cce105",
+            "locator": "pdf:page:8:line:23",
+            "normalized_document_id": "doc_88352f07b1993a274671a7e0",
+            "source_artifact_id": "src_ac34e30e3da4e32b49b5b274",
+            "source_sha256": "e71725fa32e892f887308816046c42275fc855b5cbb4ee1063cdbd518f165140"
+          },
+          "target_version_id": "ver_ab0f316563bbaad9a88fb469",
+          "temporal_fact_ids": [
+            "tmp_29d7d796a6ba4ded724e4205",
+            "tmp_ba149672a8a489f10626c484",
+            "tmp_cf1736c1296641ca64a35bb8"
+          ]
+        }
+      }
+    },
+    {
+      "category_labels": [],
+      "expected_answer": null,
+      "expected_change": null,
+      "expected_compliance_consequence": null,
+      "expert_rationale": null,
+      "fact_control_status": "not_authored",
+      "facts": [],
+      "legal_question": null,
+      "post_applicable_version_id": "ver_156a402822602338dd3cd8c1",
+      "post_reference_date": "2009-10-27",
+      "pre_applicable_version_id": null,
+      "pre_reference_date": "2009-10-26",
+      "review_status": "authoring_and_validation_required",
+      "scenario_id": "scenario_28f1ac7204b60f0cb4db1eae",
+      "scenario_schema_version": "1.0.0",
+      "source_pair_id": "pair_bd2139bf814ba07d5156db7f",
+      "supporting_legal_evidence": {
+        "amendment_event_id": "amd_a4cb5ff68754ba03b85f3a9c",
+        "cross_validation_id": "xval_2f5e17fd019ae858a2af8c9f",
+        "evidence": {
+          "amendment_event": {
+            "block_id": "blk_5ca58de616262e5f240d559d",
+            "exact_text_sha256": "9ba4b2f754eed9c83641bc61fc54dcfcb8232f41d82b8e2f4f08f274d98a1889",
+            "locator": "pdf:page:2:line:10",
+            "normalized_document_id": "doc_41556448fa565871ae34cdb5",
+            "source_artifact_id": "src_fabeae7d026d8fec9e806c10",
+            "source_sha256": "f623743ebe88795caa83e8506319e53963005512f43c451fb61698e65fb4293d"
+          },
+          "expected_effective_date": "2009-10-27",
+          "target_version": {
+            "block_id": "blk_1c47ed15803ef47dad016c3b",
+            "exact_text_sha256": "048568b47d9f229bad1217f4da421bb417e150297a49e2450f65b5a19e86737e",
+            "locator": "pdf:page:11:line:44",
+            "normalized_document_id": "doc_88352f07b1993a274671a7e0",
+            "source_artifact_id": "src_ac34e30e3da4e32b49b5b274",
+            "source_sha256": "e71725fa32e892f887308816046c42275fc855b5cbb4ee1063cdbd518f165140"
+          },
+          "target_version_id": "ver_156a402822602338dd3cd8c1",
+          "temporal_fact_ids": [
+            "tmp_0cdbedf095548e91733f914b",
+            "tmp_b1650a66d53c107611f156b0",
+            "tmp_c2e599670957627da6b50ce3"
+          ]
+        }
+      }
+    },
+    {
+      "category_labels": [],
+      "expected_answer": null,
+      "expected_change": null,
+      "expected_compliance_consequence": null,
+      "expert_rationale": null,
+      "fact_control_status": "not_authored",
+      "facts": [],
+      "legal_question": null,
+      "post_applicable_version_id": "ver_ad29bf019d37042b9101fa71",
+      "post_reference_date": "2009-10-27",
+      "pre_applicable_version_id": null,
+      "pre_reference_date": "2009-10-26",
+      "review_status": "authoring_and_validation_required",
+      "scenario_id": "scenario_30af89ea924ddee701286dd6",
+      "scenario_schema_version": "1.0.0",
+      "source_pair_id": "pair_208717a68116ca2157c46a91",
+      "supporting_legal_evidence": {
+        "amendment_event_id": "amd_f9802c45d893a112c0472587",
+        "cross_validation_id": "xval_f559b40bd2f80c5ac93e2d20",
+        "evidence": {
+          "amendment_event": {
+            "block_id": "blk_dd2de8c7565c862bbe1fe3b0",
+            "exact_text_sha256": "425a72f54dd70f7987d0e2a68979a70bc95876b90cd65bf455464fc69a716ea4",
+            "locator": "pdf:page:6:line:45",
+            "normalized_document_id": "doc_41556448fa565871ae34cdb5",
+            "source_artifact_id": "src_fabeae7d026d8fec9e806c10",
+            "source_sha256": "f623743ebe88795caa83e8506319e53963005512f43c451fb61698e65fb4293d"
+          },
+          "expected_effective_date": "2009-10-27",
+          "target_version": {
+            "block_id": "blk_50611ea38d39ebd25f22bedd",
+            "exact_text_sha256": "29f82881c2d8b6b94ca2d6e4db43e01b524ff4cf24ba3d2f979a19f0435b18bb",
+            "locator": "pdf:page:18:line:36",
+            "normalized_document_id": "doc_88352f07b1993a274671a7e0",
+            "source_artifact_id": "src_ac34e30e3da4e32b49b5b274",
+            "source_sha256": "e71725fa32e892f887308816046c42275fc855b5cbb4ee1063cdbd518f165140"
+          },
+          "target_version_id": "ver_ad29bf019d37042b9101fa71",
+          "temporal_fact_ids": [
+            "tmp_40814fc0bb73766da0ddeebc",
+            "tmp_51f7f99a138cdc509f379aae",
+            "tmp_7c1c270d973317866d963e66",
+            "tmp_891ef7c7b2bc39c4b3c605c7",
+            "tmp_8b8d28e3d0f54f2b61ddb650",
+            "tmp_a25223137626a4fb9704619c",
+            "tmp_cce37f6416f58286b5cd562c"
+          ]
+        }
+      }
+    },
+    {
+      "category_labels": [],
+      "expected_answer": null,
+      "expected_change": null,
+      "expected_compliance_consequence": null,
+      "expert_rationale": null,
+      "fact_control_status": "not_authored",
+      "facts": [],
+      "legal_question": null,
+      "post_applicable_version_id": "ver_f7f998b7330380274ac7a637",
+      "post_reference_date": "2009-10-27",
+      "pre_applicable_version_id": null,
+      "pre_reference_date": "2009-10-26",
+      "review_status": "authoring_and_validation_required",
+      "scenario_id": "scenario_376cd72a8acc5e49df166552",
+      "scenario_schema_version": "1.0.0",
+      "source_pair_id": "pair_9481c09e4d55eed2f452a4c4",
+      "supporting_legal_evidence": {
+        "amendment_event_id": "amd_4efe1c5cde5ab326f2f4b59a",
+        "cross_validation_id": "xval_9f251cb63c3a82054e3285e2",
+        "evidence": {
+          "amendment_event": {
+            "block_id": "blk_40c2d855bf613a3926788b4e",
+            "exact_text_sha256": "75825d0e14672d648f45b2882a1da5996d01669a4f0cc54eadbb9b3e5480ee15",
+            "locator": "pdf:page:14:line:19",
+            "normalized_document_id": "doc_41556448fa565871ae34cdb5",
+            "source_artifact_id": "src_fabeae7d026d8fec9e806c10",
+            "source_sha256": "f623743ebe88795caa83e8506319e53963005512f43c451fb61698e65fb4293d"
+          },
+          "expected_effective_date": "2009-10-27",
+          "target_version": {
+            "block_id": "blk_88a22fc0fd57a8beb66052e4",
+            "exact_text_sha256": "9c0f67d8ad21cc53059c03048cf5b546894d3aebbf910e31949513953c8309ca",
+            "locator": "pdf:page:27:line:37",
+            "normalized_document_id": "doc_88352f07b1993a274671a7e0",
+            "source_artifact_id": "src_ac34e30e3da4e32b49b5b274",
+            "source_sha256": "e71725fa32e892f887308816046c42275fc855b5cbb4ee1063cdbd518f165140"
+          },
+          "target_version_id": "ver_f7f998b7330380274ac7a637",
+          "temporal_fact_ids": [
+            "tmp_17ceebddb0256e0f04da6f14",
+            "tmp_a4132da54c8261fb14a536a0",
+            "tmp_f6e290f8e10676f6ab37e314"
+          ]
+        }
+      }
+    },
+    {
+      "category_labels": [],
+      "expected_answer": null,
+      "expected_change": null,
+      "expected_compliance_consequence": null,
+      "expert_rationale": null,
+      "fact_control_status": "not_authored",
+      "facts": [],
+      "legal_question": null,
+      "post_applicable_version_id": "ver_bb98a30dee178656416cc917",
+      "post_reference_date": "2009-10-27",
+      "pre_applicable_version_id": null,
+      "pre_reference_date": "2009-10-26",
+      "review_status": "authoring_and_validation_required",
+      "scenario_id": "scenario_68e783d96abfe2405220edfc",
+      "scenario_schema_version": "1.0.0",
+      "source_pair_id": "pair_a176d5c8271272a6a9de30ac",
+      "supporting_legal_evidence": {
+        "amendment_event_id": "amd_4b8be633a91aa6af22f22cde",
+        "cross_validation_id": "xval_b7d6c6652a5bc7d7425c162c",
+        "evidence": {
+          "amendment_event": {
+            "block_id": "blk_b93e3d62467d1a9bac9d1b7c",
+            "exact_text_sha256": "3958a65b7d7ec2f452a0f98828ba2f95bb3141a189b4ffb6f01dc2d0b48960af",
+            "locator": "pdf:page:9:line:35",
+            "normalized_document_id": "doc_41556448fa565871ae34cdb5",
+            "source_artifact_id": "src_fabeae7d026d8fec9e806c10",
+            "source_sha256": "f623743ebe88795caa83e8506319e53963005512f43c451fb61698e65fb4293d"
+          },
+          "expected_effective_date": "2009-10-27",
+          "target_version": {
+            "block_id": "blk_f38ade6e503c0e6916dc9adf",
+            "exact_text_sha256": "905336d45624c8bccbadf569c991d1806c567c283755c31b7c023a26e780aeb2",
+            "locator": "pdf:page:26:line:25",
+            "normalized_document_id": "doc_88352f07b1993a274671a7e0",
+            "source_artifact_id": "src_ac34e30e3da4e32b49b5b274",
+            "source_sha256": "e71725fa32e892f887308816046c42275fc855b5cbb4ee1063cdbd518f165140"
+          },
+          "target_version_id": "ver_bb98a30dee178656416cc917",
+          "temporal_fact_ids": [
+            "tmp_35bca7cf0d6d91fc5ad494a5",
+            "tmp_bfffa5f3d7b6fd2d75d635f3"
+          ]
+        }
+      }
+    },
+    {
+      "category_labels": [],
+      "expected_answer": null,
+      "expected_change": null,
+      "expected_compliance_consequence": null,
+      "expert_rationale": null,
+      "fact_control_status": "not_authored",
+      "facts": [],
+      "legal_question": null,
+      "post_applicable_version_id": "ver_ab0f316563bbaad9a88fb469",
+      "post_reference_date": "2009-10-27",
+      "pre_applicable_version_id": null,
+      "pre_reference_date": "2009-10-26",
+      "review_status": "authoring_and_validation_required",
+      "scenario_id": "scenario_920e38ad9223b1215d92fc07",
+      "scenario_schema_version": "1.0.0",
+      "source_pair_id": "pair_96cc0e894a99b16d7e62e26d",
+      "supporting_legal_evidence": {
+        "amendment_event_id": "amd_2d0c172d03b6947818eb3ce0",
+        "cross_validation_id": "xval_ff69af761de328268089389a",
+        "evidence": {
+          "amendment_event": {
+            "block_id": "blk_6c7fa2e63fee44542dbaa4f3",
+            "exact_text_sha256": "69b101888a5ebba971da40c9146bf42fcd4cf651c78a1b1e712ca6ff0ce2d123",
+            "locator": "pdf:page:3:line:31",
+            "normalized_document_id": "doc_41556448fa565871ae34cdb5",
+            "source_artifact_id": "src_fabeae7d026d8fec9e806c10",
+            "source_sha256": "f623743ebe88795caa83e8506319e53963005512f43c451fb61698e65fb4293d"
+          },
+          "expected_effective_date": "2009-10-27",
+          "target_version": {
+            "block_id": "blk_341b3279558c7490e0af323d",
+            "exact_text_sha256": "0148e30002957c3798bf7261f08b88b39c350bef1dbdc88df22bbb4670cce105",
+            "locator": "pdf:page:8:line:23",
+            "normalized_document_id": "doc_88352f07b1993a274671a7e0",
+            "source_artifact_id": "src_ac34e30e3da4e32b49b5b274",
+            "source_sha256": "e71725fa32e892f887308816046c42275fc855b5cbb4ee1063cdbd518f165140"
+          },
+          "target_version_id": "ver_ab0f316563bbaad9a88fb469",
+          "temporal_fact_ids": [
+            "tmp_29d7d796a6ba4ded724e4205",
+            "tmp_ba149672a8a489f10626c484",
+            "tmp_cf1736c1296641ca64a35bb8"
+          ]
+        }
+      }
+    },
+    {
+      "category_labels": [],
+      "expected_answer": null,
+      "expected_change": null,
+      "expected_compliance_consequence": null,
+      "expert_rationale": null,
+      "fact_control_status": "not_authored",
+      "facts": [],
+      "legal_question": null,
+      "post_applicable_version_id": "ver_fd24bd0b635e5c04a28b3161",
+      "post_reference_date": "2009-10-27",
+      "pre_applicable_version_id": null,
+      "pre_reference_date": "2009-10-26",
+      "review_status": "authoring_and_validation_required",
+      "scenario_id": "scenario_c46445efc42aa98181247b62",
+      "scenario_schema_version": "1.0.0",
+      "source_pair_id": "pair_54fa7db6aaa811c5473c5662",
+      "supporting_legal_evidence": {
+        "amendment_event_id": "amd_5a95785c0c57fd88417a484e",
+        "cross_validation_id": "xval_4f59f0c46f0e2d0c2a5684db",
+        "evidence": {
+          "amendment_event": {
+            "block_id": "blk_b93e3d62467d1a9bac9d1b7c",
+            "exact_text_sha256": "3958a65b7d7ec2f452a0f98828ba2f95bb3141a189b4ffb6f01dc2d0b48960af",
+            "locator": "pdf:page:9:line:35",
+            "normalized_document_id": "doc_41556448fa565871ae34cdb5",
+            "source_artifact_id": "src_fabeae7d026d8fec9e806c10",
+            "source_sha256": "f623743ebe88795caa83e8506319e53963005512f43c451fb61698e65fb4293d"
+          },
+          "expected_effective_date": "2009-10-27",
+          "target_version": {
+            "block_id": "blk_d482246e3a4472f83ecbe3b8",
+            "exact_text_sha256": "9526631b9ce547f9d956e5d937b7012c6a0b9b95c60004f96d4988f1ef1f35a2",
+            "locator": "pdf:page:14:line:33",
+            "normalized_document_id": "doc_88352f07b1993a274671a7e0",
+            "source_artifact_id": "src_ac34e30e3da4e32b49b5b274",
+            "source_sha256": "e71725fa32e892f887308816046c42275fc855b5cbb4ee1063cdbd518f165140"
+          },
+          "target_version_id": "ver_fd24bd0b635e5c04a28b3161",
+          "temporal_fact_ids": [
+            "tmp_392a23b5e90a7ed9516d980a"
+          ]
+        }
+      }
+    },
+    {
+      "category_labels": [],
+      "expected_answer": null,
+      "expected_change": null,
+      "expected_compliance_consequence": null,
+      "expert_rationale": null,
+      "fact_control_status": "not_authored",
+      "facts": [],
+      "legal_question": null,
+      "post_applicable_version_id": "ver_a5579c2a8489ec4dd348b8c4",
+      "post_reference_date": "2009-10-27",
+      "pre_applicable_version_id": null,
+      "pre_reference_date": "2009-10-26",
+      "review_status": "authoring_and_validation_required",
+      "scenario_id": "scenario_d9c04a37c28330689aa4e96c",
+      "scenario_schema_version": "1.0.0",
+      "source_pair_id": "pair_e0b7ffcbcfacaa904a0e0548",
+      "supporting_legal_evidence": {
+        "amendment_event_id": "amd_cab6cb30911302111f16509a",
+        "cross_validation_id": "xval_492be04af992cd2ff6365ef0",
+        "evidence": {
+          "amendment_event": {
+            "block_id": "blk_3356c9641ad7ead9bd763c6b",
+            "exact_text_sha256": "d8f9e084921f0f95cc7e46e01a2b23c95b4deab4b0c8d9de6b0c8a2b84263b37",
+            "locator": "pdf:page:5:line:19",
+            "normalized_document_id": "doc_41556448fa565871ae34cdb5",
+            "source_artifact_id": "src_fabeae7d026d8fec9e806c10",
+            "source_sha256": "f623743ebe88795caa83e8506319e53963005512f43c451fb61698e65fb4293d"
+          },
+          "expected_effective_date": "2009-10-27",
+          "target_version": {
+            "block_id": "blk_f127988f1318388a6ee19850",
+            "exact_text_sha256": "02ed711d03017369de4f1e2cea4dd485b8eb3cf68918d08d26b2d521ccfd70bc",
+            "locator": "pdf:page:12:line:46",
+            "normalized_document_id": "doc_88352f07b1993a274671a7e0",
+            "source_artifact_id": "src_ac34e30e3da4e32b49b5b274",
+            "source_sha256": "e71725fa32e892f887308816046c42275fc855b5cbb4ee1063cdbd518f165140"
+          },
+          "target_version_id": "ver_a5579c2a8489ec4dd348b8c4",
+          "temporal_fact_ids": [
+            "tmp_4a631ab6fe6d039c728c295d",
+            "tmp_6469e060ff694f37c3d3ad83",
+            "tmp_a767ff769db2dfcd8f1da9f1"
+          ]
+        }
+      }
+    },
+    {
+      "category_labels": [],
+      "expected_answer": null,
+      "expected_change": null,
+      "expected_compliance_consequence": null,
+      "expert_rationale": null,
+      "fact_control_status": "not_authored",
+      "facts": [],
+      "legal_question": null,
+      "post_applicable_version_id": "ver_fd24bd0b635e5c04a28b3161",
+      "post_reference_date": "2009-10-27",
+      "pre_applicable_version_id": null,
+      "pre_reference_date": "2009-10-26",
+      "review_status": "authoring_and_validation_required",
+      "scenario_id": "scenario_e45d9137432fd49abf4aea9a",
+      "scenario_schema_version": "1.0.0",
+      "source_pair_id": "pair_5e12622b92b694172c6e301e",
+      "supporting_legal_evidence": {
+        "amendment_event_id": "amd_b3c84f7107b90429e19fce7b",
+        "cross_validation_id": "xval_3b5eaf2ff203369dae46ac62",
+        "evidence": {
+          "amendment_event": {
+            "block_id": "blk_5ca58de616262e5f240d559d",
+            "exact_text_sha256": "9ba4b2f754eed9c83641bc61fc54dcfcb8232f41d82b8e2f4f08f274d98a1889",
+            "locator": "pdf:page:2:line:10",
+            "normalized_document_id": "doc_41556448fa565871ae34cdb5",
+            "source_artifact_id": "src_fabeae7d026d8fec9e806c10",
+            "source_sha256": "f623743ebe88795caa83e8506319e53963005512f43c451fb61698e65fb4293d"
+          },
+          "expected_effective_date": "2009-10-27",
+          "target_version": {
+            "block_id": "blk_d482246e3a4472f83ecbe3b8",
+            "exact_text_sha256": "9526631b9ce547f9d956e5d937b7012c6a0b9b95c60004f96d4988f1ef1f35a2",
+            "locator": "pdf:page:14:line:33",
+            "normalized_document_id": "doc_88352f07b1993a274671a7e0",
+            "source_artifact_id": "src_ac34e30e3da4e32b49b5b274",
+            "source_sha256": "e71725fa32e892f887308816046c42275fc855b5cbb4ee1063cdbd518f165140"
+          },
+          "target_version_id": "ver_fd24bd0b635e5c04a28b3161",
+          "temporal_fact_ids": [
+            "tmp_392a23b5e90a7ed9516d980a"
+          ]
+        }
+      }
+    },
+    {
+      "category_labels": [],
+      "expected_answer": null,
+      "expected_change": null,
+      "expected_compliance_consequence": null,
+      "expert_rationale": null,
+      "fact_control_status": "not_authored",
+      "facts": [],
+      "legal_question": null,
+      "post_applicable_version_id": "ver_5ab219b2d2eb60d8513c0add",
+      "post_reference_date": "2009-10-27",
+      "pre_applicable_version_id": null,
+      "pre_reference_date": "2009-10-26",
+      "review_status": "authoring_and_validation_required",
+      "scenario_id": "scenario_e63b93a56cc0e7c91f2ad04e",
+      "scenario_schema_version": "1.0.0",
+      "source_pair_id": "pair_2c7ac07d92765ef75f6f5101",
+      "supporting_legal_evidence": {
+        "amendment_event_id": "amd_b5cbfe0eee0f489c912f0d5f",
+        "cross_validation_id": "xval_14d0d4fffdc2d6e2970c1603",
+        "evidence": {
+          "amendment_event": {
+            "block_id": "blk_c393e35f54c7abe3d62745cc",
+            "exact_text_sha256": "2e5369ab5597d12b7fdafc31378931d57701ad3fd3383f9aaa17586b4961b45a",
+            "locator": "pdf:page:18:line:44",
+            "normalized_document_id": "doc_41556448fa565871ae34cdb5",
+            "source_artifact_id": "src_fabeae7d026d8fec9e806c10",
+            "source_sha256": "f623743ebe88795caa83e8506319e53963005512f43c451fb61698e65fb4293d"
+          },
+          "expected_effective_date": "2009-10-27",
+          "target_version": {
+            "block_id": "blk_b08dff9284a13542c6313282",
+            "exact_text_sha256": "ec5cb67cfb303262c8c04698cfdcb5edb72107c3def4b3115f287c3378f536f1",
+            "locator": "pdf:page:5:line:36",
+            "normalized_document_id": "doc_88352f07b1993a274671a7e0",
+            "source_artifact_id": "src_ac34e30e3da4e32b49b5b274",
+            "source_sha256": "e71725fa32e892f887308816046c42275fc855b5cbb4ee1063cdbd518f165140"
+          },
+          "target_version_id": "ver_5ab219b2d2eb60d8513c0add",
+          "temporal_fact_ids": [
+            "tmp_0603966f5b26ac1fa4b26fa9",
+            "tmp_1a9b3aafe43608a7f382a44d",
+            "tmp_1f012960fe36052cacdab8bb",
+            "tmp_4e67191b375e32b875869edc",
+            "tmp_61edf3748f3410da95876594",
+            "tmp_81e26856db59c31196d18660",
+            "tmp_dcaefa34b98fc6ead684fd09"
+          ]
+        }
+      }
+    },
+    {
+      "category_labels": [],
+      "expected_answer": null,
+      "expected_change": null,
+      "expected_compliance_consequence": null,
+      "expert_rationale": null,
+      "fact_control_status": "not_authored",
+      "facts": [],
+      "legal_question": null,
+      "post_applicable_version_id": "ver_6124d366e24292b9161f3f12",
+      "post_reference_date": "2009-10-27",
+      "pre_applicable_version_id": null,
+      "pre_reference_date": "2009-10-26",
+      "review_status": "authoring_and_validation_required",
+      "scenario_id": "scenario_efdf7322958aa4222ffd5e57",
+      "scenario_schema_version": "1.0.0",
+      "source_pair_id": "pair_15651fe59b37869adf988286",
+      "supporting_legal_evidence": {
+        "amendment_event_id": "amd_2aac392652217f04f45347e0",
+        "cross_validation_id": "xval_ff3f290c038f76ccbc49cbd4",
+        "evidence": {
+          "amendment_event": {
+            "block_id": "blk_822495262bc3e0f7e8088097",
+            "exact_text_sha256": "a837d578660e39432ec3134c9905fa12db8c487df7eb67d0d5abe2e017299b6c",
+            "locator": "pdf:page:16:line:49",
+            "normalized_document_id": "doc_41556448fa565871ae34cdb5",
+            "source_artifact_id": "src_fabeae7d026d8fec9e806c10",
+            "source_sha256": "f623743ebe88795caa83e8506319e53963005512f43c451fb61698e65fb4293d"
+          },
+          "expected_effective_date": "2009-10-27",
+          "target_version": {
+            "block_id": "blk_b8712fd9d6b04fe4591e9e5e",
+            "exact_text_sha256": "3494672d1e2f46353f06646b45168bb1436bd05d7f6f444b3a769324715f9546",
+            "locator": "pdf:page:31:line:43",
+            "normalized_document_id": "doc_88352f07b1993a274671a7e0",
+            "source_artifact_id": "src_ac34e30e3da4e32b49b5b274",
+            "source_sha256": "e71725fa32e892f887308816046c42275fc855b5cbb4ee1063cdbd518f165140"
+          },
+          "target_version_id": "ver_6124d366e24292b9161f3f12",
+          "temporal_fact_ids": [
+            "tmp_723c45714b03b2a677ceb324",
+            "tmp_84327235fce17c499a53374f"
+          ]
+        }
+      }
+    },
+    {
+      "category_labels": [],
+      "expected_answer": null,
+      "expected_change": null,
+      "expected_compliance_consequence": null,
+      "expert_rationale": null,
+      "fact_control_status": "not_authored",
+      "facts": [],
+      "legal_question": null,
+      "post_applicable_version_id": "ver_b78dfb5c893a5e5c361b67e3",
+      "post_reference_date": "2009-10-27",
+      "pre_applicable_version_id": null,
+      "pre_reference_date": "2009-10-26",
+      "review_status": "authoring_and_validation_required",
+      "scenario_id": "scenario_f4883150aa86b5b2573fa907",
+      "scenario_schema_version": "1.0.0",
+      "source_pair_id": "pair_2723036b35a4463039742860",
+      "supporting_legal_evidence": {
+        "amendment_event_id": "amd_454a14ad57035f4adc17472e",
+        "cross_validation_id": "xval_197e6bb3af7b402a7e4ae939",
+        "evidence": {
+          "amendment_event": {
+            "block_id": "blk_5ca58de616262e5f240d559d",
+            "exact_text_sha256": "9ba4b2f754eed9c83641bc61fc54dcfcb8232f41d82b8e2f4f08f274d98a1889",
+            "locator": "pdf:page:2:line:10",
+            "normalized_document_id": "doc_41556448fa565871ae34cdb5",
+            "source_artifact_id": "src_fabeae7d026d8fec9e806c10",
+            "source_sha256": "f623743ebe88795caa83e8506319e53963005512f43c451fb61698e65fb4293d"
+          },
+          "expected_effective_date": "2009-10-27",
+          "target_version": {
+            "block_id": "blk_a65396a79220697eeb81b128",
+            "exact_text_sha256": "ee8cf5b75f2fc19d09e82bf8f325cddda163b223ce419e5b9f8ab89c0fa89fbc",
+            "locator": "pdf:page:13:line:37",
+            "normalized_document_id": "doc_88352f07b1993a274671a7e0",
+            "source_artifact_id": "src_ac34e30e3da4e32b49b5b274",
+            "source_sha256": "e71725fa32e892f887308816046c42275fc855b5cbb4ee1063cdbd518f165140"
+          },
+          "target_version_id": "ver_b78dfb5c893a5e5c361b67e3",
+          "temporal_fact_ids": [
+            "tmp_306736970ff570a62fd52750",
+            "tmp_749db2a78e5b1709b6f645e7",
+            "tmp_d12244090dc09f48ded9a675"
+          ]
+        }
+      }
+    }
+  ],
+  "schema_version": "1.0.0",
+  "status": "scenario_scaffolds_not_compliance_gold"
+}

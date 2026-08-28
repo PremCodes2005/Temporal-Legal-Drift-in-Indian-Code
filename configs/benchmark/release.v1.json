@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0.0",
+  "release_id": "tech-preview-v0.1.0",
+  "status": "technical_dry_run_not_frozen_benchmark",
+  "random_seed": 1729,
+  "split_proportions": {"train": 0.8, "validation": 0.1, "test": 0.1},
+  "near_duplicate_token_jaccard_threshold": 0.95,
+  "required_split_strategies": ["random", "act_held_out", "amendment_event_held_out", "provision_lineage_held_out", "temporal_holdout", "domain_held_out"],
+  "redistribution_status": "authoritative_source_pdfs_in_repository_user_directed_legal_constraints_not_independently_verified"
+}

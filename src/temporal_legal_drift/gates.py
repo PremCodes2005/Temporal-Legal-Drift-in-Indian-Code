@@ -255,6 +255,186 @@ def _phase4(root: Path) -> PhaseGateResult:
     )
 
 
+def _phase5(root: Path) -> PhaseGateResult:
+    lock = load_json(root / "reports" / "phase5" / "annotation_workload.lock.json")
+    taxonomy = load_json(root / "configs" / "annotation" / "materiality_taxonomy.v1.json")
+    graph_lock = load_json(root / "reports" / "phase3" / "version_graph.lock.json")
+    cross_lock = load_json(root / "reports" / "phase4" / "cross_version_validation.lock.json")
+    fingerprints = lock.get("input_fingerprints")
+    labels = taxonomy.get("levels")
+    checks = {
+        "amendment_pair_schema_present": (
+            root / "schemas" / "annotation" / "amendment_pair.schema.json"
+        ).is_file(),
+        "materiality_annotation_schema_present": (
+            root / "schemas" / "annotation" / "materiality_annotation.schema.json"
+        ).is_file(),
+        "canonical_four_levels_defined": (
+            isinstance(labels, list)
+            and [item.get("label") for item in labels if isinstance(item, dict)]
+            == ["High", "Medium", "Low", "None"]
+        ),
+        "taxonomy_definitions_and_adjudication_present": (
+            isinstance(labels, list)
+            and all(
+                isinstance(item, dict)
+                and all(
+                    item.get(field)
+                    for field in (
+                        "definition",
+                        "inclusion",
+                        "exclusion",
+                        "positive_patterns",
+                        "negative_patterns",
+                    )
+                )
+                for item in labels
+            )
+            and bool(taxonomy.get("boundary_rules"))
+            and bool(taxonomy.get("adjudication_rules"))
+        ),
+        "materiality_and_consequence_separated": (
+            taxonomy.get("compliance_consequence_is_separate") is True
+            and lock.get("compliance_consequence_separate") is True
+        ),
+        "fifty_unique_annotation_tasks_created": (
+            lock.get("task_count") == 50 and lock.get("unique_pair_count") == 50
+        ),
+        "all_tasks_evidence_linked": lock.get("all_tasks_evidence_linked") is True,
+        "phase5_inputs_reconciled": (
+            isinstance(fingerprints, dict)
+            and fingerprints.get("version_graph_sha256") == graph_lock.get("graph_sha256")
+            and fingerprints.get("cross_validation_sha256")
+            == cross_lock.get("validation_sha256")
+            and fingerprints.get("taxonomy_sha256")
+            == sha256(canonical_json_bytes(taxonomy)).hexdigest()
+        ),
+        "machine_does_not_invent_materiality_gold": (
+            lock.get("all_materiality_labels_unassigned") is True
+            and lock.get("research_gate_passed") is False
+        ),
+    }
+    return PhaseGateResult(
+        5,
+        all(checks.values()),
+        checks,
+        "technical_annotation_workload_passed_research_annotation_not_performed",
+        (
+            "no historical before/after pair is complete",
+            "the 50 tasks have not received two independent annotations",
+            "the ten-dimension draft and materiality guideline are not research-frozen",
+            "no agreement or adjudication result exists",
+        ),
+    )
+
+
+def _phase6(root: Path) -> PhaseGateResult:
+    lock = load_json(root / "reports" / "phase6" / "scenario_scaffolds.lock.json")
+    coverage = load_json(root / "configs" / "scenarios" / "coverage_requirements.v1.json")
+    phase5_lock = load_json(root / "reports" / "phase5" / "annotation_workload.lock.json")
+    cross_lock = load_json(root / "reports" / "phase4" / "cross_version_validation.lock.json")
+    fingerprints = lock.get("input_fingerprints")
+    checks = {
+        "scenario_schema_present": (
+            root / "schemas" / "scenario" / "compliance_scenario.schema.json"
+        ).is_file(),
+        "coverage_plan_present": bool(coverage.get("required_categories")),
+        "evidence_linked_scaffolds_created": (
+            isinstance(lock.get("scenario_count"), int)
+            and int(lock["scenario_count"]) > 0
+            and lock.get("scenario_count") == lock.get("unique_scenario_count")
+            and lock.get("all_scaffolds_evidence_linked") is True
+        ),
+        "machine_does_not_invent_compliance_gold": (
+            lock.get("no_expected_answers_invented") is True
+            and lock.get("expert_validated_scenario_count") == 0
+            and lock.get("research_gate_passed") is False
+        ),
+        "incomplete_coverage_reported": lock.get("coverage_complete") is False,
+        "phase6_inputs_reconciled": (
+            isinstance(fingerprints, dict)
+            and fingerprints.get("annotation_workload_sha256")
+            == phase5_lock.get("workload_sha256")
+            and fingerprints.get("cross_validation_sha256")
+            == cross_lock.get("validation_sha256")
+            and fingerprints.get("coverage_config_sha256")
+            == sha256(canonical_json_bytes(coverage)).hexdigest()
+        ),
+    }
+    return PhaseGateResult(
+        6,
+        all(checks.values()),
+        checks,
+        "technical_scenario_scaffolds_passed_expert_scenarios_not_authored",
+        (
+            "scenario facts and legal questions are not authored",
+            "expected answers, consequences and expected-change labels are unset",
+            "required scenario-category coverage is not achieved",
+            "independent scenario validation and adjudication are unavailable",
+        ),
+    )
+
+
+def _phase7(root: Path) -> PhaseGateResult:
+    lock = load_json(root / "reports" / "phase7" / "release.lock.json")
+    phase5_lock = load_json(root / "reports" / "phase5" / "annotation_workload.lock.json")
+    phase6_lock = load_json(root / "reports" / "phase6" / "scenario_scaffolds.lock.json")
+    graph_lock = load_json(root / "reports" / "phase3" / "version_graph.lock.json")
+    release_config = load_json(root / "configs" / "benchmark" / "release.v1.json")
+    fingerprints = lock.get("input_checksums")
+    checks = {
+        "release_schema_present": (
+            root / "schemas" / "evaluation" / "benchmark_release.schema.json"
+        ).is_file(),
+        "data_card_present": (root / "reports" / "phase7" / "data_card.md").is_file(),
+        "release_counts_reconciled": lock.get("counts_reconciled") is True,
+        "phase7_inputs_reconciled": (
+            isinstance(fingerprints, dict)
+            and fingerprints.get("annotation_workload_sha256")
+            == phase5_lock.get("workload_sha256")
+            and fingerprints.get("scenario_scaffolds_sha256")
+            == phase6_lock.get("scenario_document_sha256")
+            and fingerprints.get("version_graph_sha256") == graph_lock.get("graph_sha256")
+            and fingerprints.get("release_config_sha256")
+            == sha256(canonical_json_bytes(release_config)).hexdigest()
+        ),
+        "all_split_strategies_reported": lock.get("required_strategies_reported") is True,
+        "feasible_splits_group_leakage_free": (
+            lock.get("feasible_splits_group_leakage_free") is True
+        ),
+        "infeasible_splits_explicit": lock.get("infeasible_splits_explicit") is True,
+        "redistribution_status_documented": bool(
+            release_config.get("redistribution_status")
+        ),
+        "non_gold_release_cannot_freeze": (
+            lock.get("freeze_refused_for_non_gold_inputs") is True
+            and lock.get("benchmark_frozen") is False
+            and lock.get("research_gate_passed") is False
+        ),
+    }
+    return PhaseGateResult(
+        7,
+        all(checks.values()),
+        checks,
+        "technical_release_dry_run_passed_benchmark_not_frozen",
+        (
+            "materiality labels and complete historical pairs are unavailable",
+            "expert-authored compliance scenarios are unavailable",
+            "Act, temporal and domain holdouts are infeasible in the current pilot",
+            "the scientific benchmark cannot be frozen from non-gold inputs",
+        ),
+    )
+
+
 def check_engineering_gates(root: Path) -> tuple[PhaseGateResult, ...]:
-    """Return all Phase 0-4 engineering-gate results in order."""
-    return (_phase0(root), _phase1(root), _phase2(root), _phase3(root), _phase4(root))
+    """Return all implemented engineering-gate results in order."""
+    return (
+        _phase0(root),
+        _phase1(root),
+        _phase2(root),
+        _phase3(root),
+        _phase4(root),
+        _phase5(root),
+        _phase6(root),
+        _phase7(root),
+    )
