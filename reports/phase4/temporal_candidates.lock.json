@@ -3,6 +3,7 @@
   "all_candidates_unreviewed": true,
   "approved_candidate_count": 0,
   "candidate_count": 1873,
+  "candidate_document_sha256": "445141fb7ccf4e0f4ae31d3668433ac2dc51b0f009bc7e5ff61b4d7078e01007",
   "fact_type_counts": {
     "commencement": 1826,
     "partial_commencement": 1,

@@ -25,4 +25,4 @@
 - No qualified legal reviewer has accepted the source protocol.
 - Redistribution constraints remain undecided.
 
-The local runtime contains the fourteen-document pilot corpus. Raw binaries are intentionally ignored by version control; the URLs, identifiers, hashes, byte counts, and normalized-document links are recorded in `reports/corpus/india-code-temporal-pilot-v1.lock.json`.
+The local runtime contains the fourteen-document pilot corpus. Immutable content-addressed raw binaries remain ignored by version control; verified readable copies under `data/corpus/pdfs` are Git-trackable. URLs, identifiers, hashes, byte counts, and normalized-document links are recorded in `reports/corpus/india-code-temporal-pilot-v1.lock.json`.

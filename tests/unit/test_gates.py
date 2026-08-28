@@ -14,7 +14,11 @@ class EngineeringGateTests(unittest.TestCase):
         results = check_engineering_gates(ROOT)
         self.assertEqual([result.phase for result in results], [0, 1, 2, 3, 4])
         self.assertTrue(all(result.engineering_passed for result in results))
-        self.assertTrue(all(result.review_status.startswith("pending") for result in results))
+        self.assertTrue(all(result.review_status.startswith("pending") for result in results[:4]))
+        self.assertEqual(
+            results[4].review_status,
+            "internal_cross_source_validation_passed_external_legal_review_not_performed",
+        )
         self.assertTrue(all(result.review_blockers for result in results))
 
 

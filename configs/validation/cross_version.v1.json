@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0.0",
+  "status": "internal_technical_validation_not_legal_review",
+  "relations": [
+    {
+      "relation_id": "it-act-2000-amendment-2008-propagation",
+      "amending_entry_id": "it-amendment-act-2008",
+      "target_entry_id": "it-act-2000-consolidated",
+      "amending_act_citation_regex": "(?:Act\\s+)?10\\s+of\\s+2009",
+      "effective_date": "2009-10-27",
+      "effective_date_text_regex": "27-10-2009",
+      "operation_cues": {
+        "substitution": "\\bSubs\\.",
+        "insertion": "\\bIns\\.",
+        "omission": "\\bomitted\\b",
+        "repeal": "\\brepeal(?:ed|ing)?\\b",
+        "renumbering": "\\brenumber(?:ed|ing)?\\b"
+      },
+      "minimum_corroborated_events_for_technical_gate": 10
+    }
+  ]
+}

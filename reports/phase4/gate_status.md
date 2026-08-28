@@ -2,7 +2,9 @@
 
 **Engineering/automated gate: PASSED**
 
-**Temporal-applicability legal-validation gate: PENDING**
+**Automated cross-source/version consistency gate: PASSED**
+
+**Independent temporal-applicability legal validation: NOT PERFORMED — qualified reviewer unavailable**
 
 ## Implemented
 
@@ -15,6 +17,7 @@
 - Conditional and partial-commencement handling.
 - JSON schemas, CLI resolution command, deterministic self-check and automated tests.
 - Real-corpus extraction of 1,873 evidence-linked temporal candidates; all remain unreviewed and none can drive a resolved answer.
+- Cross-source propagation validation linking the IT Amendment Act evidence, consolidated IT Act annotations and matching effective-date candidates.
 
 ## Engineering validation
 
@@ -25,11 +28,17 @@
 - Missing partial-commencement attributes cause escalation: passed.
 - Temporal registry and code fact types reconcile: passed.
 - Real-corpus candidate evidence and review-state reconciliation: passed.
+- Cross-source event-count reconciliation: passed.
+- Version-graph, temporal-candidate and validation-config fingerprint reconciliation: passed.
+- Configured pilot threshold: passed (13 corroborated events; minimum 10).
+- Distinct-source and effective-date evidence completeness for corroborated events: passed.
+- Unresolved retention: passed (63 events remain unresolved and were not promoted).
 
-## Legal/research blockers
+## Independent-review limitation
 
-- No real applicability determination has qualified legal-review approval.
+- No qualified external reviewer is available; independent legal validation was not performed.
+- No real applicability determination has qualified legal-review approval or legal-gold status.
 - The legal hierarchy and interaction of commencement, retrospectivity and transitional provisions remain unencoded pending review.
 - Real scenarios cannot enter benchmark gold until their temporal facts and governing-version determination are approved.
 
-The engineering resolver is complete. Its output remains `resolved_requires_expert_confirmation` or an explicit unresolved status; it does not autonomously publish legal conclusions.
+The engineering resolver and internal consistency gate are complete. Cross-source corroboration demonstrates that configured amendment evidence was propagated consistently in a bounded pilot; it does not establish legal applicability. Resolver output remains `resolved_requires_expert_confirmation` or an explicit unresolved status and does not autonomously publish legal conclusions.

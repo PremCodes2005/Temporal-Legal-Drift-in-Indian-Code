@@ -10,7 +10,7 @@ The repository is at TRL 2. Phases 0–4 provide configuration, source provenanc
 - **Phase 1:** source-policy enforcement, HTTP transport abstraction, SHA-256 provenance, content-addressed immutable raw storage, and metadata verification.
 - **Phase 2:** plain-text, HTML, XML, and optional PDF parsing; deterministic normalization; quarantine records; normalized output storage; unit/integration tests.
 - **Phase 3:** stable provision identity, consolidated-snapshot versions, amendment-event candidates, graph invariants, evidence links, unresolved-link escalation, and exact-version reconstruction.
-- **Phase 4:** typed temporal facts, scenario/date applicability queries, evidence traces, conditional/partial commencement handling, and unresolved escalation.
+- **Phase 4:** typed temporal facts, scenario/date applicability queries, evidence traces, conditional/partial commencement handling, unresolved escalation, and automated cross-source amendment-propagation checks.
 
 Engineering gates pass independently. Legal/research gates remain pending until the decisions and expert reviews recorded in `reports/phase0` through `reports/phase4` are completed.
 
@@ -37,6 +37,7 @@ tldrift normalize-corpus
 tldrift corpus-report
 tldrift build-version-graph
 tldrift build-temporal-candidates
+tldrift validate-cross-version
 tldrift resolve-applicability --facts PATH --scenario-id ID --lineage-id ID --reference-date YYYY-MM-DD
 tldrift check-gates
 ```
@@ -45,7 +46,7 @@ Acquisition is deny-by-default. The user-approved bounded pilot permits only `ww
 
 Raw and normalized processing artifacts are local runtime data and are ignored by version control. `materialize-corpus` creates integrity-checked, Git-trackable copies with readable filenames under `data/corpus/pdfs` while leaving immutable raw evidence unchanged. `corpus-report` writes a deterministic lock report containing the authoritative URLs, identifiers, SHA-256 hashes, sizes, parser provenance, and known extraction risks.
 
-`check-gates` is the executable Phase 0–4 engineering acceptance check used by CI. It reports qualified research/legal review separately; passing software checks never fabricates human approval.
+`check-gates` is the executable Phase 0–4 engineering acceptance check used by CI. Phase 4 also checks whether amendment-act evidence, consolidated-text amendment notes, and matching effective-date candidates agree for the configured pilot relation. This is internal consistency validation, not independent legal review or legal gold. The unavailable external review is reported explicitly rather than silently treated as passed.
 
 ## Safety and scope
 

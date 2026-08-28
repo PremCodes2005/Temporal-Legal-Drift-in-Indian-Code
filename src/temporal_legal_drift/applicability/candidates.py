@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 from collections import Counter
 from datetime import date, datetime
+from hashlib import sha256
 from pathlib import Path
 
 from temporal_legal_drift.jsonio import atomic_replace, canonical_json_bytes
@@ -72,11 +73,13 @@ def write_candidates_and_lock(
         "status": "machine_extracted_candidates_not_legal_gold",
         "facts": [fact.to_dict() for fact in facts],
     }
-    atomic_replace(output_path, canonical_json_bytes(document))
+    document_payload = canonical_json_bytes(document)
+    atomic_replace(output_path, document_payload)
     counts = Counter(fact.fact_type for fact in facts)
     lock = {
         "schema_version": "1.0.0",
         "status": "machine_extracted_candidates_not_legal_gold",
+        "candidate_document_sha256": sha256(document_payload).hexdigest(),
         "candidate_count": len(facts),
         "fact_type_counts": dict(sorted(counts.items())),
         "all_candidates_unreviewed": all(fact.review_status == "unreviewed" for fact in facts),

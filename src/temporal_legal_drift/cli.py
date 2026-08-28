@@ -12,6 +12,10 @@ from .acquisition import AcquisitionService, RawArtifactStore, SourcePolicy, Sou
 from .acquisition.models import SourceArtifact
 from .applicability import ApplicabilityQuery, ApplicabilityResolver, TemporalFact
 from .applicability.candidates import extract_temporal_candidates, write_candidates_and_lock
+from .applicability.cross_validation import (
+    validate_cross_source_consistency,
+    write_cross_validation_and_lock,
+)
 from .corpus import CorpusDownloader, CorpusManifest, materialize_corpus
 from .corpus.normalize import normalize_corpus
 from .corpus.report import build_corpus_report, write_corpus_report
@@ -125,6 +129,27 @@ def build_parser() -> argparse.ArgumentParser:
         "--lock",
         type=Path,
         default=Path("reports/phase4/temporal_candidates.lock.json"),
+    )
+
+    cross_validation = subparsers.add_parser("validate-cross-version")
+    cross_validation.add_argument(
+        "--graph", type=Path, default=Path("data/interim/version_graph.v1.json")
+    )
+    cross_validation.add_argument(
+        "--facts", type=Path, default=Path("data/interim/temporal_fact_candidates.v1.json")
+    )
+    cross_validation.add_argument(
+        "--config", type=Path, default=Path("configs/validation/cross_version.v1.json")
+    )
+    cross_validation.add_argument(
+        "--output",
+        type=Path,
+        default=Path("data/interim/cross_version_validation.v1.json"),
+    )
+    cross_validation.add_argument(
+        "--lock",
+        type=Path,
+        default=Path("reports/phase4/cross_version_validation.lock.json"),
     )
     return parser
 
@@ -279,6 +304,25 @@ def run(args: argparse.Namespace) -> int:
         facts = extract_temporal_candidates(graph)
         lock = write_candidates_and_lock(
             facts,
+            _resolve(root, args.output),
+            _resolve(root, args.lock),
+        )
+        print(json.dumps(lock, indent=2, ensure_ascii=False))
+        return 0
+
+    if args.command == "validate-cross-version":
+        graph = VersionGraph.from_dict(load_json(_resolve(root, args.graph)))
+        fact_document = load_json(_resolve(root, args.facts))
+        raw_facts = fact_document.get("facts")
+        if not isinstance(raw_facts, list) or not all(isinstance(item, dict) for item in raw_facts):
+            raise ValueError("Temporal fact document must contain an array of objects")
+        validation = validate_cross_source_consistency(
+            graph,
+            tuple(TemporalFact.from_dict(item) for item in raw_facts),
+            load_json(_resolve(root, args.config)),
+        )
+        lock = write_cross_validation_and_lock(
+            validation,
             _resolve(root, args.output),
             _resolve(root, args.lock),
         )

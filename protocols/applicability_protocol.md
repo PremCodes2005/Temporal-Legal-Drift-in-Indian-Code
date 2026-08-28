@@ -1,6 +1,6 @@
 # Phase 4 Temporal Applicability Protocol
 
-**Status:** Engineering implementation complete; qualified legal-validation gate pending.
+**Status:** Engineering and internal cross-source consistency validation implemented; independent legal review not performed because no reviewer is available.
 
 The resolver answers: given scenario S, reference date T and provision lineage L, which evidence-supported version governs?
 
@@ -16,3 +16,9 @@ Rules:
 8. A technically resolved result still requires qualified expert confirmation.
 9. No latest-version heuristic is permitted.
 10. The resolver does not determine the scenario's compliance consequence.
+
+## Internal validation fallback
+
+The technical fallback triangulates three linked records: an amendment event extracted from an authoritative amending instrument, the corresponding consolidated provision's amendment annotation, and a matching effective-date candidate. Corroboration requires distinct source artifacts for the amendment and consolidated text, matching operation cues, the configured amending-Act citation, and the configured date. Failed checks remain unresolved.
+
+This procedure tests amendment propagation and evidence consistency. It does not approve candidate facts, establish a general legal hierarchy, resolve scenario-specific transitional rules, constitute independent review, or create legal-gold applicability determinations.

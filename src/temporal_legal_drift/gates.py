@@ -6,6 +6,7 @@ These checks deliberately do not impersonate research-lead or legal-review appro
 from __future__ import annotations
 
 from dataclasses import dataclass
+from hashlib import sha256
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -13,7 +14,7 @@ from .acquisition import SourcePolicy
 from .applicability.models import TEMPORAL_FACT_TYPES
 from .applicability.selfcheck import run_resolver_self_check
 from .corpus import CorpusManifest
-from .jsonio import load_json
+from .jsonio import canonical_json_bytes, load_json
 from .phase0 import validate_contract_file
 
 
@@ -188,6 +189,10 @@ def _phase3(root: Path) -> PhaseGateResult:
 def _phase4(root: Path) -> PhaseGateResult:
     registry = load_json(root / "configs" / "temporal_semantics" / "registry.v1.json")
     candidate_lock = load_json(root / "reports" / "phase4" / "temporal_candidates.lock.json")
+    cross_lock = load_json(root / "reports" / "phase4" / "cross_version_validation.lock.json")
+    graph_lock = load_json(root / "reports" / "phase3" / "version_graph.lock.json")
+    validation_config = load_json(root / "configs" / "validation" / "cross_version.v1.json")
+    fingerprints = cross_lock.get("input_fingerprints")
     registry_types = registry.get("temporal_fact_types")
     checks = {
         "temporal_fact_schema_present": (
@@ -195,6 +200,9 @@ def _phase4(root: Path) -> PhaseGateResult:
         ).is_file(),
         "applicability_schema_present": (
             root / "schemas" / "temporal" / "applicability_determination.schema.json"
+        ).is_file(),
+        "cross_version_validation_schema_present": (
+            root / "schemas" / "temporal" / "cross_version_validation.schema.json"
         ).is_file(),
         "temporal_registry_matches_code": (
             isinstance(registry_types, list) and set(registry_types) == set(TEMPORAL_FACT_TYPES)
@@ -210,13 +218,36 @@ def _phase4(root: Path) -> PhaseGateResult:
             and candidate_lock.get("approved_candidate_count") == 0
             and candidate_lock.get("all_candidates_have_evidence") is True
         ),
+        "cross_source_counts_reconciled": cross_lock.get("counts_reconciled") is True,
+        "cross_source_inputs_reconciled": (
+            isinstance(fingerprints, dict)
+            and fingerprints.get("version_graph_sha256") == graph_lock.get("graph_sha256")
+            and fingerprints.get("temporal_facts_sha256")
+            == candidate_lock.get("candidate_document_sha256")
+            and fingerprints.get("validation_config_sha256")
+            == sha256(canonical_json_bytes(validation_config)).hexdigest()
+        ),
+        "cross_source_evidence_complete": (
+            cross_lock.get("all_corroborated_have_complete_evidence") is True
+        ),
+        "cross_source_technical_threshold_passed": (
+            cross_lock.get("all_relations_meet_technical_threshold") is True
+            and isinstance(cross_lock.get("corroborated_count"), int)
+            and int(cross_lock["corroborated_count"]) > 0
+        ),
+        "cross_source_validation_does_not_claim_legal_review": (
+            cross_lock.get("legal_validation_claimed") is False
+            and cross_lock.get("independent_legal_review_status")
+            == "not_performed_reviewer_unavailable"
+        ),
     }
     return PhaseGateResult(
         4,
         all(checks.values()),
         checks,
-        "pending_applicability_legal_validation",
+        "internal_cross_source_validation_passed_external_legal_review_not_performed",
         (
+            "independent legal review could not be performed because no reviewer is available",
             "no real applicability determination is approved as legal gold",
             "temporal hierarchy and scenario-specific conditions require qualified review",
             "compliance scenarios must not use unreviewed applicability results",

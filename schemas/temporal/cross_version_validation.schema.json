@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/temporal-legal-drift/cross-version-validation.schema.json",
+  "title": "Automated cross-source version consistency validation",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "status",
+    "input_fingerprints",
+    "results",
+    "relation_summaries"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "status": {"const": "automated_cross_source_consistency_not_legal_validation"},
+    "input_fingerprints": {
+      "type": "object",
+      "required": [
+        "version_graph_sha256",
+        "temporal_facts_sha256",
+        "validation_config_sha256"
+      ],
+      "additionalProperties": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+    },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "validation_id",
+          "relation_id",
+          "amendment_event_id",
+          "status",
+          "checks",
+          "evidence",
+          "failure_reasons"
+        ],
+        "properties": {
+          "validation_id": {"type": "string"},
+          "relation_id": {"type": "string"},
+          "amendment_event_id": {"type": "string"},
+          "status": {"enum": ["corroborated", "unresolved"]},
+          "checks": {"type": "object", "additionalProperties": {"type": "boolean"}},
+          "evidence": {"type": "object"},
+          "failure_reasons": {"type": "array", "items": {"type": "string"}}
+        },
+        "additionalProperties": false
+      }
+    },
+    "relation_summaries": {
+      "type": "array",
+      "items": {"type": "object"}
+    }
+  },
+  "additionalProperties": false
+}
