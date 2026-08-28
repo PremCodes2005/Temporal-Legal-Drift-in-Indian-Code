@@ -16,4 +16,7 @@ data/normalized/**
 !data/normalized/.gitkeep
 data/quarantine/**
 !data/quarantine/.gitkeep
-
+data/interim/**
+!data/interim/.gitkeep
+data/corpus/**
+!data/corpus/.gitkeep

@@ -1,0 +1,14 @@
+{
+  "all_versions_have_evidence": true,
+  "amendment_event_count": 76,
+  "graph_sha256": "364bf11a3334f1b426281c5596f975bf70cd2ae4054f3cee09cf9b5b1bcf27d0",
+  "graph_status": "technical_reconstruction_not_legal_gold",
+  "graph_validation_errors": [],
+  "instrument_count": 14,
+  "legal_validation_status": "not_reviewed",
+  "lineage_count": 1395,
+  "schema_version": "1.0.0",
+  "transition_count": 0,
+  "unresolved_count": 78,
+  "version_count": 1395
+}

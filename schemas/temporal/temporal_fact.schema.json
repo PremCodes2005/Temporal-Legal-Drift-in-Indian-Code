@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/temporal_fact.schema.json",
+  "title": "Temporal legal fact",
+  "type": "object",
+  "required": ["fact_id", "fact_type", "version_id", "date_or_condition", "effective_date", "source_artifact_id", "evidence_locator", "review_status", "uncertainty", "conditions"],
+  "properties": {
+    "fact_id": {"type": "string", "pattern": "^tmp_[a-f0-9]{24}$"},
+    "fact_type": {"enum": ["publication", "enactment_or_assent", "commencement", "applicability", "legal_effect", "retrospective_effect", "transitional_provision", "deferred_commencement", "partial_commencement"]},
+    "version_id": {"type": "string"},
+    "date_or_condition": {"type": "string"},
+    "effective_date": {"type": ["string", "null"], "format": "date"},
+    "source_artifact_id": {"type": "string"},
+    "evidence_locator": {"type": "string"},
+    "review_status": {"enum": ["unreviewed", "approved", "rejected", "contested"]},
+    "uncertainty": {"type": ["string", "null"]},
+    "conditions": {"type": "object", "additionalProperties": {"type": "string"}}
+  },
+  "additionalProperties": false
+}

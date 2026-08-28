@@ -40,6 +40,96 @@
       "instrument_type": "central_act",
       "expected_media_type": "application/pdf",
       "research_role": "compliance-oriented Act with deferred and partial commencement complexity"
+    },
+    {
+      "entry_id": "companies-act-2013",
+      "url": "https://www.indiacode.nic.in/indiacode/bitstream/123456789/2114/5/A2013-18.pdf",
+      "parent_reference_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/2114?view_type=browse",
+      "official_identifier": "IndiaCode:2013-18",
+      "instrument_type": "consolidated_central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "corporate compliance Act with extensive partial commencement and amendment history"
+    },
+    {
+      "entry_id": "right-to-information-act-2005",
+      "url": "https://www.indiacode.nic.in/indiacode/bitstream/123456789/2065/1/aa2005.pdf",
+      "parent_reference_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/2065?view_type=browse",
+      "official_identifier": "IndiaCode:2005-22",
+      "instrument_type": "consolidated_central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "public-authority compliance Act with explicit commencement structure"
+    },
+    {
+      "entry_id": "aadhaar-act-2016",
+      "url": "https://www.indiacode.nic.in/indiacode/bitstream/123456789/21418/1/aadhaar_act_2016_as_amended.pdf",
+      "parent_reference_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/21418?view_type=browse",
+      "official_identifier": "IndiaCode:2016-18",
+      "instrument_type": "consolidated_central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "identity and information-governance Act with amendment and commencement history"
+    },
+    {
+      "entry_id": "competition-act-2002",
+      "url": "https://www.indiacode.nic.in/indiacode/bitstream/123456789/2010/7/A2003-12.pdf",
+      "parent_reference_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/2010?view_type=browse",
+      "official_identifier": "IndiaCode:2003-12",
+      "instrument_type": "consolidated_central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "competition compliance Act with staggered commencement and amendment history"
+    },
+    {
+      "entry_id": "prevention-money-laundering-act-2002",
+      "url": "https://www.indiacode.nic.in/indiacode/bitstream/123456789/2036/5/A2003-15.pdf",
+      "parent_reference_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/2036?view_type=browse",
+      "official_identifier": "IndiaCode:2003-15",
+      "instrument_type": "consolidated_central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "financial compliance Act with commencement and material amendment history"
+    },
+    {
+      "entry_id": "insolvency-bankruptcy-code-2016",
+      "url": "https://www.indiacode.nic.in/indiacode/bitstream/123456789/2154/1/A201631.pdf",
+      "parent_reference_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/2154?view_type=browse",
+      "official_identifier": "IndiaCode:2016-31",
+      "instrument_type": "consolidated_central_code",
+      "expected_media_type": "application/pdf",
+      "research_role": "commercial compliance code with phased commencement and frequent amendment history"
+    },
+    {
+      "entry_id": "central-goods-services-tax-act-2017",
+      "url": "https://www.indiacode.nic.in/indiacode/bitstream/123456789/15689/1/A2017-12.pdf",
+      "parent_reference_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/15689?view_type=browse",
+      "official_identifier": "IndiaCode:2017-12",
+      "instrument_type": "consolidated_central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "tax compliance Act with partial commencement and transitional provisions"
+    },
+    {
+      "entry_id": "environment-protection-act-1986",
+      "url": "https://www.indiacode.nic.in/indiacode/bitstream/123456789/5334/1/environment_protection_act_1986.pdf",
+      "parent_reference_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/5334?view_type=browse",
+      "official_identifier": "IndiaCode:1986-29",
+      "instrument_type": "consolidated_central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "environmental compliance Act with delegated and commencement evidence"
+    },
+    {
+      "entry_id": "factories-act-1948",
+      "url": "https://www.indiacode.nic.in/indiacode/bitstream/123456789/22105/1/the_factories_act%2C_1948.pdf",
+      "parent_reference_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/22105?view_type=browse",
+      "official_identifier": "IndiaCode:1948-63",
+      "instrument_type": "consolidated_central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "workplace compliance Act with long amendment history"
+    },
+    {
+      "entry_id": "copyright-act-1957",
+      "url": "https://www.indiacode.nic.in/indiacode/bitstream/123456789/1367/1/A195714.pdf",
+      "parent_reference_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/1367?view_type=browse",
+      "official_identifier": "IndiaCode:1957-14",
+      "instrument_type": "consolidated_central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "intellectual-property compliance Act with extensive amendment history"
     }
   ]
 }

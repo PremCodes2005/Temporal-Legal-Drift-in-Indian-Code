@@ -1,15 +1,18 @@
-"""Command-line entry point for the Phase 0-2 foundation."""
+"""Command-line entry point for the Phase 0-4 foundation."""
 
 from __future__ import annotations
 
 import argparse
 import json
 import sys
+from datetime import date
 from pathlib import Path
 
 from .acquisition import AcquisitionService, RawArtifactStore, SourcePolicy, SourceRequest
 from .acquisition.models import SourceArtifact
-from .corpus import CorpusDownloader, CorpusManifest
+from .applicability import ApplicabilityQuery, ApplicabilityResolver, TemporalFact
+from .applicability.candidates import extract_temporal_candidates, write_candidates_and_lock
+from .corpus import CorpusDownloader, CorpusManifest, materialize_corpus
 from .corpus.normalize import normalize_corpus
 from .corpus.report import build_corpus_report, write_corpus_report
 from .errors import TemporalLegalDriftError
@@ -18,6 +21,8 @@ from .jsonio import load_json
 from .parsing.service import NormalizationService
 from .parsing.store import NormalizedDocumentStore, QuarantineStore
 from .phase0 import validate_contract_file
+from .versioning import VersionGraph, VersionGraphBuilder
+from .versioning.builder import write_graph_and_lock
 
 
 def _project_root() -> Path:
@@ -51,6 +56,14 @@ def build_parser() -> argparse.ArgumentParser:
     )
     download_corpus.add_argument("--refresh", action="store_true")
 
+    materialize = subparsers.add_parser("materialize-corpus")
+    materialize.add_argument(
+        "--manifest", type=Path, default=Path("configs/corpus/pilot_v1.json")
+    )
+    materialize.add_argument(
+        "--output", type=Path, default=Path("data/corpus/pdfs")
+    )
+
     normalize_corpus_parser = subparsers.add_parser("normalize-corpus")
     normalize_corpus_parser.add_argument(
         "--manifest", type=Path, default=Path("configs/corpus/pilot_v1.json")
@@ -67,6 +80,52 @@ def build_parser() -> argparse.ArgumentParser:
     )
 
     subparsers.add_parser("check-gates")
+
+    build_graph = subparsers.add_parser("build-version-graph")
+    build_graph.add_argument(
+        "--manifest", type=Path, default=Path("configs/corpus/pilot_v1.json")
+    )
+    build_graph.add_argument(
+        "--corpus-report",
+        type=Path,
+        default=Path("reports/corpus/india-code-temporal-pilot-v1.lock.json"),
+    )
+    build_graph.add_argument(
+        "--relations",
+        type=Path,
+        default=Path("configs/versioning/instrument_relations.v1.json"),
+    )
+    build_graph.add_argument(
+        "--output", type=Path, default=Path("data/interim/version_graph.v1.json")
+    )
+    build_graph.add_argument(
+        "--lock", type=Path, default=Path("reports/phase3/version_graph.lock.json")
+    )
+
+    resolve = subparsers.add_parser("resolve-applicability")
+    resolve.add_argument(
+        "--graph", type=Path, default=Path("data/interim/version_graph.v1.json")
+    )
+    resolve.add_argument("--facts", type=Path, required=True)
+    resolve.add_argument("--scenario-id", required=True)
+    resolve.add_argument("--lineage-id", required=True)
+    resolve.add_argument("--reference-date", required=True)
+    resolve.add_argument("--attributes-json", default="{}")
+
+    temporal_candidates = subparsers.add_parser("build-temporal-candidates")
+    temporal_candidates.add_argument(
+        "--graph", type=Path, default=Path("data/interim/version_graph.v1.json")
+    )
+    temporal_candidates.add_argument(
+        "--output",
+        type=Path,
+        default=Path("data/interim/temporal_fact_candidates.v1.json"),
+    )
+    temporal_candidates.add_argument(
+        "--lock",
+        type=Path,
+        default=Path("reports/phase4/temporal_candidates.lock.json"),
+    )
     return parser
 
 
@@ -123,6 +182,16 @@ def run(args: argparse.Namespace) -> int:
         print(json.dumps(summary.to_dict(), indent=2, ensure_ascii=False))
         return 0
 
+    if args.command == "materialize-corpus":
+        manifest = CorpusManifest.from_file(_resolve(root, args.manifest))
+        summary = materialize_corpus(
+            manifest,
+            RawArtifactStore(root / "data" / "raw"),
+            _resolve(root, args.output),
+        )
+        print(json.dumps(summary.to_dict(), indent=2, ensure_ascii=False))
+        return 0
+
     if args.command == "normalize-corpus":
         manifest = CorpusManifest.from_file(_resolve(root, args.manifest))
         raw_store = RawArtifactStore(root / "data" / "raw")
@@ -163,6 +232,58 @@ def run(args: argparse.Namespace) -> int:
             )
         )
         return 0 if passed else 2
+
+    if args.command == "build-version-graph":
+        manifest = CorpusManifest.from_file(_resolve(root, args.manifest))
+        graph = VersionGraphBuilder().build(
+            manifest,
+            load_json(_resolve(root, args.corpus_report)),
+            root / "data" / "normalized",
+            load_json(_resolve(root, args.relations)),
+        )
+        summary = write_graph_and_lock(
+            graph,
+            _resolve(root, args.output),
+            _resolve(root, args.lock),
+        )
+        print(json.dumps(summary.to_dict(), indent=2, ensure_ascii=False))
+        return 0
+
+    if args.command == "resolve-applicability":
+        graph = VersionGraph.from_dict(load_json(_resolve(root, args.graph)))
+        fact_document = load_json(_resolve(root, args.facts))
+        raw_facts = fact_document.get("facts")
+        if not isinstance(raw_facts, list) or not all(isinstance(item, dict) for item in raw_facts):
+            raise ValueError("Temporal fact document must contain an array of objects")
+        attributes = json.loads(args.attributes_json)
+        if not isinstance(attributes, dict) or not all(
+            isinstance(key, str) and isinstance(value, str) for key, value in attributes.items()
+        ):
+            raise ValueError("--attributes-json must be an object with string keys and values")
+        determination = ApplicabilityResolver(
+            graph,
+            tuple(TemporalFact.from_dict(item) for item in raw_facts),
+        ).resolve(
+            ApplicabilityQuery(
+                args.scenario_id,
+                args.lineage_id,
+                date.fromisoformat(args.reference_date),
+                attributes,
+            )
+        )
+        print(json.dumps(determination.to_dict(), indent=2, ensure_ascii=False))
+        return 0
+
+    if args.command == "build-temporal-candidates":
+        graph = VersionGraph.from_dict(load_json(_resolve(root, args.graph)))
+        facts = extract_temporal_candidates(graph)
+        lock = write_candidates_and_lock(
+            facts,
+            _resolve(root, args.output),
+            _resolve(root, args.lock),
+        )
+        print(json.dumps(lock, indent=2, ensure_ascii=False))
+        return 0
 
     raise AssertionError(f"Unhandled command: {args.command}")
 

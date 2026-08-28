@@ -1,0 +1,13 @@
+{
+  "all_candidates_have_evidence": true,
+  "all_candidates_unreviewed": true,
+  "approved_candidate_count": 0,
+  "candidate_count": 1873,
+  "fact_type_counts": {
+    "commencement": 1826,
+    "partial_commencement": 1,
+    "publication": 46
+  },
+  "schema_version": "1.0.0",
+  "status": "machine_extracted_candidates_not_legal_gold"
+}

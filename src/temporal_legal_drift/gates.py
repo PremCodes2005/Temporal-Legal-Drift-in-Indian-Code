@@ -1,4 +1,4 @@
-"""Executable engineering gates for the Phase 0-2 research foundation.
+"""Executable engineering gates for the Phase 0-4 research foundation.
 
 These checks deliberately do not impersonate research-lead or legal-review approval.
 """
@@ -10,6 +10,8 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 from .acquisition import SourcePolicy
+from .applicability.models import TEMPORAL_FACT_TYPES
+from .applicability.selfcheck import run_resolver_self_check
 from .corpus import CorpusManifest
 from .jsonio import load_json
 from .phase0 import validate_contract_file
@@ -148,6 +150,80 @@ def _phase2(root: Path) -> PhaseGateResult:
     )
 
 
+def _phase3(root: Path) -> PhaseGateResult:
+    lock = load_json(root / "reports" / "phase3" / "version_graph.lock.json")
+    manifest = CorpusManifest.from_file(root / "configs" / "corpus" / "pilot_v1.json")
+    checks = {
+        "version_graph_schema_present": (
+            root / "schemas" / "temporal" / "version_graph.schema.json"
+        ).is_file(),
+        "at_least_fourteen_corpus_instruments": len(manifest.entries) >= 14,
+        "all_corpus_instruments_reconciled": lock.get("instrument_count") == len(manifest.entries),
+        "provision_lineages_and_versions_created": (
+            isinstance(lock.get("lineage_count"), int)
+            and int(lock["lineage_count"]) > 0
+            and lock.get("lineage_count") == lock.get("version_count")
+        ),
+        "amendment_candidates_linked_or_escalated": (
+            isinstance(lock.get("amendment_event_count"), int)
+            and int(lock["amendment_event_count"]) > 0
+            and isinstance(lock.get("unresolved_count"), int)
+        ),
+        "all_versions_have_evidence": lock.get("all_versions_have_evidence") is True,
+        "graph_invariants_pass": lock.get("graph_validation_errors") == [],
+    }
+    return PhaseGateResult(
+        3,
+        all(checks.values()),
+        checks,
+        "pending_historical_reconstruction_legal_review",
+        (
+            "real historical before/after provision pairs are not yet legally validated",
+            "candidate amendment links and duplicate section candidates require adjudication",
+            "the real-corpus graph contains snapshots and unresolved events, not approved transitions",
+        ),
+    )
+
+
+def _phase4(root: Path) -> PhaseGateResult:
+    registry = load_json(root / "configs" / "temporal_semantics" / "registry.v1.json")
+    candidate_lock = load_json(root / "reports" / "phase4" / "temporal_candidates.lock.json")
+    registry_types = registry.get("temporal_fact_types")
+    checks = {
+        "temporal_fact_schema_present": (
+            root / "schemas" / "temporal" / "temporal_fact.schema.json"
+        ).is_file(),
+        "applicability_schema_present": (
+            root / "schemas" / "temporal" / "applicability_determination.schema.json"
+        ).is_file(),
+        "temporal_registry_matches_code": (
+            isinstance(registry_types, list) and set(registry_types) == set(TEMPORAL_FACT_TYPES)
+        ),
+        "resolver_engineering_self_check": run_resolver_self_check(),
+        "ambiguity_policy_is_escalation": "unresolved" in str(registry.get("resolution_policy", "")),
+        "real_corpus_temporal_candidates_extracted": (
+            isinstance(candidate_lock.get("candidate_count"), int)
+            and int(candidate_lock["candidate_count"]) > 0
+        ),
+        "real_candidates_cannot_silently_become_gold": (
+            candidate_lock.get("all_candidates_unreviewed") is True
+            and candidate_lock.get("approved_candidate_count") == 0
+            and candidate_lock.get("all_candidates_have_evidence") is True
+        ),
+    }
+    return PhaseGateResult(
+        4,
+        all(checks.values()),
+        checks,
+        "pending_applicability_legal_validation",
+        (
+            "no real applicability determination is approved as legal gold",
+            "temporal hierarchy and scenario-specific conditions require qualified review",
+            "compliance scenarios must not use unreviewed applicability results",
+        ),
+    )
+
+
 def check_engineering_gates(root: Path) -> tuple[PhaseGateResult, ...]:
-    """Return all Phase 0-2 engineering-gate results in order."""
-    return (_phase0(root), _phase1(root), _phase2(root))
+    """Return all Phase 0-4 engineering-gate results in order."""
+    return (_phase0(root), _phase1(root), _phase2(root), _phase3(root), _phase4(root))

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/applicability_determination.schema.json",
+  "title": "Temporal applicability determination",
+  "type": "object",
+  "required": ["schema_version", "determination_id", "scenario_id", "reference_date", "lineage_id", "status", "governing_version_id", "supporting_fact_ids", "reasoning_trace", "escalation_reasons", "review_requirement"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "determination_id": {"type": "string", "pattern": "^app_[a-f0-9]{24}$"},
+    "scenario_id": {"type": "string"},
+    "reference_date": {"type": "string", "format": "date"},
+    "lineage_id": {"type": "string"},
+    "status": {"enum": ["resolved_requires_expert_confirmation", "unresolved_escalate", "not_yet_effective"]},
+    "governing_version_id": {"type": ["string", "null"]},
+    "supporting_fact_ids": {"type": "array", "items": {"type": "string"}},
+    "reasoning_trace": {"type": "array", "items": {"type": "string"}},
+    "escalation_reasons": {"type": "array", "items": {"type": "string"}},
+    "review_requirement": {"const": "qualified_legal_review_required"}
+  },
+  "additionalProperties": false
+}

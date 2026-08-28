@@ -14,7 +14,7 @@
 - Immutable normalized documents.
 - Quarantine records for malformed, unsupported, unreadable, or integrity-invalid input.
 - Synthetic unit and integration tests.
-- Normalization of all four pilot PDFs into 120 page-level blocks with source hashes and parser provenance.
+- Normalization of all fourteen pilot PDFs into 1,065 page-level blocks with source hashes and parser provenance.
 
 ## Human-review and fidelity blockers
 

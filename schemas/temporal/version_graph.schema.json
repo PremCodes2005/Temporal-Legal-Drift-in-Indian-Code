@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/version_graph.schema.json",
+  "title": "Evidence-linked provision version graph",
+  "type": "object",
+  "required": ["schema_version", "graph_status", "instruments", "lineages", "versions", "amendment_events", "transitions", "unresolved"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "graph_status": {"const": "technical_reconstruction_not_legal_gold"},
+    "instruments": {"type": "array", "items": {"$ref": "#/$defs/instrument"}},
+    "lineages": {"type": "array", "items": {"$ref": "#/$defs/lineage"}},
+    "versions": {"type": "array", "items": {"$ref": "#/$defs/version"}},
+    "amendment_events": {"type": "array", "items": {"$ref": "#/$defs/amendment"}},
+    "transitions": {"type": "array", "items": {"$ref": "#/$defs/transition"}},
+    "unresolved": {"type": "array", "items": {"type": "object"}}
+  },
+  "$defs": {
+    "evidence": {
+      "type": "object",
+      "required": ["source_artifact_id", "source_sha256", "normalized_document_id", "block_id", "locator", "exact_text_sha256"],
+      "properties": {
+        "source_artifact_id": {"type": "string"},
+        "source_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "normalized_document_id": {"type": "string"},
+        "block_id": {"type": "string"},
+        "locator": {"type": "string"},
+        "exact_text_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      },
+      "additionalProperties": false
+    },
+    "instrument": {
+      "type": "object",
+      "required": ["instrument_id", "corpus_entry_id", "official_identifier", "instrument_type", "title", "source_artifact_id"]
+    },
+    "lineage": {
+      "type": "object",
+      "required": ["lineage_id", "instrument_id", "canonical_path", "provision_number", "title"]
+    },
+    "version": {
+      "type": "object",
+      "required": ["version_id", "lineage_id", "version_label", "exact_text", "exact_text_sha256", "evidence", "extraction_status"],
+      "properties": {"evidence": {"$ref": "#/$defs/evidence"}}
+    },
+    "amendment": {
+      "type": "object",
+      "required": ["amendment_event_id", "amending_instrument_id", "target_path_text", "operation", "evidence", "resolution_status"],
+      "properties": {"evidence": {"$ref": "#/$defs/evidence"}}
+    },
+    "transition": {
+      "type": "object",
+      "required": ["transition_id", "before_version_id", "after_version_id", "amendment_event_id", "operation", "evidence"],
+      "properties": {"evidence": {"$ref": "#/$defs/evidence"}}
+    }
+  },
+  "additionalProperties": false
+}
