@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/temporal-legal-drift/drift-metrics.schema.json",
+  "title": "Temporal compliance drift metrics",
+  "type": "object",
+  "required": ["paired_item_count", "false_stability_count", "false_stability_denominator", "false_stability_rate", "false_instability_count", "false_instability_denominator", "false_instability_rate", "change_decision_accuracy"]
+}

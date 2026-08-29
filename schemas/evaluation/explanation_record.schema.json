@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/temporal-legal-drift/explanation-record.schema.json",
+  "title": "Structured evidence-grounded explanation",
+  "type": "object",
+  "required": ["legal_instrument", "provision_path", "applicable_date", "version_id", "before_evidence_id", "after_evidence_id", "amendment_operation", "materiality_dimensions", "materiality_level", "compliance_consequence", "citations", "confidence", "uncertainty_or_escalation"],
+  "properties": {
+    "legal_instrument": {"type": ["string", "null"]},
+    "provision_path": {"type": ["string", "null"]},
+    "applicable_date": {"type": ["string", "null"]},
+    "version_id": {"type": ["string", "null"]},
+    "before_evidence_id": {"type": ["string", "null"]},
+    "after_evidence_id": {"type": ["string", "null"]},
+    "amendment_operation": {"type": ["string", "null"]},
+    "materiality_dimensions": {"type": "array", "items": {"type": "string"}},
+    "materiality_level": {"enum": ["High", "Medium", "Low", "None", null]},
+    "compliance_consequence": {"type": ["string", "null"]},
+    "citations": {"type": "array", "items": {"type": "string"}},
+    "confidence": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+    "uncertainty_or_escalation": {"type": ["string", "null"]}
+  },
+  "additionalProperties": false
+}

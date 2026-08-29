@@ -1,4 +1,4 @@
-"""Executable engineering gates for the Phase 0-4 research foundation.
+"""Executable engineering gates for the Phase 0-10 research foundation.
 
 These checks deliberately do not impersonate research-lead or legal-review approval.
 """
@@ -13,8 +13,12 @@ from urllib.parse import urlparse
 from .acquisition import SourcePolicy
 from .applicability.models import TEMPORAL_FACT_TYPES
 from .applicability.selfcheck import run_resolver_self_check
+from .baselines import ClassPriorBaseline, MajorityBaseline, OperationPriorBaseline
 from .corpus import CorpusManifest
+from .explanations import evaluate_explanation_support
 from .jsonio import canonical_json_bytes, load_json
+from .llm_evaluation import score_paired_assertions
+from .metrics import classification_metrics, multiclass_brier_score
 from .phase0 import validate_contract_file
 
 
@@ -426,6 +430,271 @@ def _phase7(root: Path) -> PhaseGateResult:
     )
 
 
+def _phase8(root: Path) -> PhaseGateResult:
+    lock = load_json(root / "reports" / "phase8" / "baseline_dry_run.lock.json")
+    phase5_lock = load_json(root / "reports" / "phase5" / "annotation_workload.lock.json")
+    phase7_lock = load_json(root / "reports" / "phase7" / "release.lock.json")
+    config = load_json(root / "configs" / "experiments" / "baselines.v1.json")
+    fingerprints = lock.get("input_fingerprints")
+    baselines = config.get("baselines")
+    checks = {
+        "baseline_run_schema_present": (
+            root / "schemas" / "evaluation" / "baseline_run.schema.json"
+        ).is_file(),
+        "all_required_baseline_families_registered": (
+            isinstance(baselines, list)
+            and {
+                "majority",
+                "class_prior",
+                "lexical_features",
+                "amendment_operation",
+                "rule_legal_cues",
+                "generic_document_revision",
+                "zero_shot_llm",
+                "few_shot_llm",
+                "legal_encoder",
+                "long_context_encoder",
+                "closest_work_inspired",
+                "proposed_model",
+            }
+            == {item.get("family") for item in baselines if isinstance(item, dict)}
+        ),
+        "non_neural_baseline_self_check": _baseline_self_check(),
+        "baseline_features_cover_workload": lock.get("feature_row_count")
+        == phase5_lock.get("task_count"),
+        "phase8_inputs_reconciled": (
+            isinstance(fingerprints, dict)
+            and fingerprints.get("annotation_workload_sha256")
+            == phase5_lock.get("workload_sha256")
+            and fingerprints.get("release_sha256") == phase7_lock.get("release_sha256")
+            and fingerprints.get("baseline_config_sha256")
+            == sha256(canonical_json_bytes(config)).hexdigest()
+        ),
+        "test_set_tuning_disabled": config.get("test_set_tuning_permitted") is False,
+        "unsupported_baseline_results_absent": (
+            lock.get("metrics_reported") is False
+            and lock.get("unsupported_performance_claims_absent") is True
+            and lock.get("research_gate_passed") is False
+        ),
+    }
+    return PhaseGateResult(
+        8,
+        all(checks.values()),
+        checks,
+        "baseline_framework_passed_evaluation_not_run_without_gold",
+        (
+            "the Phase 7 benchmark is not frozen",
+            "materiality gold labels and complete before/after pairs are unavailable",
+            "neural and LLM baselines have no selected models or approved execution configuration",
+            "no baseline metric or model-performance claim can be reported",
+        ),
+    )
+
+
+def _phase9(root: Path) -> PhaseGateResult:
+    lock = load_json(root / "reports" / "phase9" / "evaluation_plan.lock.json")
+    phase6_lock = load_json(root / "reports" / "phase6" / "scenario_scaffolds.lock.json")
+    phase7_lock = load_json(root / "reports" / "phase7" / "release.lock.json")
+    phase8_lock = load_json(root / "reports" / "phase8" / "baseline_dry_run.lock.json")
+    config = load_json(root / "configs" / "experiments" / "temporal_llm.v1.json")
+    prompt = load_json(root / "configs" / "prompts" / "compliance_reasoning.v1.json")
+    fingerprints = lock.get("input_fingerprints")
+    checks = {
+        "model_run_schema_present": (
+            root / "schemas" / "evaluation" / "model_run.schema.json"
+        ).is_file(),
+        "normalized_assertion_schema_present": (
+            root / "schemas" / "evaluation" / "normalized_assertion.schema.json"
+        ).is_file(),
+        "drift_metrics_schema_present": (
+            root / "schemas" / "evaluation" / "drift_metrics.schema.json"
+        ).is_file(),
+        "six_controlled_conditions_present": (
+            lock.get("condition_count") == 6
+            and lock.get("all_scenarios_have_six_conditions") is True
+        ),
+        "scenario_facts_held_constant": lock.get("facts_held_constant_across_conditions")
+        is True,
+        "drift_metric_self_check": _drift_self_check(),
+        "phase9_inputs_reconciled": (
+            isinstance(fingerprints, dict)
+            and fingerprints.get("scenario_scaffolds_sha256")
+            == phase6_lock.get("scenario_document_sha256")
+            and fingerprints.get("release_sha256") == phase7_lock.get("release_sha256")
+            and fingerprints.get("baseline_run_sha256") == phase8_lock.get("run_sha256")
+            and fingerprints.get("experiment_config_sha256")
+            == sha256(canonical_json_bytes(config)).hexdigest()
+            and fingerprints.get("prompt_config_sha256")
+            == sha256(canonical_json_bytes(prompt)).hexdigest()
+        ),
+        "controlled_execution_configuration_documented": (
+            config.get("temperature") == 0
+            and bool(config.get("prompt_version"))
+            and bool(config.get("retrieval_configuration"))
+        ),
+        "unsupported_llm_results_absent": (
+            lock.get("executed_run_count") == 0
+            and lock.get("metrics_reported") is False
+            and lock.get("unsupported_results_absent") is True
+            and lock.get("research_gate_passed") is False
+        ),
+    }
+    return PhaseGateResult(
+        9,
+        all(checks.values()),
+        checks,
+        "controlled_llm_evaluation_framework_passed_execution_not_performed",
+        (
+            "no model or model version is selected",
+            "scenario gold and expected-change labels are unavailable",
+            "the benchmark is not frozen",
+            "no LLM run, normalized assertion or temporal-drift result exists",
+        ),
+    )
+
+
+def _phase10(root: Path) -> PhaseGateResult:
+    lock = load_json(root / "reports" / "phase10" / "explanation_plan.lock.json")
+    phase9_lock = load_json(root / "reports" / "phase9" / "evaluation_plan.lock.json")
+    phase6_lock = load_json(root / "reports" / "phase6" / "scenario_scaffolds.lock.json")
+    phase5_lock = load_json(root / "reports" / "phase5" / "annotation_workload.lock.json")
+    graph_lock = load_json(root / "reports" / "phase3" / "version_graph.lock.json")
+    rubric = load_json(root / "configs" / "experiments" / "explanation_rubric.v1.json")
+    fingerprints = lock.get("input_fingerprints")
+    checks = {
+        "explanation_record_schema_present": (
+            root / "schemas" / "evaluation" / "explanation_record.schema.json"
+        ).is_file(),
+        "explanation_evaluation_schema_present": (
+            root / "schemas" / "evaluation" / "explanation_evaluation.schema.json"
+        ).is_file(),
+        "evidence_support_self_check": _explanation_self_check(rubric),
+        "phase10_inputs_reconciled": (
+            isinstance(fingerprints, dict)
+            and fingerprints.get("llm_plan_sha256") == phase9_lock.get("plan_sha256")
+            and fingerprints.get("scenario_scaffolds_sha256")
+            == phase6_lock.get("scenario_document_sha256")
+            and fingerprints.get("annotation_workload_sha256")
+            == phase5_lock.get("workload_sha256")
+            and fingerprints.get("version_graph_sha256") == graph_lock.get("graph_sha256")
+            and fingerprints.get("rubric_sha256")
+            == sha256(canonical_json_bytes(rubric)).hexdigest()
+        ),
+        "all_planned_post_versions_resolve": lock.get("all_known_post_versions_resolve")
+        is True,
+        "rubric_separates_automated_and_expert_review": (
+            rubric.get("llm_as_judge_is_sole_legal_evaluator") is False
+            and rubric.get("blinded_expert_review_required_for_quality_claims") is True
+            and bool(rubric.get("expert_required_dimensions"))
+        ),
+        "unsupported_explanation_results_absent": (
+            lock.get("automated_evaluation_count") == 0
+            and lock.get("expert_evaluation_count") == 0
+            and lock.get("aggregate_metrics_reported") is False
+            and lock.get("unsupported_quality_claims_absent") is True
+            and lock.get("research_gate_passed") is False
+        ),
+    }
+    return PhaseGateResult(
+        10,
+        all(checks.values()),
+        checks,
+        "explanation_evaluation_framework_passed_quality_evaluation_not_performed",
+        (
+            "Phase 9 produced no model explanations",
+            "materiality, applicability and compliance gold are unavailable",
+            "independent expert explanation review is unavailable",
+            "no explanation-quality or legal-correctness claim can be reported",
+        ),
+    )
+
+
+def _baseline_self_check() -> bool:
+    majority = MajorityBaseline().fit(["High", "Low", "High"]).predict(2)
+    class_prior = ClassPriorBaseline().fit(["High", "High", "Low"])
+    operation = OperationPriorBaseline().fit(
+        ["insertion", "insertion", "omission"], ["High", "High", "Low"]
+    ).predict(["insertion", "unknown"])
+    metrics = classification_metrics(
+        ["High", "Medium", "Low", "None"],
+        ["High", "Medium", "None", "None"],
+        ("High", "Medium", "Low", "None"),
+    )
+    brier = multiclass_brier_score(
+        ["High"],
+        class_prior.predict_proba(1),
+        ("High", "Medium", "Low", "None"),
+    )
+    return (
+        majority == ["High", "High"]
+        and class_prior.predict(1) == ["High"]
+        and operation == ["High", "High"]
+        and metrics.get("item_count") == 4
+        and metrics.get("high_materiality_false_negative_rate") == 0
+        and isinstance(brier.get("multiclass_brier_score"), float)
+    )
+
+
+def _drift_self_check() -> bool:
+    assertion_a = {
+        "conclusion": "compliant",
+        "cited_version_id": "v1",
+        "citations": ["e1"],
+        "explanation": "supported",
+        "uncertainty": None,
+    }
+    assertion_b = {**assertion_a, "conclusion": "non_compliant", "cited_version_id": "v2"}
+    metrics = score_paired_assertions(
+        [
+            {"expected_change": 1, "pre_assertion": assertion_a, "post_assertion": assertion_a},
+            {"expected_change": 0, "pre_assertion": assertion_a, "post_assertion": assertion_b},
+        ]
+    )
+    return (
+        metrics.get("false_stability_rate") == 1
+        and metrics.get("false_instability_rate") == 1
+        and metrics.get("false_stability_denominator") == 1
+        and metrics.get("false_instability_denominator") == 1
+    )
+
+
+def _explanation_self_check(rubric: dict[str, object]) -> bool:
+    fields = rubric.get("required_explanation_fields")
+    if not isinstance(fields, list):
+        return False
+    explanation = {
+        "legal_instrument": "Act",
+        "provision_path": "section:1",
+        "applicable_date": "2020-01-01",
+        "version_id": "stale-version",
+        "before_evidence_id": "before",
+        "after_evidence_id": "after",
+        "amendment_operation": "substitution",
+        "materiality_dimensions": ["obligation"],
+        "materiality_level": "High",
+        "compliance_consequence": "non-compliant",
+        "citations": ["after"],
+        "confidence": 0.8,
+        "uncertainty_or_escalation": "version requires review",
+    }
+    result = evaluate_explanation_support(
+        explanation,
+        {
+            "version_id": "current-version",
+            "applicable_date": "2020-01-01",
+            "compliance_consequence": "non-compliant",
+        },
+        {"before", "after"},
+        tuple(str(item) for item in fields),
+    )
+    return (
+        result.get("explanation_drift") is True
+        and result.get("version_alignment") is False
+        and result.get("legal_correctness") is None
+        and result.get("expert_evaluation_required") is True
+    )
+
+
 def check_engineering_gates(root: Path) -> tuple[PhaseGateResult, ...]:
     """Return all implemented engineering-gate results in order."""
     return (
@@ -437,4 +706,7 @@ def check_engineering_gates(root: Path) -> tuple[PhaseGateResult, ...]:
         _phase5(root),
         _phase6(root),
         _phase7(root),
+        _phase8(root),
+        _phase9(root),
+        _phase10(root),
     )

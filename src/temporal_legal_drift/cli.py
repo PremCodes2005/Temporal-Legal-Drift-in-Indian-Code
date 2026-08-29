@@ -1,4 +1,4 @@
-"""Command-line entry point for the Phase 0-7 research foundation."""
+"""Command-line entry point for the Phase 0-10 research foundation."""
 
 from __future__ import annotations
 
@@ -17,13 +17,20 @@ from .applicability.cross_validation import (
     write_cross_validation_and_lock,
 )
 from .benchmark import build_technical_release, write_technical_release_and_lock
+from .baselines import build_baseline_dry_run, write_baseline_dry_run_and_lock
 from .corpus import CorpusDownloader, CorpusManifest, materialize_corpus
 from .corpus.normalize import normalize_corpus
 from .corpus.report import build_corpus_report, write_corpus_report
 from .errors import TemporalLegalDriftError
+from .explanations import build_explanation_evaluation_plan, write_explanation_plan_and_lock
 from .gates import check_engineering_gates
 from .jsonio import load_json
 from .materiality import build_annotation_workload, write_annotation_workload_and_lock
+from .llm_evaluation import (
+    build_llm_evaluation_plan,
+    score_paired_assertions,
+    write_llm_plan_and_lock,
+)
 from .parsing.service import NormalizationService
 from .parsing.store import NormalizedDocumentStore, QuarantineStore
 from .phase0 import validate_contract_file
@@ -218,6 +225,80 @@ def build_parser() -> argparse.ArgumentParser:
     )
     phase7.add_argument(
         "--lock", type=Path, default=Path("reports/phase7/release.lock.json")
+    )
+
+    phase8 = subparsers.add_parser("prepare-baselines")
+    phase8.add_argument(
+        "--workload", type=Path, default=Path("data/annotations/phase5_workload.v1.json")
+    )
+    phase8.add_argument(
+        "--release",
+        type=Path,
+        default=Path("data/releases/tech-preview-v0.1.0/manifest.json"),
+    )
+    phase8.add_argument(
+        "--config", type=Path, default=Path("configs/experiments/baselines.v1.json")
+    )
+    phase8.add_argument(
+        "--output", type=Path, default=Path("experiments/phase8/baseline_dry_run.v1.json")
+    )
+    phase8.add_argument(
+        "--lock", type=Path, default=Path("reports/phase8/baseline_dry_run.lock.json")
+    )
+
+    phase9 = subparsers.add_parser("build-llm-evaluation-plan")
+    phase9.add_argument(
+        "--scenarios", type=Path, default=Path("data/scenarios/phase6_scaffolds.v1.json")
+    )
+    phase9.add_argument(
+        "--release",
+        type=Path,
+        default=Path("data/releases/tech-preview-v0.1.0/manifest.json"),
+    )
+    phase9.add_argument(
+        "--baseline-run",
+        type=Path,
+        default=Path("experiments/phase8/baseline_dry_run.v1.json"),
+    )
+    phase9.add_argument(
+        "--config", type=Path, default=Path("configs/experiments/temporal_llm.v1.json")
+    )
+    phase9.add_argument(
+        "--prompt", type=Path, default=Path("configs/prompts/compliance_reasoning.v1.json")
+    )
+    phase9.add_argument(
+        "--output", type=Path, default=Path("experiments/phase9/evaluation_plan.v1.json")
+    )
+    phase9.add_argument(
+        "--lock", type=Path, default=Path("reports/phase9/evaluation_plan.lock.json")
+    )
+
+    score_drift = subparsers.add_parser("score-drift-pairs")
+    score_drift.add_argument("--pairs", type=Path, required=True)
+
+    phase10 = subparsers.add_parser("build-explanation-evaluation-plan")
+    phase10.add_argument(
+        "--llm-plan", type=Path, default=Path("experiments/phase9/evaluation_plan.v1.json")
+    )
+    phase10.add_argument(
+        "--scenarios", type=Path, default=Path("data/scenarios/phase6_scaffolds.v1.json")
+    )
+    phase10.add_argument(
+        "--workload", type=Path, default=Path("data/annotations/phase5_workload.v1.json")
+    )
+    phase10.add_argument(
+        "--graph", type=Path, default=Path("data/interim/version_graph.v1.json")
+    )
+    phase10.add_argument(
+        "--rubric",
+        type=Path,
+        default=Path("configs/experiments/explanation_rubric.v1.json"),
+    )
+    phase10.add_argument(
+        "--output", type=Path, default=Path("experiments/phase10/explanation_plan.v1.json")
+    )
+    phase10.add_argument(
+        "--lock", type=Path, default=Path("reports/phase10/explanation_plan.lock.json")
     )
     return parser
 
@@ -431,6 +512,54 @@ def run(args: argparse.Namespace) -> int:
         )
         lock = write_technical_release_and_lock(
             release, _resolve(root, args.output), _resolve(root, args.lock)
+        )
+        print(json.dumps(lock, indent=2, ensure_ascii=False))
+        return 0
+
+    if args.command == "prepare-baselines":
+        document = build_baseline_dry_run(
+            load_json(_resolve(root, args.workload)),
+            load_json(_resolve(root, args.release)),
+            load_json(_resolve(root, args.config)),
+        )
+        lock = write_baseline_dry_run_and_lock(
+            document, _resolve(root, args.output), _resolve(root, args.lock)
+        )
+        print(json.dumps(lock, indent=2, ensure_ascii=False))
+        return 0
+
+    if args.command == "build-llm-evaluation-plan":
+        document = build_llm_evaluation_plan(
+            load_json(_resolve(root, args.scenarios)),
+            load_json(_resolve(root, args.release)),
+            load_json(_resolve(root, args.baseline_run)),
+            load_json(_resolve(root, args.config)),
+            load_json(_resolve(root, args.prompt)),
+        )
+        lock = write_llm_plan_and_lock(
+            document, _resolve(root, args.output), _resolve(root, args.lock)
+        )
+        print(json.dumps(lock, indent=2, ensure_ascii=False))
+        return 0
+
+    if args.command == "score-drift-pairs":
+        document = load_json(_resolve(root, args.pairs))
+        pairs = document.get("pairs")
+        if not isinstance(pairs, list) or not all(isinstance(item, dict) for item in pairs):
+            raise ValueError("Drift scoring input requires an array of pair objects")
+        print(json.dumps(score_paired_assertions(pairs), indent=2, ensure_ascii=False))
+        return 0
+
+    if args.command == "build-explanation-evaluation-plan":
+        document = build_explanation_evaluation_plan(
+            load_json(_resolve(root, args.llm_plan)),
+            load_json(_resolve(root, args.scenarios)),
+            load_json(_resolve(root, args.workload)),
+            VersionGraph.from_dict(load_json(_resolve(root, args.graph))),
+            load_json(_resolve(root, args.rubric)),
+        )
+        lock = write_explanation_plan_and_lock(
+            document, _resolve(root, args.output), _resolve(root, args.lock)
         )
         print(json.dumps(lock, indent=2, ensure_ascii=False))
         return 0

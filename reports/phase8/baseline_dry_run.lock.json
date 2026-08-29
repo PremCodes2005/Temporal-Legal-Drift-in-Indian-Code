@@ -1,0 +1,16 @@
+{
+  "feature_row_count": 50,
+  "input_fingerprints": {
+    "annotation_workload_sha256": "c8cbd269a27f80cb022b721740dd2cf72c334a91806c6b77b8d80567ace81b9b",
+    "baseline_config_sha256": "a0d0f59fde0b86df8e678721a55ab1a1c0e813573f3d223f9b86c44b66e14d42",
+    "release_sha256": "1bec7d9cb17ba5a7d9466fa24cb2a789cfefa72bfea15ed26a2b8333efc04d10"
+  },
+  "metrics_reported": false,
+  "non_neural_feature_families_present": true,
+  "registered_baseline_count": 12,
+  "research_gate_passed": false,
+  "run_sha256": "c3ceb95d7b72f979ad71c6b027a29569c337f0c072c22b8e47a717ab53c88f0e",
+  "schema_version": "1.0.0",
+  "status": "features_prepared_evaluation_blocked_no_gold",
+  "unsupported_performance_claims_absent": true
+}

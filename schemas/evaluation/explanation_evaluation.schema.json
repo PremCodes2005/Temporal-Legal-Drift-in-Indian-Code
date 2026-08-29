@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/temporal-legal-drift/explanation-evaluation.schema.json",
+  "title": "Explanation automated-support evaluation",
+  "type": "object",
+  "required": ["field_completeness", "evidence_reference_resolution", "version_alignment", "temporal_alignment", "citation_precision", "uncertainty_presence", "explanation_drift", "expert_evaluation_required", "legal_correctness"],
+  "properties": {
+    "field_completeness": {"type": "number"},
+    "evidence_reference_resolution": {"type": "boolean"},
+    "version_alignment": {"type": ["boolean", "null"]},
+    "temporal_alignment": {"type": ["boolean", "null"]},
+    "citation_precision": {"type": ["number", "null"]},
+    "uncertainty_presence": {"type": "boolean"},
+    "explanation_drift": {"type": ["boolean", "null"]},
+    "expert_evaluation_required": {"const": true},
+    "legal_correctness": {"type": "null"}
+  },
+  "additionalProperties": false
+}

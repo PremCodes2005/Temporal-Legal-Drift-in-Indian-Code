@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0.0",
+  "experiment_id": "phase9-temporal-drift-dry-run-v1",
+  "status": "configured_execution_disabled_missing_gold_and_model",
+  "model": null,
+  "model_version": null,
+  "prompt_version": "1.0.0-draft",
+  "temperature": 0,
+  "retrieval_configuration": "none_for_plan_generation",
+  "execution_enabled": false,
+  "conditions": [
+    "no_legal_context",
+    "pre_amendment_legal_context",
+    "post_amendment_legal_context",
+    "both_versions",
+    "both_versions_plus_reference_date",
+    "reconstructed_temporally_applicable_context"
+  ],
+  "structured_conclusions": ["compliant", "non_compliant", "indeterminate"],
+  "required_failure_layers": [
+    "source_or_retrieval",
+    "version_reconstruction",
+    "temporal_applicability",
+    "amendment_or_materiality",
+    "scenario_reasoning",
+    "answer_normalization",
+    "citation",
+    "explanation_faithfulness"
+  ]
+}

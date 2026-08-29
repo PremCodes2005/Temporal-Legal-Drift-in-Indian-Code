@@ -1,0 +1,19 @@
+{
+  "aggregate_metrics_reported": false,
+  "all_known_post_versions_resolve": true,
+  "automated_evaluation_count": 0,
+  "expert_evaluation_count": 0,
+  "input_fingerprints": {
+    "annotation_workload_sha256": "c8cbd269a27f80cb022b721740dd2cf72c334a91806c6b77b8d80567ace81b9b",
+    "llm_plan_sha256": "1dc6dc11681f1cb26d6bbff8543c6bcca017dd61c9ae43f1f66dfe9fdb412831",
+    "rubric_sha256": "751cdb53e6bb7a7273b5f85815d9ab203c505ef9bfd614749f175420198ad9ef",
+    "scenario_scaffolds_sha256": "926d99932f3a87f2b91b926bc087460d3b1ebfaa3fc4a6a06ec76a5335ba4bcf",
+    "version_graph_sha256": "364bf11a3334f1b426281c5596f975bf70cd2ae4054f3cee09cf9b5b1bcf27d0"
+  },
+  "plan_sha256": "ea4074f446ee3f08a692c10c34b1665ece69c8bdb790dcce057ba378c9e01966",
+  "planned_evaluation_count": 78,
+  "research_gate_passed": false,
+  "schema_version": "1.0.0",
+  "status": "evaluation_plan_built_no_explanations_scored",
+  "unsupported_quality_claims_absent": true
+}

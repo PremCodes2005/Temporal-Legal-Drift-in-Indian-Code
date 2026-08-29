@@ -5,7 +5,7 @@
 **Status:** Research specification; TRL 2  
 **Target:** Lab-validated research prototype; TRL 4  
 **Core orientation:** Temporal legal reasoning and compliance-drift evaluation over versioned Indian law  
-**Implementation status:** The Phase 0-7 engineering foundation now exists: research-contract validation, provenance-controlled acquisition, immutable raw storage, parsing/normalization, a technical provision-version graph, an evidence-constrained temporal applicability resolver, an evidence-linked 50-task annotation workload, compliance-scenario authoring scaffolds, a leakage-audited technical release dry run, tests, gates, and CI. A fourteen-document India Code technical pilot has been downloaded and normalized locally. The graph contains consolidated snapshots and unresolved amendment candidates, not approved historical transitions. Materiality labels, complete pre/post pairs, expert-authored scenarios, and legal-gold applicability determinations do not exist; consequently, the taxonomy and scientific benchmark are not frozen. No model evaluation, experimental result, or monitoring agent exists.
+**Implementation status:** The Phase 0-10 engineering foundation now exists: research-contract validation, provenance-controlled acquisition, immutable raw storage, parsing/normalization, a technical provision-version graph, an evidence-constrained temporal applicability resolver, an evidence-linked 50-task annotation workload, compliance-scenario authoring scaffolds, a leakage-audited technical release dry run, baseline and metric infrastructure, six-condition temporal-LLM experiment planning, structured answer normalization, false-stability/false-instability scoring, evidence-grounded explanation support checks, tests, gates, and CI. A fourteen-document India Code technical pilot has been downloaded and normalized locally. The graph contains consolidated snapshots and unresolved amendment candidates, not approved historical transitions. Materiality labels, complete pre/post pairs, expert-authored scenarios, legal-gold applicability determinations, and a frozen benchmark do not exist. No model was called; no baseline, LLM, drift, citation, explanation-quality, or performance result is reported. The optional monitoring agent is not implemented.
 
 This plan defines intended work. It does not report completed implementation, collected data, model performance, legal validation, or experimental results.
 
@@ -1650,7 +1650,7 @@ The agent must never:
 
 | Priority | Risk / issue | Required treatment |
 |---|---|---|
-| Critical | No implementation currently exists | Treat all architecture and phases as planned work; begin at Phase 0 |
+| Resolved foundation issue | No implementation existed at the initial audit | Phase 0-10 engineering infrastructure now exists; do not confuse implemented machinery with missing gold data or experiments |
 | Critical | No benchmark currently exists | Do not report dataset size, coverage, labels, or results as completed |
 | Critical | Historical Indian provision reconstruction may be difficult or incomplete | Pilot source availability and reconstruction before modelling |
 | Critical | Temporal applicability may require nuanced legal interpretation | Use a temporal-semantics registry, qualified review, and unresolved/escalation outcomes |
@@ -1672,7 +1672,7 @@ The agent must never:
 
 ## 25. Target Repository Layout
 
-This layout is now scaffolded. Phase 0-2 modules contain implementation; Phase 3+ module directories are placeholders only and contain no operational code.
+This layout is scaffolded and Phase 0-10 engineering modules contain operational code. Generated Phase 5-10 artifacts remain non-gold dry runs where the required legal annotations, scenarios, frozen benchmark, model executions, or expert judgments are unavailable.
 
 ```text
 project/

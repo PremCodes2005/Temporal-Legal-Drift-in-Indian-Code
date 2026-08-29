@@ -1,0 +1,1081 @@
+{
+  "baseline_registry": [
+    {
+      "family": "majority",
+      "id": "majority",
+      "implementation_status": "implemented_requires_training_labels"
+    },
+    {
+      "family": "class_prior",
+      "id": "class-prior",
+      "implementation_status": "implemented_requires_training_labels"
+    },
+    {
+      "family": "lexical_features",
+      "id": "lexical-edit",
+      "implementation_status": "feature_extractor_implemented_requires_complete_pairs"
+    },
+    {
+      "family": "amendment_operation",
+      "id": "amendment-operation",
+      "implementation_status": "feature_extractor_implemented"
+    },
+    {
+      "family": "rule_legal_cues",
+      "id": "rule-legal-cues",
+      "implementation_status": "feature_extractor_implemented"
+    },
+    {
+      "family": "generic_document_revision",
+      "id": "generic-document-revision",
+      "implementation_status": "not_selected_or_executed"
+    },
+    {
+      "family": "zero_shot_llm",
+      "id": "zero-shot-llm",
+      "implementation_status": "not_executed_no_model_or_gold"
+    },
+    {
+      "family": "few_shot_llm",
+      "id": "few-shot-llm",
+      "implementation_status": "not_executed_no_model_or_gold"
+    },
+    {
+      "family": "legal_encoder",
+      "id": "legal-encoder",
+      "implementation_status": "not_executed_no_model_or_gold"
+    },
+    {
+      "family": "long_context_encoder",
+      "id": "long-context-encoder",
+      "implementation_status": "not_executed_no_model_or_gold"
+    },
+    {
+      "family": "closest_work_inspired",
+      "id": "closest-work-inspired",
+      "implementation_status": "methodology_not_claimed_as_reproduction"
+    },
+    {
+      "family": "proposed_model",
+      "id": "proposed-materiality-model",
+      "implementation_status": "optional_not_implemented"
+    }
+  ],
+  "experiment_id": "phase8-baseline-dry-run-v1",
+  "feature_rows": [
+    {
+      "after_character_count": 996,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 4,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 0,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 834,
+      "normalized_edit_ratio": null,
+      "operation": "substitution",
+      "pair_id": "pair_15651fe59b37869adf988286"
+    },
+    {
+      "after_character_count": 3209,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 2,
+        "exception": 1,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 1,
+        "threshold": 0,
+        "time": 1
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 2148,
+      "normalized_edit_ratio": null,
+      "operation": "insertion",
+      "pair_id": "pair_96cc0e894a99b16d7e62e26d"
+    },
+    {
+      "after_character_count": 3209,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 1,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 0,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 1029,
+      "normalized_edit_ratio": null,
+      "operation": "substitution",
+      "pair_id": "pair_16ac9c20df18b3437edf24ab"
+    },
+    {
+      "after_character_count": 1154,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 1,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 0,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 1118,
+      "normalized_edit_ratio": null,
+      "operation": "substitution",
+      "pair_id": "pair_2723036b35a4463039742860"
+    },
+    {
+      "after_character_count": 5472,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 8,
+        "duty": 10,
+        "exception": 0,
+        "penalty": 16,
+        "prohibition": 0,
+        "right": 12,
+        "threshold": 4,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 10553,
+      "normalized_edit_ratio": null,
+      "operation": "substitution",
+      "pair_id": "pair_a176d5c8271272a6a9de30ac"
+    },
+    {
+      "after_character_count": 3912,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 3,
+        "exception": 1,
+        "penalty": 1,
+        "prohibition": 0,
+        "right": 5,
+        "threshold": 0,
+        "time": 1
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 2597,
+      "normalized_edit_ratio": null,
+      "operation": "insertion",
+      "pair_id": "pair_9481c09e4d55eed2f452a4c4"
+    },
+    {
+      "after_character_count": 1449,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 8,
+        "duty": 10,
+        "exception": 0,
+        "penalty": 16,
+        "prohibition": 0,
+        "right": 12,
+        "threshold": 4,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 10553,
+      "normalized_edit_ratio": null,
+      "operation": "substitution",
+      "pair_id": "pair_54fa7db6aaa811c5473c5662"
+    },
+    {
+      "after_character_count": 996,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 2,
+        "exception": 0,
+        "penalty": 2,
+        "prohibition": 0,
+        "right": 0,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 1253,
+      "normalized_edit_ratio": null,
+      "operation": "insertion",
+      "pair_id": "pair_b1258e4f5cd6609d8dfc55d9"
+    },
+    {
+      "after_character_count": 2236,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 1,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 0,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 1118,
+      "normalized_edit_ratio": null,
+      "operation": "substitution",
+      "pair_id": "pair_bd2139bf814ba07d5156db7f"
+    },
+    {
+      "after_character_count": 1449,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 1,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 0,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 1118,
+      "normalized_edit_ratio": null,
+      "operation": "substitution",
+      "pair_id": "pair_5e12622b92b694172c6e301e"
+    },
+    {
+      "after_character_count": 9556,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 1,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 0,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 1029,
+      "normalized_edit_ratio": null,
+      "operation": "substitution",
+      "pair_id": "pair_2c7ac07d92765ef75f6f5101"
+    },
+    {
+      "after_character_count": 1418,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 2,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 0,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 352,
+      "normalized_edit_ratio": null,
+      "operation": "substitution",
+      "pair_id": "pair_e0b7ffcbcfacaa904a0e0548"
+    },
+    {
+      "after_character_count": 5387,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 4,
+        "duty": 1,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 4,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 1489,
+      "normalized_edit_ratio": null,
+      "operation": "insertion",
+      "pair_id": "pair_208717a68116ca2157c46a91"
+    },
+    {
+      "after_character_count": 284,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 1,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 0,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 132,
+      "normalized_edit_ratio": null,
+      "operation": "complex_or_unresolved",
+      "pair_id": "pair_d72ad7774b521ab04a88ebee"
+    },
+    {
+      "after_character_count": 1128,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 1,
+        "duty": 2,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 1,
+        "right": 1,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 645,
+      "normalized_edit_ratio": null,
+      "operation": "complex_or_unresolved",
+      "pair_id": "pair_7577d313b43ae9fdf32ea03d"
+    },
+    {
+      "after_character_count": null,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 4,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 0,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 834,
+      "normalized_edit_ratio": null,
+      "operation": "substitution",
+      "pair_id": "pair_53a7fb984d56e1dbb9bfe6bd"
+    },
+    {
+      "after_character_count": null,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 8,
+        "duty": 4,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 0,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 2906,
+      "normalized_edit_ratio": null,
+      "operation": "complex_or_unresolved",
+      "pair_id": "pair_a86fe80cba720c6f120bfbf7"
+    },
+    {
+      "after_character_count": 426,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 14,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 0,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 4368,
+      "normalized_edit_ratio": null,
+      "operation": "complex_or_unresolved",
+      "pair_id": "pair_becabf6b1ffd44e0818ccdb4"
+    },
+    {
+      "after_character_count": 3209,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 14,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 0,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 4368,
+      "normalized_edit_ratio": null,
+      "operation": "complex_or_unresolved",
+      "pair_id": "pair_4c83d4070a393b1c78596f03"
+    },
+    {
+      "after_character_count": 800,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 1,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 0,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 1118,
+      "normalized_edit_ratio": null,
+      "operation": "substitution",
+      "pair_id": "pair_5b820055e785fd63e0ec80ac"
+    },
+    {
+      "after_character_count": null,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 8,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 1,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 3806,
+      "normalized_edit_ratio": null,
+      "operation": "complex_or_unresolved",
+      "pair_id": "pair_c034f8c46be3c02b04fdecdf"
+    },
+    {
+      "after_character_count": 3359,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 8,
+        "duty": 10,
+        "exception": 0,
+        "penalty": 16,
+        "prohibition": 0,
+        "right": 12,
+        "threshold": 4,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 10553,
+      "normalized_edit_ratio": null,
+      "operation": "substitution",
+      "pair_id": "pair_34244d2ac9a5f98bf0f3b3bc"
+    },
+    {
+      "after_character_count": null,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 6,
+        "exception": 0,
+        "penalty": 2,
+        "prohibition": 0,
+        "right": 2,
+        "threshold": 1,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 2063,
+      "normalized_edit_ratio": null,
+      "operation": "complex_or_unresolved",
+      "pair_id": "pair_41114e3770a437ee15eec5e4"
+    },
+    {
+      "after_character_count": 777,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 8,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 1,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 3806,
+      "normalized_edit_ratio": null,
+      "operation": "complex_or_unresolved",
+      "pair_id": "pair_96c772e3850b7c2866748802"
+    },
+    {
+      "after_character_count": 864,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 3,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 0,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 642,
+      "normalized_edit_ratio": null,
+      "operation": "complex_or_unresolved",
+      "pair_id": "pair_516112d68b1c4e150c600d27"
+    },
+    {
+      "after_character_count": null,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 8,
+        "duty": 10,
+        "exception": 0,
+        "penalty": 16,
+        "prohibition": 0,
+        "right": 12,
+        "threshold": 4,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 10553,
+      "normalized_edit_ratio": null,
+      "operation": "substitution",
+      "pair_id": "pair_2e85492ad94a2ea68f2ff056"
+    },
+    {
+      "after_character_count": 1305,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 1,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 0,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 1118,
+      "normalized_edit_ratio": null,
+      "operation": "substitution",
+      "pair_id": "pair_43277bb9236081ae2ce1921d"
+    },
+    {
+      "after_character_count": 9556,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 14,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 0,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 4368,
+      "normalized_edit_ratio": null,
+      "operation": "complex_or_unresolved",
+      "pair_id": "pair_e42f401ab4f901a99efd4f26"
+    },
+    {
+      "after_character_count": null,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 8,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 1,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 3806,
+      "normalized_edit_ratio": null,
+      "operation": "complex_or_unresolved",
+      "pair_id": "pair_693025741e6e725bb4c2fe66"
+    },
+    {
+      "after_character_count": null,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 8,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 1,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 3806,
+      "normalized_edit_ratio": null,
+      "operation": "complex_or_unresolved",
+      "pair_id": "pair_f2a13cebc839f5396fb03163"
+    },
+    {
+      "after_character_count": null,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 8,
+        "exception": 0,
+        "penalty": 6,
+        "prohibition": 0,
+        "right": 4,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 4250,
+      "normalized_edit_ratio": null,
+      "operation": "substitution",
+      "pair_id": "pair_a89132ade3c19c57dc117dcc"
+    },
+    {
+      "after_character_count": null,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 4,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 0,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 834,
+      "normalized_edit_ratio": null,
+      "operation": "substitution",
+      "pair_id": "pair_b18b5e81c0e01ec4a2dba1b4"
+    },
+    {
+      "after_character_count": 498,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 2,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 1,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 508,
+      "normalized_edit_ratio": null,
+      "operation": "complex_or_unresolved",
+      "pair_id": "pair_8b8fa88615d3b2649ce5a976"
+    },
+    {
+      "after_character_count": 1098,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 1,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 0,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 249,
+      "normalized_edit_ratio": null,
+      "operation": "omission",
+      "pair_id": "pair_65a84f9f09440bbd55fe616e"
+    },
+    {
+      "after_character_count": 3912,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 1,
+        "duty": 2,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 0,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 1209,
+      "normalized_edit_ratio": null,
+      "operation": "complex_or_unresolved",
+      "pair_id": "pair_97ecf461c281764fea8ba8a8"
+    },
+    {
+      "after_character_count": 316,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 8,
+        "duty": 10,
+        "exception": 0,
+        "penalty": 16,
+        "prohibition": 0,
+        "right": 12,
+        "threshold": 4,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 10553,
+      "normalized_edit_ratio": null,
+      "operation": "substitution",
+      "pair_id": "pair_f0e2db6aadfc856aec332bf8"
+    },
+    {
+      "after_character_count": null,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 14,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 0,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 4368,
+      "normalized_edit_ratio": null,
+      "operation": "complex_or_unresolved",
+      "pair_id": "pair_bbd956d2f17c49351fb80d5c"
+    },
+    {
+      "after_character_count": 777,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 1,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 0,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 1118,
+      "normalized_edit_ratio": null,
+      "operation": "substitution",
+      "pair_id": "pair_1b298cc20aae3de6af55f800"
+    },
+    {
+      "after_character_count": null,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 8,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 1,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 3806,
+      "normalized_edit_ratio": null,
+      "operation": "complex_or_unresolved",
+      "pair_id": "pair_2b2539674e13d282bfceca85"
+    },
+    {
+      "after_character_count": 3912,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 8,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 1,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 3806,
+      "normalized_edit_ratio": null,
+      "operation": "complex_or_unresolved",
+      "pair_id": "pair_1524142d113396313bf501ab"
+    },
+    {
+      "after_character_count": null,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 8,
+        "duty": 10,
+        "exception": 0,
+        "penalty": 16,
+        "prohibition": 0,
+        "right": 12,
+        "threshold": 4,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 10553,
+      "normalized_edit_ratio": null,
+      "operation": "substitution",
+      "pair_id": "pair_8156bd9d923dc55c34609ccc"
+    },
+    {
+      "after_character_count": null,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 1,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 0,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 51,
+      "normalized_edit_ratio": null,
+      "operation": "omission",
+      "pair_id": "pair_526d17fa3e9d0ca6c6357e28"
+    },
+    {
+      "after_character_count": null,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 9,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 6,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 6074,
+      "normalized_edit_ratio": null,
+      "operation": "substitution",
+      "pair_id": "pair_7858a499a0c7296189d1c207"
+    },
+    {
+      "after_character_count": 5387,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 2,
+        "duty": 5,
+        "exception": 0,
+        "penalty": 4,
+        "prohibition": 0,
+        "right": 0,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 1144,
+      "normalized_edit_ratio": null,
+      "operation": "complex_or_unresolved",
+      "pair_id": "pair_d6a5cd3942108d915b1478a2"
+    },
+    {
+      "after_character_count": 1254,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 4,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 0,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 834,
+      "normalized_edit_ratio": null,
+      "operation": "substitution",
+      "pair_id": "pair_d543c367de5d88a164f3261f"
+    },
+    {
+      "after_character_count": 1536,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 6,
+        "exception": 0,
+        "penalty": 2,
+        "prohibition": 0,
+        "right": 2,
+        "threshold": 1,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 2063,
+      "normalized_edit_ratio": null,
+      "operation": "complex_or_unresolved",
+      "pair_id": "pair_9708417fe8436817bf2f9be4"
+    },
+    {
+      "after_character_count": 1676,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 1,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 0,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 1118,
+      "normalized_edit_ratio": null,
+      "operation": "substitution",
+      "pair_id": "pair_5b675702b4e650e1b4541a33"
+    },
+    {
+      "after_character_count": 720,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 1,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 0,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 738,
+      "normalized_edit_ratio": null,
+      "operation": "insertion",
+      "pair_id": "pair_e96b3d25f4e103ad375d8191"
+    },
+    {
+      "after_character_count": 1305,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 1,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 0,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 199,
+      "normalized_edit_ratio": null,
+      "operation": "complex_or_unresolved",
+      "pair_id": "pair_fca228a9c3836dc66165c5be"
+    },
+    {
+      "after_character_count": null,
+      "before_character_count": null,
+      "cue_counts": {
+        "definition": 0,
+        "duty": 14,
+        "exception": 0,
+        "penalty": 0,
+        "prohibition": 0,
+        "right": 0,
+        "threshold": 0,
+        "time": 0
+      },
+      "gold_label": null,
+      "has_complete_before_after": false,
+      "instruction_character_count": 4368,
+      "normalized_edit_ratio": null,
+      "operation": "complex_or_unresolved",
+      "pair_id": "pair_b3e5a0f2c761d22982326857"
+    }
+  ],
+  "input_fingerprints": {
+    "annotation_workload_sha256": "c8cbd269a27f80cb022b721740dd2cf72c334a91806c6b77b8d80567ace81b9b",
+    "baseline_config_sha256": "a0d0f59fde0b86df8e678721a55ab1a1c0e813573f3d223f9b86c44b66e14d42",
+    "release_sha256": "1bec7d9cb17ba5a7d9466fa24cb2a789cfefa72bfea15ed26a2b8333efc04d10"
+  },
+  "limitations": [
+    "No materiality gold labels are present.",
+    "No complete historical before/after pairs are present.",
+    "No baseline was trained, tuned, or evaluated on the technical preview.",
+    "No prior-paper reproduction or model-performance claim is made."
+  ],
+  "metrics": null,
+  "schema_version": "1.0.0",
+  "status": "features_prepared_evaluation_blocked_no_gold"
+}

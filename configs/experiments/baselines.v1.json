@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0.0",
+  "experiment_id": "phase8-baseline-dry-run-v1",
+  "status": "configured_not_executed_on_gold",
+  "random_seed": 1729,
+  "canonical_labels": ["High", "Medium", "Low", "None"],
+  "test_set_tuning_permitted": false,
+  "baselines": [
+    {"id": "majority", "family": "majority", "implementation_status": "implemented_requires_training_labels"},
+    {"id": "class-prior", "family": "class_prior", "implementation_status": "implemented_requires_training_labels"},
+    {"id": "lexical-edit", "family": "lexical_features", "implementation_status": "feature_extractor_implemented_requires_complete_pairs"},
+    {"id": "amendment-operation", "family": "amendment_operation", "implementation_status": "feature_extractor_implemented"},
+    {"id": "rule-legal-cues", "family": "rule_legal_cues", "implementation_status": "feature_extractor_implemented"},
+    {"id": "generic-document-revision", "family": "generic_document_revision", "implementation_status": "not_selected_or_executed"},
+    {"id": "zero-shot-llm", "family": "zero_shot_llm", "implementation_status": "not_executed_no_model_or_gold"},
+    {"id": "few-shot-llm", "family": "few_shot_llm", "implementation_status": "not_executed_no_model_or_gold"},
+    {"id": "legal-encoder", "family": "legal_encoder", "implementation_status": "not_executed_no_model_or_gold"},
+    {"id": "long-context-encoder", "family": "long_context_encoder", "implementation_status": "not_executed_no_model_or_gold"},
+    {"id": "closest-work-inspired", "family": "closest_work_inspired", "implementation_status": "methodology_not_claimed_as_reproduction"},
+    {"id": "proposed-materiality-model", "family": "proposed_model", "implementation_status": "optional_not_implemented"}
+  ]
+}

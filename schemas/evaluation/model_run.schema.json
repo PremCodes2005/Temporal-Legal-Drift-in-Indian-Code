@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/temporal-legal-drift/model-run.schema.json",
+  "title": "Controlled Phase 9 model run",
+  "type": "object",
+  "required": ["run_id", "scenario_id", "condition", "facts_sha256", "model", "model_version", "prompt_version", "temperature", "retrieval_configuration", "raw_prompt", "raw_response", "execution_status"],
+  "properties": {
+    "run_id": {"type": "string"},
+    "scenario_id": {"type": "string"},
+    "condition": {"type": "string"},
+    "facts_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "model": {"type": ["string", "null"]},
+    "model_version": {"type": ["string", "null"]},
+    "prompt_version": {"type": "string"},
+    "temperature": {"type": "number"},
+    "retrieval_configuration": {"type": "string"},
+    "raw_prompt": {"type": ["string", "null"]},
+    "raw_response": {"type": ["string", "object", "null"]},
+    "execution_status": {"enum": ["blocked_missing_scenario_gold_and_model", "completed", "failed"]}
+  },
+  "additionalProperties": false
+}

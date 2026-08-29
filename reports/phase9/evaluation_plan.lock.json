@@ -1,0 +1,21 @@
+{
+  "all_scenarios_have_six_conditions": true,
+  "condition_count": 6,
+  "executed_run_count": 0,
+  "facts_held_constant_across_conditions": true,
+  "input_fingerprints": {
+    "baseline_run_sha256": "c3ceb95d7b72f979ad71c6b027a29569c337f0c072c22b8e47a717ab53c88f0e",
+    "experiment_config_sha256": "de8afa5de16dfc2e9266116a5156734d7fa0503bdabd6969f174beba847d4bbb",
+    "prompt_config_sha256": "833c1a3591e6b9fada21d2b608dd690a6f9a22e7ee491a9609efdb1fbe1efd25",
+    "release_sha256": "1bec7d9cb17ba5a7d9466fa24cb2a789cfefa72bfea15ed26a2b8333efc04d10",
+    "scenario_scaffolds_sha256": "926d99932f3a87f2b91b926bc087460d3b1ebfaa3fc4a6a06ec76a5335ba4bcf"
+  },
+  "metrics_reported": false,
+  "plan_sha256": "1dc6dc11681f1cb26d6bbff8543c6bcca017dd61c9ae43f1f66dfe9fdb412831",
+  "planned_run_count": 78,
+  "research_gate_passed": false,
+  "scenario_count": 13,
+  "schema_version": "1.0.0",
+  "status": "controlled_plan_built_execution_blocked",
+  "unsupported_results_absent": true
+}

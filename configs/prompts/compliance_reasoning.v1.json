@@ -1,0 +1,8 @@
+{
+  "schema_version": "1.0.0",
+  "prompt_version": "1.0.0-draft",
+  "status": "template_not_executed",
+  "required_inputs": ["scenario_facts", "legal_question", "reference_date", "condition_context"],
+  "required_output_fields": ["conclusion", "cited_version_id", "citations", "explanation", "uncertainty"],
+  "instruction": "Answer only from the supplied scenario and condition context. Identify uncertainty rather than inventing missing legal evidence."
+}

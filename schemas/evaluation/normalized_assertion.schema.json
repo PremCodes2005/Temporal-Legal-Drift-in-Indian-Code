@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/temporal-legal-drift/normalized-assertion.schema.json",
+  "title": "Normalized compliance assertion",
+  "type": "object",
+  "required": ["conclusion", "cited_version_id", "citations", "explanation", "uncertainty"],
+  "properties": {
+    "conclusion": {"enum": ["compliant", "non_compliant", "indeterminate"]},
+    "cited_version_id": {"type": ["string", "null"]},
+    "citations": {"type": "array", "items": {"type": "string"}},
+    "explanation": {"type": "string"},
+    "uncertainty": {"type": ["string", "null"]}
+  },
+  "additionalProperties": false
+}

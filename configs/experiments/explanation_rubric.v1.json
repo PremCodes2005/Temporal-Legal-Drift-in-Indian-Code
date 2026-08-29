@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0.0",
+  "rubric_version": "1.0.0-draft",
+  "status": "implemented_automated_support_expert_evaluation_unavailable",
+  "required_explanation_fields": [
+    "legal_instrument",
+    "provision_path",
+    "applicable_date",
+    "version_id",
+    "before_evidence_id",
+    "after_evidence_id",
+    "amendment_operation",
+    "materiality_dimensions",
+    "materiality_level",
+    "compliance_consequence",
+    "citations",
+    "confidence",
+    "uncertainty_or_escalation"
+  ],
+  "automated_support_dimensions": [
+    "field_completeness",
+    "evidence_reference_resolution",
+    "version_alignment",
+    "temporal_alignment",
+    "citation_precision",
+    "uncertainty_presence",
+    "explanation_drift_flag"
+  ],
+  "expert_required_dimensions": [
+    "evidence_correctness",
+    "entailment",
+    "materiality_reasoning",
+    "compliance_reasoning",
+    "legal_correctness",
+    "expert_acceptability"
+  ],
+  "llm_as_judge_is_sole_legal_evaluator": false,
+  "blinded_expert_review_required_for_quality_claims": true
+}
