@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0.0",
+  "status": "research_engineer_authored_non_gold_demonstration",
+  "scenarios": [
+    {
+      "scenario_id": "demo_it_act_section_19_electronic_signature",
+      "scenario_schema_version": "1.0.0-demo",
+      "facts": [
+        "The Controller recognised a foreign Certifying Authority under section 19(1), with the previous approval of the Central Government and notification in the Official Gazette.",
+        "That recognition remained in force on both reference dates and all stated regulatory conditions were satisfied.",
+        "The recognised authority issued a certificate using a legally notified electronic-signature technique that was not a digital-signature technique.",
+        "No fact other than the applicable wording of section 19(2) changes between the two evaluations."
+      ],
+      "legal_question": "For the stated reference date, should the certificate be treated as valid for the purposes of the Information Technology Act under section 19(2)? Return compliant for valid and non_compliant for not valid under the supplied provision.",
+      "pre_reference_date": "2009-10-26",
+      "post_reference_date": "2009-10-27",
+      "pre_applicable_version_id": "demo_it_act_s19_pre_2009",
+      "post_applicable_version_id": "ver_b78dfb5c893a5e5c361b67e3",
+      "pre_amendment_legal_context": {
+        "version_id": "demo_it_act_s19_pre_2009",
+        "provision_text_excerpt": "Section 19(2): Where any Certifying Authority is recognised under sub-section (1), the Digital Signature Certificate issued by such Certifying Authority shall be valid for the purposes of this Act.",
+        "evidence_id": "blk_5ca58de616262e5f240d559d",
+        "evidence_locator": "pdf:page:2:line:10",
+        "extraction_status": "research_engineer_reconstruction_from_substitution_instruction_unreviewed"
+      },
+      "post_amendment_legal_context": {
+        "version_id": "ver_b78dfb5c893a5e5c361b67e3",
+        "provision_text_excerpt": "Section 19(2): Where any Certifying Authority is recognised under sub-section (1), the electronic signature Certificate issued by such Certifying Authority shall be valid for the purposes of this Act. Footnote: substituted for Digital Signature with effect from 27-10-2009.",
+        "evidence_id": "blk_a65396a79220697eeb81b128",
+        "evidence_locator": "pdf:page:13:line:37",
+        "extraction_status": "machine_extracted_unreviewed"
+      },
+      "expected_change": 1,
+      "expected_pre_conclusion": "non_compliant",
+      "expected_post_conclusion": "compliant",
+      "expectation_status": "research_engineer_hypothesis_non_gold",
+      "expert_rationale": null,
+      "review_status": "demonstration_only_independent_legal_review_required",
+      "supporting_legal_evidence": {
+        "amendment_event_id": "amd_454a14ad57035f4adc17472e",
+        "amendment_instruction_evidence_id": "blk_5ca58de616262e5f240d559d",
+        "post_version_evidence_id": "blk_a65396a79220697eeb81b128",
+        "effective_date": "2009-10-27"
+      }
+    }
+  ]
+}

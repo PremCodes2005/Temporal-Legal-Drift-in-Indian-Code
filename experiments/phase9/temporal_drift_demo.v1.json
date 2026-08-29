@@ -1,0 +1,234 @@
+{
+  "conditions": [
+    "no_legal_context",
+    "pre_amendment_legal_context",
+    "post_amendment_legal_context",
+    "both_versions",
+    "both_versions_plus_reference_date",
+    "reconstructed_temporally_applicable_context"
+  ],
+  "execution": {
+    "batch_invocation_count": 1,
+    "client": "v0.149.0-alpha.4",
+    "completed_run_count": 6,
+    "finished_at": "2026-08-29T17:43:44.151762+00:00",
+    "model": "gpt-5.6-sol",
+    "planned_run_count": 6,
+    "provider": "openai_codex_cli",
+    "response_sha256": "c7e2bb20217a9c5216157d8da2b1835fb055e04845855a650e668676cd71c778",
+    "scoring_status": "not_scored_missing_independent_legal_gold",
+    "started_at": "2026-08-29T17:43:25.107835+00:00"
+  },
+  "experiment_id": "phase9-temporal-drift-controlled-smoke-v1",
+  "failure_attributions": [],
+  "input_fingerprints": {
+    "baseline_run_sha256": "c3ceb95d7b72f979ad71c6b027a29569c337f0c072c22b8e47a717ab53c88f0e",
+    "experiment_config_sha256": "c94a22011b0bc8ac839cd2b220a993a81aad598e18c44a68ca848e6c0368f150",
+    "prompt_config_sha256": "e91716274e2ba19a3f38c3edd55bacaddb6929f1f2da8ad61562886420e51730",
+    "release_sha256": "1bec7d9cb17ba5a7d9466fa24cb2a789cfefa72bfea15ed26a2b8333efc04d10",
+    "scenario_scaffolds_sha256": "00b401d760eded86a2598ac58ad96bad2c036b46690d45e3e766477a6513d4b1"
+  },
+  "limitations": [
+    "The controlled LLM pipeline was executed on non-gold scenario scaffolds.",
+    "Scenario facts and legal questions are absent, so abstention is expected.",
+    "One schema-constrained batch invocation produced the per-condition assertions.",
+    "No accuracy, drift, citation, explanation-quality, or legal-correctness claim is made."
+  ],
+  "metrics": null,
+  "normalized_assertions": [
+    {
+      "citations": [
+        "blk_5ca58de616262e5f240d559d",
+        "blk_a65396a79220697eeb81b128"
+      ],
+      "cited_version_id": null,
+      "conclusion": "indeterminate",
+      "explanation": "The versions produce different outcomes for a non-digital electronic-signature certificate, and no reference date identifies the applicable version.",
+      "run_id": "run_127f8b18fba7d67f1e705dcf",
+      "uncertainty": "Applicable legal version cannot be determined without a reference date."
+    },
+    {
+      "citations": [
+        "blk_a65396a79220697eeb81b128"
+      ],
+      "cited_version_id": "ver_b78dfb5c893a5e5c361b67e3",
+      "conclusion": "compliant",
+      "explanation": "The supplied post-amendment wording, effective on the reference date, makes an electronic signature Certificate from the recognised authority valid.",
+      "run_id": "run_267e07ffb1e51d4f549db487",
+      "uncertainty": "The supplied source is machine-extracted, unreviewed demonstration material."
+    },
+    {
+      "citations": [
+        "blk_a65396a79220697eeb81b128"
+      ],
+      "cited_version_id": "ver_b78dfb5c893a5e5c361b67e3",
+      "conclusion": "compliant",
+      "explanation": "The post-amendment provision effective on the reference date validates the stated electronic signature Certificate.",
+      "run_id": "run_3f5d8bec531348f42d9f1c84",
+      "uncertainty": "The supplied source is machine-extracted, unreviewed demonstration material."
+    },
+    {
+      "citations": [
+        "blk_a65396a79220697eeb81b128"
+      ],
+      "cited_version_id": "ver_b78dfb5c893a5e5c361b67e3",
+      "conclusion": "compliant",
+      "explanation": "The amendment is stated to take effect on 2009-10-27, so the post-amendment wording validates the electronic signature Certificate on that date.",
+      "run_id": "run_4406bcea475e73f01e162b28",
+      "uncertainty": "The supplied source is machine-extracted, unreviewed demonstration material."
+    },
+    {
+      "citations": [],
+      "cited_version_id": null,
+      "conclusion": "indeterminate",
+      "explanation": "No legal context or reference date is supplied from which validity under section 19(2) can be determined.",
+      "run_id": "run_715f49a10819c784b9d0446a",
+      "uncertainty": "The applicable wording and legal version are missing."
+    },
+    {
+      "citations": [
+        "blk_5ca58de616262e5f240d559d"
+      ],
+      "cited_version_id": "demo_it_act_s19_pre_2009",
+      "conclusion": "non_compliant",
+      "explanation": "The supplied pre-amendment wording validates a Digital Signature Certificate, while the stated certificate uses a non-digital electronic-signature technique.",
+      "run_id": "run_ec9f63aa699817a2e3528a96",
+      "uncertainty": "The pre-amendment text is an unreviewed reconstruction supplied for demonstration."
+    }
+  ],
+  "runs": [
+    {
+      "condition": "both_versions",
+      "execution_status": "completed",
+      "facts_sha256": "5552b8771e62cf8ac0590f2a0df383c3a26b8e0b215bf32d0ceda755c9b7096b",
+      "model": "gpt-5.6-sol",
+      "model_version": "gpt-5.6-sol",
+      "prompt_version": "1.0.0-draft",
+      "raw_prompt": "{\"condition\": \"both_versions\", \"facts\": [\"The Controller recognised a foreign Certifying Authority under section 19(1), with the previous approval of the Central Government and notification in the Official Gazette.\", \"That recognition remained in force on both reference dates and all stated regulatory conditions were satisfied.\", \"The recognised authority issued a certificate using a legally notified electronic-signature technique that was not a digital-signature technique.\", \"No fact other than the applicable wording of section 19(2) changes between the two evaluations.\"], \"instruction\": \"Answer only from the supplied scenario and condition context. Identify uncertainty rather than inventing missing legal evidence.\", \"legal_context\": [{\"evidence_id\": \"blk_5ca58de616262e5f240d559d\", \"evidence_locator\": \"pdf:page:2:line:10\", \"extraction_status\": \"research_engineer_reconstruction_from_substitution_instruction_unreviewed\", \"label\": \"pre_amendment\", \"provision_text_excerpt\": \"Section 19(2): Where any Certifying Authority is recognised under sub-section (1), the Digital Signature Certificate issued by such Certifying Authority shall be valid for the purposes of this Act.\", \"version_id\": \"demo_it_act_s19_pre_2009\"}, {\"evidence_id\": \"blk_a65396a79220697eeb81b128\", \"evidence_locator\": \"pdf:page:13:line:37\", \"extraction_status\": \"machine_extracted_unreviewed\", \"label\": \"post_amendment\", \"provision_text_excerpt\": \"Section 19(2): Where any Certifying Authority is recognised under sub-section (1), the electronic signature Certificate issued by such Certifying Authority shall be valid for the purposes of this Act. Footnote: substituted for Digital Signature with effect from 27-10-2009.\", \"version_id\": \"ver_b78dfb5c893a5e5c361b67e3\"}], \"legal_question\": \"For the stated reference date, should the certificate be treated as valid for the purposes of the Information Technology Act under section 19(2)? Return compliant for valid and non_compliant for not valid under the supplied provision.\", \"output_contract\": {\"citations\": \"array; use only supplied evidence IDs or locators\", \"cited_version_id\": \"string or null; cite only a supplied version ID\", \"conclusion\": \"compliant | non_compliant | indeterminate\", \"explanation\": \"concise reasoning\", \"uncertainty\": \"string or null\"}, \"reference_date\": null, \"scenario_id\": \"demo_it_act_section_19_electronic_signature\", \"source_review_status\": \"demonstration_only_independent_legal_review_required\"}",
+      "raw_response": {
+        "citations": [
+          "blk_5ca58de616262e5f240d559d",
+          "blk_a65396a79220697eeb81b128"
+        ],
+        "cited_version_id": null,
+        "conclusion": "indeterminate",
+        "explanation": "The versions produce different outcomes for a non-digital electronic-signature certificate, and no reference date identifies the applicable version.",
+        "uncertainty": "Applicable legal version cannot be determined without a reference date."
+      },
+      "retrieval_configuration": "version_graph_evidence_excerpt_v1",
+      "run_id": "run_127f8b18fba7d67f1e705dcf",
+      "scenario_id": "demo_it_act_section_19_electronic_signature",
+      "temperature": 0
+    },
+    {
+      "condition": "reconstructed_temporally_applicable_context",
+      "execution_status": "completed",
+      "facts_sha256": "5552b8771e62cf8ac0590f2a0df383c3a26b8e0b215bf32d0ceda755c9b7096b",
+      "model": "gpt-5.6-sol",
+      "model_version": "gpt-5.6-sol",
+      "prompt_version": "1.0.0-draft",
+      "raw_prompt": "{\"condition\": \"reconstructed_temporally_applicable_context\", \"facts\": [\"The Controller recognised a foreign Certifying Authority under section 19(1), with the previous approval of the Central Government and notification in the Official Gazette.\", \"That recognition remained in force on both reference dates and all stated regulatory conditions were satisfied.\", \"The recognised authority issued a certificate using a legally notified electronic-signature technique that was not a digital-signature technique.\", \"No fact other than the applicable wording of section 19(2) changes between the two evaluations.\"], \"instruction\": \"Answer only from the supplied scenario and condition context. Identify uncertainty rather than inventing missing legal evidence.\", \"legal_context\": [{\"evidence_id\": \"blk_a65396a79220697eeb81b128\", \"evidence_locator\": \"pdf:page:13:line:37\", \"extraction_status\": \"machine_extracted_unreviewed\", \"label\": \"post_amendment\", \"provision_text_excerpt\": \"Section 19(2): Where any Certifying Authority is recognised under sub-section (1), the electronic signature Certificate issued by such Certifying Authority shall be valid for the purposes of this Act. Footnote: substituted for Digital Signature with effect from 27-10-2009.\", \"version_id\": \"ver_b78dfb5c893a5e5c361b67e3\"}], \"legal_question\": \"For the stated reference date, should the certificate be treated as valid for the purposes of the Information Technology Act under section 19(2)? Return compliant for valid and non_compliant for not valid under the supplied provision.\", \"output_contract\": {\"citations\": \"array; use only supplied evidence IDs or locators\", \"cited_version_id\": \"string or null; cite only a supplied version ID\", \"conclusion\": \"compliant | non_compliant | indeterminate\", \"explanation\": \"concise reasoning\", \"uncertainty\": \"string or null\"}, \"reference_date\": \"2009-10-27\", \"scenario_id\": \"demo_it_act_section_19_electronic_signature\", \"source_review_status\": \"demonstration_only_independent_legal_review_required\"}",
+      "raw_response": {
+        "citations": [
+          "blk_a65396a79220697eeb81b128"
+        ],
+        "cited_version_id": "ver_b78dfb5c893a5e5c361b67e3",
+        "conclusion": "compliant",
+        "explanation": "The supplied post-amendment wording, effective on the reference date, makes an electronic signature Certificate from the recognised authority valid.",
+        "uncertainty": "The supplied source is machine-extracted, unreviewed demonstration material."
+      },
+      "retrieval_configuration": "version_graph_evidence_excerpt_v1",
+      "run_id": "run_267e07ffb1e51d4f549db487",
+      "scenario_id": "demo_it_act_section_19_electronic_signature",
+      "temperature": 0
+    },
+    {
+      "condition": "post_amendment_legal_context",
+      "execution_status": "completed",
+      "facts_sha256": "5552b8771e62cf8ac0590f2a0df383c3a26b8e0b215bf32d0ceda755c9b7096b",
+      "model": "gpt-5.6-sol",
+      "model_version": "gpt-5.6-sol",
+      "prompt_version": "1.0.0-draft",
+      "raw_prompt": "{\"condition\": \"post_amendment_legal_context\", \"facts\": [\"The Controller recognised a foreign Certifying Authority under section 19(1), with the previous approval of the Central Government and notification in the Official Gazette.\", \"That recognition remained in force on both reference dates and all stated regulatory conditions were satisfied.\", \"The recognised authority issued a certificate using a legally notified electronic-signature technique that was not a digital-signature technique.\", \"No fact other than the applicable wording of section 19(2) changes between the two evaluations.\"], \"instruction\": \"Answer only from the supplied scenario and condition context. Identify uncertainty rather than inventing missing legal evidence.\", \"legal_context\": [{\"evidence_id\": \"blk_a65396a79220697eeb81b128\", \"evidence_locator\": \"pdf:page:13:line:37\", \"extraction_status\": \"machine_extracted_unreviewed\", \"label\": \"post_amendment\", \"provision_text_excerpt\": \"Section 19(2): Where any Certifying Authority is recognised under sub-section (1), the electronic signature Certificate issued by such Certifying Authority shall be valid for the purposes of this Act. Footnote: substituted for Digital Signature with effect from 27-10-2009.\", \"version_id\": \"ver_b78dfb5c893a5e5c361b67e3\"}], \"legal_question\": \"For the stated reference date, should the certificate be treated as valid for the purposes of the Information Technology Act under section 19(2)? Return compliant for valid and non_compliant for not valid under the supplied provision.\", \"output_contract\": {\"citations\": \"array; use only supplied evidence IDs or locators\", \"cited_version_id\": \"string or null; cite only a supplied version ID\", \"conclusion\": \"compliant | non_compliant | indeterminate\", \"explanation\": \"concise reasoning\", \"uncertainty\": \"string or null\"}, \"reference_date\": \"2009-10-27\", \"scenario_id\": \"demo_it_act_section_19_electronic_signature\", \"source_review_status\": \"demonstration_only_independent_legal_review_required\"}",
+      "raw_response": {
+        "citations": [
+          "blk_a65396a79220697eeb81b128"
+        ],
+        "cited_version_id": "ver_b78dfb5c893a5e5c361b67e3",
+        "conclusion": "compliant",
+        "explanation": "The post-amendment provision effective on the reference date validates the stated electronic signature Certificate.",
+        "uncertainty": "The supplied source is machine-extracted, unreviewed demonstration material."
+      },
+      "retrieval_configuration": "version_graph_evidence_excerpt_v1",
+      "run_id": "run_3f5d8bec531348f42d9f1c84",
+      "scenario_id": "demo_it_act_section_19_electronic_signature",
+      "temperature": 0
+    },
+    {
+      "condition": "both_versions_plus_reference_date",
+      "execution_status": "completed",
+      "facts_sha256": "5552b8771e62cf8ac0590f2a0df383c3a26b8e0b215bf32d0ceda755c9b7096b",
+      "model": "gpt-5.6-sol",
+      "model_version": "gpt-5.6-sol",
+      "prompt_version": "1.0.0-draft",
+      "raw_prompt": "{\"condition\": \"both_versions_plus_reference_date\", \"facts\": [\"The Controller recognised a foreign Certifying Authority under section 19(1), with the previous approval of the Central Government and notification in the Official Gazette.\", \"That recognition remained in force on both reference dates and all stated regulatory conditions were satisfied.\", \"The recognised authority issued a certificate using a legally notified electronic-signature technique that was not a digital-signature technique.\", \"No fact other than the applicable wording of section 19(2) changes between the two evaluations.\"], \"instruction\": \"Answer only from the supplied scenario and condition context. Identify uncertainty rather than inventing missing legal evidence.\", \"legal_context\": [{\"evidence_id\": \"blk_5ca58de616262e5f240d559d\", \"evidence_locator\": \"pdf:page:2:line:10\", \"extraction_status\": \"research_engineer_reconstruction_from_substitution_instruction_unreviewed\", \"label\": \"pre_amendment\", \"provision_text_excerpt\": \"Section 19(2): Where any Certifying Authority is recognised under sub-section (1), the Digital Signature Certificate issued by such Certifying Authority shall be valid for the purposes of this Act.\", \"version_id\": \"demo_it_act_s19_pre_2009\"}, {\"evidence_id\": \"blk_a65396a79220697eeb81b128\", \"evidence_locator\": \"pdf:page:13:line:37\", \"extraction_status\": \"machine_extracted_unreviewed\", \"label\": \"post_amendment\", \"provision_text_excerpt\": \"Section 19(2): Where any Certifying Authority is recognised under sub-section (1), the electronic signature Certificate issued by such Certifying Authority shall be valid for the purposes of this Act. Footnote: substituted for Digital Signature with effect from 27-10-2009.\", \"version_id\": \"ver_b78dfb5c893a5e5c361b67e3\"}], \"legal_question\": \"For the stated reference date, should the certificate be treated as valid for the purposes of the Information Technology Act under section 19(2)? Return compliant for valid and non_compliant for not valid under the supplied provision.\", \"output_contract\": {\"citations\": \"array; use only supplied evidence IDs or locators\", \"cited_version_id\": \"string or null; cite only a supplied version ID\", \"conclusion\": \"compliant | non_compliant | indeterminate\", \"explanation\": \"concise reasoning\", \"uncertainty\": \"string or null\"}, \"reference_date\": \"2009-10-27\", \"scenario_id\": \"demo_it_act_section_19_electronic_signature\", \"source_review_status\": \"demonstration_only_independent_legal_review_required\"}",
+      "raw_response": {
+        "citations": [
+          "blk_a65396a79220697eeb81b128"
+        ],
+        "cited_version_id": "ver_b78dfb5c893a5e5c361b67e3",
+        "conclusion": "compliant",
+        "explanation": "The amendment is stated to take effect on 2009-10-27, so the post-amendment wording validates the electronic signature Certificate on that date.",
+        "uncertainty": "The supplied source is machine-extracted, unreviewed demonstration material."
+      },
+      "retrieval_configuration": "version_graph_evidence_excerpt_v1",
+      "run_id": "run_4406bcea475e73f01e162b28",
+      "scenario_id": "demo_it_act_section_19_electronic_signature",
+      "temperature": 0
+    },
+    {
+      "condition": "no_legal_context",
+      "execution_status": "completed",
+      "facts_sha256": "5552b8771e62cf8ac0590f2a0df383c3a26b8e0b215bf32d0ceda755c9b7096b",
+      "model": "gpt-5.6-sol",
+      "model_version": "gpt-5.6-sol",
+      "prompt_version": "1.0.0-draft",
+      "raw_prompt": "{\"condition\": \"no_legal_context\", \"facts\": [\"The Controller recognised a foreign Certifying Authority under section 19(1), with the previous approval of the Central Government and notification in the Official Gazette.\", \"That recognition remained in force on both reference dates and all stated regulatory conditions were satisfied.\", \"The recognised authority issued a certificate using a legally notified electronic-signature technique that was not a digital-signature technique.\", \"No fact other than the applicable wording of section 19(2) changes between the two evaluations.\"], \"instruction\": \"Answer only from the supplied scenario and condition context. Identify uncertainty rather than inventing missing legal evidence.\", \"legal_context\": [], \"legal_question\": \"For the stated reference date, should the certificate be treated as valid for the purposes of the Information Technology Act under section 19(2)? Return compliant for valid and non_compliant for not valid under the supplied provision.\", \"output_contract\": {\"citations\": \"array; use only supplied evidence IDs or locators\", \"cited_version_id\": \"string or null; cite only a supplied version ID\", \"conclusion\": \"compliant | non_compliant | indeterminate\", \"explanation\": \"concise reasoning\", \"uncertainty\": \"string or null\"}, \"reference_date\": null, \"scenario_id\": \"demo_it_act_section_19_electronic_signature\", \"source_review_status\": \"demonstration_only_independent_legal_review_required\"}",
+      "raw_response": {
+        "citations": [],
+        "cited_version_id": null,
+        "conclusion": "indeterminate",
+        "explanation": "No legal context or reference date is supplied from which validity under section 19(2) can be determined.",
+        "uncertainty": "The applicable wording and legal version are missing."
+      },
+      "retrieval_configuration": "version_graph_evidence_excerpt_v1",
+      "run_id": "run_715f49a10819c784b9d0446a",
+      "scenario_id": "demo_it_act_section_19_electronic_signature",
+      "temperature": 0
+    },
+    {
+      "condition": "pre_amendment_legal_context",
+      "execution_status": "completed",
+      "facts_sha256": "5552b8771e62cf8ac0590f2a0df383c3a26b8e0b215bf32d0ceda755c9b7096b",
+      "model": "gpt-5.6-sol",
+      "model_version": "gpt-5.6-sol",
+      "prompt_version": "1.0.0-draft",
+      "raw_prompt": "{\"condition\": \"pre_amendment_legal_context\", \"facts\": [\"The Controller recognised a foreign Certifying Authority under section 19(1), with the previous approval of the Central Government and notification in the Official Gazette.\", \"That recognition remained in force on both reference dates and all stated regulatory conditions were satisfied.\", \"The recognised authority issued a certificate using a legally notified electronic-signature technique that was not a digital-signature technique.\", \"No fact other than the applicable wording of section 19(2) changes between the two evaluations.\"], \"instruction\": \"Answer only from the supplied scenario and condition context. Identify uncertainty rather than inventing missing legal evidence.\", \"legal_context\": [{\"evidence_id\": \"blk_5ca58de616262e5f240d559d\", \"evidence_locator\": \"pdf:page:2:line:10\", \"extraction_status\": \"research_engineer_reconstruction_from_substitution_instruction_unreviewed\", \"label\": \"pre_amendment\", \"provision_text_excerpt\": \"Section 19(2): Where any Certifying Authority is recognised under sub-section (1), the Digital Signature Certificate issued by such Certifying Authority shall be valid for the purposes of this Act.\", \"version_id\": \"demo_it_act_s19_pre_2009\"}], \"legal_question\": \"For the stated reference date, should the certificate be treated as valid for the purposes of the Information Technology Act under section 19(2)? Return compliant for valid and non_compliant for not valid under the supplied provision.\", \"output_contract\": {\"citations\": \"array; use only supplied evidence IDs or locators\", \"cited_version_id\": \"string or null; cite only a supplied version ID\", \"conclusion\": \"compliant | non_compliant | indeterminate\", \"explanation\": \"concise reasoning\", \"uncertainty\": \"string or null\"}, \"reference_date\": \"2009-10-26\", \"scenario_id\": \"demo_it_act_section_19_electronic_signature\", \"source_review_status\": \"demonstration_only_independent_legal_review_required\"}",
+      "raw_response": {
+        "citations": [
+          "blk_5ca58de616262e5f240d559d"
+        ],
+        "cited_version_id": "demo_it_act_s19_pre_2009",
+        "conclusion": "non_compliant",
+        "explanation": "The supplied pre-amendment wording validates a Digital Signature Certificate, while the stated certificate uses a non-digital electronic-signature technique.",
+        "uncertainty": "The pre-amendment text is an unreviewed reconstruction supplied for demonstration."
+      },
+      "retrieval_configuration": "version_graph_evidence_excerpt_v1",
+      "run_id": "run_ec9f63aa699817a2e3528a96",
+      "scenario_id": "demo_it_act_section_19_electronic_signature",
+      "temperature": 0
+    }
+  ],
+  "schema_version": "1.0.0",
+  "status": "controlled_execution_completed_unscored_without_legal_gold"
+}

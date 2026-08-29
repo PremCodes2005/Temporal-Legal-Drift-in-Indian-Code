@@ -10,6 +10,7 @@ from temporal_legal_drift.baselines import (
 from temporal_legal_drift.explanations import evaluate_explanation_support
 from temporal_legal_drift.llm_evaluation import (
     build_llm_evaluation_plan,
+    build_drift_evaluation_from_executed_plan,
     normalize_structured_assertion,
     score_paired_assertions,
 )
@@ -20,6 +21,48 @@ LABELS = ("High", "Medium", "Low", "None")
 
 
 class PhaseEightToTenTests(unittest.TestCase):
+    def test_executed_pre_post_runs_are_paired_and_scored(self) -> None:
+        pre = {
+            "conclusion": "non_compliant",
+            "cited_version_id": "v1",
+            "citations": ["e1"],
+            "explanation": "before",
+            "uncertainty": None,
+        }
+        post = {
+            "conclusion": "compliant",
+            "cited_version_id": "v2",
+            "citations": ["e2"],
+            "explanation": "after",
+            "uncertainty": None,
+        }
+        result = build_drift_evaluation_from_executed_plan(
+            {
+                "experiment_id": "demo",
+                "runs": [
+                    {"scenario_id": "s1", "condition": "pre_amendment_legal_context", "run_id": "r1", "raw_response": pre},
+                    {"scenario_id": "s1", "condition": "post_amendment_legal_context", "run_id": "r2", "raw_response": post},
+                ],
+            },
+            {
+                "scenarios": [
+                    {
+                        "scenario_id": "s1",
+                        "expected_change": 1,
+                        "expected_pre_conclusion": "non_compliant",
+                        "expected_post_conclusion": "compliant",
+                        "pre_applicable_version_id": "v1",
+                        "post_applicable_version_id": "v2",
+                        "pre_amendment_legal_context": {"evidence_id": "e1"},
+                        "post_amendment_legal_context": {"evidence_id": "e2"},
+                    }
+                ]
+            },
+        )
+        self.assertEqual(result["metrics"]["false_stability_rate"], 0)
+        self.assertEqual(result["metrics"]["version_accuracy"], 1)
+        self.assertEqual(result["metrics"]["citation_precision"], 1)
+
     def test_execution_enabled_plan_requires_a_model(self) -> None:
         scenarios = {"scenarios": [{"scenario_id": "s1", "facts": []}]}
         release = {"benchmark_frozen": False}

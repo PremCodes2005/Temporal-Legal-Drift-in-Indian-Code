@@ -26,6 +26,10 @@ REQUIRED_ARTIFACTS = (
     "reports/phase8/baseline_dry_run.lock.json",
     "reports/phase9/evaluation_plan.lock.json",
     "reports/phase10/explanation_plan.lock.json",
+    "data/scenarios/temporal_drift_demo.v1.json",
+    "experiments/phase9/temporal_drift_demo.v1.json",
+    "experiments/phase9/temporal_drift_demo.results.v1.json",
+    "reports/phase9/temporal_drift_demo.lock.json",
 )
 
 

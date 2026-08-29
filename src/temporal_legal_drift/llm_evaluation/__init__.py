@@ -2,6 +2,7 @@
 
 from .runner import (
     build_llm_evaluation_plan,
+    build_drift_evaluation_from_executed_plan,
     execute_controlled_plan_with_codex_cli,
     normalize_structured_assertion,
     score_paired_assertions,
@@ -10,6 +11,7 @@ from .runner import (
 
 __all__ = [
     "build_llm_evaluation_plan",
+    "build_drift_evaluation_from_executed_plan",
     "execute_controlled_plan_with_codex_cli",
     "normalize_structured_assertion",
     "score_paired_assertions",

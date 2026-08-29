@@ -27,6 +27,7 @@ from .gates import check_engineering_gates
 from .jsonio import load_json
 from .materiality import build_annotation_workload, write_annotation_workload_and_lock
 from .llm_evaluation import (
+    build_drift_evaluation_from_executed_plan,
     build_llm_evaluation_plan,
     execute_controlled_plan_with_codex_cli,
     score_paired_assertions,
@@ -305,6 +306,11 @@ def build_parser() -> argparse.ArgumentParser:
 
     score_drift = subparsers.add_parser("score-drift-pairs")
     score_drift.add_argument("--pairs", type=Path, required=True)
+
+    score_executed = subparsers.add_parser("score-executed-drift")
+    score_executed.add_argument("--plan", type=Path, required=True)
+    score_executed.add_argument("--scenarios", type=Path, required=True)
+    score_executed.add_argument("--output", type=Path, required=True)
 
     phase10 = subparsers.add_parser("build-explanation-evaluation-plan")
     phase10.add_argument(
@@ -609,6 +615,18 @@ def run(args: argparse.Namespace) -> int:
         if not isinstance(pairs, list) or not all(isinstance(item, dict) for item in pairs):
             raise ValueError("Drift scoring input requires an array of pair objects")
         print(json.dumps(score_paired_assertions(pairs), indent=2, ensure_ascii=False))
+        return 0
+
+    if args.command == "score-executed-drift":
+        result = build_drift_evaluation_from_executed_plan(
+            load_json(_resolve(root, args.plan)),
+            load_json(_resolve(root, args.scenarios)),
+        )
+        output = _resolve(root, args.output)
+        from .jsonio import atomic_replace, canonical_json_bytes
+
+        atomic_replace(output, canonical_json_bytes(result))
+        print(json.dumps(result, indent=2, ensure_ascii=False))
         return 0
 
     if args.command == "build-explanation-evaluation-plan":

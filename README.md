@@ -4,6 +4,8 @@ Research software foundation for evaluating whether LLM-based compliance systems
 
 The repository is at TRL 2. Phases 0–11 provide configuration, source provenance, immutable acquisition storage, deterministic parsing/normalization, a technical provision-version graph, an evidence-constrained applicability resolver, a materiality-annotation workload, scenario-authoring scaffolds, a leakage-audited technical release dry run, baseline infrastructure, controlled temporal-LLM execution, explanation-support evaluation, and fresh-environment engineering reproduction. A fourteen-document India Code technical pilot is available, but it is not a legally validated corpus or frozen benchmark. A 78-run non-gold LLM smoke experiment has executed; it verifies pipeline operation but provides no model-performance or legal-correctness result. The repository does not contain materiality gold labels, completed expert scenarios, independent legal validation, or a monitoring agent.
 
+A separate one-pair controlled temporal-drift demonstration is reported in `reports/phase9/temporal_drift_demo.md`. It produced the expected pre/post answer change, but its research-engineer-authored expectations are not legal gold.
+
 ## Implemented boundary
 
 - **Phase 0:** draft research contract, terminology/temporal registries, novelty-audit template, gate status, and structural validation.

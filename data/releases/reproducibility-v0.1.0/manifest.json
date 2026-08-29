@@ -14,6 +14,9 @@
     "configs/terminology_registry.v1.json": "d05b0a1b5e78900b0dbaf1177b2d21f39094201cacdf922129622775fc888e27",
     "configs/validation/cross_version.v1.json": "5c58616d1e6175c6c29354474651d2d5152b0bc94d9b9db24b2bbaad9245f305",
     "configs/versioning/instrument_relations.v1.json": "2e56654119e366de2a558a51fed8ee8e1fb1ead300259a9164d22636626aba5d",
+    "data/scenarios/temporal_drift_demo.v1.json": "ac78b978f75628bd5facdb06feaaf5710720ba9fca8a4eea766c247b3d41bbcc",
+    "experiments/phase9/temporal_drift_demo.results.v1.json": "40f2a730ed033d921b907d4e8d4e22decfb22778fb1522cff34261801df39123",
+    "experiments/phase9/temporal_drift_demo.v1.json": "60565bb4ec48c8748a6dbb2d2b25d9be98a89b59cbba4066d0167597a8a2a109",
     "protocols/applicability_protocol.md": "41c4782869b66bfa9eb4590b459167472ef9463b32128c6b5cc5504516110f4a",
     "protocols/baseline_protocol.md": "b3d84d4b6d5a98e66a13636e96b83e14f6f5b4b86b0c7231effdd518332be730",
     "protocols/benchmark_release_protocol.md": "398446555a3f5c04ea8d94dc9bf98c7daaf354f6cbc17b3c9b7b541c406af336",
@@ -34,6 +37,7 @@
     "reports/phase7/release.lock.json": "5028a469248d485d0f994a172b08dad9999d1bd53420f58b9db809661dd7dbe7",
     "reports/phase8/baseline_dry_run.lock.json": "1cd468ff5935b5d4b71db07eed8a3c0a067bfbe716365887c3740cc691953e39",
     "reports/phase9/evaluation_plan.lock.json": "0eb35a70361236c1b4c983ebfdac97081c6cd540d48afef18a8cfe4f25cb10fd",
+    "reports/phase9/temporal_drift_demo.lock.json": "15342998bfc3bbb0dcd715b95965060191626acdf6b68e092f4027c170c5b47a",
     "schemas/annotation/amendment_pair.schema.json": "5d8aea515c6f4bbae9cb491f09c5205d6945d3948f8222c93e1430cc75736b82",
     "schemas/annotation/materiality_annotation.schema.json": "b6a4207f38f75932352fecaaf8c41de759516b953310df88f34801447020c60b",
     "schemas/evaluation/baseline_run.schema.json": "2f2ae61c3e4ab109e9ef849a76ddfd5401fa624bdb6afd7d7a19bdad7c8fab3b",
@@ -69,7 +73,7 @@
     "src/temporal_legal_drift/baselines/runner.py": "0e7d8b99d70f7c9fd4f86338a18043d1dcb924cae3012d80b4d9cd8d58aef59b",
     "src/temporal_legal_drift/benchmark/__init__.py": "00836c651557f932abcc62f5fa8834a7e0a97570cfb3a6dc92bcda1a6fc4bf1f",
     "src/temporal_legal_drift/benchmark/builder.py": "04bcbc19bac29790b260a67d3c0d997ace775a0b8500cd1040a8e2e43f2b6cb7",
-    "src/temporal_legal_drift/cli.py": "0890ad0a898e97bd17a29c5f44ec7686faf5686908478ae0b873f0ed726545f6",
+    "src/temporal_legal_drift/cli.py": "a2988ec33314f63b1f7fe07d6e05c917eb0d1deaec1299cfcb2f45acb01a8cb9",
     "src/temporal_legal_drift/corpus/__init__.py": "7baa6ce358159b55d688d6fb637bb61ae340e2004c2bde7b74260ffbf4f0549b",
     "src/temporal_legal_drift/corpus/download.py": "9dbcdcdc10f25b2e7e162bdf91ed892f81cb52b32c7e3c94e970304602a2e1bf",
     "src/temporal_legal_drift/corpus/manifest.py": "4f3cb76b3762ad6eb717f5a3909e3f9af6c00db5d88898e55b07ed777367efe5",
@@ -81,8 +85,8 @@
     "src/temporal_legal_drift/explanations/evaluator.py": "2e98868beeeb36f7e49696cea5d1acc872d1b33431c278b654ad9832200683fc",
     "src/temporal_legal_drift/gates.py": "727eb3e710af15f251914794d6ab4e9268b3c865ffa7b8f68a99f8bfaadd77b3",
     "src/temporal_legal_drift/jsonio.py": "cf34a726e100a2d81d678fbbc0fe955eb93aa88fa5a85313e9d71ffc1483ae1e",
-    "src/temporal_legal_drift/llm_evaluation/__init__.py": "76fd0801c09d16b5702d6804c1f4ae6ad47eee2f4b7f80f7876a4bbb843ff54e",
-    "src/temporal_legal_drift/llm_evaluation/runner.py": "0cea2405fdc1e848b55fcad04f681adf8e1c0d4e70163f14139455ca1140a9fb",
+    "src/temporal_legal_drift/llm_evaluation/__init__.py": "09771441c84ec8e1ab7d3606dc3be1f971f137245f7052fa4ca6d00ac38a6745",
+    "src/temporal_legal_drift/llm_evaluation/runner.py": "10e183ad0cba09f757b0e6353dad06f7f7ddf3169cf57a4157ae8394406e7e47",
     "src/temporal_legal_drift/materiality/__init__.py": "e6943fc307220981311b9facd80d639884333fef6ce98112631e83bf3188678b",
     "src/temporal_legal_drift/materiality/builder.py": "f26b152858e6a2e34c0bb37612bac73ff18f8c2d7f0400cae3d9b8d261d799c8",
     "src/temporal_legal_drift/metrics/__init__.py": "985aab7ec381b0adf8c925ad0d0f8b06e6eb237658a41e3856ced6238c872a16",
@@ -99,7 +103,7 @@
     "src/temporal_legal_drift/parsing/xml.py": "6be5907098600ea61cdb16bc635b0545555db2478610b673ee5e9e66fa64f7f3",
     "src/temporal_legal_drift/phase0.py": "1b7b9bb8fc84e6db4922b2be6446b34b4a0ae7ad4d09095a7b643c9128ef7292",
     "src/temporal_legal_drift/reproducibility/__init__.py": "40d4bc2addfb7a53da7cd2df7a2d865dfe0ef8f5765b2ad793e3acc1d5a72bfd",
-    "src/temporal_legal_drift/reproducibility/builder.py": "a18fd2bd799d00a25c110e1279b2694a0878a01946075cbb86974c54b4ad196e",
+    "src/temporal_legal_drift/reproducibility/builder.py": "89ff8d8dcc207bc020308f3a2df05c3d93da7d7b1bb691ab283ed80549fd939a",
     "src/temporal_legal_drift/scenarios/__init__.py": "6a4eecdee4f4c4b329cad2a8a6c1fee06f6974473e8d103879854f49e3a31424",
     "src/temporal_legal_drift/scenarios/builder.py": "1ecf3452ef91f3871a58211775da3cb3ceeb621beccdd3cd8d00a5cfedc18526",
     "src/temporal_legal_drift/versioning/__init__.py": "9a3fd9a7b15599313ae3cf3a94723425f3c570544c4dbdc6b6bfd4de111a0d5d",
@@ -118,7 +122,7 @@
     "tests/unit/test_parsers.py": "b811851151545f3a5574bfa12ae76db0479a8ddebaafe2df5411115abbaf19f5",
     "tests/unit/test_phase0.py": "aee4c1acce1c082fcd16e85d51f4effb15c152cc8559f8cbf829249a86871e9a",
     "tests/unit/test_phases_5_7.py": "18604aa0823fe3f1b337ed35bbc30a375262826354429fbd5ceeafca23ddf09e",
-    "tests/unit/test_phases_8_10.py": "03af79495f642b173a3d4e49dd7630f4ce95900db5d1f9e3c00a75a4ab7f55ab",
+    "tests/unit/test_phases_8_10.py": "e486bc4921cbe079e8413b171a28e88785aef2257e81b9f2f5159fc3941dbe20",
     "tests/unit/test_versioning.py": "9543915be9d2e33ffc0a63cc5d76e6385e9f9ccfff7b2236aee8b70c30f76f45"
   },
   "environment": {
@@ -179,8 +183,8 @@
         "-v"
       ],
       "exit_code": 0,
-      "output_tail": "rimary_or_absorb_consequence) ... ok\ntest_repository_contract_is_valid_but_human_review_gate_is_open (tests.unit.test_phase0.ResearchContractTests.test_repository_contract_is_valid_but_human_review_gate_is_open) ... ok\ntest_non_gold_pipeline_preserves_missing_research_fields (tests.unit.test_phases_5_7.PhaseFiveToSevenTests.test_non_gold_pipeline_preserves_missing_research_fields) ... ok\ntest_correct_conclusion_with_stale_version_is_explanation_drift (tests.unit.test_phases_8_10.PhaseEightToTenTests.test_correct_conclusion_with_stale_version_is_explanation_drift) ... ok\ntest_execution_enabled_plan_requires_a_model (tests.unit.test_phases_8_10.PhaseEightToTenTests.test_execution_enabled_plan_requires_a_model) ... ok\ntest_false_stability_and_false_instability_are_exact (tests.unit.test_phases_8_10.PhaseEightToTenTests.test_false_stability_and_false_instability_are_exact) ... ok\ntest_reproducible_non_neural_baselines_and_metrics (tests.unit.test_phases_8_10.PhaseEightToTenTests.test_reproducible_non_neural_baselines_and_metrics) ... ok\ntest_graph_reconstructs_exact_version_and_rejects_cycles (tests.unit.test_versioning.VersioningTests.test_graph_reconstructs_exact_version_and_rejects_cycles) ... ok\ntest_section_extraction_is_stable_and_reports_duplicate_candidates (tests.unit.test_versioning.VersioningTests.test_section_extraction_is_stable_and_reports_duplicate_candidates) ... ok\ntest_acquire_then_normalize_preserves_provenance (tests.integration.test_normalization_pipeline.NormalizationPipelineTests.test_acquire_then_normalize_preserves_provenance) ... ok\ntest_corrupted_raw_blob_is_quarantined (tests.integration.test_normalization_pipeline.NormalizationPipelineTests.test_corrupted_raw_blob_is_quarantined) ... ok\ntest_unsupported_format_is_quarantined (tests.integration.test_normalization_pipeline.NormalizationPipelineTests.test_unsupported_format_is_quarantined) ... ok\n\n----------------------------------------------------------------------\nRan 30 tests in 0.038s\n\nOK\n",
-      "stderr_sha256": "7dc46bbd080f0a506a46ed13667df0c965bf2346cd188ebf5be87458380da59f",
+      "output_tail": "tory_contract_is_valid_but_human_review_gate_is_open) ... ok\ntest_non_gold_pipeline_preserves_missing_research_fields (tests.unit.test_phases_5_7.PhaseFiveToSevenTests.test_non_gold_pipeline_preserves_missing_research_fields) ... ok\ntest_correct_conclusion_with_stale_version_is_explanation_drift (tests.unit.test_phases_8_10.PhaseEightToTenTests.test_correct_conclusion_with_stale_version_is_explanation_drift) ... ok\ntest_executed_pre_post_runs_are_paired_and_scored (tests.unit.test_phases_8_10.PhaseEightToTenTests.test_executed_pre_post_runs_are_paired_and_scored) ... ok\ntest_execution_enabled_plan_requires_a_model (tests.unit.test_phases_8_10.PhaseEightToTenTests.test_execution_enabled_plan_requires_a_model) ... ok\ntest_false_stability_and_false_instability_are_exact (tests.unit.test_phases_8_10.PhaseEightToTenTests.test_false_stability_and_false_instability_are_exact) ... ok\ntest_reproducible_non_neural_baselines_and_metrics (tests.unit.test_phases_8_10.PhaseEightToTenTests.test_reproducible_non_neural_baselines_and_metrics) ... ok\ntest_graph_reconstructs_exact_version_and_rejects_cycles (tests.unit.test_versioning.VersioningTests.test_graph_reconstructs_exact_version_and_rejects_cycles) ... ok\ntest_section_extraction_is_stable_and_reports_duplicate_candidates (tests.unit.test_versioning.VersioningTests.test_section_extraction_is_stable_and_reports_duplicate_candidates) ... ok\ntest_acquire_then_normalize_preserves_provenance (tests.integration.test_normalization_pipeline.NormalizationPipelineTests.test_acquire_then_normalize_preserves_provenance) ... ok\ntest_corrupted_raw_blob_is_quarantined (tests.integration.test_normalization_pipeline.NormalizationPipelineTests.test_corrupted_raw_blob_is_quarantined) ... ok\ntest_unsupported_format_is_quarantined (tests.integration.test_normalization_pipeline.NormalizationPipelineTests.test_unsupported_format_is_quarantined) ... ok\n\n----------------------------------------------------------------------\nRan 31 tests in 0.038s\n\nOK\n",
+      "stderr_sha256": "1c78ff2e8c0ef96d874f96568f280a0248d8e167c11e881e3c7b8fd3a1ca8a05",
       "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "step": 3
     }
@@ -199,5 +203,5 @@
   "research_gate_passed": false,
   "schema_version": "1.0.0",
   "status": "fresh_environment_engineering_reproduction_passed_expert_review_unavailable",
-  "verified_at": "2026-08-29T17:33:49.072148+00:00"
+  "verified_at": "2026-08-29T17:45:17.551283+00:00"
 }

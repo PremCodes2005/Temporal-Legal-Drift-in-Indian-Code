@@ -1,0 +1,68 @@
+{
+  "experiment_id": "phase9-temporal-drift-controlled-smoke-v1",
+  "limitations": [
+    "Expected conclusions are research-engineer demonstration hypotheses, not legal gold.",
+    "This result tests pipeline behaviour on one controlled example and is not model performance."
+  ],
+  "metrics": {
+    "change_decision_accuracy": 1.0,
+    "citation_expected_denominator": 2,
+    "citation_precision": 1.0,
+    "citation_predicted_denominator": 2,
+    "citation_recall": 1.0,
+    "citation_true_positive_count": 2,
+    "compliance_outcome_accuracy": 1.0,
+    "compliance_outcome_correct_count": 2,
+    "compliance_outcome_denominator": 2,
+    "false_instability_count": 0,
+    "false_instability_denominator": 0,
+    "false_instability_rate": null,
+    "false_stability_count": 0,
+    "false_stability_denominator": 1,
+    "false_stability_rate": 0.0,
+    "paired_item_count": 1,
+    "version_accuracy": 1.0,
+    "version_correct_count": 2,
+    "version_denominator": 2
+  },
+  "pair_count": 1,
+  "pairs": [
+    {
+      "expectation_status": "research_engineer_hypothesis_non_gold",
+      "expected_change": 1,
+      "expected_post_citations": [
+        "blk_a65396a79220697eeb81b128"
+      ],
+      "expected_post_conclusion": "compliant",
+      "expected_post_version_id": "ver_b78dfb5c893a5e5c361b67e3",
+      "expected_pre_citations": [
+        "blk_5ca58de616262e5f240d559d"
+      ],
+      "expected_pre_conclusion": "non_compliant",
+      "expected_pre_version_id": "demo_it_act_s19_pre_2009",
+      "post_assertion": {
+        "citations": [
+          "blk_a65396a79220697eeb81b128"
+        ],
+        "cited_version_id": "ver_b78dfb5c893a5e5c361b67e3",
+        "conclusion": "compliant",
+        "explanation": "The post-amendment provision effective on the reference date validates the stated electronic signature Certificate.",
+        "uncertainty": "The supplied source is machine-extracted, unreviewed demonstration material."
+      },
+      "post_run_id": "run_3f5d8bec531348f42d9f1c84",
+      "pre_assertion": {
+        "citations": [
+          "blk_5ca58de616262e5f240d559d"
+        ],
+        "cited_version_id": "demo_it_act_s19_pre_2009",
+        "conclusion": "non_compliant",
+        "explanation": "The supplied pre-amendment wording validates a Digital Signature Certificate, while the stated certificate uses a non-digital electronic-signature technique.",
+        "uncertainty": "The pre-amendment text is an unreviewed reconstruction supplied for demonstration."
+      },
+      "pre_run_id": "run_ec9f63aa699817a2e3528a96",
+      "scenario_id": "demo_it_act_section_19_electronic_signature"
+    }
+  ],
+  "schema_version": "1.0.0",
+  "status": "controlled_temporal_drift_demonstration_scored_non_gold"
+}

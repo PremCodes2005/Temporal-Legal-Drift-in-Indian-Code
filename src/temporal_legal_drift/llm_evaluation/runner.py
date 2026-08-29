@@ -365,6 +365,72 @@ def score_paired_assertions(records: list[dict[str, object]]) -> dict[str, objec
     return metrics
 
 
+def build_drift_evaluation_from_executed_plan(
+    plan: dict[str, object], scenarios: dict[str, object]
+) -> dict[str, object]:
+    """Pair pre/post context runs and score them against declared demonstration expectations."""
+    runs = plan.get("runs")
+    scenario_items = scenarios.get("scenarios")
+    if not isinstance(runs, list) or not isinstance(scenario_items, list):
+        raise ValueError("Executed drift scoring requires runs and scenarios")
+    by_key = {
+        (str(item.get("scenario_id")), str(item.get("condition"))): item
+        for item in runs
+        if isinstance(item, dict)
+    }
+    pairs: list[dict[str, object]] = []
+    for scenario in scenario_items:
+        if not isinstance(scenario, dict):
+            raise ValueError("Scenario records must be objects")
+        scenario_id = str(scenario.get("scenario_id"))
+        expected_change = scenario.get("expected_change")
+        expected_pre = scenario.get("expected_pre_conclusion")
+        expected_post = scenario.get("expected_post_conclusion")
+        if expected_change not in {0, 1} or expected_pre not in CONCLUSIONS or expected_post not in CONCLUSIONS:
+            raise ValueError("Drift scoring requires declared pre/post expectations")
+        pre = by_key.get((scenario_id, "pre_amendment_legal_context"))
+        post = by_key.get((scenario_id, "post_amendment_legal_context"))
+        if not isinstance(pre, dict) or not isinstance(post, dict):
+            raise ValueError(f"Missing paired controlled runs for {scenario_id}")
+        pre_assertion = pre.get("raw_response")
+        post_assertion = post.get("raw_response")
+        if not isinstance(pre_assertion, dict) or not isinstance(post_assertion, dict):
+            raise ValueError(f"Paired runs are not completed for {scenario_id}")
+        pairs.append(
+            {
+                "scenario_id": scenario_id,
+                "expectation_status": scenario.get("expectation_status"),
+                "expected_change": expected_change,
+                "expected_pre_conclusion": expected_pre,
+                "expected_post_conclusion": expected_post,
+                "expected_pre_version_id": scenario.get("pre_applicable_version_id"),
+                "expected_post_version_id": scenario.get("post_applicable_version_id"),
+                "expected_pre_citations": _expected_context_citations(
+                    scenario.get("pre_amendment_legal_context")
+                ),
+                "expected_post_citations": _expected_context_citations(
+                    scenario.get("post_amendment_legal_context")
+                ),
+                "pre_run_id": pre.get("run_id"),
+                "post_run_id": post.get("run_id"),
+                "pre_assertion": pre_assertion,
+                "post_assertion": post_assertion,
+            }
+        )
+    return {
+        "schema_version": "1.0.0",
+        "status": "controlled_temporal_drift_demonstration_scored_non_gold",
+        "experiment_id": plan.get("experiment_id"),
+        "pair_count": len(pairs),
+        "pairs": pairs,
+        "metrics": score_paired_assertions(pairs),
+        "limitations": [
+            "Expected conclusions are research-engineer demonstration hypotheses, not legal gold.",
+            "This result tests pipeline behaviour on one controlled example and is not model performance.",
+        ],
+    }
+
+
 def write_llm_plan_and_lock(
     document: dict[str, object], output_path: Path, lock_path: Path
 ) -> dict[str, object]:
@@ -446,6 +512,10 @@ def _render_prompt(
     context: list[dict[str, object]] = []
 
     def add_version(label: str, version_id: object) -> None:
+        inline = scenario.get(f"{label}_legal_context")
+        if isinstance(inline, dict):
+            context.append({"label": label, **inline})
+            return
         if not isinstance(version_id, str) or version_id not in versions:
             context.append({"label": label, "status": "version_unavailable"})
             return
@@ -550,3 +620,9 @@ def _codex_client_identity(log: str) -> str:
         if line.startswith("OpenAI Codex v"):
             return line.removeprefix("OpenAI Codex ")
     return "codex-cli-version-unreported"
+
+
+def _expected_context_citations(value: object) -> list[str]:
+    if isinstance(value, dict) and isinstance(value.get("evidence_id"), str):
+        return [str(value["evidence_id"])]
+    return []
