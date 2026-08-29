@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/temporal-legal-drift/reproducibility-manifest.schema.json",
+  "title": "Phase 11 engineering reproducibility manifest",
+  "type": "object",
+  "required": ["schema_version", "release_id", "status", "verified_at", "environment", "artifact_checksums", "executions", "fresh_environment_reproduction_passed", "independent_expert_validation", "research_gate_passed", "limitations"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "release_id": {"type": "string"},
+    "status": {"type": "string"},
+    "verified_at": {"type": "string"},
+    "environment": {"type": "object"},
+    "artifact_checksums": {"type": "object", "additionalProperties": {"type": "string", "pattern": "^[0-9a-f]{64}$"}},
+    "executions": {"type": "array"},
+    "fresh_environment_reproduction_passed": {"const": true},
+    "independent_expert_validation": {"type": "object"},
+    "research_gate_passed": {"const": false},
+    "limitations": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}

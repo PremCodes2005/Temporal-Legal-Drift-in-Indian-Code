@@ -1,4 +1,4 @@
-"""Command-line entry point for the Phase 0-10 research foundation."""
+"""Command-line entry point for the Phase 0-11 research foundation."""
 
 from __future__ import annotations
 
@@ -28,12 +28,14 @@ from .jsonio import load_json
 from .materiality import build_annotation_workload, write_annotation_workload_and_lock
 from .llm_evaluation import (
     build_llm_evaluation_plan,
+    execute_controlled_plan_with_codex_cli,
     score_paired_assertions,
     write_llm_plan_and_lock,
 )
 from .parsing.service import NormalizationService
 from .parsing.store import NormalizedDocumentStore, QuarantineStore
 from .phase0 import validate_contract_file
+from .reproducibility import verify_fresh_environment, write_reproducibility_manifest_and_lock
 from .scenarios import build_scenario_scaffolds, write_scenarios_and_lock
 from .versioning import VersionGraph, VersionGraphBuilder
 from .versioning.builder import write_graph_and_lock
@@ -93,7 +95,8 @@ def build_parser() -> argparse.ArgumentParser:
         default=Path("reports/corpus/india-code-temporal-pilot-v1.lock.json"),
     )
 
-    subparsers.add_parser("check-gates")
+    check_gates = subparsers.add_parser("check-gates")
+    check_gates.add_argument("--through-phase", type=int)
 
     build_graph = subparsers.add_parser("build-version-graph")
     build_graph.add_argument(
@@ -273,6 +276,33 @@ def build_parser() -> argparse.ArgumentParser:
         "--lock", type=Path, default=Path("reports/phase9/evaluation_plan.lock.json")
     )
 
+    execute_phase9 = subparsers.add_parser("execute-llm-evaluation")
+    execute_phase9.add_argument(
+        "--plan", type=Path, default=Path("experiments/phase9/evaluation_plan.v1.json")
+    )
+    execute_phase9.add_argument(
+        "--scenarios", type=Path, default=Path("data/scenarios/phase6_scaffolds.v1.json")
+    )
+    execute_phase9.add_argument(
+        "--graph", type=Path, default=Path("data/interim/version_graph.v1.json")
+    )
+    execute_phase9.add_argument(
+        "--config", type=Path, default=Path("configs/experiments/temporal_llm.v1.json")
+    )
+    execute_phase9.add_argument(
+        "--prompt", type=Path, default=Path("configs/prompts/compliance_reasoning.v1.json")
+    )
+    execute_phase9.add_argument(
+        "--codex-command", default="codex"
+    )
+    execute_phase9.add_argument("--timeout-seconds", type=int, default=1800)
+    execute_phase9.add_argument(
+        "--output", type=Path, default=Path("experiments/phase9/evaluation_plan.v1.json")
+    )
+    execute_phase9.add_argument(
+        "--lock", type=Path, default=Path("reports/phase9/evaluation_plan.lock.json")
+    )
+
     score_drift = subparsers.add_parser("score-drift-pairs")
     score_drift.add_argument("--pairs", type=Path, required=True)
 
@@ -299,6 +329,17 @@ def build_parser() -> argparse.ArgumentParser:
     )
     phase10.add_argument(
         "--lock", type=Path, default=Path("reports/phase10/explanation_plan.lock.json")
+    )
+
+    phase11 = subparsers.add_parser("verify-reproducibility")
+    phase11.add_argument("--timeout-seconds", type=int, default=900)
+    phase11.add_argument(
+        "--output",
+        type=Path,
+        default=Path("data/releases/reproducibility-v0.1.0/manifest.json"),
+    )
+    phase11.add_argument(
+        "--lock", type=Path, default=Path("reports/phase11/reproducibility.lock.json")
     )
     return parser
 
@@ -390,7 +431,7 @@ def run(args: argparse.Namespace) -> int:
         return 0
 
     if args.command == "check-gates":
-        results = check_engineering_gates(root)
+        results = check_engineering_gates(root, through_phase=args.through_phase)
         passed = all(result.engineering_passed for result in results)
         print(
             json.dumps(
@@ -542,6 +583,26 @@ def run(args: argparse.Namespace) -> int:
         print(json.dumps(lock, indent=2, ensure_ascii=False))
         return 0
 
+    if args.command == "execute-llm-evaluation":
+        config = load_json(_resolve(root, args.config))
+        model = config.get("model")
+        if config.get("execution_enabled") is not True or not isinstance(model, str):
+            raise ValueError("Phase 9 execution must be enabled with a selected model")
+        document = execute_controlled_plan_with_codex_cli(
+            load_json(_resolve(root, args.plan)),
+            load_json(_resolve(root, args.scenarios)),
+            VersionGraph.from_dict(load_json(_resolve(root, args.graph))),
+            load_json(_resolve(root, args.prompt)),
+            model=model,
+            codex_command=args.codex_command,
+            timeout_seconds=args.timeout_seconds,
+        )
+        lock = write_llm_plan_and_lock(
+            document, _resolve(root, args.output), _resolve(root, args.lock)
+        )
+        print(json.dumps(lock, indent=2, ensure_ascii=False))
+        return 0
+
     if args.command == "score-drift-pairs":
         document = load_json(_resolve(root, args.pairs))
         pairs = document.get("pairs")
@@ -559,6 +620,14 @@ def run(args: argparse.Namespace) -> int:
             load_json(_resolve(root, args.rubric)),
         )
         lock = write_explanation_plan_and_lock(
+            document, _resolve(root, args.output), _resolve(root, args.lock)
+        )
+        print(json.dumps(lock, indent=2, ensure_ascii=False))
+        return 0
+
+    if args.command == "verify-reproducibility":
+        document = verify_fresh_environment(root, timeout_seconds=args.timeout_seconds)
+        lock = write_reproducibility_manifest_and_lock(
             document, _resolve(root, args.output), _resolve(root, args.lock)
         )
         print(json.dumps(lock, indent=2, ensure_ascii=False))

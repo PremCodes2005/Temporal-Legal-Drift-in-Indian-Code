@@ -16,7 +16,7 @@
     "retrieval_configuration": {"type": "string"},
     "raw_prompt": {"type": ["string", "null"]},
     "raw_response": {"type": ["string", "object", "null"]},
-    "execution_status": {"enum": ["blocked_missing_scenario_gold_and_model", "completed", "failed"]}
+    "execution_status": {"enum": ["blocked_missing_scenario_gold_and_model", "ready_for_controlled_execution", "completed", "failed"]}
   },
   "additionalProperties": false
 }

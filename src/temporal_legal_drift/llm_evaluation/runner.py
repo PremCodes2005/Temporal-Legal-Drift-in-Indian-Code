@@ -1,9 +1,14 @@
-"""Controlled Phase 9 planning, normalization, and drift scoring."""
+"""Controlled Phase 9 planning, execution, normalization, and drift scoring."""
 
 from __future__ import annotations
 
+import json
+import shutil
+import subprocess
 from hashlib import sha256
 from pathlib import Path
+from tempfile import TemporaryDirectory
+from datetime import datetime, timezone
 
 from temporal_legal_drift.jsonio import atomic_replace, canonical_json_bytes
 from temporal_legal_drift.metrics import temporal_drift_metrics
@@ -31,8 +36,15 @@ def build_llm_evaluation_plan(
     conditions = config.get("conditions")
     if not isinstance(items, list) or conditions != list(REQUIRED_CONDITIONS):
         raise ValueError("Phase 9 requires the six canonical controlled conditions")
-    if config.get("execution_enabled") is not False or config.get("model") is not None:
-        raise ValueError("Dry-run planning requires execution disabled and no selected model")
+    execution_enabled = config.get("execution_enabled")
+    model = config.get("model")
+    model_version = config.get("model_version")
+    if not isinstance(execution_enabled, bool):
+        raise ValueError("execution_enabled must be a boolean")
+    if execution_enabled and (not isinstance(model, str) or not model):
+        raise ValueError("Execution-enabled plans require a selected model")
+    if model_version is not None and not isinstance(model_version, str):
+        raise ValueError("model_version must be a string or null")
     if release.get("benchmark_frozen") is not False:
         raise ValueError("Current Phase 9 plan expects the non-frozen technical release")
     if baseline_run.get("metrics") is not None:
@@ -51,20 +63,28 @@ def build_llm_evaluation_plan(
                     "scenario_id": scenario["scenario_id"],
                     "condition": condition,
                     "facts_sha256": facts_hash,
-                    "model": None,
-                    "model_version": None,
+                    "model": model,
+                    "model_version": model_version,
                     "prompt_version": prompt.get("prompt_version"),
                     "temperature": config.get("temperature"),
                     "retrieval_configuration": config.get("retrieval_configuration"),
                     "raw_prompt": None,
                     "raw_response": None,
-                    "execution_status": "blocked_missing_scenario_gold_and_model",
+                    "execution_status": (
+                        "ready_for_controlled_execution"
+                        if execution_enabled
+                        else "blocked_missing_scenario_gold_and_model"
+                    ),
                 }
             )
     return {
         "schema_version": "1.0.0",
         "experiment_id": config.get("experiment_id"),
-        "status": "controlled_plan_built_execution_blocked",
+        "status": (
+            "controlled_plan_built_ready_for_execution"
+            if execution_enabled
+            else "controlled_plan_built_execution_blocked"
+        ),
         "input_fingerprints": {
             "scenario_scaffolds_sha256": sha256(canonical_json_bytes(scenarios)).hexdigest(),
             "release_sha256": sha256(canonical_json_bytes(release)).hexdigest(),
@@ -78,12 +98,172 @@ def build_llm_evaluation_plan(
         "metrics": None,
         "failure_attributions": [],
         "limitations": [
-            "No model or model version is selected.",
             "Scenario facts, questions and expected-change labels are not gold.",
-            "No prompt was rendered and no provider was called.",
-            "No LLM response, normalized assertion, drift metric or performance result exists.",
+            "A model execution does not convert machine-generated scenarios into legal gold.",
+            "Temporal-drift performance metrics remain unavailable until independent gold exists.",
         ],
     }
+
+
+def execute_controlled_plan_with_codex_cli(
+    plan: dict[str, object],
+    scenarios: dict[str, object],
+    graph: object,
+    prompt: dict[str, object],
+    *,
+    model: str,
+    codex_command: str = "codex",
+    timeout_seconds: int = 1800,
+) -> dict[str, object]:
+    """Execute every planned condition in one schema-constrained Codex CLI batch.
+
+    The batch is an operational pipeline run, not a legal benchmark result.  It is
+    intentionally allowed to execute incomplete scenarios so the correct model
+    behaviour (abstention) and artifact plumbing can be tested end to end.
+    """
+    runs = plan.get("runs")
+    scenario_items = scenarios.get("scenarios")
+    if not isinstance(runs, list) or not runs:
+        raise ValueError("Controlled execution requires planned runs")
+    if not isinstance(scenario_items, list):
+        raise ValueError("Controlled execution requires scenarios")
+    executable = shutil.which(codex_command)
+    if executable is None:
+        candidate = Path(codex_command)
+        if not candidate.is_file():
+            raise ValueError(f"Codex CLI not found: {codex_command}")
+        executable = str(candidate)
+
+    scenario_by_id = {
+        str(item["scenario_id"]): item
+        for item in scenario_items
+        if isinstance(item, dict) and item.get("scenario_id")
+    }
+    versions = {str(item.version_id): item for item in getattr(graph, "versions", ())}
+    requests: list[dict[str, str]] = []
+    prompt_by_run: dict[str, str] = {}
+    for item in runs:
+        if not isinstance(item, dict):
+            raise ValueError("Planned runs must be objects")
+        scenario = scenario_by_id.get(str(item.get("scenario_id")))
+        if scenario is None:
+            raise ValueError("Planned run references a missing scenario")
+        rendered = _render_prompt(item, scenario, versions, prompt)
+        run_id = str(item["run_id"])
+        requests.append({"run_id": run_id, "prompt": rendered})
+        prompt_by_run[run_id] = rendered
+
+    batch_prompt = (
+        "You are executing a controlled temporal-legal reasoning pipeline smoke test. "
+        "Return exactly one result for every request. Follow each embedded prompt. "
+        "Do not infer missing scenario facts, questions, legal versions, or legal conclusions. "
+        "The current records are non-gold research scaffolds; abstain with conclusion "
+        "'indeterminate' whenever information is insufficient. Keep explanations concise.\n\n"
+        + json.dumps({"requests": requests}, ensure_ascii=False, sort_keys=True)
+    )
+    output_schema = _batch_output_schema()
+    started = datetime.now(timezone.utc).isoformat()
+    with TemporaryDirectory(prefix="tldrift-phase9-") as temporary_directory:
+        temporary = Path(temporary_directory)
+        schema_path = temporary / "batch-output.schema.json"
+        output_path = temporary / "batch-output.json"
+        schema_path.write_text(json.dumps(output_schema), encoding="utf-8")
+        completed = subprocess.run(
+            [
+                executable,
+                "exec",
+                "--ephemeral",
+                "--skip-git-repo-check",
+                "-C",
+                str(temporary),
+                "--sandbox",
+                "read-only",
+                "--model",
+                model,
+                "--output-schema",
+                str(schema_path),
+                "-o",
+                str(output_path),
+                batch_prompt,
+            ],
+            capture_output=True,
+            text=True,
+            timeout=timeout_seconds,
+            check=False,
+        )
+        if completed.returncode != 0 or not output_path.is_file():
+            detail = (completed.stderr or completed.stdout)[-2000:]
+            raise ValueError(f"Codex CLI execution failed ({completed.returncode}): {detail}")
+        response_document = json.loads(output_path.read_text(encoding="utf-8"))
+        client_log = completed.stderr
+    finished = datetime.now(timezone.utc).isoformat()
+
+    response_items = response_document.get("results")
+    if not isinstance(response_items, list):
+        raise ValueError("Model batch response has no results array")
+    response_by_id: dict[str, dict[str, object]] = {}
+    for item in response_items:
+        if not isinstance(item, dict) or not isinstance(item.get("run_id"), str):
+            raise ValueError("Model batch result is malformed")
+        run_id = str(item["run_id"])
+        if run_id in response_by_id:
+            raise ValueError(f"Duplicate model response for {run_id}")
+        assertion = item.get("assertion")
+        if not isinstance(assertion, dict):
+            raise ValueError(f"Missing structured assertion for {run_id}")
+        response_by_id[run_id] = normalize_structured_assertion(assertion)
+    expected_ids = set(prompt_by_run)
+    if set(response_by_id) != expected_ids:
+        raise ValueError("Model response run IDs do not exactly match the execution plan")
+
+    executed_runs: list[dict[str, object]] = []
+    normalized_assertions: list[dict[str, object]] = []
+    for original in runs:
+        run = dict(original)  # type: ignore[arg-type]
+        run_id = str(run["run_id"])
+        assertion = response_by_id[run_id]
+        run.update(
+            {
+                "model": model,
+                "model_version": model,
+                "raw_prompt": prompt_by_run[run_id],
+                "raw_response": assertion,
+                "execution_status": "completed",
+            }
+        )
+        executed_runs.append(run)
+        normalized_assertions.append({"run_id": run_id, **assertion})
+
+    result = dict(plan)
+    result.update(
+        {
+            "status": "controlled_execution_completed_unscored_without_legal_gold",
+            "runs": sorted(executed_runs, key=lambda item: str(item["run_id"])),
+            "normalized_assertions": sorted(
+                normalized_assertions, key=lambda item: str(item["run_id"])
+            ),
+            "metrics": None,
+            "execution": {
+                "provider": "openai_codex_cli",
+                "model": model,
+                "client": _codex_client_identity(client_log),
+                "batch_invocation_count": 1,
+                "started_at": started,
+                "finished_at": finished,
+                "planned_run_count": len(runs),
+                "completed_run_count": len(executed_runs),
+                "response_sha256": sha256(canonical_json_bytes(response_document)).hexdigest(),
+                "scoring_status": "not_scored_missing_independent_legal_gold",
+            },
+            "limitations": [
+                "The controlled LLM pipeline was executed on non-gold scenario scaffolds.",
+                "Scenario facts and legal questions are absent, so abstention is expected.",
+                "One schema-constrained batch invocation produced the per-condition assertions.",
+                "No accuracy, drift, citation, explanation-quality, or legal-correctness claim is made.",
+            ],
+        }
+    )
+    return result
 
 
 def normalize_structured_assertion(value: dict[str, object]) -> dict[str, object]:
@@ -217,7 +397,24 @@ def write_llm_plan_and_lock(
             len(hashes) == 1 for hashes in facts_by_scenario.values()
         ),
         "executed_run_count": sum(
-            isinstance(run, dict) and run.get("raw_response") is not None for run in runs
+            isinstance(run, dict)
+            and run.get("execution_status") == "completed"
+            and run.get("raw_response") is not None
+            for run in runs
+        ),
+        "all_planned_runs_completed": bool(runs)
+        and all(
+            isinstance(run, dict)
+            and run.get("execution_status") == "completed"
+            and run.get("raw_prompt") is not None
+            and run.get("raw_response") is not None
+            for run in runs
+        ),
+        "normalized_assertion_count": len(document.get("normalized_assertions", [])),
+        "operational_execution_gate_passed": bool(runs)
+        and all(
+            isinstance(run, dict) and run.get("execution_status") == "completed"
+            for run in runs
         ),
         "metrics_reported": document.get("metrics") is not None,
         "unsupported_results_absent": document.get("metrics") is None,
@@ -235,3 +432,121 @@ def _run_id(scenario_id: str, condition: str, experiment_id: str) -> str:
 
 def _ratio(numerator: int, denominator: int) -> float | None:
     return numerator / denominator if denominator else None
+
+
+def _render_prompt(
+    run: dict[str, object],
+    scenario: dict[str, object],
+    versions: dict[str, object],
+    prompt: dict[str, object],
+) -> str:
+    condition = str(run["condition"])
+    pre_version_id = scenario.get("pre_applicable_version_id")
+    post_version_id = scenario.get("post_applicable_version_id")
+    context: list[dict[str, object]] = []
+
+    def add_version(label: str, version_id: object) -> None:
+        if not isinstance(version_id, str) or version_id not in versions:
+            context.append({"label": label, "status": "version_unavailable"})
+            return
+        version = versions[version_id]
+        evidence = getattr(version, "evidence")
+        context.append(
+            {
+                "label": label,
+                "version_id": version_id,
+                "provision_text_excerpt": str(getattr(version, "exact_text"))[:1600],
+                "evidence_id": str(getattr(evidence, "block_id")),
+                "evidence_locator": str(getattr(evidence, "locator")),
+                "extraction_status": str(getattr(version, "extraction_status")),
+            }
+        )
+
+    if condition in {"pre_amendment_legal_context", "both_versions", "both_versions_plus_reference_date"}:
+        add_version("pre_amendment", pre_version_id)
+    if condition in {
+        "post_amendment_legal_context",
+        "both_versions",
+        "both_versions_plus_reference_date",
+        "reconstructed_temporally_applicable_context",
+    }:
+        add_version("post_amendment", post_version_id)
+    reference_date = None
+    if condition == "pre_amendment_legal_context":
+        reference_date = scenario.get("pre_reference_date")
+    elif condition in {
+        "post_amendment_legal_context",
+        "both_versions_plus_reference_date",
+        "reconstructed_temporally_applicable_context",
+    }:
+        reference_date = scenario.get("post_reference_date")
+    payload = {
+        "instruction": prompt.get("instruction"),
+        "scenario_id": scenario.get("scenario_id"),
+        "condition": condition,
+        "facts": scenario.get("facts"),
+        "legal_question": scenario.get("legal_question"),
+        "reference_date": reference_date,
+        "legal_context": context,
+        "source_review_status": scenario.get("review_status"),
+        "output_contract": {
+            "conclusion": "compliant | non_compliant | indeterminate",
+            "cited_version_id": "string or null; cite only a supplied version ID",
+            "citations": "array; use only supplied evidence IDs or locators",
+            "explanation": "concise reasoning",
+            "uncertainty": "string or null",
+        },
+    }
+    return json.dumps(payload, ensure_ascii=False, sort_keys=True)
+
+
+def _batch_output_schema() -> dict[str, object]:
+    return {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "required": ["results"],
+        "properties": {
+            "results": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "required": ["run_id", "assertion"],
+                    "properties": {
+                        "run_id": {"type": "string"},
+                        "assertion": {
+                            "type": "object",
+                            "required": [
+                                "conclusion",
+                                "cited_version_id",
+                                "citations",
+                                "explanation",
+                                "uncertainty",
+                            ],
+                            "properties": {
+                                "conclusion": {
+                                    "enum": ["compliant", "non_compliant", "indeterminate"]
+                                },
+                                "cited_version_id": {"type": ["string", "null"]},
+                                "citations": {
+                                    "type": "array",
+                                    "items": {"type": "string"},
+                                },
+                                "explanation": {"type": "string"},
+                                "uncertainty": {"type": ["string", "null"]},
+                            },
+                            "additionalProperties": False,
+                        },
+                    },
+                    "additionalProperties": False,
+                },
+            }
+        },
+        "additionalProperties": False,
+    }
+
+
+def _codex_client_identity(log: str) -> str:
+    for line in log.splitlines():
+        if line.startswith("OpenAI Codex v"):
+            return line.removeprefix("OpenAI Codex ")
+    return "codex-cli-version-unreported"

@@ -1,4 +1,4 @@
-"""Executable engineering gates for the Phase 0-10 research foundation.
+"""Executable engineering gates for the Phase 0-11 research foundation.
 
 These checks deliberately do not impersonate research-lead or legal-review approval.
 """
@@ -531,10 +531,17 @@ def _phase9(root: Path) -> PhaseGateResult:
             config.get("temperature") == 0
             and bool(config.get("prompt_version"))
             and bool(config.get("retrieval_configuration"))
+            and config.get("execution_enabled") is True
+            and bool(config.get("model"))
         ),
-        "unsupported_llm_results_absent": (
-            lock.get("executed_run_count") == 0
-            and lock.get("metrics_reported") is False
+        "controlled_llm_pipeline_executed": (
+            lock.get("executed_run_count") == lock.get("planned_run_count")
+            and lock.get("all_planned_runs_completed") is True
+            and lock.get("normalized_assertion_count") == lock.get("planned_run_count")
+            and lock.get("operational_execution_gate_passed") is True
+        ),
+        "unsupported_performance_results_absent": (
+            lock.get("metrics_reported") is False
             and lock.get("unsupported_results_absent") is True
             and lock.get("research_gate_passed") is False
         ),
@@ -543,12 +550,11 @@ def _phase9(root: Path) -> PhaseGateResult:
         9,
         all(checks.values()),
         checks,
-        "controlled_llm_evaluation_framework_passed_execution_not_performed",
+        "controlled_llm_pipeline_executed_performance_unscored_without_gold",
         (
-            "no model or model version is selected",
             "scenario gold and expected-change labels are unavailable",
             "the benchmark is not frozen",
-            "no LLM run, normalized assertion or temporal-drift result exists",
+            "the executed smoke run cannot yield temporal-drift performance metrics",
         ),
     )
 
@@ -587,10 +593,13 @@ def _phase10(root: Path) -> PhaseGateResult:
             and rubric.get("blinded_expert_review_required_for_quality_claims") is True
             and bool(rubric.get("expert_required_dimensions"))
         ),
+        "automated_support_evaluation_completed": (
+            lock.get("automated_evaluation_count") == lock.get("planned_evaluation_count")
+            and lock.get("aggregate_support_metrics_reported") is True
+        ),
         "unsupported_explanation_results_absent": (
-            lock.get("automated_evaluation_count") == 0
-            and lock.get("expert_evaluation_count") == 0
-            and lock.get("aggregate_metrics_reported") is False
+            lock.get("expert_evaluation_count") == 0
+            and lock.get("legal_quality_metrics_reported") is False
             and lock.get("unsupported_quality_claims_absent") is True
             and lock.get("research_gate_passed") is False
         ),
@@ -599,12 +608,57 @@ def _phase10(root: Path) -> PhaseGateResult:
         10,
         all(checks.values()),
         checks,
-        "explanation_evaluation_framework_passed_quality_evaluation_not_performed",
+        "automated_explanation_support_evaluated_legal_quality_unscored",
         (
-            "Phase 9 produced no model explanations",
             "materiality, applicability and compliance gold are unavailable",
             "independent expert explanation review is unavailable",
-            "no explanation-quality or legal-correctness claim can be reported",
+            "automated support diagnostics cannot establish legal correctness",
+        ),
+    )
+
+
+def _phase11(root: Path) -> PhaseGateResult:
+    manifest_path = root / "data" / "releases" / "reproducibility-v0.1.0" / "manifest.json"
+    lock = load_json(root / "reports" / "phase11" / "reproducibility.lock.json")
+    manifest = load_json(manifest_path)
+    artifact_checksums = manifest.get("artifact_checksums")
+    checksums_reconcile = isinstance(artifact_checksums, dict) and all(
+        isinstance(relative, str)
+        and isinstance(expected, str)
+        and (root / relative).is_file()
+        and sha256((root / relative).read_bytes()).hexdigest() == expected
+        for relative, expected in artifact_checksums.items()
+    )
+    checks = {
+        "reproducibility_schema_present": (
+            root / "schemas" / "evaluation" / "reproducibility_manifest.schema.json"
+        ).is_file(),
+        "manifest_and_lock_reconcile": (
+            sha256(canonical_json_bytes(manifest)).hexdigest() == lock.get("manifest_sha256")
+            and lock.get("artifact_count") == len(artifact_checksums or {})
+        ),
+        "artifact_checksums_reconcile": checksums_reconcile,
+        "fresh_environment_commands_passed": (
+            lock.get("execution_step_count") == 3
+            and lock.get("all_execution_steps_passed") is True
+            and lock.get("fresh_environment_reproduction_passed") is True
+        ),
+        "legal_review_boundary_preserved": (
+            lock.get("independent_expert_validation_status")
+            == "not_performed_reviewer_unavailable"
+            and lock.get("legal_correctness_claimed") is False
+            and lock.get("research_gate_passed") is False
+        ),
+    }
+    return PhaseGateResult(
+        11,
+        all(checks.values()),
+        checks,
+        "fresh_environment_reproduction_passed_independent_expert_review_unavailable",
+        (
+            "independent legal-expert validation has not been performed",
+            "the benchmark is not frozen and no performance claims are publishable",
+            "core scientific completion remains blocked despite engineering reproduction",
         ),
     )
 
@@ -695,18 +749,25 @@ def _explanation_self_check(rubric: dict[str, object]) -> bool:
     )
 
 
-def check_engineering_gates(root: Path) -> tuple[PhaseGateResult, ...]:
+def check_engineering_gates(
+    root: Path, through_phase: int | None = None
+) -> tuple[PhaseGateResult, ...]:
     """Return all implemented engineering-gate results in order."""
-    return (
-        _phase0(root),
-        _phase1(root),
-        _phase2(root),
-        _phase3(root),
-        _phase4(root),
-        _phase5(root),
-        _phase6(root),
-        _phase7(root),
-        _phase8(root),
-        _phase9(root),
-        _phase10(root),
+    phase_functions = (
+        _phase0,
+        _phase1,
+        _phase2,
+        _phase3,
+        _phase4,
+        _phase5,
+        _phase6,
+        _phase7,
+        _phase8,
+        _phase9,
+        _phase10,
+        _phase11,
     )
+    maximum = len(phase_functions) - 1 if through_phase is None else through_phase
+    if maximum < 0 or maximum >= len(phase_functions):
+        raise ValueError(f"through_phase must be between 0 and {len(phase_functions) - 1}")
+    return tuple(function(root) for function in phase_functions[: maximum + 1])

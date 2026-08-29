@@ -9,6 +9,7 @@ from temporal_legal_drift.baselines import (
 )
 from temporal_legal_drift.explanations import evaluate_explanation_support
 from temporal_legal_drift.llm_evaluation import (
+    build_llm_evaluation_plan,
     normalize_structured_assertion,
     score_paired_assertions,
 )
@@ -19,6 +20,27 @@ LABELS = ("High", "Medium", "Low", "None")
 
 
 class PhaseEightToTenTests(unittest.TestCase):
+    def test_execution_enabled_plan_requires_a_model(self) -> None:
+        scenarios = {"scenarios": [{"scenario_id": "s1", "facts": []}]}
+        release = {"benchmark_frozen": False}
+        baseline = {"metrics": None}
+        config = {
+            "conditions": [
+                "no_legal_context",
+                "pre_amendment_legal_context",
+                "post_amendment_legal_context",
+                "both_versions",
+                "both_versions_plus_reference_date",
+                "reconstructed_temporally_applicable_context",
+            ],
+            "execution_enabled": True,
+            "model": None,
+            "model_version": None,
+            "experiment_id": "test",
+        }
+        with self.assertRaises(ValueError):
+            build_llm_evaluation_plan(scenarios, release, baseline, config, {})
+
     def test_reproducible_non_neural_baselines_and_metrics(self) -> None:
         majority = MajorityBaseline().fit(["High", "High", "Low"])
         priors = ClassPriorBaseline().fit(["High", "High", "Low"])

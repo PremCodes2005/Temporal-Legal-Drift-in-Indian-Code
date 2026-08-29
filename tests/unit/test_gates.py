@@ -10,9 +10,9 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 class EngineeringGateTests(unittest.TestCase):
-    def test_phase_0_to_10_engineering_gates_pass_without_faking_review(self) -> None:
+    def test_phase_0_to_11_engineering_gates_pass_without_faking_review(self) -> None:
         results = check_engineering_gates(ROOT)
-        self.assertEqual([result.phase for result in results], list(range(11)))
+        self.assertEqual([result.phase for result in results], list(range(12)))
         self.assertTrue(all(result.engineering_passed for result in results))
         self.assertTrue(all(result.review_status.startswith("pending") for result in results[:4]))
         self.assertEqual(
@@ -37,11 +37,15 @@ class EngineeringGateTests(unittest.TestCase):
         )
         self.assertEqual(
             results[9].review_status,
-            "controlled_llm_evaluation_framework_passed_execution_not_performed",
+            "controlled_llm_pipeline_executed_performance_unscored_without_gold",
         )
         self.assertEqual(
             results[10].review_status,
-            "explanation_evaluation_framework_passed_quality_evaluation_not_performed",
+            "automated_explanation_support_evaluated_legal_quality_unscored",
+        )
+        self.assertEqual(
+            results[11].review_status,
+            "fresh_environment_reproduction_passed_independent_expert_review_unavailable",
         )
         self.assertTrue(all(result.review_blockers for result in results))
 

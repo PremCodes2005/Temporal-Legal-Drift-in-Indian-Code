@@ -2,7 +2,7 @@
 
 Research software foundation for evaluating whether LLM-based compliance systems correctly propagate legally applicable changes in Indian law over time.
 
-The repository is at TRL 2. Phases 0–10 provide configuration, source provenance, immutable acquisition storage, deterministic parsing/normalization, a technical provision-version graph, an evidence-constrained applicability resolver, a materiality-annotation workload, scenario-authoring scaffolds, a leakage-audited technical release dry run, baseline infrastructure, controlled temporal-LLM experiment planning, drift metrics, and evidence-grounded explanation evaluation. A fourteen-document India Code technical pilot is available, but it is not a legally validated corpus or frozen benchmark. The repository does not contain materiality gold labels, completed compliance scenarios, executed model runs, performance results, or a monitoring agent.
+The repository is at TRL 2. Phases 0–11 provide configuration, source provenance, immutable acquisition storage, deterministic parsing/normalization, a technical provision-version graph, an evidence-constrained applicability resolver, a materiality-annotation workload, scenario-authoring scaffolds, a leakage-audited technical release dry run, baseline infrastructure, controlled temporal-LLM execution, explanation-support evaluation, and fresh-environment engineering reproduction. A fourteen-document India Code technical pilot is available, but it is not a legally validated corpus or frozen benchmark. A 78-run non-gold LLM smoke experiment has executed; it verifies pipeline operation but provides no model-performance or legal-correctness result. The repository does not contain materiality gold labels, completed expert scenarios, independent legal validation, or a monitoring agent.
 
 ## Implemented boundary
 
@@ -15,10 +15,11 @@ The repository is at TRL 2. Phases 0–10 provide configuration, source provenan
 - **Phase 6:** controlled-scenario schema, coverage registry, and evidence-linked authoring scaffolds without invented legal facts or outcomes.
 - **Phase 7:** deterministic technical release manifest, duplicate-aware dry-run splits, leakage audit, data card, checksums, and enforced refusal to freeze non-gold inputs.
 - **Phase 8:** registered baseline suite, dependency-free non-neural baselines, deterministic features, classification metrics, calibration support, and unsupported-result safeguards.
-- **Phase 9:** six-condition controlled run planning, strict answer normalization, exact false-stability/false-instability metrics, and reproducible run contracts without fabricated model responses.
-- **Phase 10:** structured explanation rubric, evidence/version/date/citation support checks, explanation-drift detection, and explicit separation of automated support from expert legal review.
+- **Phase 9:** six-condition controlled run planning and execution, 78 preserved schema-valid responses, strict answer normalization, and exact false-stability/false-instability metrics. Performance remains unscored without gold.
+- **Phase 10:** 78 automated explanation-support evaluations, evidence/version/date/citation checks, explanation-drift detection, and explicit separation of diagnostics from expert legal review.
+- **Phase 11:** artifact checksum manifest and fresh-virtual-environment reproduction of Phase 0–10 gates and tests; independent expert validation remains unavailable.
 
-Engineering gates pass independently. Legal/research and experimental gates remain unavailable or incomplete as recorded in `reports/phase0` through `reports/phase10`; software checks do not convert machine-produced candidates into legal gold or model-performance results.
+Engineering gates through Phase 11 pass independently. Legal/research gates remain unavailable or incomplete as recorded in `reports/phase0` through `reports/phase11`; software checks and a real LLM smoke run do not convert machine-produced candidates into legal gold or performance results.
 
 ## Quick start
 
@@ -49,8 +50,10 @@ tldrift build-scenario-scaffolds
 tldrift build-technical-release
 tldrift prepare-baselines
 tldrift build-llm-evaluation-plan
+tldrift execute-llm-evaluation
 tldrift score-drift-pairs --pairs PATH_TO_COMPLETED_PAIRS
 tldrift build-explanation-evaluation-plan
+tldrift verify-reproducibility
 tldrift resolve-applicability --facts PATH --scenario-id ID --lineage-id ID --reference-date YYYY-MM-DD
 tldrift check-gates
 ```
@@ -59,7 +62,7 @@ Acquisition is deny-by-default. The user-approved bounded pilot permits only `ww
 
 Raw and normalized processing artifacts are local runtime data and are ignored by version control. `materialize-corpus` creates integrity-checked, Git-trackable copies with readable filenames under `data/corpus/pdfs` while leaving immutable raw evidence unchanged. `corpus-report` writes a deterministic lock report containing the authoritative URLs, identifiers, SHA-256 hashes, sizes, parser provenance, and known extraction risks.
 
-`check-gates` is the executable Phase 0–10 engineering acceptance check used by CI. Phase 4 checks amendment-evidence consistency; Phases 5–7 verify workload, scenario, release and leakage safeguards; and Phases 8–10 verify baseline, controlled-drift and explanation-evaluation machinery. These are technical checks, not independent legal review, legal gold, or completed model experiments.
+`check-gates` is the executable Phase 0–11 engineering acceptance check used by CI. Phase 4 checks amendment-evidence consistency; Phases 5–7 verify workload, scenario, release and leakage safeguards; Phases 8–10 verify baseline, controlled LLM execution and explanation-support evaluation; and Phase 11 verifies the reproducibility record. These are technical checks, not independent legal review or legal gold.
 
 ## Safety and scope
 

@@ -1,21 +1,24 @@
 {
+  "all_planned_runs_completed": true,
   "all_scenarios_have_six_conditions": true,
   "condition_count": 6,
-  "executed_run_count": 0,
+  "executed_run_count": 78,
   "facts_held_constant_across_conditions": true,
   "input_fingerprints": {
     "baseline_run_sha256": "c3ceb95d7b72f979ad71c6b027a29569c337f0c072c22b8e47a717ab53c88f0e",
-    "experiment_config_sha256": "de8afa5de16dfc2e9266116a5156734d7fa0503bdabd6969f174beba847d4bbb",
-    "prompt_config_sha256": "833c1a3591e6b9fada21d2b608dd690a6f9a22e7ee491a9609efdb1fbe1efd25",
+    "experiment_config_sha256": "c94a22011b0bc8ac839cd2b220a993a81aad598e18c44a68ca848e6c0368f150",
+    "prompt_config_sha256": "e91716274e2ba19a3f38c3edd55bacaddb6929f1f2da8ad61562886420e51730",
     "release_sha256": "1bec7d9cb17ba5a7d9466fa24cb2a789cfefa72bfea15ed26a2b8333efc04d10",
     "scenario_scaffolds_sha256": "926d99932f3a87f2b91b926bc087460d3b1ebfaa3fc4a6a06ec76a5335ba4bcf"
   },
   "metrics_reported": false,
-  "plan_sha256": "1dc6dc11681f1cb26d6bbff8543c6bcca017dd61c9ae43f1f66dfe9fdb412831",
+  "normalized_assertion_count": 78,
+  "operational_execution_gate_passed": true,
+  "plan_sha256": "cbd385ed6770bbadc55f7fcf6c4722e2427267c33a42a9b36f769ee9239400a3",
   "planned_run_count": 78,
   "research_gate_passed": false,
   "scenario_count": 13,
   "schema_version": "1.0.0",
-  "status": "controlled_plan_built_execution_blocked",
+  "status": "controlled_execution_completed_unscored_without_legal_gold",
   "unsupported_results_absent": true
 }

@@ -8,7 +8,7 @@ permissions:
   contents: read
 
 jobs:
-  phase-0-10:
+  phase-0-11:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -22,7 +22,7 @@ jobs:
         run: python -m pip install --no-deps -e .
       - name: Validate research contract
         run: tldrift validate-contract
-      - name: Check Phase 0-10 engineering gates
+      - name: Check Phase 0-11 engineering gates
         run: tldrift check-gates
-      - name: Run Phase 0-10 tests
+      - name: Run Phase 0-11 tests
         run: python -m unittest discover -s tests -v

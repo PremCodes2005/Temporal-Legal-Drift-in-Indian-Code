@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "temporal-legal-drift"
-version = "0.4.0"
-description = "Phase 0-10 research infrastructure for Temporal Legal Drift in the Indian Code"
+version = "0.5.0"
+description = "Phase 0-11 research infrastructure for Temporal Legal Drift in the Indian Code"
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [{ name = "Temporal Legal Drift research team" }]

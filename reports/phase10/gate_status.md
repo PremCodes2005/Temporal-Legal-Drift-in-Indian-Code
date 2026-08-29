@@ -2,7 +2,9 @@
 
 **Engineering/automated gate: PASSED**
 
-**Explanation-quality and legal-correctness gate: NOT EVALUATED**
+**Automated explanation-support gate: PASSED**
+
+**Explanation legal-correctness gate: NOT SCORED — EXPERT/GOLD UNAVAILABLE**
 
 ## Implemented
 
@@ -15,9 +17,9 @@
 ## Current artifact
 
 - Planned explanation evaluations: 78.
-- Available model explanations: 0.
-- Automated evaluations: 0.
+- Available model explanations: 78.
+- Automated evaluations: 78.
 - Expert evaluations: 0.
-- Aggregate explanation metrics: none.
+- Aggregate support diagnostics: available and explicitly non-legal.
 
-The gate passes because the framework works and correctly refuses unsupported explanation-quality claims.
+The automated checks cover structure, evidence-ID resolution, version/date alignment, citations, completeness and uncertainty. They do not establish entailment or legal correctness.

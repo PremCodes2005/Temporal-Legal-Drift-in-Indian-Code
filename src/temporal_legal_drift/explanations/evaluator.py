@@ -105,7 +105,13 @@ def build_explanation_evaluation_plan(
         for item in scenario_items
         if isinstance(item, dict) and item.get("scenario_id")
     }
-    version_ids = {version.version_id for version in graph.versions}
+    version_by_id = {version.version_id: version for version in graph.versions}
+    lineage_by_id = {lineage.lineage_id: lineage for lineage in graph.lineages}
+    instrument_by_id = {instrument.instrument_id: instrument for instrument in graph.instruments}
+    event_by_id = {
+        event.amendment_event_id: event for event in graph.amendment_events
+    }
+    version_ids = set(version_by_id)
     records: list[dict[str, object]] = []
     for run in runs:
         if not isinstance(run, dict):
@@ -114,23 +120,104 @@ def build_explanation_evaluation_plan(
         if scenario is None:
             raise ValueError("Phase 9 run references missing scenario")
         version_id = scenario.get("post_applicable_version_id")
-        records.append(
-            {
-                "evaluation_id": _stable_id("explain_eval", str(run["run_id"])),
-                "run_id": run["run_id"],
-                "scenario_id": run["scenario_id"],
-                "condition": run["condition"],
-                "known_post_version_exists": version_id in version_ids,
-                "explanation": None,
-                "automated_support_evaluation": None,
-                "expert_evaluation": None,
-                "status": "blocked_no_model_explanation_or_gold",
+        raw_response = run.get("raw_response")
+        base_record = {
+            "evaluation_id": _stable_id("explain_eval", str(run["run_id"])),
+            "run_id": run["run_id"],
+            "scenario_id": run["scenario_id"],
+            "condition": run["condition"],
+            "known_post_version_exists": version_id in version_ids,
+            "explanation": None,
+            "automated_support_evaluation": None,
+            "expert_evaluation": None,
+            "status": "blocked_no_model_explanation_or_gold",
+        }
+        if isinstance(raw_response, dict):
+            version = version_by_id.get(str(version_id))
+            lineage = lineage_by_id.get(version.lineage_id) if version is not None else None
+            instrument = (
+                instrument_by_id.get(lineage.instrument_id) if lineage is not None else None
+            )
+            evidence = scenario.get("supporting_legal_evidence")
+            amendment_id = evidence.get("amendment_event_id") if isinstance(evidence, dict) else None
+            event = event_by_id.get(str(amendment_id))
+            amendment_evidence_id = (
+                event.evidence.block_id if event is not None else None
+            )
+            after_evidence_id = version.evidence.block_id if version is not None else None
+            condition = str(run.get("condition"))
+            applicable_date = (
+                scenario.get("pre_reference_date")
+                if condition == "pre_amendment_legal_context"
+                else scenario.get("post_reference_date")
+                if condition
+                in {
+                    "post_amendment_legal_context",
+                    "both_versions_plus_reference_date",
+                    "reconstructed_temporally_applicable_context",
+                }
+                else None
+            )
+            cited_version = raw_response.get("cited_version_id")
+            explanation = {
+                "legal_instrument": instrument.title if instrument is not None else None,
+                "provision_path": lineage.canonical_path if lineage is not None else None,
+                "applicable_date": applicable_date,
+                "version_id": cited_version,
+                "before_evidence_id": amendment_evidence_id,
+                "after_evidence_id": after_evidence_id,
+                "amendment_operation": event.operation if event is not None else None,
+                "materiality_dimensions": [],
+                "materiality_level": None,
+                "compliance_consequence": raw_response.get("conclusion"),
+                "citations": raw_response.get("citations", []),
+                "confidence": None,
+                "uncertainty_or_escalation": raw_response.get("uncertainty"),
             }
-        )
+            allowed_evidence_ids = {
+                str(value)
+                for value in (amendment_evidence_id, after_evidence_id)
+                if value is not None
+            }
+            expected_version = (
+                version_id
+                if condition
+                in {
+                    "post_amendment_legal_context",
+                    "both_versions_plus_reference_date",
+                    "reconstructed_temporally_applicable_context",
+                }
+                else None
+            )
+            support = evaluate_explanation_support(
+                explanation,
+                {"version_id": expected_version, "applicable_date": applicable_date},
+                allowed_evidence_ids,
+                tuple(str(item) for item in required_fields),
+            )
+            base_record.update(
+                {
+                    "explanation": explanation,
+                    "model_explanation_text": raw_response.get("explanation"),
+                    "automated_support_evaluation": support,
+                    "status": "automated_support_evaluated_expert_review_required",
+                }
+            )
+        records.append(base_record)
+    automated = [
+        item["automated_support_evaluation"]
+        for item in records
+        if isinstance(item.get("automated_support_evaluation"), dict)
+    ]
+    aggregate_metrics = _aggregate_support_metrics(automated, records) if automated else None
     return {
         "schema_version": "1.0.0",
         "rubric_version": rubric.get("rubric_version"),
-        "status": "evaluation_plan_built_no_explanations_scored",
+        "status": (
+            "automated_support_evaluation_completed_expert_review_pending"
+            if automated
+            else "evaluation_plan_built_no_explanations_scored"
+        ),
         "input_fingerprints": {
             "llm_plan_sha256": sha256(canonical_json_bytes(llm_plan)).hexdigest(),
             "scenario_scaffolds_sha256": sha256(canonical_json_bytes(scenarios)).hexdigest(),
@@ -142,12 +229,12 @@ def build_explanation_evaluation_plan(
         "automated_support_dimensions": rubric.get("automated_support_dimensions"),
         "expert_required_dimensions": rubric.get("expert_required_dimensions"),
         "records": sorted(records, key=lambda item: str(item["evaluation_id"])),
-        "aggregate_metrics": None,
+        "aggregate_metrics": aggregate_metrics,
         "limitations": [
-            "No model explanations exist because Phase 9 was not executed.",
             "No materiality or compliance gold exists for legal correctness scoring.",
             "Automated checks are limited to structure, identifier resolution and alignment.",
-            "No explanation-quality or legal-correctness result is claimed.",
+            "Aggregate values are pipeline-support diagnostics, not legal-quality metrics.",
+            "No legal-correctness result is claimed.",
         ],
     }
 
@@ -177,8 +264,9 @@ def write_explanation_plan_and_lock(
             isinstance(item, dict) and item.get("known_post_version_exists") is True
             for item in records
         ),
-        "aggregate_metrics_reported": document.get("aggregate_metrics") is not None,
-        "unsupported_quality_claims_absent": document.get("aggregate_metrics") is None,
+        "aggregate_support_metrics_reported": document.get("aggregate_metrics") is not None,
+        "legal_quality_metrics_reported": False,
+        "unsupported_quality_claims_absent": True,
         "research_gate_passed": False,
     }
     atomic_replace(output_path, payload)
@@ -188,3 +276,43 @@ def write_explanation_plan_and_lock(
 
 def _stable_id(prefix: str, value: str) -> str:
     return f"{prefix}_{sha256(value.encode('utf-8')).hexdigest()[:24]}"
+
+
+def _aggregate_support_metrics(
+    evaluations: list[object], records: list[dict[str, object]]
+) -> dict[str, object]:
+    values = [item for item in evaluations if isinstance(item, dict)]
+
+    def rate(field: str) -> dict[str, object]:
+        eligible = [item[field] for item in values if isinstance(item.get(field), bool)]
+        passed = sum(value is True for value in eligible)
+        return {"passed": passed, "denominator": len(eligible), "rate": passed / len(eligible) if eligible else None}
+
+    citation_values = [
+        float(item["citation_precision"])
+        for item in values
+        if isinstance(item.get("citation_precision"), (int, float))
+    ]
+    abstentions = sum(
+        isinstance(item.get("explanation"), dict)
+        and item["explanation"].get("compliance_consequence") == "indeterminate"
+        for item in records
+    )
+    return {
+        "evaluation_count": len(values),
+        "field_completeness_mean": (
+            sum(float(item["field_completeness"]) for item in values) / len(values)
+            if values
+            else None
+        ),
+        "evidence_reference_resolution": rate("evidence_reference_resolution"),
+        "version_alignment": rate("version_alignment"),
+        "temporal_alignment": rate("temporal_alignment"),
+        "uncertainty_presence": rate("uncertainty_presence"),
+        "citation_precision_mean": (
+            sum(citation_values) / len(citation_values) if citation_values else None
+        ),
+        "abstention_count": abstentions,
+        "legal_correctness": None,
+        "interpretation": "automated_pipeline_support_only_not_legal_quality",
+    }

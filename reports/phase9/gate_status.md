@@ -2,7 +2,9 @@
 
 **Engineering/automated gate: PASSED**
 
-**Controlled LLM experiment gate: NOT EXECUTED**
+**Controlled LLM operational execution gate: PASSED**
+
+**Temporal-drift performance gate: NOT SCORED — LEGAL GOLD UNAVAILABLE**
 
 ## Implemented
 
@@ -18,7 +20,10 @@
 - Scenario scaffolds: 13.
 - Conditions per scenario: 6.
 - Planned runs: 78.
-- Executed runs: 0.
-- Model responses and reported metrics: 0.
+- Executed runs: 78.
+- Schema-valid normalized assertions: 78.
+- Model: `gpt-5.6-sol` through OpenAI Codex CLI.
+- Provider invocations: one controlled schema-constrained batch.
+- Performance metrics: none, because expected-change and compliance gold do not exist.
 
-No model or approved scenario gold exists, so execution and performance claims remain blocked.
+The pipeline was executed end to end. All 78 responses correctly abstained on the incomplete scenario scaffolds. This verifies execution and artifact plumbing; it is not evidence of legal or model performance.
