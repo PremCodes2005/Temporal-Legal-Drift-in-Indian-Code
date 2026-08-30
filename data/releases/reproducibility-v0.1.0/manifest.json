@@ -18,11 +18,12 @@
     "experiments/phase9/temporal_drift_demo.results.v1.json": "40f2a730ed033d921b907d4e8d4e22decfb22778fb1522cff34261801df39123",
     "experiments/phase9/temporal_drift_demo.v1.json": "60565bb4ec48c8748a6dbb2d2b25d9be98a89b59cbba4066d0167597a8a2a109",
     "frontend/index.html": "0440d852f7a0d4d89ea45e7a38a98eaa2d786ffaf72a6f6e738d94d2e4720dcc",
+    "frontend/package-lock.json": "c3c688941a8c84f4734035a125690bd85e9816d85dc61d7487064ad847343700",
     "frontend/package.json": "33e7d592402ad0a321cfc5fe58ce1a5a893b717f56f86e70775bc47db247ea5b",
     "frontend/pnpm-lock.yaml": "7391c06206d93d68b65caf646368b852f231bb0cbb168badd9648f9e354554cc",
-    "frontend/src/App.jsx": "d68091c8839c5771bfcbe914a5c805aa227bc1430d34ef23acf5a47c279058e1",
+    "frontend/src/App.jsx": "726db4a9038fb2622a1a5fb6de37a3be93631e9f81eb3a2f941255646761d6db",
     "frontend/src/main.jsx": "c74c6bbb5f94cd1c995b2a352c243f16b229b8f1b8628933ad8c2ec4282524e6",
-    "frontend/src/styles.css": "f8b5d2deec6b52713c8cb2ce201d18d573f1d2d73596683422ddeebf57d99add",
+    "frontend/src/styles.css": "302320b1217ec6f19d38bdb33d749b861283acf8349972fc504ea64aef3f4536",
     "frontend/vite.config.js": "9cc986da9616d5d7caf5f51993058bd730771dc84e78b2b16223b84e9c490586",
     "protocols/applicability_protocol.md": "41c4782869b66bfa9eb4590b459167472ef9463b32128c6b5cc5504516110f4a",
     "protocols/baseline_protocol.md": "b3d84d4b6d5a98e66a13636e96b83e14f6f5b4b86b0c7231effdd518332be730",
@@ -82,7 +83,7 @@
     "src/temporal_legal_drift/benchmark/builder.py": "04bcbc19bac29790b260a67d3c0d997ace775a0b8500cd1040a8e2e43f2b6cb7",
     "src/temporal_legal_drift/cli.py": "a36318823c8684cfcd0b2ebe704bc55e0525d4b2696ac0e18cdb392136621086",
     "src/temporal_legal_drift/comparison/__init__.py": "a0ed513adcd20e683adc1a4f91f7c2480f4e41fca5215b0606c03b4dcbbc10b2",
-    "src/temporal_legal_drift/comparison/analyzer.py": "30ec14b0148079b79eeef7e3b4f7bf56c1e350f7d460379a7d8105b20ac75964",
+    "src/temporal_legal_drift/comparison/analyzer.py": "ecfddf7a94a4c0689ef89faa80edbf01aca28ff582fa9bfc8b83d61f6b79e40a",
     "src/temporal_legal_drift/corpus/__init__.py": "7baa6ce358159b55d688d6fb637bb61ae340e2004c2bde7b74260ffbf4f0549b",
     "src/temporal_legal_drift/corpus/download.py": "9dbcdcdc10f25b2e7e162bdf91ed892f81cb52b32c7e3c94e970304602a2e1bf",
     "src/temporal_legal_drift/corpus/manifest.py": "4f3cb76b3762ad6eb717f5a3909e3f9af6c00db5d88898e55b07ed777367efe5",
@@ -121,14 +122,14 @@
     "src/temporal_legal_drift/versioning/models.py": "b234929e27e6946c92e5adf6614648927a801884148f527485248d4e2c1a3dc0",
     "src/temporal_legal_drift/webapp/__init__.py": "dad02cb78c3b17100a7567691343ef114110d7601cabe2400e69889ae97b90cd",
     "src/temporal_legal_drift/webapp/server.py": "b3b0abdffbd0aed01e2080b9f9128917a974b2dd3f3340050bb97c711c51cb85",
-    "src/temporal_legal_drift/webapp/service.py": "858c416ea3572d8d9b5692922bc97f8f9ef316180c5926c20b562412d0e21422",
+    "src/temporal_legal_drift/webapp/service.py": "123e2d2cb895a3e67078bcd8f1b8ac8de4456cbea1a766d29c0979fe3446b6b5",
     "tests/__init__.py": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
     "tests/integration/__init__.py": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
     "tests/integration/test_normalization_pipeline.py": "4da777ba2bec46754427fc22d422f542261df5216829c17fbc46bd3b1b29629a",
     "tests/unit/__init__.py": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
     "tests/unit/test_acquisition.py": "2bf9ced5ebcb2380188d4cd43dc3075d782103946103ceb0002029984571ac1b",
     "tests/unit/test_applicability.py": "533a0c64ad1097d93f5746f08cb6681504adb515ad4dc835239ef86f0a6492b3",
-    "tests/unit/test_comparison.py": "a00f85458ddc8ad97ba248149db22af12e8f929f04893d9da4fe1b1273d6526a",
+    "tests/unit/test_comparison.py": "ab0b2283f103890252b5349b794baac3f684232a0715c88755469e04e54aa8ee",
     "tests/unit/test_corpus.py": "20e0cfbd611bbf4727a9033ace09be1dd8f4ce4e2755e79f232849d547cf1465",
     "tests/unit/test_cross_validation.py": "783beba1fa91d2b7cc945dc112ea6660f93e1addffe01e26f0e12b78488cedfe",
     "tests/unit/test_gates.py": "25ccf1f8542452996be9aa103669a633f8a2f95a31b2d9ef4da5ea2775ec9626",
@@ -138,9 +139,9 @@
     "tests/unit/test_phases_8_10.py": "e486bc4921cbe079e8413b171a28e88785aef2257e81b9f2f5159fc3941dbe20",
     "tests/unit/test_versioning.py": "9543915be9d2e33ffc0a63cc5d76e6385e9f9ccfff7b2236aee8b70c30f76f45",
     "tests/unit/test_webapp.py": "7ea9f53034bdf5b6f56a109824285276bf7b51504320af041f36139e35c7b0b5",
-    "web/assets/index-Bl20EwIv.css": "22ea110409b551b38cbeee84bfafb2197320c8cd67644c45a949fcd5bcd0c076",
-    "web/assets/index-C1ve191e.js": "25e8741569167c0c65a4076a171489c143ffbbb6a00bfea09e8df41b2a346e54",
-    "web/index.html": "bde2c1b87db6451c72920b2b3664f45771bd6f64e88ec94d3e9883a304740b1a"
+    "web/assets/index-CLQCSjih.js": "398b2f20bd3c9fbc39be3f66540c07f23dcd19b5ee87ade0e11b995096cd9719",
+    "web/assets/index-DK74lTm2.css": "0b3a04e48ce2dd04d378649a649c32c1f48353f746feabc2fb2cb004514b5335",
+    "web/index.html": "ee6f4e1da814fab35dfd8a0bcfd2107db25ccdf7a85d479152142a8f361d7449"
   },
   "environment": {
     "fresh_virtual_environment": true,
@@ -202,8 +203,8 @@
         "-v"
       ],
       "exit_code": 0,
-      "output_tail": "t_runs_are_paired_and_scored (tests.unit.test_phases_8_10.PhaseEightToTenTests.test_executed_pre_post_runs_are_paired_and_scored) ... ok\ntest_execution_enabled_plan_requires_a_model (tests.unit.test_phases_8_10.PhaseEightToTenTests.test_execution_enabled_plan_requires_a_model) ... ok\ntest_false_stability_and_false_instability_are_exact (tests.unit.test_phases_8_10.PhaseEightToTenTests.test_false_stability_and_false_instability_are_exact) ... ok\ntest_reproducible_non_neural_baselines_and_metrics (tests.unit.test_phases_8_10.PhaseEightToTenTests.test_reproducible_non_neural_baselines_and_metrics) ... ok\ntest_graph_reconstructs_exact_version_and_rejects_cycles (tests.unit.test_versioning.VersioningTests.test_graph_reconstructs_exact_version_and_rejects_cycles) ... ok\ntest_section_extraction_is_stable_and_reports_duplicate_candidates (tests.unit.test_versioning.VersioningTests.test_section_extraction_is_stable_and_reports_duplicate_candidates) ... ok\ntest_dashboard_reads_connected_project_artifacts (tests.unit.test_webapp.DashboardServiceTests.test_dashboard_reads_connected_project_artifacts) ... ok\ntest_pdf_upload_is_hashed_and_not_added_to_corpus (tests.unit.test_webapp.DashboardServiceTests.test_pdf_upload_is_hashed_and_not_added_to_corpus) ... ok\ntest_scenario_submission_is_review_only (tests.unit.test_webapp.DashboardServiceTests.test_scenario_submission_is_review_only) ... ok\ntest_acquire_then_normalize_preserves_provenance (tests.integration.test_normalization_pipeline.NormalizationPipelineTests.test_acquire_then_normalize_preserves_provenance) ... ok\ntest_corrupted_raw_blob_is_quarantined (tests.integration.test_normalization_pipeline.NormalizationPipelineTests.test_corrupted_raw_blob_is_quarantined) ... ok\ntest_unsupported_format_is_quarantined (tests.integration.test_normalization_pipeline.NormalizationPipelineTests.test_unsupported_format_is_quarantined) ... ok\n\n----------------------------------------------------------------------\nRan 37 tests in 0.048s\n\nOK\n",
-      "stderr_sha256": "7a3dd57c2e513f67fadce19bf0dc1768d6b41c5ee88bd2f618e6ed016d5479d6",
+      "output_tail": "t_runs_are_paired_and_scored (tests.unit.test_phases_8_10.PhaseEightToTenTests.test_executed_pre_post_runs_are_paired_and_scored) ... ok\ntest_execution_enabled_plan_requires_a_model (tests.unit.test_phases_8_10.PhaseEightToTenTests.test_execution_enabled_plan_requires_a_model) ... ok\ntest_false_stability_and_false_instability_are_exact (tests.unit.test_phases_8_10.PhaseEightToTenTests.test_false_stability_and_false_instability_are_exact) ... ok\ntest_reproducible_non_neural_baselines_and_metrics (tests.unit.test_phases_8_10.PhaseEightToTenTests.test_reproducible_non_neural_baselines_and_metrics) ... ok\ntest_graph_reconstructs_exact_version_and_rejects_cycles (tests.unit.test_versioning.VersioningTests.test_graph_reconstructs_exact_version_and_rejects_cycles) ... ok\ntest_section_extraction_is_stable_and_reports_duplicate_candidates (tests.unit.test_versioning.VersioningTests.test_section_extraction_is_stable_and_reports_duplicate_candidates) ... ok\ntest_dashboard_reads_connected_project_artifacts (tests.unit.test_webapp.DashboardServiceTests.test_dashboard_reads_connected_project_artifacts) ... ok\ntest_pdf_upload_is_hashed_and_not_added_to_corpus (tests.unit.test_webapp.DashboardServiceTests.test_pdf_upload_is_hashed_and_not_added_to_corpus) ... ok\ntest_scenario_submission_is_review_only (tests.unit.test_webapp.DashboardServiceTests.test_scenario_submission_is_review_only) ... ok\ntest_acquire_then_normalize_preserves_provenance (tests.integration.test_normalization_pipeline.NormalizationPipelineTests.test_acquire_then_normalize_preserves_provenance) ... ok\ntest_corrupted_raw_blob_is_quarantined (tests.integration.test_normalization_pipeline.NormalizationPipelineTests.test_corrupted_raw_blob_is_quarantined) ... ok\ntest_unsupported_format_is_quarantined (tests.integration.test_normalization_pipeline.NormalizationPipelineTests.test_unsupported_format_is_quarantined) ... ok\n\n----------------------------------------------------------------------\nRan 38 tests in 0.045s\n\nOK\n",
+      "stderr_sha256": "d29781befacfa8fffaa32fb51d409ae026d55a99ee706ee6c07d05f4a87aef05",
       "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "step": 3
     }
@@ -222,5 +223,5 @@
   "research_gate_passed": false,
   "schema_version": "1.0.0",
   "status": "fresh_environment_engineering_reproduction_passed_expert_review_unavailable",
-  "verified_at": "2026-08-30T07:40:33.145766+00:00"
+  "verified_at": "2026-08-30T08:07:35.618617+00:00"
 }

@@ -158,12 +158,13 @@ function AnalysisResults({ result, onReset }) {
     <section id="analysis-results" className="results" aria-labelledby="results-heading">
       <div className="result-heading"><div><span className="section-kicker">Comparison result</span><h2 id="results-heading">Legal drift analysis</h2></div><button className="secondary-button" type="button" onClick={onReset}>Start new comparison</button></div>
       <article className={`summary-card ${classification.materiality.toLowerCase()}`}><div><span className="result-label">{classification.materiality} materiality</span><h3>{result.summary}</h3><p>{classification.materiality_reason}</p></div><div className="score-ring"><strong>{metrics.drift_score}</strong><span>/ 100 drift</span></div></article>
+      {result.temporal_interpretation?.evidence_order_corrected && <article className="temporal-note"><strong>Document roles corrected</strong><p>{result.temporal_interpretation.note}</p></article>}
       <div className="metric-grid">{metricCards.map(([value, label, note]) => <article className="metric-card" key={label}><span>{label}</span><strong>{value}</strong><p>{note}</p></article>)}</div>
       <div className="content-grid equal">
         <article className="panel"><span className="section-kicker">What changed</span><h3>Detected legal changes</h3><ChangeList result={result} /></article>
         <article className="panel"><span className="section-kicker">Answer to your question</span><h3>Compliance consequence</h3><Compliance result={result.compliance} /></article>
       </div>
-      <div className="evidence-grid"><EvidenceCard label="Before evidence" filename={result.documents.pre.filename} excerpts={result.evidence.before} /><EvidenceCard label="After evidence" filename={result.documents.post.filename} excerpts={result.evidence.after} after /></div>
+      <div className="evidence-grid"><EvidenceCard label="Before evidence" filename={result.documents.evidence_before?.filename || result.documents.pre.filename} excerpts={result.evidence.before} /><EvidenceCard label="After evidence" filename={result.documents.evidence_after?.filename || result.documents.post.filename} excerpts={result.evidence.after} after /></div>
       <article className="score-note"><strong>How to read the drift score</strong><p>{result.interpretation.drift_score}</p><small>{result.interpretation.review_note}</small></article>
     </section>
   );

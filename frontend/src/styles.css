@@ -91,6 +91,9 @@ button:disabled { opacity: .55; cursor: wait; }
 .summary-card.low .result-label, .summary-card.none .result-label { color: var(--green); }
 .summary-card h3 { margin: 7px 0 6px; color: var(--ink-strong); font-size: 18px; }
 .summary-card p { margin: 0; color: var(--muted); font-size: 12px; }
+.temporal-note { margin-top: 13px; padding: 14px 17px; border: 1px solid #c9dde6; border-radius: 10px; background: var(--primary-soft); }
+.temporal-note strong { color: var(--primary-dark); font-size: 12px; }
+.temporal-note p { margin: 4px 0 0; color: var(--muted); font-size: 11px; }
 .score-ring { width: 92px; height: 92px; display: grid; place-content: center; border: 6px solid rgba(160,106,37,.18); border-top-color: var(--amber); border-radius: 50%; text-align: center; }
 .score-ring strong { color: var(--ink-strong); font: 500 28px Georgia, serif; line-height: 1; }
 .score-ring span { margin-top: 4px; color: var(--muted); font-size: 9px; }

@@ -284,6 +284,19 @@ class DashboardService:
                 "warnings": post_warnings,
             },
         }
+        temporal = result.get("temporal_interpretation", {})
+        if isinstance(temporal, dict) and temporal.get("evidence_order_corrected") is True:
+            pre_is_consolidated = "consolidated" in pre_name.lower()
+            post_is_consolidated = "consolidated" in post_name.lower()
+            consolidated_name = pre_name if pre_is_consolidated else post_name if post_is_consolidated else "consolidated Act"
+            amendment_name = post_name if pre_is_consolidated else pre_name
+            result["documents"]["evidence_before"] = {
+                "filename": f"Reconstructed pre-amendment provision ({amendment_name})"
+            }
+            result["documents"]["evidence_after"] = {"filename": consolidated_name}
+        else:
+            result["documents"]["evidence_before"] = {"filename": pre_name}
+            result["documents"]["evidence_after"] = {"filename": post_name}
         result["question"] = question
         return result
 
