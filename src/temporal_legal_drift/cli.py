@@ -40,6 +40,7 @@ from .reproducibility import verify_fresh_environment, write_reproducibility_man
 from .scenarios import build_scenario_scaffolds, write_scenarios_and_lock
 from .versioning import VersionGraph, VersionGraphBuilder
 from .versioning.builder import write_graph_and_lock
+from .webapp import serve_dashboard
 
 
 def _project_root() -> Path:
@@ -347,6 +348,10 @@ def build_parser() -> argparse.ArgumentParser:
     phase11.add_argument(
         "--lock", type=Path, default=Path("reports/phase11/reproducibility.lock.json")
     )
+
+    dashboard = subparsers.add_parser("serve-dashboard")
+    dashboard.add_argument("--host", default="127.0.0.1")
+    dashboard.add_argument("--port", type=int, default=8765)
     return parser
 
 
@@ -649,6 +654,10 @@ def run(args: argparse.Namespace) -> int:
             document, _resolve(root, args.output), _resolve(root, args.lock)
         )
         print(json.dumps(lock, indent=2, ensure_ascii=False))
+        return 0
+
+    if args.command == "serve-dashboard":
+        serve_dashboard(root, host=args.host, port=args.port)
         return 0
 
     raise AssertionError(f"Unhandled command: {args.command}")

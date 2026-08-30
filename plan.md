@@ -5,7 +5,7 @@
 **Status:** Research specification; TRL 2  
 **Target:** Lab-validated research prototype; TRL 4  
 **Core orientation:** Temporal legal reasoning and compliance-drift evaluation over versioned Indian law  
-**Implementation status:** The Phase 0-11 engineering foundation now exists: research-contract validation, provenance-controlled acquisition, immutable raw storage, parsing/normalization, a technical provision-version graph, an evidence-constrained temporal applicability resolver, an evidence-linked 50-task annotation workload, compliance-scenario authoring scaffolds, a leakage-audited technical release dry run, baseline and metric infrastructure, six-condition temporal-LLM execution, structured answer normalization, false-stability/false-instability scoring, automated explanation-support checks, fresh-environment engineering reproduction, tests, gates, and CI. A fourteen-document India Code technical pilot has been downloaded and normalized locally. The graph contains consolidated snapshots and unresolved amendment candidates, not approved historical transitions. The controlled Phase 9 smoke run executed 78/78 planned conditions with schema-valid responses; all responses abstained because the scenario scaffolds contain no authored facts or legal questions. This is operational evidence only. Materiality labels, complete pre/post pairs, expert-authored scenarios, legal-gold applicability determinations, a frozen benchmark, performance metrics, and independent expert validation do not exist. The optional monitoring agent is not implemented.
+**Implementation status:** The Phase 0-11 engineering foundation and connected local research dashboard now exist: research-contract validation, provenance-controlled acquisition, immutable raw storage, parsing/normalization, a technical provision-version graph, an evidence-constrained temporal applicability resolver, an evidence-linked 50-task annotation workload, compliance-scenario authoring scaffolds, a leakage-audited technical release dry run, baseline and metric infrastructure, six-condition temporal-LLM execution, structured answer normalization, false-stability/false-instability scoring, automated explanation-support checks, fresh-environment engineering reproduction, live project APIs, controlled evidence/scenario intake, tests, gates, and CI. A fourteen-document India Code technical pilot has been downloaded and normalized locally. The graph contains consolidated snapshots and unresolved amendment candidates, not approved historical transitions. The controlled Phase 9 smoke run executed 78/78 planned conditions with schema-valid responses; all responses abstained because the scenario scaffolds contain no authored facts or legal questions. This is operational evidence only. Materiality labels, complete pre/post pairs, expert-authored scenarios, legal-gold applicability determinations, a frozen benchmark, performance metrics, and independent expert validation do not exist. The optional monitoring agent is not implemented.
 
 This plan distinguishes implemented engineering artifacts from planned research work. It reports no model performance, legal validation, or scientific benchmark result.
 
@@ -1712,7 +1712,9 @@ project/
     explanations/
     metrics/
     reproducibility/
+    webapp/                 # local connected research APIs
     monitoring/             # optional
+  web/                      # dependency-free research dashboard
   tests/
     fixtures/
     unit/

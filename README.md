@@ -34,6 +34,21 @@ python -m unittest discover -s tests -v
 
 The package requires no third-party dependency for text, HTML, or XML processing. PDF text extraction is optional and uses `pypdf`.
 
+## Research dashboard
+
+The interface source is a React/Vite application in `frontend/`. Build it into the Python server's `web/` directory, install the PDF extraction dependency, and start the connected interface:
+
+```bash
+cd frontend
+pnpm install
+pnpm run build
+cd ..
+python -m pip install -e '.[pdf]'
+PYTHONPATH=src python -m temporal_legal_drift.cli serve-dashboard
+```
+
+Then open `http://127.0.0.1:8765`. The interface compares a pre-amendment PDF with a post-amendment PDF and reports textual change, legal materiality, scenario-specific compliance consequence, evidence excerpts and a transparent drift score. Uploaded comparison files are processed for the request and are not added to the project corpus. The corpus browser opens the downloaded local India Code PDFs.
+
 ## CLI
 
 ```bash
@@ -56,6 +71,7 @@ tldrift execute-llm-evaluation
 tldrift score-drift-pairs --pairs PATH_TO_COMPLETED_PAIRS
 tldrift build-explanation-evaluation-plan
 tldrift verify-reproducibility
+tldrift serve-dashboard
 tldrift resolve-applicability --facts PATH --scenario-id ID --lineage-id ID --reference-date YYYY-MM-DD
 tldrift check-gates
 ```

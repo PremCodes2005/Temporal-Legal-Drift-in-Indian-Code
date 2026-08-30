@@ -62,6 +62,7 @@ def verify_fresh_environment(root: Path, *, timeout_seconds: int = 900) -> dict[
                 "unittest",
                 "tests.unit.test_acquisition",
                 "tests.unit.test_applicability",
+                "tests.unit.test_comparison",
                 "tests.unit.test_corpus",
                 "tests.unit.test_cross_validation",
                 "tests.unit.test_parsers",
@@ -69,6 +70,7 @@ def verify_fresh_environment(root: Path, *, timeout_seconds: int = 900) -> dict[
                 "tests.unit.test_phases_5_7",
                 "tests.unit.test_phases_8_10",
                 "tests.unit.test_versioning",
+                "tests.unit.test_webapp",
                 "tests.integration.test_normalization_pipeline",
                 "-v",
             ],
@@ -176,8 +178,11 @@ def _portable_command(command: list[str], root: Path, environment: Path) -> list
 def _reproducibility_paths(root: Path) -> tuple[str, ...]:
     values = set(REQUIRED_ARTIFACTS)
     values.add("pyproject.toml")
-    for directory in ("configs", "schemas", "src", "tests", "protocols"):
+    values.add("frontend/pnpm-lock.yaml")
+    for directory in ("configs", "schemas", "src", "tests", "protocols", "frontend", "web"):
         for path in (root / directory).rglob("*"):
-            if path.is_file() and path.suffix in {".py", ".json", ".md"}:
+            if "node_modules" in path.parts:
+                continue
+            if path.is_file() and path.suffix in {".py", ".jsx", ".json", ".md", ".html", ".css", ".js"}:
                 values.add(str(path.relative_to(root)))
     return tuple(sorted(values))
