@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "manifest_id": "india-code-temporal-pilot-v1",
   "status": "bounded_technical_pilot_not_legal_gold",
-  "description": "A bounded India Code pilot for testing acquisition, provenance, PDF extraction, amendment representation readiness, and temporal-complexity capture. Inclusion does not establish legal sufficiency or benchmark coverage.",
+  "description": "A 100-document authoritative India Code technical corpus spanning major Indian legal domains, including consolidated/base Central Acts and separate amending instruments. Inclusion does not establish legal sufficiency, historical snapshot equivalence, or benchmark-gold status.",
   "entries": [
     {
       "entry_id": "it-act-2000-consolidated",
@@ -130,6 +130,780 @@
       "instrument_type": "consolidated_central_act",
       "expected_media_type": "application/pdf",
       "research_role": "intellectual-property compliance Act with extensive amendment history"
+    },
+    {
+      "entry_id": "bharatiya-nyaya-sanhita-2023",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/8007a80e-259b-429d-9ca4-1a2f474b5000/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/4bb3e636-ed67-4731-8fb1-7ebfd83e1584",
+      "official_identifier": "IndiaCode:123456789/496548",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "bharatiya-nagarik-suraksha-sanhita-2023",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/dab4cf5a-e218-4c87-b397-d6ddd11a2b80/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/72592ac7-d084-4545-95d3-0c98dc49fac3",
+      "official_identifier": "IndiaCode:123456789/496550",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "bharatiya-sakshya-adhiniyam-2023",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/fa0f7526-d871-41f2-a644-2a42952211f5/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/9e461245-2c13-4171-9d9d-267425c01e1d",
+      "official_identifier": "IndiaCode:123456789/496549",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "telecommunications-act-2023",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/ae8a4fb9-6320-4723-a054-9afd43a031cf/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/3b49d32d-5af1-4bb9-9f6c-ddac6d06fb1c",
+      "official_identifier": "IndiaCode:123456789/496373",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "mental-healthcare-act-2017",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/5d48a4b1-19b3-4ad5-acd9-454bc60826c1/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/63a1a7f4-fc92-49c3-808b-6f0bc3ede89c",
+      "official_identifier": "IndiaCode:123456789/495991",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "rights-of-persons-with-disabilities-act-2016",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/5fe6c4cd-2647-4c68-b1fb-4e631c535984/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/a2ccc006-552f-4598-886f-217d79088b9d",
+      "official_identifier": "IndiaCode:123456789/496164",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "real-estate-regulation-and-development-act-2016",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/b9a6905c-ede5-48e1-8c87-3d28be9707d7/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/769e081c-f8d1-4987-ab07-b93a11ae53ad",
+      "official_identifier": "IndiaCode:123456789/496051",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "juvenile-justice-care-and-protection-of-children-act-2015",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/56f3f6a9-697f-4c35-836e-c6db0e575f32/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/bfa75673-9ac9-4ce8-b5cf-836472c94203",
+      "official_identifier": "IndiaCode:123456789/496000",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "sexual-harassment-of-women-at-workplace-prevention-prohibition-and-redressal-act-2013",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/ee8a8259-1ea6-4b42-b804-a5d6b6baa2d0/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/6497706b-d8a5-4486-a968-9975498de966",
+      "official_identifier": "IndiaCode:123456789/496008",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "protection-of-children-from-sexual-offences-act-2012",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/f21e8728-6f27-4c80-8fec-1688793a4dee/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/60dad1b9-bbf1-4310-8fa1-62643beab7a6",
+      "official_identifier": "IndiaCode:123456789/496004",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "food-safety-and-standards-act-2006",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/85d01867-be01-4a3f-9c7c-94e2d0fa5c18/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/901412c2-ea41-4afb-b6d2-8686b27623e6",
+      "official_identifier": "IndiaCode:123456789/496383",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "protection-of-women-from-domestic-violence-act-2005",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/8aa8ec49-c98c-4e76-91ac-bab44815e835/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/4311e86f-7d98-40b6-8a80-2195278207cb",
+      "official_identifier": "IndiaCode:123456789/496007",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "disaster-management-act-2005",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/204b4d5d-73a8-4f03-8479-57efc9fe5177/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/c749fc23-ea1a-4d98-8ed7-473d0d1d0941",
+      "official_identifier": "IndiaCode:123456789/496632",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "electricity-act-2003",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/2c523cf6-302e-4e58-afcc-21de052cb403/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/9e67d1ba-388a-411d-8151-1162bfc61789",
+      "official_identifier": "IndiaCode:123456789/496082",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "biological-diversity-act-2002",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/bf83f6e3-2c10-4dab-9daa-da46662849d2/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/000de0a3-39ce-4e18-85f0-0c51b4bdab5d",
+      "official_identifier": "IndiaCode:123456789/496021",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "trade-marks-act-1999",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/7648d2d2-4e14-40dc-80d0-db8f99716fd5/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/62219d21-0553-405b-9ccb-a11b4d9c41c2",
+      "official_identifier": "IndiaCode:123456789/495962",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "foreign-exchange-management-act-1999",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/8024e4a4-c5b7-4f53-9326-0f9591087b39/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/a972a617-5989-4b2c-a84f-617792137a57",
+      "official_identifier": "IndiaCode:123456789/496326",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "arbitration-and-conciliation-act-1996",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/c368a901-3738-47f6-acb8-9885147945ec/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/51601006-0e76-4a81-83ce-739f3a021112",
+      "official_identifier": "IndiaCode:123456789/496493",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "securities-and-exchange-board-of-india-act-1992",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/b3df21af-3e1b-4cb5-b527-1478eddbf47b/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/a646ef79-0891-473c-a048-eb6d37bb5555",
+      "official_identifier": "IndiaCode:123456789/496232",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "public-liability-insurance-act-1991",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/4819f68a-11b7-4726-9c7c-2fef39196c66/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/d51b1eb9-a3f8-4920-bcd1-00997c19c220",
+      "official_identifier": "IndiaCode:123456789/496025",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "scheduled-castes-and-the-scheduled-tribes-prevention-of-atrocities-act-1989",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/d67f4b4f-ad81-4c64-9e89-215892887fa3/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/f9c8fb04-363a-4779-b628-0d9f9bb997e0",
+      "official_identifier": "IndiaCode:123456789/496156",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "prevention-of-corruption-act-1988",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/54dfd58e-7946-4041-b25d-5e0c85ba9aca/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/5b300920-4878-4e39-8d87-fa87d4953f09",
+      "official_identifier": "IndiaCode:123456789/496166",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "motor-vehicles-act-1988",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/1d30ea4a-1331-4791-89bf-b820172bf790/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/2bbbcc40-38f1-4b15-ae94-646b85db4ee7",
+      "official_identifier": "IndiaCode:123456789/619305",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "wild-life-protection-act-1972",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/028cf190-8c70-42d0-baf0-d15be4ba14e7/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/3df23bd4-5433-4baf-92e9-56b72f4f1008",
+      "official_identifier": "IndiaCode:123456789/496026",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "patents-act-1970",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/9e02bd6e-8946-4131-9eec-b1a0dd71cf80/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/a49ad42b-f2dc-4ee2-9884-11ef0839798d",
+      "official_identifier": "IndiaCode:123456789/495964",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "specific-relief-act-1963",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/d47b330c-8fdb-4a6b-9fcf-72201b62e1ba/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/e0a1c7bb-8bed-47d7-a0b6-9fd3c8a3944c",
+      "official_identifier": "IndiaCode:123456789/496392",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "customs-act-1962",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/43993580-e794-493a-a0cc-2a278c5dcd70/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/5b38b7b8-6708-4630-85d2-8b14a28e53d3",
+      "official_identifier": "IndiaCode:123456789/496309",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "essential-commodities-act-1955",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/dd5ed497-5cbb-4990-8946-bbae7e3151ac/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/c37854bc-64c2-4314-9370-1dd418016ce5",
+      "official_identifier": "IndiaCode:123456789/496107",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "citizenship-act-1955",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/635fea2f-c956-4905-af2a-dde5a1fe1d53/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/85a9f995-5bfb-4fb4-afef-cd95ccd45ae4",
+      "official_identifier": "IndiaCode:123456789/496576",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "representation-of-the-people-act-1950",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/d592b1b7-a793-4c21-94ff-a5f6d07086a4/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/d1511220-9dbc-4108-949f-28e1229e7a44",
+      "official_identifier": "IndiaCode:123456789/496397",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "banking-regulation-act-1949",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/264432b5-2ee6-498b-b41f-4c961bd9738b/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/18020586-18bc-4857-91fe-668ed2469876",
+      "official_identifier": "IndiaCode:123456789/496222",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "reserve-bank-of-india-act-1934",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/e159cd99-2be8-4f80-b2f5-7c2fe3974829/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/3f9f5c4e-dce7-4144-b5ac-d2cc995b1761",
+      "official_identifier": "IndiaCode:123456789/496319",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "drugs-and-cosmetics-act-1940",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/3b64f195-bdb9-4837-afb2-7d7b24ac83d2/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/8725a8a7-45a4-42e3-9046-e2a6383cd049",
+      "official_identifier": "IndiaCode:123456789/495988",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "code-of-civil-procedure-1908",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/fc9dad3f-97a9-4216-843b-934665693468/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/3d38ec80-965e-4df0-a2d2-3d97cb1dc702",
+      "official_identifier": "IndiaCode:123456789/496430",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "transfer-of-property-act-1882",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/df9f8770-4efe-4cf9-85ba-1ea884649679/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/2b436b95-ae89-4c5f-ab70-3d5ef5ffd8e8",
+      "official_identifier": "IndiaCode:123456789/496421",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "indian-contract-act-1872",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/e7571d39-11a7-4a2c-86e3-c515ae43e617/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/0e782442-f035-4d53-aace-81b1552a8cf2",
+      "official_identifier": "IndiaCode:123456789/496413",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "legal-metrology-act-2009",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/6660e561-336f-4f12-be1d-ddfdafd9d201/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/0ad0a862-c909-4033-8dd5-f45ddff817e0",
+      "official_identifier": "IndiaCode:123456789/496114",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "lokpal-and-lokayuktas-act-2013",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/4f16afee-1690-4916-a45f-612a57a117e3/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/15f6da06-72aa-4959-8a6c-e0490a72122c",
+      "official_identifier": "IndiaCode:123456789/496176",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "water-prevention-and-control-of-pollution-act-1974",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/185a9d3a-b38a-443f-8a76-8b1e8cf0f78b/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/16ffc39d-110a-4a34-91e9-f4e78d8cafa8",
+      "official_identifier": "IndiaCode:123456789/496023",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "air-prevention-and-control-of-pollution-act-1981",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/638bc1ac-fd49-4436-8143-dc51ea15deea/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/269a874d-1f40-4bd5-af17-d9cf30f58d51",
+      "official_identifier": "IndiaCode:123456789/496024",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "child-and-adolescent-labour-prohibition-and-regulation-act-1986",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/a83ea133-d4af-4164-a622-5a8d5b5ae9f6/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/1fe940f9-b6ed-4d97-871c-587007b16632",
+      "official_identifier": "IndiaCode:123456789/496711",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "representation-of-the-people-act-1951",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/00e2aca5-8a4f-49c4-9f9e-5f2ca4c2ce4c/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/c6952b2d-766b-49df-8217-41b17a026fd5",
+      "official_identifier": "IndiaCode:123456789/496502",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "unlawful-activities-prevention-act-1967",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/cbc4c140-079e-42c6-bfe6-04ce8feb1d4c/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/fa986084-35d9-4391-a7e1-9561c880d8bb",
+      "official_identifier": "IndiaCode:123456789/496521",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "national-food-security-act-2013",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/d7d8ba91-50a2-47d9-9d06-b5363f3964b9/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/07a82769-c081-42db-8639-e604ff7ab28b",
+      "official_identifier": "IndiaCode:123456789/496105",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "customs-tariff-act-1975",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/81945b1f-a032-4a3c-8253-1a37b4543ab7/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/087d3280-1ba9-4db1-9316-ccac69e5e81d",
+      "official_identifier": "IndiaCode:123456789/496302",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "prevention-of-money-laundering-act-2002",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/2f3fbe2f-5336-4402-8c32-9a7fa148d4e6/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/3babfe62-c9c8-49b3-8247-052834d2dfa4",
+      "official_identifier": "IndiaCode:123456789/496293",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "competition-act-2002-679c33d2",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/8a8b564a-d85c-4143-8588-94e607ea79e0/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/679c33d2-a217-4e57-8e28-51dd4208371f",
+      "official_identifier": "IndiaCode:123456789/496125",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "clinical-establishments-registration-and-regulation-act-2010",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/805f683d-84da-4d63-891b-afa0a660d42a/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/74e4e4dd-ba5f-4e8d-9376-bb8164381040",
+      "official_identifier": "IndiaCode:123456789/495986",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "transplantation-of-human-organs-and-tissues-act-1994",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/e9fe97b9-738a-46d1-ab08-917ef7b24003/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/3ba50df5-0860-4188-93e3-8c709597cd5e",
+      "official_identifier": "IndiaCode:123456789/495977",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "legal-services-authorities-act-1987",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/287546b4-d237-4ff1-8c79-09712f336adf/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/a742f03e-3129-4b8d-8dda-af2a36190b18",
+      "official_identifier": "IndiaCode:123456789/496492",
+      "instrument_type": "central_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "authoritative Central Act selected for cross-domain temporal legal retrieval"
+    },
+    {
+      "entry_id": "jan-vishwas-amendment-of-provisions-act-2023",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/7c204b87-fc63-47c9-929f-034f50de7925/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/80f395e5-1458-4268-a7aa-9025c1d94684",
+      "official_identifier": "IndiaCode:123456789/617271",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "amending instrument targeting Information Technology Act"
+    },
+    {
+      "entry_id": "banking-laws-amendment-act-2025",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/36c3451f-0403-49ea-aeba-7d745400e463/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/0c521cf8-8013-4f37-b099-e668928d571a",
+      "official_identifier": "IndiaCode:123456789/617030",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "amending instrument targeting Banking Companies (Acquisition and Transfer of Undertakings)Act"
+    },
+    {
+      "entry_id": "competition-amendment-act-2023",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/4254e51b-c6a0-48e5-a40c-7e482d002a09/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/cb6e4186-f937-40cc-b1f2-ff05c1a5c00f",
+      "official_identifier": "IndiaCode:123456789/617289",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "amending instrument targeting Competition Act"
+    },
+    {
+      "entry_id": "insolvency-and-bankruptcy-code-amendment-act-2021",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/d64b700b-5511-4452-b5fa-6711f79acb0e/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/95ac7ba4-66fa-4046-b7f1-fc3a546c4ac7",
+      "official_identifier": "IndiaCode:123456789/617366",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "amending instrument targeting Insolvency and Bankruptcy Code"
+    },
+    {
+      "entry_id": "central-goods-and-services-tax-second-amendment-act-2023",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/0641e1ac-67ae-4b66-83d9-dbfd608fedae/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/adede447-0f09-43d5-bc45-4ff5fd898393",
+      "official_identifier": "IndiaCode:123456789/617371",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "amending instrument targeting Central Goods and Services Act"
+    },
+    {
+      "entry_id": "integrated-goods-and-services-tax-amendment-act-2023",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/f2358337-0772-498a-b6e7-6dda7ba8afef/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/c1367ca3-573d-4c1f-a862-db6607cda237",
+      "official_identifier": "IndiaCode:123456789/617373",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "amending instrument targeting Integrated Goods and Services Tax Act"
+    },
+    {
+      "entry_id": "right-to-information-amendment-act-2019",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/c8ab0469-7589-4e87-86aa-33845de8d444/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/3beac4a7-afa8-468f-9a32-6ab8bae0034b",
+      "official_identifier": "IndiaCode:123456789/617308",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "amending instrument targeting Right to Information Act, 2005"
+    },
+    {
+      "entry_id": "aadhaar-and-other-laws-amendment-act-2019",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/5485577b-ef44-413b-9654-29d69310aec1/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/5b383624-ff3f-4645-bad1-15112710c494",
+      "official_identifier": "IndiaCode:123456789/617361",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "amending instrument targeting Aadhaar (Targeted Delivery of Financial and Other Subsidies, Benefits and Services) Act"
+    },
+    {
+      "entry_id": "motor-vehicles-amendment-act-2019",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/d9674662-a4d3-4665-b147-12dd237a2f23/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/581f7763-0b61-44b3-973a-37f8e14ae174",
+      "official_identifier": "IndiaCode:123456789/617192",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "amending instrument targeting Motor Vehicles Act"
+    },
+    {
+      "entry_id": "criminal-law-amendment-act-2018",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/b6ed67c9-0cb5-4bf6-ae46-e9a3be3c4e20/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/a2313721-fa4f-4898-bf01-2df5afb99e28",
+      "official_identifier": "IndiaCode:123456789/617346",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "amending instrument targeting Protection of Children from Sexual Offences Act"
+    },
+    {
+      "entry_id": "code-of-civil-procedure-amendment-act-1999",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/ca88c6fd-8ffe-4ed7-8a9d-f0d9adb96166/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/4c90b875-a139-4452-97cd-beeb277be167",
+      "official_identifier": "IndiaCode:123456789/616952",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "amending instrument targeting Limitation Act"
+    },
+    {
+      "entry_id": "arbitration-and-conciliation-amendment-act-2015",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/0b5fe3f8-bd8a-4fe5-9a8b-78b1229bf29a/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/02fd57a5-8028-40e5-969b-3c43ffcde5d1",
+      "official_identifier": "IndiaCode:123456789/617252",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "amending instrument targeting Arbitration and Conciliation Act"
+    },
+    {
+      "entry_id": "specific-relief-amendment-act-2018",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/be9c9f89-504c-4187-bf40-d1f25245e904/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/85c01163-8179-4594-8a77-0f21830fe07f",
+      "official_identifier": "IndiaCode:123456789/616959",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "amending instrument targeting Specific Relief Act"
+    },
+    {
+      "entry_id": "prevention-of-corruption-amendment-act-2018",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/2cfdc005-4f19-432c-b785-8b42a42e739e/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/62a08274-d6b5-45bf-bd78-833182addc6e",
+      "official_identifier": "IndiaCode:123456789/617187",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "amending instrument targeting Prevention of Corruption Act"
+    },
+    {
+      "entry_id": "maternity-benefit-amendment-act-2017",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/388d9313-0f95-4728-b921-c9ccf734ef5b/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/f5113a70-793a-4770-8d83-5fd2100889db",
+      "official_identifier": "IndiaCode:123456789/616917",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "amending instrument targeting Maternity Benefit Act"
+    },
+    {
+      "entry_id": "wild-life-protection-amendment-act-2022",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/479916cc-b01a-4639-9167-a522652cbb5a/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/5f682edd-2ae9-4296-9ea8-0b50a435c8b1",
+      "official_identifier": "IndiaCode:123456789/617072",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "amending instrument targeting Wild Life (Protection) Act"
+    },
+    {
+      "entry_id": "biological-diversity-amendment-act-2023",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/9e880bd1-16d0-4a1e-915c-e29eedf96a36/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/6dc2f699-5de1-46d6-9938-58f4923976ca",
+      "official_identifier": "IndiaCode:123456789/617297",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "amending instrument targeting Biological Diversity Act"
+    },
+    {
+      "entry_id": "election-laws-amendment-act-2016",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/50be6765-8cdc-4ff7-ba72-dd12a1ce3908/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/5b7213a0-2895-47ae-b0ba-55f1301aff30",
+      "official_identifier": "IndiaCode:123456789/616513",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "amending instrument targeting Representation of the People Act, 1950"
+    },
+    {
+      "entry_id": "securities-laws-amendment-act-2014",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/b3b808d8-2c3b-4b9d-98e4-015867703488/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/0de4878a-c2a6-467b-854b-30e6564cf791",
+      "official_identifier": "IndiaCode:123456789/617250",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "amending instrument targeting Depositories Act"
+    },
+    {
+      "entry_id": "motor-vehicles-amendment-act-2001",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/e95feaa2-70e1-411f-a00a-9ca71514a3fc/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/daf859a1-465b-43b9-ac33-d543a8c03576",
+      "official_identifier": "IndiaCode:123456789/617191",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "amending instrument targeting Motor Vehicles Act"
+    },
+    {
+      "entry_id": "protection-of-children-from-sexual-offences-amendment-act-2019",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/f3768362-6f8a-4d2b-a7cb-1d44032c26b6/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/6217cfc8-a7c0-41fe-906b-21e95ba37b13",
+      "official_identifier": "IndiaCode:123456789/617347",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "amending instrument targeting Protection of Children from Sexual Offences Act"
+    },
+    {
+      "entry_id": "transplantation-of-human-organs-amendment-act-2011",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/ea6aa8f1-ff82-4ee3-a532-d80a9b33fc04/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/ccd8543e-6b7d-4ecd-bf6e-c63bf990107a",
+      "official_identifier": "IndiaCode:123456789/617233",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "amending instrument targeting Transplantation of  Human Organs Act"
+    },
+    {
+      "entry_id": "legal-services-authorities-amendment-act-2002",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/203cf610-d230-4aef-9a2f-e8668551352b/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/69976d01-fa94-440d-8e3e-40112ae1c799",
+      "official_identifier": "IndiaCode:123456789/617178",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "amending instrument targeting Legal Services Authorities Act"
+    },
+    {
+      "entry_id": "conservation-of-foreign-exchange-and-prevention-of-smuggling-activities-amendment-act-1996",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/128fba5b-f05d-4978-a87c-06cf8ea3a321/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/19984a4d-4bb4-404b-a288-31991c4f1bcf",
+      "official_identifier": "IndiaCode:123456789/617106",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "amending instrument targeting Conservation of Foreign Exchange and Prevention of Smuggling Activities Act"
+    },
+    {
+      "entry_id": "employee-s-provident-funds-and-miscellaneous-provisions-amendment-act-1998",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/2c847657-a3e0-4a7b-8659-8bf82e6896a6/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/98dcbfd7-01cf-4483-8b4f-84c3f775f360",
+      "official_identifier": "IndiaCode:123456789/616602",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "amending instrument targeting Employees' Provident Funds and Miscellaneous Provisions Act"
+    },
+    {
+      "entry_id": "disaster-management-amendment-act-2025",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/a617c3bd-e3e7-4d63-a24c-58bc69e0452b/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/29366ab5-84fb-458a-a155-3999695f8a54",
+      "official_identifier": "IndiaCode:123456789/617312",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "amending instrument targeting Disaster Management Act"
+    },
+    {
+      "entry_id": "insolvency-and-bankruptcy-code-second-amendment-act-2020",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/d2a5ca39-c499-4478-9750-5070f5c89540/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/164c3f92-dd1d-4c5f-9c24-6bdd438be484",
+      "official_identifier": "IndiaCode:123456789/617365",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "amending instrument targeting Insolvency and Bankruptcy Code"
+    },
+    {
+      "entry_id": "insolvency-and-bankruptcy-code-amendment-act-2020",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/21e849b3-85d2-4532-879e-f53ad4698b73/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/74755769-654c-43e8-b90f-6ad34197bda3",
+      "official_identifier": "IndiaCode:123456789/617364",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "amending instrument targeting Insolvency and Bankruptcy Code"
+    },
+    {
+      "entry_id": "insolvency-and-bankruptcy-code-amendment-act-2019",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/12282800-bd71-4ac6-be2b-a35bf3abdf29/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/26151fce-47b7-4415-a817-aa4b494b6090",
+      "official_identifier": "IndiaCode:123456789/617363",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "amending instrument targeting Insolvency and Bankruptcy Code"
+    },
+    {
+      "entry_id": "companies-amendment-act-2019",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/2b6c31de-9283-4846-8004-b41acd9d50f9/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/a9595d79-e43a-4a18-943d-8ddf9fc9ac5f",
+      "official_identifier": "IndiaCode:123456789/617351",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "amending instrument targeting Companies Act"
+    },
+    {
+      "entry_id": "companies-amendment-act-2015",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/75b6a6b8-fe50-4407-8117-fe173dce612c/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/6473f8e7-f30a-4455-a42e-a07e45eae6df",
+      "official_identifier": "IndiaCode:123456789/617349",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "amending instrument targeting Companies Act"
+    },
+    {
+      "entry_id": "labour-laws-exemption-from-the-furnishing-returns-and-maintenance-registers-by-certain-estab",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/af7a8c05-8454-44d0-86ec-22c5f35f77b1/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/aef188ad-584a-4b5e-b2a9-0ab2103532a3",
+      "official_identifier": "IndiaCode:123456789/617188",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "amending instrument targeting The labour laws (simplification of procedure for furnishing returns and maintaining registers by certain establishments) act, 1988"
+    },
+    {
+      "entry_id": "representation-of-the-people-amendment-and-validation-act-2013",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/d13bf0c5-fedb-4bda-af80-14b30f93c2dc/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/e4e42bae-332b-4565-9d0f-6039ec83f527",
+      "official_identifier": "IndiaCode:123456789/616571",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "amending instrument targeting The Representation of the People Act, 1951"
+    },
+    {
+      "entry_id": "code-of-criminal-procedure-amendment-act-2008",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/c478cfeb-7b14-4bdc-857c-cf757a051e22/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/d53dc21f-8919-4091-ae15-82c8f58d1ab7",
+      "official_identifier": "IndiaCode:123456789/617092",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "amending instrument targeting Code of Criminal Procedure"
+    },
+    {
+      "entry_id": "patents-amendment-act-2002",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/c1bd43d2-00a4-4738-8079-e8704a079b17/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/73dce6bc-75b9-4af8-95c7-fec52cc0be88",
+      "official_identifier": "IndiaCode:123456789/617038",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "amending instrument targeting Patents Act"
+    },
+    {
+      "entry_id": "repealing-and-amending-act-2001",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/2361bef7-affc-45b1-80be-ec6d1b5cbea1/content",
+      "parent_reference_url": "https://indiacode.gov.in/items/514e8b75-154f-4dad-a2d1-781747d483d6",
+      "official_identifier": "IndiaCode:123456789/617088",
+      "instrument_type": "amending_act",
+      "expected_media_type": "application/pdf",
+      "research_role": "amending instrument targeting Code of Criminal Procedure"
     }
   ]
 }

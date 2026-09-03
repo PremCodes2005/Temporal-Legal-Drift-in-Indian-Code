@@ -19,8 +19,8 @@ class RagPipelineTests(unittest.TestCase):
     def test_repository_is_automatically_indexed_with_required_metadata(self) -> None:
         status = self.pipeline.status()
         self.assertTrue(status["ready"])
-        self.assertEqual(status["document_count"], 14)
-        self.assertGreater(status["chunk_count"], 14)
+        self.assertEqual(status["document_count"], 100)
+        self.assertGreater(status["chunk_count"], 100)
         self.assertEqual(
             status["metadata_fields"],
             ["document_type", "version", "act_name", "date"],

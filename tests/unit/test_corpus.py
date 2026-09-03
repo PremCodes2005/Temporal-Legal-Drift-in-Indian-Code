@@ -36,7 +36,7 @@ class CorpusTests(unittest.TestCase):
     def test_repository_pilot_manifest_is_explicitly_not_legal_gold(self) -> None:
         manifest = CorpusManifest.from_file(ROOT / "configs" / "corpus" / "pilot_v1.json")
         self.assertEqual(manifest.status, "bounded_technical_pilot_not_legal_gold")
-        self.assertEqual(len(manifest.entries), 14)
+        self.assertEqual(len(manifest.entries), 100)
         amendment = next(entry for entry in manifest.entries if entry.entry_id == "it-amendment-act-2008")
         self.assertIsNotNone(amendment.known_extraction_risk)
 
@@ -46,7 +46,7 @@ class CorpusTests(unittest.TestCase):
         policy = SourcePolicy(
             "test",
             frozenset({"https"}),
-            frozenset({"www.indiacode.nic.in"}),
+            frozenset({"www.indiacode.nic.in", "indiacode.gov.in"}),
             4096,
             1,
         )
@@ -63,9 +63,9 @@ class CorpusTests(unittest.TestCase):
             )
             first = downloader.download(manifest)
             second = downloader.download(manifest)
-            self.assertEqual(len(first.downloaded), 14)
-            self.assertEqual(len(second.skipped), 14)
-            self.assertEqual(transport.calls, 14)
+            self.assertEqual(len(first.downloaded), 100)
+            self.assertEqual(len(second.skipped), 100)
+            self.assertEqual(transport.calls, 100)
 
     def test_expected_pdf_signature_is_enforced(self) -> None:
         manifest = CorpusManifest.from_file(ROOT / "configs" / "corpus" / "pilot_v1.json")
@@ -73,7 +73,7 @@ class CorpusTests(unittest.TestCase):
         policy = SourcePolicy(
             "test",
             frozenset({"https"}),
-            frozenset({"www.indiacode.nic.in"}),
+            frozenset({"www.indiacode.nic.in", "indiacode.gov.in"}),
             4096,
             1,
         )
@@ -93,7 +93,7 @@ class CorpusTests(unittest.TestCase):
         policy = SourcePolicy(
             "test",
             frozenset({"https"}),
-            frozenset({"www.indiacode.nic.in"}),
+            frozenset({"www.indiacode.nic.in", "indiacode.gov.in"}),
             4096,
             1,
         )
@@ -108,9 +108,9 @@ class CorpusTests(unittest.TestCase):
             first = materialize_corpus(manifest, store, root / "corpus" / "pdfs")
             second = materialize_corpus(manifest, store, root / "corpus" / "pdfs")
 
-            self.assertEqual(len(first.materialized), 14)
-            self.assertEqual(len(second.skipped), 14)
-            self.assertEqual(len(list(first.output_directory.glob("*.pdf"))), 14)
+            self.assertEqual(len(first.materialized), 100)
+            self.assertEqual(len(second.skipped), 100)
+            self.assertEqual(len(list(first.output_directory.glob("*.pdf"))), 100)
             self.assertTrue(first.index_path.is_file())
 
 

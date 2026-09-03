@@ -35,6 +35,17 @@ def normalize_corpus(
     if not isinstance(completed, dict):
         raise ValueError(f"Invalid corpus checkpoint: {checkpoint_path}")
 
+    # Normalized records are immutable.  Reuse a record already tied to the
+    # same source artifact instead of reparsing it with a potentially newer
+    # PDF library and then attempting to overwrite immutable evidence.
+    existing_by_source: dict[str, str] = {}
+    for path in sorted(service.normalized_store.root.glob("*.json")):
+        value = load_json(path)
+        source_id = value.get("source_artifact_id")
+        document_id = value.get("normalized_document_id")
+        if isinstance(source_id, str) and isinstance(document_id, str):
+            existing_by_source[source_id] = document_id
+
     document_ids: list[str] = []
     for entry in manifest.entries:
         source_artifact_id = completed.get(entry.entry_id)
@@ -42,7 +53,10 @@ def normalize_corpus(
             raise ValueError(f"Corpus entry has not been downloaded: {entry.entry_id}")
         artifact = raw_store.load_metadata(source_artifact_id)
         raw_store.verify(artifact)
+        existing_document_id = existing_by_source.get(source_artifact_id)
+        if existing_document_id is not None:
+            document_ids.append(existing_document_id)
+            continue
         document = service.normalize(artifact, raw_store.root)
         document_ids.append(document.normalized_document_id)
     return CorpusNormalizationSummary(manifest.manifest_id, tuple(document_ids))
-

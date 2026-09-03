@@ -3,12 +3,14 @@
   "status": "bounded_pilot_approved_by_user_pending_legal_review",
   "allowed_schemes": ["https"],
   "approved_hosts": [
-    "www.indiacode.nic.in"
+    "www.indiacode.nic.in",
+    "indiacode.gov.in",
+    "www.indiacode.gov.in"
   ],
   "candidate_hosts_requiring_review": [
     "indiacode.nic.in"
   ],
-  "maximum_response_bytes": 52428800,
+  "maximum_response_bytes": 104857600,
   "request_timeout_seconds": 30,
   "required_request_fields": [
     "url",
