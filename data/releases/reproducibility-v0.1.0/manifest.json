@@ -21,9 +21,9 @@
     "frontend/package-lock.json": "c3c688941a8c84f4734035a125690bd85e9816d85dc61d7487064ad847343700",
     "frontend/package.json": "33e7d592402ad0a321cfc5fe58ce1a5a893b717f56f86e70775bc47db247ea5b",
     "frontend/pnpm-lock.yaml": "7391c06206d93d68b65caf646368b852f231bb0cbb168badd9648f9e354554cc",
-    "frontend/src/App.jsx": "726db4a9038fb2622a1a5fb6de37a3be93631e9f81eb3a2f941255646761d6db",
+    "frontend/src/App.jsx": "eb3653bdd2ac9d011ce051c25a6e371e1cc47fc94efdbdb6c454a572c8e4992f",
     "frontend/src/main.jsx": "c74c6bbb5f94cd1c995b2a352c243f16b229b8f1b8628933ad8c2ec4282524e6",
-    "frontend/src/styles.css": "302320b1217ec6f19d38bdb33d749b861283acf8349972fc504ea64aef3f4536",
+    "frontend/src/styles.css": "7dd10a296e1872741b8cad7fb5ed1b2852c159b3d70514db2ef7e2c7406b3055",
     "frontend/vite.config.js": "9cc986da9616d5d7caf5f51993058bd730771dc84e78b2b16223b84e9c490586",
     "protocols/applicability_protocol.md": "41c4782869b66bfa9eb4590b459167472ef9463b32128c6b5cc5504516110f4a",
     "protocols/baseline_protocol.md": "b3d84d4b6d5a98e66a13636e96b83e14f6f5b4b86b0c7231effdd518332be730",
@@ -35,7 +35,7 @@
     "protocols/source_protocol.md": "70648961e2fcb625baf6889b62b8da943d350158588bc9aed520b488a17a61b4",
     "protocols/temporal_llm_evaluation_protocol.md": "bf7b167cb2b526fbbf2983809c35c6f2ee9787824dd5e6b5d1de213a358577c3",
     "protocols/versioning_protocol.md": "264a941ddb1bd6699f1ed4592da0a809f3a9ebbc89a6c2f02a916fb7ed4f2ce4",
-    "pyproject.toml": "ee9eaa070691e7e85d860fac45e3b00d0b01e7c5b929f1a3c57e75f3852935bb",
+    "pyproject.toml": "3dd0cca9dc6f9d5a0467b31d6c0b71bdb3495d46eec9d00169ec2c1ffec6584d",
     "reports/corpus/india-code-temporal-pilot-v1.lock.json": "82c127f81b59c8135aa922af96ad6ea69429fc45b9df4a55f07029dcd6272187",
     "reports/phase10/explanation_plan.lock.json": "68b67729195321f527bb1adf718eb676f7f6334e7dd214ffc3a4b237ff5e61bd",
     "reports/phase3/version_graph.lock.json": "e24b316432baf476d3ee438fef36b6cc845ca139730470caa326261e7833f48f",
@@ -112,8 +112,13 @@
     "src/temporal_legal_drift/parsing/store.py": "3f43042377ea56bcad9661dfb8fd4c3644e213bc4d29071ad9d34293babdd701",
     "src/temporal_legal_drift/parsing/xml.py": "6be5907098600ea61cdb16bc635b0545555db2478610b673ee5e9e66fa64f7f3",
     "src/temporal_legal_drift/phase0.py": "1b7b9bb8fc84e6db4922b2be6446b34b4a0ae7ad4d09095a7b643c9128ef7292",
+    "src/temporal_legal_drift/rag/__init__.py": "5de9317d630d3abfaf6a9f1fab86d952cf2625aa554838b0b2610714cf78e016",
+    "src/temporal_legal_drift/rag/indiacode.py": "1c932d3cf6e31d8a19dea69eb468083c8bf7dde394d00f7b5967ddeabf5ca3d4",
+    "src/temporal_legal_drift/rag/metrics.py": "c4f9662563c399e1efd7c46b70d457baa70973d7c137014fe1e35917e188a502",
+    "src/temporal_legal_drift/rag/rag_pipeline.py": "8cb9c046897d3f493ef12e3fef2a271524eec7be5a244ee2f32cb6e5cd724352",
+    "src/temporal_legal_drift/rag/retriever.py": "f2677bce52122d79a2a77cdd6780172e809d5fbdcc918c5aa53300a9b1e88a44",
     "src/temporal_legal_drift/reproducibility/__init__.py": "40d4bc2addfb7a53da7cd2df7a2d865dfe0ef8f5765b2ad793e3acc1d5a72bfd",
-    "src/temporal_legal_drift/reproducibility/builder.py": "eb820887800a8c10244b87aa0d8e6f00837afb0f1e96ebbd56bf1f972981b697",
+    "src/temporal_legal_drift/reproducibility/builder.py": "176f92763b764f1b9686a950735b583d5afe56bf3466c65a7a5b43e6b6491c59",
     "src/temporal_legal_drift/scenarios/__init__.py": "6a4eecdee4f4c4b329cad2a8a6c1fee06f6974473e8d103879854f49e3a31424",
     "src/temporal_legal_drift/scenarios/builder.py": "1ecf3452ef91f3871a58211775da3cb3ceeb621beccdd3cd8d00a5cfedc18526",
     "src/temporal_legal_drift/versioning/__init__.py": "9a3fd9a7b15599313ae3cf3a94723425f3c570544c4dbdc6b6bfd4de111a0d5d",
@@ -121,8 +126,8 @@
     "src/temporal_legal_drift/versioning/extract.py": "2a70db26608ce2028f73841722687b3ce8dece6c214f63ed29c3255a421811e8",
     "src/temporal_legal_drift/versioning/models.py": "b234929e27e6946c92e5adf6614648927a801884148f527485248d4e2c1a3dc0",
     "src/temporal_legal_drift/webapp/__init__.py": "dad02cb78c3b17100a7567691343ef114110d7601cabe2400e69889ae97b90cd",
-    "src/temporal_legal_drift/webapp/server.py": "b3b0abdffbd0aed01e2080b9f9128917a974b2dd3f3340050bb97c711c51cb85",
-    "src/temporal_legal_drift/webapp/service.py": "123e2d2cb895a3e67078bcd8f1b8ac8de4456cbea1a766d29c0979fe3446b6b5",
+    "src/temporal_legal_drift/webapp/server.py": "8223ab247f9385841b3aae4df04e2d0a1862e06749b9045ed6ef6ab88aa84dea",
+    "src/temporal_legal_drift/webapp/service.py": "d5b40f7126a62d8119e506ada408c19a3a16084ab235e9c4d860898b903ad10a",
     "tests/__init__.py": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
     "tests/integration/__init__.py": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
     "tests/integration/test_normalization_pipeline.py": "4da777ba2bec46754427fc22d422f542261df5216829c17fbc46bd3b1b29629a",
@@ -137,24 +142,25 @@
     "tests/unit/test_phase0.py": "aee4c1acce1c082fcd16e85d51f4effb15c152cc8559f8cbf829249a86871e9a",
     "tests/unit/test_phases_5_7.py": "18604aa0823fe3f1b337ed35bbc30a375262826354429fbd5ceeafca23ddf09e",
     "tests/unit/test_phases_8_10.py": "e486bc4921cbe079e8413b171a28e88785aef2257e81b9f2f5159fc3941dbe20",
+    "tests/unit/test_rag.py": "2f6a3490aba58b7512f0369acacbe75aa43a8b4dc00334c05aa30008e6e07ac9",
     "tests/unit/test_versioning.py": "9543915be9d2e33ffc0a63cc5d76e6385e9f9ccfff7b2236aee8b70c30f76f45",
-    "tests/unit/test_webapp.py": "7ea9f53034bdf5b6f56a109824285276bf7b51504320af041f36139e35c7b0b5",
-    "web/assets/index-CLQCSjih.js": "398b2f20bd3c9fbc39be3f66540c07f23dcd19b5ee87ade0e11b995096cd9719",
-    "web/assets/index-DK74lTm2.css": "0b3a04e48ce2dd04d378649a649c32c1f48353f746feabc2fb2cb004514b5335",
-    "web/index.html": "ee6f4e1da814fab35dfd8a0bcfd2107db25ccdf7a85d479152142a8f361d7449"
+    "tests/unit/test_webapp.py": "ba875aeac2845a401adf261f5cba3c0a74678594b2731c23d14eb26bc95e63e4",
+    "web/assets/index-3x7lW-6V.js": "505d9a2368236ab8fcaa597b80f7a560371f1b284b3412a4a7a4be0b24a30548",
+    "web/assets/index-Dv-2Arpr.css": "ef85fa277e69e01b8d65b848e790e803bf9d61d3ac54e8fc641ee824b0e96971",
+    "web/index.html": "496eaff86025a0385be9a302c5f157b2170fc1a55b571a0880929c590410651b"
   },
   "environment": {
     "fresh_virtual_environment": true,
     "implementation": "CPython",
     "network_required": false,
     "package_execution": "isolated_interpreter_with_explicit_project_src_path",
-    "platform": "macOS-26.5.2-arm64-arm-64bit",
-    "python": "3.12.13"
+    "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+    "python": "3.14.7"
   },
   "executions": [
     {
       "command": [
-        "/Users/premduseja/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
         "-m",
         "venv",
         "--system-site-packages",
@@ -197,14 +203,15 @@
         "tests.unit.test_phase0",
         "tests.unit.test_phases_5_7",
         "tests.unit.test_phases_8_10",
+        "tests.unit.test_rag",
         "tests.unit.test_versioning",
         "tests.unit.test_webapp",
         "tests.integration.test_normalization_pipeline",
         "-v"
       ],
       "exit_code": 0,
-      "output_tail": "t_runs_are_paired_and_scored (tests.unit.test_phases_8_10.PhaseEightToTenTests.test_executed_pre_post_runs_are_paired_and_scored) ... ok\ntest_execution_enabled_plan_requires_a_model (tests.unit.test_phases_8_10.PhaseEightToTenTests.test_execution_enabled_plan_requires_a_model) ... ok\ntest_false_stability_and_false_instability_are_exact (tests.unit.test_phases_8_10.PhaseEightToTenTests.test_false_stability_and_false_instability_are_exact) ... ok\ntest_reproducible_non_neural_baselines_and_metrics (tests.unit.test_phases_8_10.PhaseEightToTenTests.test_reproducible_non_neural_baselines_and_metrics) ... ok\ntest_graph_reconstructs_exact_version_and_rejects_cycles (tests.unit.test_versioning.VersioningTests.test_graph_reconstructs_exact_version_and_rejects_cycles) ... ok\ntest_section_extraction_is_stable_and_reports_duplicate_candidates (tests.unit.test_versioning.VersioningTests.test_section_extraction_is_stable_and_reports_duplicate_candidates) ... ok\ntest_dashboard_reads_connected_project_artifacts (tests.unit.test_webapp.DashboardServiceTests.test_dashboard_reads_connected_project_artifacts) ... ok\ntest_pdf_upload_is_hashed_and_not_added_to_corpus (tests.unit.test_webapp.DashboardServiceTests.test_pdf_upload_is_hashed_and_not_added_to_corpus) ... ok\ntest_scenario_submission_is_review_only (tests.unit.test_webapp.DashboardServiceTests.test_scenario_submission_is_review_only) ... ok\ntest_acquire_then_normalize_preserves_provenance (tests.integration.test_normalization_pipeline.NormalizationPipelineTests.test_acquire_then_normalize_preserves_provenance) ... ok\ntest_corrupted_raw_blob_is_quarantined (tests.integration.test_normalization_pipeline.NormalizationPipelineTests.test_corrupted_raw_blob_is_quarantined) ... ok\ntest_unsupported_format_is_quarantined (tests.integration.test_normalization_pipeline.NormalizationPipelineTests.test_unsupported_format_is_quarantined) ... ok\n\n----------------------------------------------------------------------\nRan 38 tests in 0.045s\n\nOK\n",
-      "stderr_sha256": "d29781befacfa8fffaa32fb51d409ae026d55a99ee706ee6c07d05f4a87aef05",
+      "output_tail": "s_automatically_indexed_with_required_metadata (tests.unit.test_rag.RagPipelineTests.test_repository_is_automatically_indexed_with_required_metadata) ... ok\ntest_section_substitution_reconstructs_a_narrow_baseline (tests.unit.test_rag.RagPipelineTests.test_section_substitution_reconstructs_a_narrow_baseline) ... ok\ntest_single_document_lookup_does_not_report_fake_pair_drift (tests.unit.test_rag.RagPipelineTests.test_single_document_lookup_does_not_report_fake_pair_drift) ... ok\ntest_graph_reconstructs_exact_version_and_rejects_cycles (tests.unit.test_versioning.VersioningTests.test_graph_reconstructs_exact_version_and_rejects_cycles) ... ok\ntest_section_extraction_is_stable_and_reports_duplicate_candidates (tests.unit.test_versioning.VersioningTests.test_section_extraction_is_stable_and_reports_duplicate_candidates) ... ok\ntest_dashboard_reads_connected_project_artifacts (tests.unit.test_webapp.DashboardServiceTests.test_dashboard_reads_connected_project_artifacts) ... ok\ntest_pdf_upload_is_hashed_and_not_added_to_corpus (tests.unit.test_webapp.DashboardServiceTests.test_pdf_upload_is_hashed_and_not_added_to_corpus) ... ok\ntest_scenario_submission_is_review_only (tests.unit.test_webapp.DashboardServiceTests.test_scenario_submission_is_review_only) ... ok\ntest_single_prompt_rag_api_contract (tests.unit.test_webapp.DashboardServiceTests.test_single_prompt_rag_api_contract) ... ok\ntest_acquire_then_normalize_preserves_provenance (tests.integration.test_normalization_pipeline.NormalizationPipelineTests.test_acquire_then_normalize_preserves_provenance) ... ok\ntest_corrupted_raw_blob_is_quarantined (tests.integration.test_normalization_pipeline.NormalizationPipelineTests.test_corrupted_raw_blob_is_quarantined) ... ok\ntest_unsupported_format_is_quarantined (tests.integration.test_normalization_pipeline.NormalizationPipelineTests.test_unsupported_format_is_quarantined) ... ok\n\n----------------------------------------------------------------------\nRan 46 tests in 1.272s\n\nOK\n",
+      "stderr_sha256": "1de03c6d63a12582cde07de488e234559e23e2150d66d83adfff0f65b4acc4e2",
       "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "step": 3
     }
@@ -223,5 +230,5 @@
   "research_gate_passed": false,
   "schema_version": "1.0.0",
   "status": "fresh_environment_engineering_reproduction_passed_expert_review_unavailable",
-  "verified_at": "2026-08-30T08:07:35.618617+00:00"
+  "verified_at": "2026-09-03T12:30:51.142196+00:00"
 }

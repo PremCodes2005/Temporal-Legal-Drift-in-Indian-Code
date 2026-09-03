@@ -18,6 +18,8 @@ from temporal_legal_drift.jsonio import atomic_write_new, canonical_json_bytes, 
 from temporal_legal_drift.llm_evaluation import build_drift_evaluation_from_executed_plan
 from temporal_legal_drift.parsing.models import ParseContext
 from temporal_legal_drift.parsing.pdf import PdfParser
+from temporal_legal_drift.rag import RagPipeline
+from temporal_legal_drift.rag.indiacode import INDIA_CODE_HOME
 
 
 MAX_UPLOAD_BYTES = 20 * 1024 * 1024
@@ -27,6 +29,21 @@ ALLOWED_UPLOAD_SUFFIXES = {".pdf", ".json"}
 class DashboardService:
     def __init__(self, root: Path) -> None:
         self.root = root.resolve()
+        self.rag = RagPipeline(self.root)
+
+    def rag_status(self) -> dict[str, object]:
+        """Describe the automatically ingested local legal repository."""
+        return self.rag.status()
+
+    def query_rag(self, value: dict[str, object]) -> dict[str, object]:
+        query = _required_text(value, "query", 4000)
+        mode = value.get("mode", "specific")
+        if not isinstance(mode, str):
+            raise ValueError("mode must be specific or generic")
+        return self.rag.answer(query, mode)
+
+    def rebuild_rag_index(self) -> dict[str, object]:
+        return self.rag.rebuild()
 
     def overview(self) -> dict[str, object]:
         corpus = self._load("reports/corpus/india-code-temporal-pilot-v1.lock.json")
@@ -93,6 +110,7 @@ class DashboardService:
                     "official_identifier": raw.get("official_identifier"),
                     "research_role": raw.get("research_role"),
                     "source_url": raw.get("parent_reference_url"),
+                    "official_portal_url": INDIA_CODE_HOME,
                     "sha256": raw.get("sha256"),
                     "byte_length": raw.get("byte_length"),
                     "normalized_blocks": raw.get("normalized_block_count"),
@@ -111,6 +129,11 @@ class DashboardService:
             "total_bytes": report.get("total_bytes"),
             "total_normalized_blocks": report.get("total_normalized_blocks"),
             "entries": entries,
+            "official_repository": {
+                "name": "India Code",
+                "url": INDIA_CODE_HOME,
+                "message": "Visit the official website for complete text and further information.",
+            },
         }
 
     def demo(self) -> dict[str, object]:

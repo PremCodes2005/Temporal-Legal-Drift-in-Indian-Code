@@ -69,6 +69,7 @@ def verify_fresh_environment(root: Path, *, timeout_seconds: int = 900) -> dict[
                 "tests.unit.test_phase0",
                 "tests.unit.test_phases_5_7",
                 "tests.unit.test_phases_8_10",
+                "tests.unit.test_rag",
                 "tests.unit.test_versioning",
                 "tests.unit.test_webapp",
                 "tests.integration.test_normalization_pipeline",

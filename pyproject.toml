@@ -14,6 +14,7 @@ dependencies = []
 [project.optional-dependencies]
 dev = []
 pdf = ["pypdf>=5.0"]
+rag = ["chromadb>=0.5"]
 
 [project.scripts]
 tldrift = "temporal_legal_drift.cli:main"

@@ -21,3 +21,5 @@ data/interim/**
 !data/interim/.gitkeep
 data/submissions/**
 !data/submissions/.gitkeep
+data/runtime/**
+!data/runtime/.gitkeep

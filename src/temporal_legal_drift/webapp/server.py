@@ -52,6 +52,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             "/api/corpus": self.dashboard_service.corpus,
             "/api/demo": self.dashboard_service.demo,
             "/api/architecture": self.dashboard_service.architecture,
+            "/api/rag/status": self.dashboard_service.rag_status,
         }
         try:
             if path in api_routes:
@@ -71,6 +72,10 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             body = self._request_json()
             if path == "/api/scenarios":
                 self._json(HTTPStatus.CREATED, self.dashboard_service.submit_scenario(body))
+            elif path == "/api/rag/query":
+                self._json(HTTPStatus.OK, self.dashboard_service.query_rag(body))
+            elif path == "/api/rag/reindex":
+                self._json(HTTPStatus.OK, self.dashboard_service.rebuild_rag_index())
             elif path == "/api/compare":
                 self._json(HTTPStatus.OK, self.dashboard_service.compare_amendments(body))
             elif path == "/api/uploads":

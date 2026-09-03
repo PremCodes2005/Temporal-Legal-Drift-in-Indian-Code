@@ -56,6 +56,18 @@ class DashboardServiceTests(unittest.TestCase):
             self.assertEqual(result["status"], "evidence_review_queue_not_corpus")
             self.assertEqual(result["byte_length"], len(payload))
 
+    def test_single_prompt_rag_api_contract(self) -> None:
+        service = DashboardService(ROOT)
+        result = service.query_rag(
+            {
+                "query": "Compare Section 19 before and after the IT Amendment Act, 2008.",
+                "mode": "specific",
+            }
+        )
+        self.assertEqual(result["mode"], "specific")
+        self.assertIn("semantic_drift_percent", result["metrics"])
+        self.assertIn("source_guidance", result)
+
 
 if __name__ == "__main__":
     unittest.main()
