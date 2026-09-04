@@ -219,6 +219,102 @@ class HybridRetriever:
         _, amending, target = max(candidates)
         return {"amending_entry_id": amending, "target_entry_id": target}
 
+    def listed_amendments(self, entry_id: str | None) -> list[str]:
+        """Return the amendment-history list printed in a consolidated Act.
+
+        This is discovery metadata, not a set of reconstructed provision
+        versions. The wording is retained from the indexed India Code PDF.
+        """
+        if not entry_id:
+            return []
+        document = self.ensure_index()
+        for item in document.get("chunks", []):
+            if not isinstance(item, dict):
+                continue
+            metadata = item.get("metadata", {})
+            if not isinstance(metadata, dict) or metadata.get("entry_id") != entry_id:
+                continue
+            text = str(item.get("text", ""))
+            marker = re.search(r"LIST OF AMENDING ACTS", text, re.I)
+            if not marker:
+                continue
+            history = text[marker.end():]
+            history = re.split(r"LIST OF ABBREVIATIONS|ARRANGEMENT OF SECTIONS", history, maxsplit=1, flags=re.I)[0]
+            rows = re.split(r"\s+(?=\d+\.\s+)", history.strip())
+            return [
+                re.sub(r"^\d+\.\s+", "", row).strip()
+                for row in rows
+                if re.match(r"^\d+\.\s+", row) and "Act" in row
+            ][:100]
+        return []
+
+    def overview_chunk(self, entry_id: str | None) -> RetrievedChunk | None:
+        """Return the earliest indexed page for a document-level summary.
+
+        Indian amending Acts normally state their purpose, commencement and
+        high-level operation on the opening page.  This avoids answering a
+        general question from an arbitrary schedule row returned by search.
+        """
+        if not entry_id:
+            return None
+        candidates: list[dict[str, object]] = []
+        for raw in self.ensure_index().get("chunks", []):
+            if not isinstance(raw, dict):
+                continue
+            metadata = raw.get("metadata", {})
+            if isinstance(metadata, dict) and metadata.get("entry_id") == entry_id:
+                candidates.append(raw)
+        if not candidates:
+            return None
+
+        def page_number(raw: dict[str, object]) -> int:
+            metadata = raw.get("metadata", {})
+            anchor = str(metadata.get("source_anchor", "")) if isinstance(metadata, dict) else ""
+            match = re.search(r"page:(\d+)", anchor)
+            return int(match.group(1)) if match else 10**9
+
+        first_page = min(page_number(item) for item in candidates)
+        opening = [item for item in candidates if page_number(item) == first_page]
+        raw = max(
+            opening,
+            key=lambda item: (
+                "an act to" in str(item.get("text", "")).lower(),
+                len(str(item.get("text", ""))),
+            ),
+        )
+        metadata = dict(raw.get("metadata", {}))
+        return RetrievedChunk(
+            chunk_id=str(raw["chunk_id"]),
+            text=str(raw.get("text", "")),
+            score=1.0,
+            semantic_score=1.0,
+            lexical_score=1.0,
+            metadata=metadata,
+        )
+
+    def document_chunks(self, entry_id: str | None, *, limit: int = 200) -> list[RetrievedChunk]:
+        """Return stored chunks for one instrument in stable page order."""
+        if not entry_id:
+            return []
+        rows: list[RetrievedChunk] = []
+        for raw in self.ensure_index().get("chunks", []):
+            if not isinstance(raw, dict):
+                continue
+            metadata = raw.get("metadata", {})
+            if not isinstance(metadata, dict) or metadata.get("entry_id") != entry_id:
+                continue
+            rows.append(RetrievedChunk(
+                chunk_id=str(raw["chunk_id"]), text=str(raw.get("text", "")),
+                score=1.0, semantic_score=1.0, lexical_score=1.0,
+                metadata=dict(metadata),
+            ))
+
+        def order(item: RetrievedChunk) -> tuple[int, str]:
+            match = re.search(r"page:(\d+)", str(item.metadata.get("source_anchor", "")))
+            return (int(match.group(1)) if match else 10**9, item.chunk_id)
+
+        return sorted(rows, key=order)[:limit]
+
     def _build_index(self, fingerprint: str | None = None) -> dict[str, object]:
         corpus = load_json(self.root / "data/corpus/index.json")
         normalized_by_source: dict[str, dict[str, object]] = {}

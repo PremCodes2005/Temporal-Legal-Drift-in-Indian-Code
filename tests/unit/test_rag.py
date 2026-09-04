@@ -61,6 +61,14 @@ class RagPipelineTests(unittest.TestCase):
         self.assertIsNone(result["metrics"])
         self.assertFalse(result["verification"]["passed"])
 
+    def test_general_act_question_returns_an_opening_page_summary(self) -> None:
+        result = self.pipeline.answer("What happened in the Jan Vishwas Act?", "generic")
+        self.assertEqual(result["answer"]["answer_type"], "single_document_summary")
+        self.assertIn("decriminalising and rationalising offences", result["answer"]["short_answer"])
+        self.assertTrue(any("ten per cent" in item.lower() for item in result["answer"]["key_differences"]))
+        self.assertEqual(result["citations"][0]["source_anchor"], "pdf:page:1")
+        self.assertIsNone(result["metrics"])
+
     def test_invalid_mode_is_rejected(self) -> None:
         with self.assertRaisesRegex(ValueError, "specific or generic"):
             self.pipeline.answer("What changed?", "verbose")

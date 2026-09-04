@@ -5,12 +5,13 @@ from __future__ import annotations
 import json
 import os
 import re
+import socket
 from dataclasses import dataclass
 from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
-from .indiacode import source_guidance
+from .indiacode import IndiaCodeLiveRepository, source_guidance
 from .metrics import calculate_drift_metrics
 from .retriever import HybridRetriever, RetrievedChunk
 
@@ -23,6 +24,10 @@ LEGAL_CUES = (
     "shall", "must", "may", "prohibited", "penalty", "fine", "imprisonment",
     "liable", "means", "includes", "substituted", "inserted", "omitted",
 )
+# A non-reasoning model is used because this pipeline intentionally fixes
+# temperature at 0.0 and requests strict JSON from Chat Completions.
+DEFAULT_RAG_MODEL = "gpt-4.1-mini"
+DEFAULT_OLLAMA_MODEL = "qwen3:4b"
 
 
 @dataclass(frozen=True)
@@ -33,24 +38,28 @@ class GenerationResult:
     conceptual_score: float | None
     method: str
     warning: str | None = None
+    short_answer: str | None = None
 
 
 class RagPipeline:
     def __init__(self, root: Path) -> None:
         self.root = root.resolve()
         self.retriever = HybridRetriever(self.root)
+        self.live_repository = IndiaCodeLiveRepository()
 
     def status(self) -> dict[str, object]:
         retrieval = self.retriever.status()
         return {
             **retrieval,
             "generation": {
-                "provider": "openai_compatible" if _llm_configured() else "extractive_fallback",
+                "provider": _rag_provider() if _llm_configured() else "extractive_fallback",
                 "temperature": 0.0,
-                "model": os.environ.get("TLD_RAG_MODEL") if _llm_configured() else None,
+                "model": _llm_model() if _llm_configured() else None,
                 "grounded_output_required": True,
             },
             "notice": "The local index is a research aid. India Code remains the authoritative source.",
+            "repository_mode": "live_indiacode_with_local_evidence_cache",
+            "live_repository_enabled": os.environ.get("TLD_LIVE_INDIA_CODE", "1") != "0",
         }
 
     def rebuild(self) -> dict[str, object]:
@@ -67,6 +76,29 @@ class RagPipeline:
 
         intent = _classify_intent(query)
         retrieved = self.retriever.search(query, limit=40)
+        live = (
+            self.live_repository.search_sections(query)
+            if os.environ.get("TLD_LIVE_INDIA_CODE", "1") != "0"
+            else None
+        )
+        # Merge current India Code sections with the reproducible local cache.
+        # Previously, even a weak local match prevented live evidence from
+        # being considered, which caused unrelated opening-page fallbacks.
+        # Live current sections are never labelled as historical versions.
+        if live is not None:
+            live_chunks = [
+                RetrievedChunk(
+                    chunk_id=str(item["chunk_id"]),
+                    text=str(item["text"]),
+                    score=float(item["score"]),
+                    semantic_score=float(item["semantic_score"]),
+                    lexical_score=float(item["lexical_score"]),
+                    metadata=dict(item["metadata"]),
+                )
+                for item in live.chunks
+            ]
+            by_id = {item.chunk_id: item for item in [*retrieved, *live_chunks]}
+            retrieved = sorted(by_id.values(), key=lambda item: (-item.score, item.chunk_id))[:40]
         relation = self.retriever.relation_for_results(retrieved)
         if relation:
             related_ids = {relation["amending_entry_id"], relation["target_entry_id"]}
@@ -79,7 +111,32 @@ class RagPipeline:
         if pre is None and post is None:
             return _insufficient_response(query, mode, intent, guidance, self.status())
 
-        generation = _generate(query, mode, pre, post)
+        answer_type = "comparison" if pre is not None and post is not None else "single_document_summary"
+        if answer_type == "single_document_summary" and post is not None:
+            post = self.retriever.overview_chunk(str(post.metadata.get("entry_id"))) or post
+            document_chunks = self.retriever.document_chunks(str(post.metadata.get("entry_id")))
+            generation = _generate_single_document(query, mode, post, document_chunks)
+        else:
+            generation = _generate(query, mode, pre, post)
+        history_source = post or pre
+        listed_history = self.retriever.listed_amendments(
+            str(history_source.metadata.get("entry_id")) if history_source else None
+        )
+        live_amendments = list(live.amendments) if live is not None else []
+        known_titles = {str(item.get("title", "")).lower() for item in live_amendments}
+        for title in listed_history:
+            if title.lower() in known_titles:
+                continue
+            years = re.findall(r"(?:19|20)\d{2}", title)
+            live_amendments.append({
+                "title": title,
+                "target_act": history_source.metadata.get("act_name") if history_source else None,
+                "year": years[-1] if years else None,
+                "official_identifier": history_source.metadata.get("official_identifier") if history_source else None,
+                "source_url": history_source.metadata.get("source_url") if history_source else guidance["url"],
+                "record_type": "listed_in_current_consolidated_act",
+            })
+            known_titles.add(title.lower())
         pre_text = pre.text if pre else ""
         post_text = post.text if post else ""
         reconstructed_pre, comparable_post, _ = _reconstructed_comparison(pre, post, query)
@@ -100,13 +157,15 @@ class RagPipeline:
             )
         citations = _citations(pre, post)
         verification = _verification(query, pre, post, pair_status, generation, citations)
-        answer_markdown = _answer_markdown(generation, citations, guidance)
+        answer_markdown = _answer_markdown(generation, citations, guidance, answer_type)
         return {
             "schema_version": "1.0.0",
             "query": query,
             "mode": mode,
             "intent": intent,
             "answer": {
+                "answer_type": answer_type,
+                "short_answer": generation.short_answer,
                 "pre_amendment_baseline": generation.pre_baseline,
                 "post_amendment_revision": generation.post_revision,
                 "key_differences": generation.differences,
@@ -121,6 +180,14 @@ class RagPipeline:
                 "relation": relation,
                 "pre": pre.to_dict() if pre else None,
                 "post": post.to_dict() if post else None,
+                "live_indiacode": {
+                    "attempted": live is not None,
+                    "candidate_count": len(live.chunks) if live is not None else 0,
+                    "amendment_count": len(live_amendments),
+                    "amendments": live_amendments,
+                    "error": live.error if live is not None else None,
+                    "role": "current-law and amendment-history supplement; not automatically a historical pre/post pair",
+                },
             },
             "citations": citations,
             "verification": verification,
@@ -176,7 +243,34 @@ def _generate(
 
 
 def _llm_configured() -> bool:
-    return bool(os.environ.get("TLD_RAG_API_KEY") and os.environ.get("TLD_RAG_MODEL"))
+    return _ollama_available() if _rag_provider() == "ollama_local" else bool(_llm_api_key())
+
+
+def _rag_provider() -> str:
+    configured = os.environ.get("TLD_RAG_PROVIDER", "").strip().lower()
+    if configured in {"ollama", "ollama_local"}:
+        return "ollama_local"
+    if configured in {"openai", "openai_compatible"}:
+        return "openai_compatible"
+    return "openai_compatible" if _llm_api_key() else "ollama_local"
+
+
+def _ollama_available() -> bool:
+    try:
+        with socket.create_connection(("127.0.0.1", 11434), timeout=0.2):
+            return True
+    except OSError:
+        return False
+
+
+def _llm_api_key() -> str:
+    """Read a server-side credential without ever sending it to the browser."""
+    return os.environ.get("TLD_RAG_API_KEY") or os.environ.get("OPENAI_API_KEY") or ""
+
+
+def _llm_model() -> str:
+    default = DEFAULT_OLLAMA_MODEL if _rag_provider() == "ollama_local" else DEFAULT_RAG_MODEL
+    return os.environ.get("TLD_RAG_MODEL") or os.environ.get("OPENAI_MODEL") or default
 
 
 def _llm_generate(
@@ -185,7 +279,12 @@ def _llm_generate(
     pre: RetrievedChunk | None,
     post: RetrievedChunk | None,
 ) -> GenerationResult:
-    endpoint = os.environ.get("TLD_RAG_API_URL", "https://api.openai.com/v1/chat/completions")
+    endpoint = os.environ.get(
+        "TLD_RAG_API_URL",
+        "http://127.0.0.1:11434/v1/chat/completions"
+        if _rag_provider() == "ollama_local"
+        else "https://api.openai.com/v1/chat/completions",
+    )
     prompt = {
         "task": "Answer the legal query only from the supplied excerpts. Do not invent missing text, dates, applicability or citations.",
         "mode": mode,
@@ -200,7 +299,7 @@ def _llm_generate(
         },
     }
     body = {
-        "model": os.environ["TLD_RAG_MODEL"],
+        "model": _llm_model(),
         "temperature": 0.0,
         "response_format": {"type": "json_object"},
         "messages": [
@@ -208,12 +307,10 @@ def _llm_generate(
             {"role": "user", "content": json.dumps(prompt, ensure_ascii=False)},
         ],
     }
-    request = Request(
-        endpoint,
-        data=json.dumps(body).encode("utf-8"),
-        headers={"Authorization": f"Bearer {os.environ['TLD_RAG_API_KEY']}", "Content-Type": "application/json"},
-        method="POST",
-    )
+    headers = {"Content-Type": "application/json"}
+    if _llm_api_key():
+        headers["Authorization"] = f"Bearer {_llm_api_key()}"
+    request = Request(endpoint, data=json.dumps(body).encode("utf-8"), headers=headers, method="POST")
     with urlopen(request, timeout=90) as response:
         payload = json.loads(response.read().decode("utf-8"))
     content = payload["choices"][0]["message"]["content"]
@@ -262,6 +359,195 @@ def _extractive_generate(
     if not differences:
         differences = ["The retrieved evidence is insufficient to establish a supported amendment difference."]
     return GenerationResult(pre_summary, post_summary, differences, None, "extractive_fallback")
+
+
+def _generate_single_document(
+    query: str,
+    mode: str,
+    document: RetrievedChunk,
+    document_chunks: list[RetrievedChunk],
+) -> GenerationResult:
+    if _llm_configured():
+        try:
+            return _llm_single_document_generate(query, mode, document, document_chunks)
+        except (ValueError, HTTPError, URLError, TimeoutError, json.JSONDecodeError) as error:
+            fallback = _single_document_generate(query, document, document_chunks)
+            return GenerationResult(
+                fallback.pre_baseline,
+                fallback.post_revision,
+                fallback.differences,
+                None,
+                "extractive_fallback",
+                f"Configured local model was unavailable: {type(error).__name__}",
+                fallback.short_answer,
+            )
+    return _single_document_generate(query, document, document_chunks)
+
+
+def _llm_single_document_generate(
+    query: str,
+    mode: str,
+    document: RetrievedChunk,
+    document_chunks: list[RetrievedChunk],
+) -> GenerationResult:
+    query_terms = set(re.findall(r"[a-z0-9]+", query.lower()))
+    ranked = sorted(
+        document_chunks,
+        key=lambda item: (
+            item.metadata.get("source_anchor") == "pdf:page:1",
+            len(query_terms & set(re.findall(r"[a-z0-9]+", item.text.lower()))),
+        ),
+        reverse=True,
+    )
+    evidence = [
+        {
+            "chunk_id": item.chunk_id,
+            "source_anchor": item.metadata.get("source_anchor"),
+            "text": _bounded_text(item.text, 1800),
+        }
+        for item in ranked[:8]
+    ]
+    prompt = {
+        "task": (
+            "Answer the question using only the supplied excerpts. Give a concise direct answer "
+            "and 2-5 concrete key points. Do not claim that the excerpts cover the whole Act. "
+            "Do not invent dates, effects, applicability, or provisions."
+        ),
+        "mode": mode,
+        "query": query,
+        "document": {
+            "act_name": document.metadata.get("act_name"),
+            "version": document.metadata.get("version"),
+            "official_identifier": document.metadata.get("official_identifier"),
+        },
+        "evidence": evidence,
+        "output": {"short_answer": "string", "key_points": ["string"]},
+    }
+    endpoint = os.environ.get(
+        "TLD_RAG_API_URL",
+        "http://127.0.0.1:11434/v1/chat/completions"
+        if _rag_provider() == "ollama_local"
+        else "https://api.openai.com/v1/chat/completions",
+    )
+    body = {
+        "model": _llm_model(),
+        "temperature": 0.0,
+        "response_format": {"type": "json_object"},
+        "messages": [
+            {"role": "system", "content": "You are an evidence-bound Indian legal research assistant. Return JSON only."},
+            {"role": "user", "content": json.dumps(prompt, ensure_ascii=False)},
+        ],
+    }
+    headers = {"Content-Type": "application/json"}
+    if _llm_api_key():
+        headers["Authorization"] = f"Bearer {_llm_api_key()}"
+    request = Request(endpoint, data=json.dumps(body).encode("utf-8"), headers=headers, method="POST")
+    with urlopen(request, timeout=120) as response:
+        payload = json.loads(response.read().decode("utf-8"))
+    value = json.loads(payload["choices"][0]["message"]["content"])
+    points = value.get("key_points")
+    if not isinstance(points, list) or not points or not all(isinstance(item, str) for item in points):
+        raise ValueError("LLM returned invalid key_points")
+    short_answer = _bounded_text(value.get("short_answer"), 1000)
+    if not short_answer:
+        raise ValueError("LLM returned an empty short_answer")
+    return GenerationResult(
+        "No pre-amendment comparison was requested.",
+        short_answer,
+        [_bounded_text(item, 500) for item in points[:5]],
+        None,
+        "llm_grounded",
+        short_answer=short_answer,
+    )
+
+
+def _single_document_generate(
+    query: str,
+    document: RetrievedChunk,
+    document_chunks: list[RetrievedChunk],
+) -> GenerationResult:
+    """Create a short document-level answer from explicit opening provisions."""
+    text = " ".join(document.text.split())
+    purpose = re.search(
+        r"\bAn Act\s+(?:further\s+)?to\s+(.+?)(?=\s+BE it enacted|\s+1\.\s*\(1\)|\s+Bill No\.|\s+THE\s+.+?\s+BILL)",
+        text,
+        re.I,
+    )
+    commencement = re.search(
+        r"\(2\)\s+It shall come into force.+?(?=\s+2\.\s+The enactments|\s+\d+\.\s+)",
+        text,
+        re.I,
+    )
+    amendment_scope = re.search(
+        r"\bThe enactments mentioned in column \(4\).+?(?=\s+3\.\s+The fines|\s+\d+\.\s+)",
+        text,
+        re.I,
+    )
+    penalty_revision = re.search(
+        r"\bThe fines and penalties.+?(?=\s+Short title|\s+Amendment of|\s+Revision of|\s+EXTRAORDINARY)",
+        text,
+        re.I,
+    )
+
+    title = str(document.metadata.get("act_name") or "This Act")
+    if purpose:
+        purpose_text = _bounded_text(purpose.group(1).strip(), 600)
+        short_answer = f"{title} was enacted to {purpose_text}"
+        short_answer = short_answer.rstrip(".") + "."
+    else:
+        short_answer = _best_excerpt(document, query, "generic")
+
+    key_points: list[str] = []
+    for match in (amendment_scope, commencement, penalty_revision):
+        if match:
+            point = _bounded_text(match.group(0), 500).strip()
+            point = point[0].upper() + point[1:] if point else point
+            if point and point not in key_points:
+                key_points.append(point)
+    if len(key_points) < 3:
+        key_points.extend(_representative_changes(document_chunks, existing=key_points, limit=4))
+    if not key_points:
+        key_points.append("The available opening-page evidence supports only this high-level summary; consult the cited Act for its complete provisions.")
+
+    return GenerationResult(
+        "No pre-amendment comparison was requested.",
+        short_answer,
+        key_points,
+        None,
+        "extractive_summary",
+        short_answer=short_answer,
+    )
+
+
+def _representative_changes(
+    chunks: list[RetrievedChunk], *, existing: list[str], limit: int
+) -> list[str]:
+    """Extract concise operative amendment statements without inventing a summary."""
+    operation = re.compile(
+        r"\b(?:shall be substituted|shall be inserted|shall be omitted|is hereby amended|"
+        r"shall be increased|liable to penalty|punishable with|shall come into force)\b",
+        re.I,
+    )
+    candidates: list[tuple[int, str]] = []
+    seen = {re.sub(r"\W+", " ", item.lower()).strip() for item in existing}
+    for chunk in chunks:
+        text = " ".join(chunk.text.split())
+        for match in operation.finditer(text):
+            start = max(0, text.rfind(".", 0, match.start()) + 1)
+            end_match = re.search(r"[.;](?:\s|$)", text[match.end():])
+            end = match.end() + (end_match.end() if end_match else min(350, len(text) - match.end()))
+            sentence = _bounded_text(text[start:end].strip(" —;"), 420)
+            normalized = re.sub(r"\W+", " ", sentence.lower()).strip()
+            if len(sentence) < 35 or normalized in seen:
+                continue
+            seen.add(normalized)
+            lowered = sentence.lower()
+            context_rank = 0 if re.search(r"\b(?:for|in)\s+(?:section|the .+ act)", lowered) else 1
+            fragment_penalty = 1 if sentence[:1] in {'"', "'"} or len(sentence.split()) < 8 else 0
+            cue_rank = 0 if "substitut" in match.group(0).lower() else 1
+            candidates.append((fragment_penalty * 10 + context_rank * 2 + cue_rank, sentence))
+    candidates.sort(key=lambda row: (row[0], -len(row[1])))
+    return [sentence for _, sentence in candidates[: max(0, limit - len(existing))]]
 
 
 def _reconstructed_comparison(
@@ -393,7 +679,22 @@ def _metadata_coverage(pre: RetrievedChunk | None, post: RetrievedChunk | None) 
     return present / (len(items) * len(fields))
 
 
-def _answer_markdown(generation: GenerationResult, citations: list[dict[str, object]], guidance: dict[str, str]) -> str:
+def _answer_markdown(
+    generation: GenerationResult,
+    citations: list[dict[str, object]],
+    guidance: dict[str, str],
+    answer_type: str,
+) -> str:
+    if answer_type == "single_document_summary":
+        lines = [
+            "## Short Answer", generation.short_answer or generation.post_revision,
+            "", "## Key Points",
+            *[f"- {item}" for item in generation.differences],
+            "", "## Evidence",
+            *[f"- {item.get('act_name')} · {item.get('source_anchor')} · {item.get('official_identifier')}" for item in citations],
+            "", f"[{guidance['label']}]({guidance['url']})",
+        ]
+        return "\n".join(lines)
     lines = [
         "## Pre-Amendment Baseline", generation.pre_baseline,
         "", "## Post-Amendment Revision", generation.post_revision,
@@ -413,6 +714,8 @@ def _insufficient_response(
     return {
         "schema_version": "1.0.0", "query": query, "mode": mode, "intent": intent,
         "answer": {
+            "answer_type": "insufficient_evidence",
+            "short_answer": message,
             "pre_amendment_baseline": message,
             "post_amendment_revision": message,
             "key_differences": [message],

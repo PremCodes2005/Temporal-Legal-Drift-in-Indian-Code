@@ -17,9 +17,9 @@ class DashboardServiceTests(unittest.TestCase):
         overview = service.overview()
         corpus = service.corpus()
         demo = service.demo()
-        self.assertEqual(overview["metrics"]["corpus_documents"], 14)
+        self.assertEqual(overview["metrics"]["corpus_documents"], 100)
         self.assertEqual(overview["metrics"]["controlled_llm_runs"], 78)
-        self.assertEqual(corpus["entry_count"], 14)
+        self.assertEqual(corpus["entry_count"], 100)
         self.assertTrue(all(item["pdf_available"] for item in corpus["entries"]))
         self.assertEqual(demo["results"]["metrics"]["false_stability_rate"], 0)
 

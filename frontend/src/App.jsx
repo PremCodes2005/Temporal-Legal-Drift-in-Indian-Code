@@ -4,6 +4,7 @@ const sections = [
   { id: "assistant", number: "01", label: "Legal drift assistant" },
   { id: "corpus", number: "02", label: "Document repository" },
   { id: "method", number: "03", label: "How it works" },
+  { id: "faq", number: "04", label: "Recent changes FAQ" },
 ];
 
 const suggestions = [
@@ -18,6 +19,7 @@ export default function App() {
   const [corpus, setCorpus] = useState(null);
   const [status, setStatus] = useState(null);
   const [loadError, setLoadError] = useState("");
+  const [starterQuery, setStarterQuery] = useState("");
 
   useEffect(() => {
     Promise.all([api("/api/corpus"), api("/api/rag/status")])
@@ -27,6 +29,11 @@ export default function App() {
 
   const navigate = (next) => {
     setSection(next); setMenuOpen(false); window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const askFromFaq = (question) => {
+    setStarterQuery(question); setSection("assistant"); setMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return <div className="app-shell">
@@ -39,20 +46,23 @@ export default function App() {
     <div className="workspace">
       <header className="topbar"><button className="menu-toggle" onClick={() => setMenuOpen((open) => !open)} aria-label="Open navigation">☰</button><div><p className="eyebrow">Versioned Indian law</p><h1>{sections.find((item) => item.id === section)?.label}</h1></div></header>
       <main id="main-content">
-        {section === "assistant" && <AssistantWorkspace status={status} error={loadError} />}
+        {section === "assistant" && <AssistantWorkspace status={status} error={loadError} starterQuery={starterQuery} />}
         {section === "corpus" && <CorpusBrowser corpus={corpus} error={loadError} status={status} />}
         {section === "method" && <Method />}
+        {section === "faq" && <RecentChangesFaq onAsk={askFromFaq} />}
       </main>
     </div>
   </div>;
 }
 
-function AssistantWorkspace({ status, error: statusError }) {
-  const [query, setQuery] = useState("");
+function AssistantWorkspace({ status, error: statusError, starterQuery }) {
+  const [query, setQuery] = useState(starterQuery || "");
   const [mode, setMode] = useState("specific");
   const [result, setResult] = useState(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => { if (starterQuery) setQuery(starterQuery); }, [starterQuery]);
 
   const submit = async (event) => {
     event.preventDefault(); setError(""); setResult(null);
@@ -70,7 +80,7 @@ function AssistantWorkspace({ status, error: statusError }) {
     <div className="hero">
       <span className="section-kicker">Single-prompt legal research</span>
       <h2>Ask what changed in Indian law.</h2>
-      <p>The assistant searches the local versioned corpus, retrieves relevant amendment evidence and explains the change with traceable source anchors.</p>
+      <p>The assistant checks the live India Code repository and uses the local evidence cache for reproducible amendment comparisons and traceable source anchors.</p>
       <RepositoryStatus status={status} error={statusError} />
       <form className="prompt-panel" onSubmit={submit}>
         <label htmlFor="legal-query" className="sr-only">Legal research question</label>
@@ -94,23 +104,22 @@ function AssistantWorkspace({ status, error: statusError }) {
 function RepositoryStatus({ status, error }) {
   return <div className={`repository-status ${error ? "error" : ""}`}>
     <span className="status-dot" />
-    <div><strong>{error ? "Repository unavailable" : status?.ready ? "Document repository ready" : "Preparing document repository"}</strong><small>{error || (status ? `${formatNumber(status.document_count)} documents · ${formatNumber(status.chunk_count)} searchable chunks · Hybrid retrieval` : "Building the local legal index…")}</small></div>
-    {status && <span className="status-badge">Auto-ingestion on</span>}
+    <div><strong>{error ? "Repository unavailable" : status?.ready ? "India Code connection ready" : "Preparing legal repository"}</strong><small>{error || (status ? `Live India Code lookup · ${formatNumber(status.document_count)} cached documents · ${formatNumber(status.chunk_count)} searchable chunks` : "Connecting to India Code and the local evidence cache…")}</small></div>
+    {status && <span className="status-badge">Live + cached</span>}
   </div>;
 }
 
 function RagResult({ result }) {
   const answer = result.answer;
   const metrics = result.metrics;
+  const isSummary = answer.answer_type === "single_document_summary";
   return <section id="rag-result" className="results">
     <div className="result-heading"><div><span className="section-kicker">Grounded response</span><h2>{titleCase(result.intent)}</h2></div><div className="mode-badge">{titleCase(result.mode)} mode</div></div>
     <article className="answer-card">
-      <AnswerSection label="Pre-amendment baseline" text={answer.pre_amendment_baseline} tone="before" />
-      <div className="answer-divider" />
-      <AnswerSection label="Post-amendment revision" text={answer.post_amendment_revision} tone="after" />
-      <div className="difference-summary"><span className="section-kicker">Key differences summary</span><ul>{answer.key_differences.map((item, index) => <li key={index}>{item}</li>)}</ul></div>
+      {isSummary ? <AnswerSection label="Short answer" text={answer.short_answer || answer.post_amendment_revision} tone="summary" /> : <><AnswerSection label="Pre-amendment baseline" text={answer.pre_amendment_baseline} tone="before" /><div className="answer-divider" /><AnswerSection label="Post-amendment revision" text={answer.post_amendment_revision} tone="after" /></>}
+      <div className="difference-summary"><span className="section-kicker">{isSummary ? "Key points" : "Key differences summary"}</span><ul>{answer.key_differences.map((item, index) => <li key={index}>{item}</li>)}</ul></div>
     </article>
-    {metrics ? <DriftPanel metrics={metrics} /> : <article className="empty-analysis"><strong>Drift metrics unavailable</strong><p>A supported pre/post evidence pair was not found for this query.</p></article>}
+    {metrics ? <DriftPanel metrics={metrics} /> : <article className="empty-analysis"><strong>{isSummary ? "Document summary" : "Drift metrics unavailable"}</strong><p>{isSummary ? "Drift scores are shown only when the question asks for a comparison and a supported pre/post evidence pair is available." : "A supported pre/post evidence pair was not found for this query."}</p></article>}
     <div className="result-columns">
       <VerificationPanel verification={result.verification} />
       <EvidencePanel citations={result.citations} retrieval={result.retrieval} />
@@ -121,7 +130,7 @@ function RagResult({ result }) {
   </section>;
 }
 
-function AnswerSection({ label, text, tone }) { return <section className={`answer-section ${tone}`}><div className="answer-label"><span>{tone === "before" ? "B" : "A"}</span><strong>{label}</strong></div><p>{text}</p></section>; }
+function AnswerSection({ label, text, tone }) { return <section className={`answer-section ${tone}`}><div className="answer-label"><span>{tone === "before" ? "B" : tone === "after" ? "A" : "S"}</span><strong>{label}</strong></div><p>{text}</p></section>; }
 
 function DriftPanel({ metrics }) {
   const rows = [
@@ -135,7 +144,10 @@ function DriftPanel({ metrics }) {
 
 function VerificationPanel({ verification }) { return <article className="panel compact"><span className="section-kicker">Objective verification</span><h3>{verification.passed ? "Alignment checks passed" : "Review required"}</h3><div className="check-list">{verification.checks.map((check) => <div key={check.id} className={check.passed ? "pass" : "fail"}><span>{check.passed ? "✓" : "!"}</span>{check.label}</div>)}</div><p className="panel-note">{verification.note}</p></article>; }
 
-function EvidencePanel({ citations, retrieval }) { return <article className="panel compact"><span className="section-kicker">Retrieved evidence</span><h3>{citations.length} source anchor{citations.length === 1 ? "" : "s"}</h3>{citations.length ? <div className="citation-list">{citations.map((item) => <a key={item.chunk_id} href={item.source_url || item.official_portal_url} target="_blank" rel="noreferrer"><span>{item.label === "pre" ? "Baseline" : "Revision"} · {item.source_anchor || "Document"}</span><strong>{item.act_name}</strong><small>{item.version} · {item.official_identifier}</small></a>)}</div> : <p className="panel-note">No local citation was available.</p>}<p className="panel-note">Pair status: {titleCase(retrieval.pair_status)}</p></article>; }
+function EvidencePanel({ citations, retrieval }) {
+  const amendments = retrieval.live_indiacode?.amendments || [];
+  return <article className="panel compact"><span className="section-kicker">Retrieved evidence</span><h3>{citations.length} source anchor{citations.length === 1 ? "" : "s"}</h3>{citations.length ? <div className="citation-list">{citations.map((item) => <a key={item.chunk_id} href={item.source_url || item.official_portal_url} target="_blank" rel="noreferrer"><span>{item.label === "pre" ? "Baseline" : "Revision"} · {item.source_anchor || "Document"}</span><strong>{item.act_name}</strong><small>{item.version} · {item.official_identifier}</small></a>)}</div> : <p className="panel-note">No local citation was available.</p>}{amendments.length > 0 && <div className="live-amendments"><h4>Related India Code amendment records</h4><p>These records show amendment history. They are not treated as reconstructed pre/post text automatically.</p><div className="amendment-links">{amendments.map((item) => <a key={`${item.official_identifier}-${item.target_act}`} href={item.source_url} target="_blank" rel="noreferrer"><strong>{item.title}</strong><small>{item.target_act || "Target Act not stated"}{item.year ? ` · ${item.year}` : ""}</small></a>)}</div></div>}<p className="panel-note">Pair status: {titleCase(retrieval.pair_status)}</p></article>;
+}
 
 function CorpusBrowser({ corpus, status, error }) {
   const [query, setQuery] = useState("");
@@ -151,6 +163,25 @@ function Method() { return <section className="page-section"><div className="sec
   ["5", "Generate", "Produce a specific clause view or generic overview using only supplied evidence."],
   ["6", "Verify", "Check coverage, version pairing, citation anchors and response alignment."],
 ].map(([number, title, body]) => <article className="method-card" key={number}><span>{number}</span><h3>{title}</h3><p>{body}</p></article>)}</div><article className="source-guidance"><div><span className="section-kicker">Always verify</span><h3>Local retrieval is not the final legal authority</h3><p>If evidence is missing or incomplete, the assistant still directs the user to India Code for the complete text and further information.</p></div><a href="https://indiacode.gov.in/" target="_blank" rel="noreferrer">Visit India Code ↗</a></article></section>; }
+
+const recentChangeQuestions = [
+  ["Banking law", "What changed recently under the Banking Laws (Amendment) Act, 2025?"],
+  ["Disaster management", "What changed in the Disaster Management (Amendment) Act, 2025?"],
+  ["Competition", "What important changes were made by the Competition (Amendment) Act, 2023?"],
+  ["Biological diversity", "What changed under the Biological Diversity (Amendment) Act, 2023?"],
+  ["GST", "What changed in the Central Goods and Services Tax amendments of 2023?"],
+  ["Wildlife", "What changed in the Wild Life (Protection) Amendment Act, 2022?"],
+  ["Insolvency", "What changed across the Insolvency and Bankruptcy Code amendments from 2019 to 2021?"],
+  ["Data and technology", "What are the major legal changes affecting data and technology after the Information Technology Act, 2000?"],
+  ["Right to Information", "What changed in the Right to Information (Amendment) Act, 2019?"],
+  ["Motor vehicles", "What changed in the Motor Vehicles (Amendment) Act, 2019?"],
+  ["Aadhaar", "What changed in the Aadhaar and Other Laws (Amendment) Act, 2019?"],
+  ["Child protection", "What changed in the Protection of Children from Sexual Offences (Amendment) Act, 2019?"],
+];
+
+function RecentChangesFaq({ onAsk }) {
+  return <section className="page-section"><div className="section-header"><span className="section-kicker">Frequently asked questions</span><h2>What has changed recently in Indian Acts?</h2><p>Select a common question to analyse it using available India Code evidence. A drift score is shown only when a supported pre/post pair can be established.</p></div><div className="faq-grid">{recentChangeQuestions.map(([topic, question]) => <article className="faq-card" key={question}><span>{topic}</span><h3>{question}</h3><button type="button" onClick={() => onAsk(question)}>Ask the legal drift assistant <b>→</b></button></article>)}</div><article className="source-guidance"><div><span className="section-kicker">Current source</span><h3>Check the latest official text</h3><p>Recent-change answers depend on publication, commencement and applicability evidence. Confirm the complete record on India Code.</p></div><a href="https://indiacode.gov.in/" target="_blank" rel="noreferrer">Visit India Code ↗</a></article></section>;
+}
 
 async function api(path, options = {}) { const init = { method: options.method || "GET", headers: { Accept: "application/json" } }; if (options.body !== undefined) { init.headers["Content-Type"] = "application/json"; init.body = JSON.stringify(options.body); } const response = await fetch(path, init); let value; try { value = await response.json(); } catch { throw new Error(`Server returned ${response.status}`); } if (!response.ok) throw new Error(value.error || `Request failed with ${response.status}`); return value; }
 function titleCase(value) { return String(value || "").replaceAll("_", " ").replaceAll("-", " ").split(/\s+/).map((item) => item.charAt(0).toUpperCase() + item.slice(1)).join(" "); }
