@@ -20,6 +20,7 @@ from .benchmark import build_technical_release, write_technical_release_and_lock
 from .baselines import build_baseline_dry_run, write_baseline_dry_run_and_lock
 from .corpus import CorpusDownloader, CorpusManifest, materialize_corpus
 from .corpus.normalize import normalize_corpus
+from .corpus.rehydrate import rehydrate_raw_store
 from .corpus.report import build_corpus_report, write_corpus_report
 from .errors import TemporalLegalDriftError
 from .explanations import build_explanation_evaluation_plan, write_explanation_plan_and_lock
@@ -73,6 +74,17 @@ def build_parser() -> argparse.ArgumentParser:
         "--policy", type=Path, default=Path("configs/source_policy.v1.json")
     )
     download_corpus.add_argument("--refresh", action="store_true")
+
+    rehydrate = subparsers.add_parser("rehydrate-raw-store")
+    rehydrate.add_argument(
+        "--manifest", type=Path, default=Path("configs/corpus/pilot_v1.json")
+    )
+    rehydrate.add_argument(
+        "--index", type=Path, default=Path("data/corpus/index.json")
+    )
+    rehydrate.add_argument(
+        "--pdfs", type=Path, default=Path("data/corpus/pdfs")
+    )
 
     materialize = subparsers.add_parser("materialize-corpus")
     materialize.add_argument(
@@ -405,6 +417,17 @@ def run(args: argparse.Namespace) -> int:
             AcquisitionService(policy, store),
             store,
         ).download(manifest, refresh=args.refresh)
+        print(json.dumps(summary.to_dict(), indent=2, ensure_ascii=False))
+        return 0
+
+    if args.command == "rehydrate-raw-store":
+        manifest = CorpusManifest.from_file(_resolve(root, args.manifest))
+        summary = rehydrate_raw_store(
+            manifest,
+            RawArtifactStore(root / "data" / "raw"),
+            _resolve(root, args.index),
+            _resolve(root, args.pdfs),
+        )
         print(json.dumps(summary.to_dict(), indent=2, ensure_ascii=False))
         return 0
 
