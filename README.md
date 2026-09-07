@@ -49,6 +49,13 @@ PYTHONPATH=src python -m temporal_legal_drift.cli serve-dashboard
 
 Then open `http://127.0.0.1:8765`. The interface compares a pre-amendment PDF with a post-amendment PDF and reports textual change, legal materiality, scenario-specific compliance consequence, evidence excerpts and a transparent drift score. Uploaded comparison files are processed for the request and are not added to the project corpus. The corpus browser opens the downloaded local India Code PDFs.
 
+The dashboard's retrieval-augmented comparison indexes a **separate, larger retrieval corpus** described in `configs/corpus/rag_corpus.v1.json` (a superset of the fourteen-document engineering pilot). It is a research aid only — not legal gold and not a frozen benchmark — and it is not consumed by the Phase 2–11 engineering pipeline or gates. Build its local index offline from the committed PDFs with:
+
+```bash
+tldrift rehydrate-raw-store --manifest configs/corpus/rag_corpus.v1.json
+tldrift normalize-corpus    --manifest configs/corpus/rag_corpus.v1.json
+```
+
 ## CLI
 
 ```bash
@@ -56,6 +63,7 @@ tldrift validate-contract
 tldrift acquire --url URL --official-id ID --instrument-type TYPE
 tldrift normalize --metadata PATH_TO_SOURCE_METADATA
 tldrift download-corpus
+tldrift rehydrate-raw-store
 tldrift materialize-corpus
 tldrift normalize-corpus
 tldrift corpus-report
@@ -78,7 +86,7 @@ tldrift check-gates
 
 Acquisition is deny-by-default. The user-approved bounded pilot permits only `www.indiacode.nic.in`; every other host remains blocked. `download-corpus` is resumable through an integrity-checked checkpoint. The pilot manifest is not legal gold and does not establish sufficient benchmark coverage.
 
-Raw and normalized processing artifacts are local runtime data and are ignored by version control. `materialize-corpus` creates integrity-checked, Git-trackable copies with readable filenames under `data/corpus/pdfs` while leaving immutable raw evidence unchanged. `corpus-report` writes a deterministic lock report containing the authoritative URLs, identifiers, SHA-256 hashes, sizes, parser provenance, and known extraction risks.
+Raw and normalized processing artifacts are local runtime data and are ignored by version control. `materialize-corpus` creates integrity-checked, Git-trackable copies with readable filenames under `data/corpus/pdfs` while leaving immutable raw evidence unchanged. `rehydrate-raw-store` performs the reverse offline: it rebuilds `data/raw` deterministically from those committed copies plus `data/corpus/index.json`, verifying every SHA-256 against the manifest, so the pipeline (and CI) can run without re-downloading. `corpus-report` writes a deterministic lock report containing the authoritative URLs, identifiers, SHA-256 hashes, sizes, parser provenance, and known extraction risks.
 
 `check-gates` is the executable Phase 0–11 engineering acceptance check used by CI. Phase 4 checks amendment-evidence consistency; Phases 5–7 verify workload, scenario, release and leakage safeguards; Phases 8–10 verify baseline, controlled LLM execution and explanation-support evaluation; and Phase 11 verifies the reproducibility record. These are technical checks, not independent legal review or legal gold.
 

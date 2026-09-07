@@ -3,7 +3,8 @@ from __future__ import annotations
 import unittest
 from hashlib import sha256
 
-from temporal_legal_drift.versioning.extract import extract_provisions
+from temporal_legal_drift.versioning.builder import _dedupe_by_number
+from temporal_legal_drift.versioning.extract import ExtractedProvision, extract_provisions
 from temporal_legal_drift.versioning.models import (
     AmendmentEvent,
     EvidenceReference,
@@ -40,6 +41,21 @@ class VersioningTests(unittest.TestCase):
         self.assertEqual([item.number for item in provisions], ["1", "2"])
         self.assertIn("longer duplicate", provisions[0].exact_text)
         self.assertEqual(unresolved[0]["reason_code"], "duplicate_section_candidates")
+
+    def test_builder_dedupes_repeated_clause_numbers_instead_of_crashing(self) -> None:
+        # The amending-clause fallback can yield two provisions with the same
+        # number; the builder must collapse them (longest text wins) and escalate
+        # the rest so the graph's lineage-id uniqueness invariant still holds.
+        provisions = (
+            ExtractedProvision("1", "Short title", "1. Short title.", "blk_1", "pdf:page:1:line:1"),
+            ExtractedProvision("2", "Amendment of section 4", "2. Longer amending clause text.", "blk_1", "pdf:page:1:line:5"),
+            ExtractedProvision("1", "Short title", "1. Short title. This Act may be called ...", "blk_2", "pdf:page:3:line:2"),
+        )
+        deduped, collisions = _dedupe_by_number(provisions)
+        self.assertEqual([item.number for item in deduped], ["1", "2"])
+        self.assertIn("This Act may be called", deduped[0].exact_text)
+        self.assertEqual(collisions[0]["reason_code"], "duplicate_section_candidates")
+        self.assertEqual(collisions[0]["provision_number"], "1")
 
     def test_graph_reconstructs_exact_version_and_rejects_cycles(self) -> None:
         before_text = "1. Duty.—Before."

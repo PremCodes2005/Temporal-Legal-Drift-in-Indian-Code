@@ -10,6 +10,16 @@ from temporal_legal_drift.webapp.service import DashboardService
 
 ROOT = Path(__file__).resolve().parents[2]
 
+# The single-prompt RAG endpoint needs the local hybrid retrieval index, which is
+# built from the git-ignored normalized RAG corpus. Build it with:
+#   tldrift rehydrate-raw-store --manifest configs/corpus/rag_corpus.v1.json
+#   tldrift normalize-corpus    --manifest configs/corpus/rag_corpus.v1.json
+_RAG_INDEX_AVAILABLE = any((ROOT / "data" / "normalized").glob("*.json"))
+_RAG_SKIP_REASON = (
+    "RAG retrieval index not built (no data/normalized/*.json); "
+    "run rehydrate-raw-store + normalize-corpus for configs/corpus/rag_corpus.v1.json"
+)
+
 
 class DashboardServiceTests(unittest.TestCase):
     def test_dashboard_reads_connected_project_artifacts(self) -> None:
@@ -17,9 +27,9 @@ class DashboardServiceTests(unittest.TestCase):
         overview = service.overview()
         corpus = service.corpus()
         demo = service.demo()
-        self.assertEqual(overview["metrics"]["corpus_documents"], 100)
+        self.assertEqual(overview["metrics"]["corpus_documents"], 14)
         self.assertEqual(overview["metrics"]["controlled_llm_runs"], 78)
-        self.assertEqual(corpus["entry_count"], 100)
+        self.assertEqual(corpus["entry_count"], 14)
         self.assertTrue(all(item["pdf_available"] for item in corpus["entries"]))
         self.assertEqual(demo["results"]["metrics"]["false_stability_rate"], 0)
 
@@ -56,6 +66,7 @@ class DashboardServiceTests(unittest.TestCase):
             self.assertEqual(result["status"], "evidence_review_queue_not_corpus")
             self.assertEqual(result["byte_length"], len(payload))
 
+    @unittest.skipUnless(_RAG_INDEX_AVAILABLE, _RAG_SKIP_REASON)
     def test_single_prompt_rag_api_contract(self) -> None:
         service = DashboardService(ROOT)
         result = service.query_rag(

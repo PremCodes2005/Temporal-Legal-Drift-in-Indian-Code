@@ -26,3 +26,23 @@ jobs:
         run: tldrift check-gates
       - name: Run Phase 0-11 tests
         run: python -m unittest discover -s tests -v
+
+  rag-integration:
+    runs-on: ubuntu-latest
+    env:
+      # Keep retrieval deterministic and offline; the live India Code lookup is a
+      # runtime supplement, not part of the tested contract.
+      TLD_LIVE_INDIA_CODE: "0"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install package with PDF extras
+        run: python -m pip install -e '.[pdf]'
+      - name: Build the RAG retrieval corpus offline
+        run: |
+          tldrift rehydrate-raw-store --manifest configs/corpus/rag_corpus.v1.json
+          tldrift normalize-corpus    --manifest configs/corpus/rag_corpus.v1.json
+      - name: Run RAG retrieval tests
+        run: python -m unittest tests.unit.test_rag tests.unit.test_webapp -v

@@ -10,8 +10,19 @@ from temporal_legal_drift.rag.metrics import calculate_drift_metrics
 
 ROOT = Path(__file__).resolve().parents[2]
 
+# Retrieval tests need the local hybrid index, which is built from the git-ignored
+# normalized RAG corpus (configs/corpus/rag_corpus.v1.json). Build it offline with:
+#   tldrift rehydrate-raw-store --manifest configs/corpus/rag_corpus.v1.json
+#   tldrift normalize-corpus    --manifest configs/corpus/rag_corpus.v1.json
+_RAG_INDEX_AVAILABLE = any((ROOT / "data" / "normalized").glob("*.json"))
+_RAG_SKIP_REASON = (
+    "RAG retrieval index not built (no data/normalized/*.json); "
+    "run rehydrate-raw-store + normalize-corpus for configs/corpus/rag_corpus.v1.json"
+)
 
-class RagPipelineTests(unittest.TestCase):
+
+@unittest.skipUnless(_RAG_INDEX_AVAILABLE, _RAG_SKIP_REASON)
+class RagPipelineRetrievalTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.pipeline = RagPipeline(ROOT)
@@ -19,7 +30,7 @@ class RagPipelineTests(unittest.TestCase):
     def test_repository_is_automatically_indexed_with_required_metadata(self) -> None:
         status = self.pipeline.status()
         self.assertTrue(status["ready"])
-        self.assertEqual(status["document_count"], 100)
+        self.assertEqual(status["document_count"], 98)
         self.assertGreater(status["chunk_count"], 100)
         self.assertEqual(
             status["metadata_fields"],
@@ -69,9 +80,13 @@ class RagPipelineTests(unittest.TestCase):
         self.assertEqual(result["citations"][0]["source_anchor"], "pdf:page:1")
         self.assertIsNone(result["metrics"])
 
+
+class RagPipelineUnitTests(unittest.TestCase):
+    """Checks that do not depend on a built retrieval index."""
+
     def test_invalid_mode_is_rejected(self) -> None:
         with self.assertRaisesRegex(ValueError, "specific or generic"):
-            self.pipeline.answer("What changed?", "verbose")
+            RagPipeline(ROOT).answer("What changed?", "verbose")
 
     def test_drift_metrics_keep_drift_and_alignment_separate(self) -> None:
         metrics = calculate_drift_metrics(

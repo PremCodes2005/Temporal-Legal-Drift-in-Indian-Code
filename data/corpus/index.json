@@ -581,16 +581,6 @@
       "source_url": "https://indiacode.gov.in/server/api/core/bitstreams/d7d8ba91-50a2-47d9-9d06-b5363f3964b9/content"
     },
     {
-      "byte_length": 34957893,
-      "entry_id": "customs-tariff-act-1975",
-      "filename": "customs-tariff-act-1975.pdf",
-      "official_identifier": "IndiaCode:123456789/496302",
-      "parent_reference_url": "https://indiacode.gov.in/items/087d3280-1ba9-4db1-9316-ccac69e5e81d",
-      "sha256": "ef57fc86636b9e32312ab99f0efc232b36f4cf4fd51a8d0c0c0eb3a9ceaeaa35",
-      "source_artifact_id": "src_ddfe8c95a22036ab065c78e0",
-      "source_url": "https://indiacode.gov.in/server/api/core/bitstreams/81945b1f-a032-4a3c-8253-1a37b4543ab7/content"
-    },
-    {
       "byte_length": 678312,
       "entry_id": "prevention-of-money-laundering-act-2002",
       "filename": "prevention-of-money-laundering-act-2002.pdf",
@@ -789,16 +779,6 @@
       "sha256": "3d3c95f6fe3baf2d5e8312ca0b8c4726552f9ec4e48c0fbe2f01169f1321fa7a",
       "source_artifact_id": "src_51bfff3b544f577f289dbb16",
       "source_url": "https://indiacode.gov.in/server/api/core/bitstreams/388d9313-0f95-4728-b921-c9ccf734ef5b/content"
-    },
-    {
-      "byte_length": 64535020,
-      "entry_id": "wild-life-protection-amendment-act-2022",
-      "filename": "wild-life-protection-amendment-act-2022.pdf",
-      "official_identifier": "IndiaCode:123456789/617072",
-      "parent_reference_url": "https://indiacode.gov.in/items/5f682edd-2ae9-4296-9ea8-0b50a435c8b1",
-      "sha256": "fc62e6c7da4fde06944184fcb659402bb213c26b505375ce9783f22cdd879b2f",
-      "source_artifact_id": "src_0530e08f12edbc47c3ca7a48",
-      "source_url": "https://indiacode.gov.in/server/api/core/bitstreams/479916cc-b01a-4639-9167-a522652cbb5a/content"
     },
     {
       "byte_length": 232721,
@@ -1005,6 +985,6 @@
   "manifest_status": "bounded_technical_pilot_not_legal_gold",
   "notice": "Readable local copies of verified raw evidence; this index does not imply legal validation or benchmark-gold status.",
   "schema_version": "1.0.0",
-  "total_bytes": 178574899,
-  "total_documents": 100
+  "total_bytes": 79081986,
+  "total_documents": 98
 }
