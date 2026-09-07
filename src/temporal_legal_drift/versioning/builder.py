@@ -9,7 +9,12 @@ from pathlib import Path
 from temporal_legal_drift.corpus import CorpusManifest
 from temporal_legal_drift.jsonio import atomic_replace, canonical_json_bytes, load_json
 
-from .extract import extract_amendments, extract_amending_clauses, extract_provisions
+from .extract import (
+    ExtractedProvision,
+    extract_amendments,
+    extract_amending_clauses,
+    extract_provisions,
+)
 from .models import (
     AmendmentEvent,
     EvidenceReference,
@@ -94,8 +99,13 @@ class VersionGraphBuilder:
                 amending_clauses = extract_amending_clauses(document)
                 if amending_clauses:
                     provisions = amending_clauses
+            # ``extract_provisions`` already collapses repeated section numbers, but the
+            # amending-clause fallback does not. Two provisions with the same number would
+            # produce an identical lineage id and fail the graph's uniqueness invariant, so
+            # keep the longest-text candidate and escalate the rest instead of crashing.
+            provisions, number_collisions = _dedupe_by_number(provisions)
             extracted_by_entry[entry.entry_id] = provisions
-            for collision in collisions:
+            for collision in (*collisions, *number_collisions):
                 unresolved.append({"corpus_entry_id": entry.entry_id, **collision})
             if not provisions:
                 unresolved.append(
@@ -203,6 +213,33 @@ class VersionGraphBuilder:
         if errors:
             raise ValueError("Invalid version graph: " + "; ".join(errors))
         return graph
+
+
+def _dedupe_by_number(
+    provisions: tuple[ExtractedProvision, ...],
+) -> tuple[tuple[ExtractedProvision, ...], list[dict[str, object]]]:
+    """Keep one provision per section number; escalate the discarded candidates."""
+    grouped: dict[str, list[ExtractedProvision]] = {}
+    for provision in provisions:
+        grouped.setdefault(provision.number, []).append(provision)
+    # ``grouped`` keeps first-appearance order, which preserves downstream
+    # extraction stability for the common no-collision case.
+    selected: list[ExtractedProvision] = []
+    collisions: list[dict[str, object]] = []
+    for number, items in grouped.items():
+        chosen = max(items, key=lambda item: len(item.exact_text))
+        selected.append(chosen)
+        if len(items) > 1:
+            collisions.append(
+                {
+                    "reason_code": "duplicate_section_candidates",
+                    "provision_number": number,
+                    "selected_locator": chosen.locator,
+                    "candidate_locators": [item.locator for item in items],
+                    "requires_review": True,
+                }
+            )
+    return tuple(selected), collisions
 
 
 def write_graph_and_lock(graph: VersionGraph, graph_path: Path, lock_path: Path) -> BuildSummary:
