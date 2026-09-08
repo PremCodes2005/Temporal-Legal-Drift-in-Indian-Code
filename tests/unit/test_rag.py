@@ -1,9 +1,13 @@
 from __future__ import annotations
 
+import json
+import os
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from temporal_legal_drift.rag import RagPipeline
+from temporal_legal_drift.rag import rag_pipeline
 from temporal_legal_drift.rag.indiacode import INDIA_CODE_HOME, is_india_code_url
 from temporal_legal_drift.rag.metrics import calculate_drift_metrics
 
@@ -87,6 +91,48 @@ class RagPipelineTests(unittest.TestCase):
         self.assertTrue(is_india_code_url("https://indiacode.gov.in/"))
         self.assertTrue(is_india_code_url("https://www.indiacode.nic.in/indiacode/"))
         self.assertFalse(is_india_code_url("https://example.com/"))
+
+    def test_ollama_uses_native_non_thinking_json_request(self) -> None:
+        captured: dict[str, object] = {}
+
+        class Response:
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *_args):
+                return False
+
+            def read(self) -> bytes:
+                return json.dumps({"message": {"content": '{"ok": true}'}}).encode()
+
+        def fake_urlopen(request, timeout):
+            captured["url"] = request.full_url
+            captured["body"] = json.loads(request.data.decode())
+            captured["timeout"] = timeout
+            return Response()
+
+        environment = {
+            "TLD_RAG_PROVIDER": "ollama",
+            "TLD_RAG_API_URL": "http://127.0.0.1:11434/v1/chat/completions",
+            "TLD_RAG_TIMEOUT_SECONDS": "240",
+            "TLD_OLLAMA_CONTEXT_TOKENS": "8192",
+        }
+        with patch.dict(os.environ, environment, clear=False), patch.object(
+            rag_pipeline, "urlopen", fake_urlopen
+        ):
+            content = rag_pipeline._chat_completion(
+                [{"role": "user", "content": "Return JSON."}]
+            )
+
+        self.assertEqual(content, '{"ok": true}')
+        self.assertEqual(captured["url"], "http://127.0.0.1:11434/api/chat")
+        self.assertEqual(captured["timeout"], 240)
+        body = captured["body"]
+        self.assertIs(body["think"], False)
+        self.assertIs(body["stream"], False)
+        self.assertEqual(body["format"], "json")
+        self.assertEqual(body["options"]["temperature"], 0.0)
+        self.assertEqual(body["options"]["num_ctx"], 8192)
 
 
 if __name__ == "__main__":

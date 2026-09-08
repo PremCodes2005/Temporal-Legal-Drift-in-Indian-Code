@@ -28,6 +28,9 @@ LEGAL_CUES = (
 # temperature at 0.0 and requests strict JSON from Chat Completions.
 DEFAULT_RAG_MODEL = "gpt-4.1-mini"
 DEFAULT_OLLAMA_MODEL = "qwen3:4b"
+DEFAULT_OLLAMA_TIMEOUT_SECONDS = 180
+DEFAULT_REMOTE_TIMEOUT_SECONDS = 90
+DEFAULT_OLLAMA_CONTEXT_TOKENS = 8192
 
 
 @dataclass(frozen=True)
@@ -273,47 +276,101 @@ def _llm_model() -> str:
     return os.environ.get("TLD_RAG_MODEL") or os.environ.get("OPENAI_MODEL") or default
 
 
+def _positive_int_environment(name: str, default: int, *, maximum: int = 3600) -> int:
+    """Return a bounded positive integer from configuration."""
+    raw = os.environ.get(name, "").strip()
+    if not raw:
+        return default
+    try:
+        value = int(raw)
+    except ValueError as error:
+        raise ValueError(f"{name} must be a positive integer") from error
+    if value <= 0 or value > maximum:
+        raise ValueError(f"{name} must be between 1 and {maximum}")
+    return value
+
+
+def _chat_completion(messages: list[dict[str, str]]) -> str:
+    """Call the configured model and return only the assistant content.
+
+    Ollama uses its native chat endpoint so thinking can be disabled explicitly.
+    This prevents Qwen3 from spending most of the request timeout generating a
+    hidden reasoning trace. Remote providers retain the OpenAI-compatible path.
+    """
+    provider = _rag_provider()
+    headers = {"Content-Type": "application/json"}
+    if provider == "ollama_local":
+        endpoint = os.environ.get("TLD_RAG_API_URL", "http://127.0.0.1:11434/api/chat")
+        # Older setup instructions used Ollama's OpenAI-compatible endpoint.
+        # Normalize that local URL to the native endpoint, which supports the
+        # explicit ``think: false`` control used below.
+        endpoint = re.sub(r"/v1/chat/completions/?$", "/api/chat", endpoint)
+        body = {
+            "model": _llm_model(),
+            "messages": messages,
+            "stream": False,
+            "think": False,
+            "format": "json",
+            "options": {
+                "temperature": 0.0,
+                "num_ctx": _positive_int_environment(
+                    "TLD_OLLAMA_CONTEXT_TOKENS",
+                    DEFAULT_OLLAMA_CONTEXT_TOKENS,
+                    maximum=1_048_576,
+                ),
+            },
+        }
+        timeout = _positive_int_environment(
+            "TLD_RAG_TIMEOUT_SECONDS", DEFAULT_OLLAMA_TIMEOUT_SECONDS
+        )
+    else:
+        endpoint = os.environ.get("TLD_RAG_API_URL", "https://api.openai.com/v1/chat/completions")
+        body = {
+            "model": _llm_model(),
+            "temperature": 0.0,
+            "response_format": {"type": "json_object"},
+            "messages": messages,
+        }
+        if _llm_api_key():
+            headers["Authorization"] = f"Bearer {_llm_api_key()}"
+        timeout = _positive_int_environment(
+            "TLD_RAG_TIMEOUT_SECONDS", DEFAULT_REMOTE_TIMEOUT_SECONDS
+        )
+    request = Request(
+        endpoint,
+        data=json.dumps(body).encode("utf-8"),
+        headers=headers,
+        method="POST",
+    )
+    with urlopen(request, timeout=timeout) as response:
+        payload = json.loads(response.read().decode("utf-8"))
+    if provider == "ollama_local":
+        return str(payload["message"]["content"])
+    return str(payload["choices"][0]["message"]["content"])
+
+
 def _llm_generate(
     query: str,
     mode: str,
     pre: RetrievedChunk | None,
     post: RetrievedChunk | None,
 ) -> GenerationResult:
-    endpoint = os.environ.get(
-        "TLD_RAG_API_URL",
-        "http://127.0.0.1:11434/v1/chat/completions"
-        if _rag_provider() == "ollama_local"
-        else "https://api.openai.com/v1/chat/completions",
-    )
-    prompt = {
-        "task": "Answer the legal query only from the supplied excerpts. Do not invent missing text, dates, applicability or citations.",
-        "mode": mode,
-        "query": query,
-        "pre_evidence": _prompt_evidence(pre),
-        "post_evidence": _prompt_evidence(post),
-        "output": {
-            "pre_amendment_baseline": "string",
-            "post_amendment_revision": "string",
-            "key_differences": ["string"],
-            "conceptual_drift_percent": "number 0-100",
-        },
-    }
-    body = {
-        "model": _llm_model(),
-        "temperature": 0.0,
-        "response_format": {"type": "json_object"},
-        "messages": [
-            {"role": "system", "content": "You are an evidence-bound Indian legal document comparison assistant. Return JSON only."},
-            {"role": "user", "content": json.dumps(prompt, ensure_ascii=False)},
-        ],
-    }
-    headers = {"Content-Type": "application/json"}
-    if _llm_api_key():
-        headers["Authorization"] = f"Bearer {_llm_api_key()}"
-    request = Request(endpoint, data=json.dumps(body).encode("utf-8"), headers=headers, method="POST")
-    with urlopen(request, timeout=90) as response:
-        payload = json.loads(response.read().decode("utf-8"))
-    content = payload["choices"][0]["message"]["content"]
+    prompt = "\n\n".join([
+        "Answer the legal query only from the supplied excerpts. Do not invent missing text, dates, applicability, or citations.",
+        f"Analysis mode: {mode}\nQuestion: {query}",
+        _evidence_prompt_block("PRE-AMENDMENT EVIDENCE", pre),
+        _evidence_prompt_block("POST-AMENDMENT EVIDENCE", post),
+        (
+            "Return one JSON object containing only these fields: "
+            "pre_amendment_baseline (string), post_amendment_revision (string), "
+            "key_differences (array of strings), and conceptual_drift_percent "
+            "(number from 0 to 100). Do not repeat the prompt or evidence object."
+        ),
+    ])
+    content = _chat_completion([
+        {"role": "system", "content": "You are an evidence-bound Indian legal document comparison assistant. Return JSON only."},
+        {"role": "user", "content": prompt},
+    ])
     value = json.loads(content)
     differences = value.get("key_differences")
     if not isinstance(differences, list) or not all(isinstance(item, str) for item in differences):
@@ -403,48 +460,38 @@ def _llm_single_document_generate(
         {
             "chunk_id": item.chunk_id,
             "source_anchor": item.metadata.get("source_anchor"),
-            "text": _bounded_text(item.text, 1800),
+            "text": _bounded_text(item.text, 1200),
         }
-        for item in ranked[:8]
+        for item in ranked[:5]
     ]
-    prompt = {
-        "task": (
+    evidence_text = "\n\n".join(
+        f"EXCERPT {number}\nAnchor: {item['source_anchor']}\nText: {item['text']}"
+        for number, item in enumerate(evidence, start=1)
+    )
+    prompt = "\n\n".join([
+        (
             "Answer the question using only the supplied excerpts. Give a concise direct answer "
             "and 2-5 concrete key points. Do not claim that the excerpts cover the whole Act. "
             "Do not invent dates, effects, applicability, or provisions."
         ),
-        "mode": mode,
-        "query": query,
-        "document": {
-            "act_name": document.metadata.get("act_name"),
-            "version": document.metadata.get("version"),
-            "official_identifier": document.metadata.get("official_identifier"),
-        },
-        "evidence": evidence,
-        "output": {"short_answer": "string", "key_points": ["string"]},
-    }
-    endpoint = os.environ.get(
-        "TLD_RAG_API_URL",
-        "http://127.0.0.1:11434/v1/chat/completions"
-        if _rag_provider() == "ollama_local"
-        else "https://api.openai.com/v1/chat/completions",
-    )
-    body = {
-        "model": _llm_model(),
-        "temperature": 0.0,
-        "response_format": {"type": "json_object"},
-        "messages": [
-            {"role": "system", "content": "You are an evidence-bound Indian legal research assistant. Return JSON only."},
-            {"role": "user", "content": json.dumps(prompt, ensure_ascii=False)},
-        ],
-    }
-    headers = {"Content-Type": "application/json"}
-    if _llm_api_key():
-        headers["Authorization"] = f"Bearer {_llm_api_key()}"
-    request = Request(endpoint, data=json.dumps(body).encode("utf-8"), headers=headers, method="POST")
-    with urlopen(request, timeout=120) as response:
-        payload = json.loads(response.read().decode("utf-8"))
-    value = json.loads(payload["choices"][0]["message"]["content"])
+        f"Analysis mode: {mode}\nQuestion: {query}",
+        (
+            f"Document: {document.metadata.get('act_name')}\n"
+            f"Version: {document.metadata.get('version')}\n"
+            f"Official identifier: {document.metadata.get('official_identifier')}"
+        ),
+        evidence_text,
+        (
+            "Return one JSON object containing only short_answer (string) and key_points "
+            "(an array of 2 to 5 strings). Do not repeat the prompt, document metadata, "
+            "or excerpts."
+        ),
+    ])
+    content = _chat_completion([
+        {"role": "system", "content": "You are an evidence-bound Indian legal research assistant. Return JSON only."},
+        {"role": "user", "content": prompt},
+    ])
+    value = json.loads(content)
     points = value.get("key_points")
     if not isinstance(points, list) or not points or not all(isinstance(item, str) for item in points):
         raise ValueError("LLM returned invalid key_points")
@@ -736,6 +783,20 @@ def _prompt_evidence(item: RetrievedChunk | None) -> dict[str, object] | None:
     if item is None:
         return None
     return {"chunk_id": item.chunk_id, "text": item.text, "metadata": item.metadata}
+
+
+def _evidence_prompt_block(label: str, item: RetrievedChunk | None) -> str:
+    if item is None:
+        return f"{label}\nNo evidence was retrieved."
+    return (
+        f"{label}\n"
+        f"Chunk: {item.chunk_id}\n"
+        f"Act: {item.metadata.get('act_name')}\n"
+        f"Version: {item.metadata.get('version')}\n"
+        f"Date: {item.metadata.get('date')}\n"
+        f"Anchor: {item.metadata.get('source_anchor')}\n"
+        f"Text: {_bounded_text(item.text, 1800)}"
+    )
 
 
 def _bounded_text(value: object, maximum: int = 1200) -> str:
