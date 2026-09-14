@@ -9,7 +9,7 @@ from unittest.mock import patch
 from temporal_legal_drift.rag import RagPipeline
 from temporal_legal_drift.rag import rag_pipeline
 from temporal_legal_drift.rag.indiacode import INDIA_CODE_HOME, is_india_code_url
-from temporal_legal_drift.rag.metrics import calculate_drift_metrics
+from temporal_legal_drift.rag.metrics import _drift_level, calculate_drift_metrics
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -86,6 +86,17 @@ class RagPipelineTests(unittest.TestCase):
         )
         self.assertGreater(metrics["lexical_drift_percent"], 0)
         self.assertEqual(metrics["alignment_accuracy_percent"], 90.0)
+        self.assertIn(metrics["levels"]["lexical"], {"Low", "Medium", "High"})
+        self.assertEqual(
+            metrics["level_thresholds"],
+            {"Low": "0.0-33.3", "Medium": "33.4-66.6", "High": "66.7-100.0"},
+        )
+
+    def test_drift_level_boundaries_are_explicit(self) -> None:
+        self.assertEqual(_drift_level(33.3), "Low")
+        self.assertEqual(_drift_level(33.4), "Medium")
+        self.assertEqual(_drift_level(66.6), "Medium")
+        self.assertEqual(_drift_level(66.7), "High")
 
     def test_legacy_and_current_india_code_hosts_are_recognised(self) -> None:
         self.assertTrue(is_india_code_url("https://indiacode.gov.in/"))

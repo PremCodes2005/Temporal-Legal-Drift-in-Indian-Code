@@ -14,6 +14,11 @@ CUES = {
     "penalty": ("penalty", "fine", "imprisonment", "punishable", "liable"),
     "scope": ("means", "includes", "applies to", "notwithstanding"),
 }
+DRIFT_LEVEL_THRESHOLDS = {
+    "Low": "0.0-33.3",
+    "Medium": "33.4-66.6",
+    "High": "66.7-100.0",
+}
 
 
 def calculate_drift_metrics(
@@ -48,6 +53,12 @@ def calculate_drift_metrics(
     retrieval = max(0.0, min(1.0, sum(retrieval_scores) / 2))
     evidence_completeness = 1.0 if pre_chunk.strip() and post_chunk.strip() else 0.5 if pre_chunk.strip() or post_chunk.strip() else 0.0
     alignment = (retrieval * 0.50 + evidence_completeness * 0.30 + max(0.0, min(1.0, metadata_coverage)) * 0.20) * 100
+    metric_values = {
+        "semantic": semantic_drift,
+        "lexical": lexical_drift,
+        "conceptual": conceptual,
+        "overall": overall_drift,
+    }
     return {
         "semantic_drift_percent": round(semantic_drift, 1),
         "lexical_drift_percent": round(lexical_drift, 1),
@@ -55,9 +66,20 @@ def calculate_drift_metrics(
         "overall_drift_percent": round(overall_drift, 1),
         "alignment_accuracy_percent": round(alignment, 1),
         "weights": {"semantic": 0.40, "lexical": 0.30, "conceptual": 0.30},
+        "levels": {name: _drift_level(value) for name, value in metric_values.items()},
+        "level_thresholds": DRIFT_LEVEL_THRESHOLDS,
         "conceptual_method": conceptual_method,
         "accuracy_definition": "retrieval confidence, paired-evidence completeness and metadata coverage; not legal correctness",
     }
+
+
+def _drift_level(value: float) -> str:
+    """Map a 0-100 drift score to a stable descriptive band."""
+    if value <= 33.3:
+        return "Low"
+    if value <= 66.6:
+        return "Medium"
+    return "High"
 
 
 def _tokens(value: str) -> list[str]:

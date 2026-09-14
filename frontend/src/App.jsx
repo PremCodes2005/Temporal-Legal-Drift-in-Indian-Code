@@ -3,8 +3,9 @@ import { useEffect, useMemo, useState } from "react";
 const sections = [
   { id: "assistant", number: "01", label: "Legal drift assistant" },
   { id: "corpus", number: "02", label: "Document repository" },
-  { id: "method", number: "03", label: "How it works" },
-  { id: "faq", number: "04", label: "Recent changes FAQ" },
+  { id: "drift", number: "03", label: "Drift explanation" },
+  { id: "method", number: "04", label: "How it works" },
+  { id: "faq", number: "05", label: "Recent changes FAQ" },
 ];
 
 const suggestions = [
@@ -20,6 +21,7 @@ export default function App() {
   const [status, setStatus] = useState(null);
   const [loadError, setLoadError] = useState("");
   const [starterQuery, setStarterQuery] = useState("");
+  const [lastResult, setLastResult] = useState(null);
 
   useEffect(() => {
     Promise.all([api("/api/corpus"), api("/api/rag/status")])
@@ -46,8 +48,9 @@ export default function App() {
     <div className="workspace">
       <header className="topbar"><button className="menu-toggle" onClick={() => setMenuOpen((open) => !open)} aria-label="Open navigation">☰</button><div><p className="eyebrow">Versioned Indian law</p><h1>{sections.find((item) => item.id === section)?.label}</h1></div></header>
       <main id="main-content">
-        {section === "assistant" && <AssistantWorkspace status={status} error={loadError} starterQuery={starterQuery} />}
+        {section === "assistant" && <AssistantWorkspace status={status} error={loadError} starterQuery={starterQuery} result={lastResult} onResult={setLastResult} onExplain={() => navigate("drift")} />}
         {section === "corpus" && <CorpusBrowser corpus={corpus} error={loadError} status={status} />}
+        {section === "drift" && <DriftExplanation result={lastResult} onAnalyse={() => navigate("assistant")} />}
         {section === "method" && <Method />}
         {section === "faq" && <RecentChangesFaq onAsk={askFromFaq} />}
       </main>
@@ -55,22 +58,21 @@ export default function App() {
   </div>;
 }
 
-function AssistantWorkspace({ status, error: statusError, starterQuery }) {
+function AssistantWorkspace({ status, error: statusError, starterQuery, result, onResult, onExplain }) {
   const [query, setQuery] = useState(starterQuery || "");
   const [mode, setMode] = useState("specific");
-  const [result, setResult] = useState(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => { if (starterQuery) setQuery(starterQuery); }, [starterQuery]);
 
   const submit = async (event) => {
-    event.preventDefault(); setError(""); setResult(null);
+    event.preventDefault(); setError(""); onResult(null);
     if (!query.trim()) return setError("Enter a question about the indexed Indian legal documents.");
     setBusy(true);
     try {
       const value = await api("/api/rag/query", { method: "POST", body: { query: query.trim(), mode } });
-      setResult(value);
+      onResult(value);
       window.setTimeout(() => document.getElementById("rag-result")?.scrollIntoView({ behavior: "smooth", block: "start" }), 0);
     } catch (requestError) { setError(requestError.message); }
     finally { setBusy(false); }
@@ -97,7 +99,7 @@ function AssistantWorkspace({ status, error: statusError, starterQuery }) {
       {error && <div className="form-error" role="alert"><strong>Analysis could not be completed.</strong><span>{error}</span></div>}
     </div>
     {busy && <div className="loading-panel"><span className="spinner"/><div><strong>Retrieving versioned legal evidence…</strong><p>Classifying the question, matching documents and validating the response context.</p></div></div>}
-    {result && <RagResult result={result} />}
+    {result && <RagResult result={result} onExplain={onExplain} />}
   </section>;
 }
 
@@ -109,7 +111,7 @@ function RepositoryStatus({ status, error }) {
   </div>;
 }
 
-function RagResult({ result }) {
+function RagResult({ result, onExplain }) {
   const answer = result.answer;
   const metrics = result.metrics;
   const isSummary = answer.answer_type === "single_document_summary";
@@ -119,7 +121,7 @@ function RagResult({ result }) {
       {isSummary ? <AnswerSection label="Short answer" text={answer.short_answer || answer.post_amendment_revision} tone="summary" /> : <><AnswerSection label="Pre-amendment baseline" text={answer.pre_amendment_baseline} tone="before" /><div className="answer-divider" /><AnswerSection label="Post-amendment revision" text={answer.post_amendment_revision} tone="after" /></>}
       <div className="difference-summary"><span className="section-kicker">{isSummary ? "Key points" : "Key differences summary"}</span><ul>{answer.key_differences.map((item, index) => <li key={index}>{item}</li>)}</ul></div>
     </article>
-    {metrics ? <DriftPanel metrics={metrics} /> : <article className="empty-analysis"><strong>{isSummary ? "Document summary" : "Drift metrics unavailable"}</strong><p>{isSummary ? "Drift scores are shown only when the question asks for a comparison and a supported pre/post evidence pair is available." : "A supported pre/post evidence pair was not found for this query."}</p></article>}
+    {metrics ? <><DriftPanel metrics={metrics} /><button className="explain-drift-button" type="button" onClick={onExplain}>Explain these scores with PDF evidence <span>→</span></button></> : <article className="empty-analysis"><strong>{isSummary ? "Document summary" : "Drift metrics unavailable"}</strong><p>{isSummary ? "Drift scores are shown only when the question asks for a comparison and a supported pre/post evidence pair is available." : "A supported pre/post evidence pair was not found for this query."}</p></article>}
     <div className="result-columns">
       <VerificationPanel verification={result.verification} />
       <EvidencePanel citations={result.citations} retrieval={result.retrieval} />
@@ -140,6 +142,40 @@ function DriftPanel({ metrics }) {
     { label: "Retrieval & extraction alignment", value: metrics.alignment_accuracy_percent, tone: "gold", help: "Retrieval confidence, metadata coverage and paired evidence completeness." },
   ];
   return <article className="analytics-panel"><div className="analytics-heading"><div><span className="section-kicker">Drift score breakdown</span><h3>How far the retrieved versions moved</h3></div><div className="overall-score"><strong>{metrics.overall_drift_percent}%</strong><span>weighted drift</span></div></div><div className="metric-bars">{rows.map((row) => <div className="metric-row" key={row.label}><div><strong>{row.label}</strong><span>{row.help}</span></div><div className="bar-line"><div className={`bar-fill ${row.tone}`} style={{ width: `${Math.max(0, Math.min(100, row.value))}%` }} /></div><b>{row.value}%</b></div>)}</div></article>;
+}
+
+function DriftExplanation({ result, onAnalyse }) {
+  if (!result?.metrics) return <section className="page-section"><div className="section-header"><span className="section-kicker">Score interpretation</span><h2>Run a comparison to explain its drift.</h2><p>This tab uses the latest supported pre/post result. General questions and single-document answers do not produce drift scores.</p></div><button className="send-button" type="button" onClick={onAnalyse}>Open legal drift assistant <span>→</span></button></section>;
+
+  const { metrics, retrieval, citations } = result;
+  const levels = metrics.levels || {};
+  const scoreRows = [
+    ["Semantic drift", metrics.semantic_drift_percent, levels.semantic, "How far the deterministic vector representations moved."],
+    ["Lexical shift", metrics.lexical_drift_percent, levels.lexical, "How much the words and token sequence changed."],
+    ["Conceptual drift", metrics.conceptual_drift_percent, levels.conceptual, "How much the detected legal cues, numbers or model-assessed intent changed."],
+    ["Overall drift", metrics.overall_drift_percent, levels.overall, "Weighted result: 40% semantic, 30% lexical and 30% conceptual."],
+  ];
+  const preCitation = citations?.find((item) => item.label === "pre");
+  const postCitation = citations?.find((item) => item.label === "post");
+  return <section className="page-section drift-page">
+    <div className="section-header"><span className="section-kicker">Latest comparison</span><h2>What the drift score means</h2><p>The classifications below describe movement between the two retrieved excerpts. They do not independently prove legal materiality or correctness.</p></div>
+    <div className="level-guide">
+      <article className="low"><strong>Low</strong><b>0–33.3%</b><p>The excerpts are mostly stable, with limited textual or conceptual movement.</p></article>
+      <article className="medium"><strong>Medium</strong><b>33.4–66.6%</b><p>A noticeable change exists and the cited clauses should be reviewed carefully.</p></article>
+      <article className="high"><strong>High</strong><b>66.7–100%</b><p>Substantial movement was detected; this still requires legal and applicability review.</p></article>
+    </div>
+    <article className="drift-breakdown"><span className="section-kicker">Calculated classification</span><h3>{levels.overall || driftLevel(metrics.overall_drift_percent)} overall drift</h3><div className="drift-score-grid">{scoreRows.map(([label, value, level, detail]) => <div key={label}><span>{label}</span><strong>{value}%</strong><b className={`level-pill ${(level || driftLevel(value)).toLowerCase()}`}>{level || driftLevel(value)}</b><p>{detail}</p></div>)}</div></article>
+    <div className="evidence-comparison">
+      <EvidenceExcerpt title="Before-side PDF evidence" citation={preCitation} chunk={retrieval.pre} />
+      <div className="comparison-arrow" aria-hidden="true">→</div>
+      <EvidenceExcerpt title="After-side PDF evidence" citation={postCitation} chunk={retrieval.post} />
+    </div>
+    <article className="difference-evidence"><span className="section-kicker">Detected change</span><h3>How the cited excerpts differ</h3><ul>{result.answer.key_differences.map((item, index) => <li key={index}>{item}</li>)}</ul><p>Open the cited source to inspect the complete provision, amendment operation, commencement and applicability.</p></article>
+  </section>;
+}
+
+function EvidenceExcerpt({ title, citation, chunk }) {
+  return <article className="evidence-excerpt"><span className="section-kicker">{title}</span><h3>{citation?.act_name || chunk?.metadata?.act_name || "Evidence unavailable"}</h3><div className="evidence-meta">{citation?.version || chunk?.metadata?.version || "Unknown version"} · {citation?.source_anchor || chunk?.metadata?.source_anchor || "No anchor"}</div><blockquote>{excerpt(chunk?.text)}</blockquote>{(citation?.source_url || citation?.official_portal_url) && <a href={citation.source_url || citation.official_portal_url} target="_blank" rel="noreferrer">Open cited source ↗</a>}</article>;
 }
 
 function VerificationPanel({ verification }) { return <article className="panel compact"><span className="section-kicker">Objective verification</span><h3>{verification.passed ? "Alignment checks passed" : "Review required"}</h3><div className="check-list">{verification.checks.map((check) => <div key={check.id} className={check.passed ? "pass" : "fail"}><span>{check.passed ? "✓" : "!"}</span>{check.label}</div>)}</div><p className="panel-note">{verification.note}</p></article>; }
@@ -186,3 +222,5 @@ function RecentChangesFaq({ onAsk }) {
 async function api(path, options = {}) { const init = { method: options.method || "GET", headers: { Accept: "application/json" } }; if (options.body !== undefined) { init.headers["Content-Type"] = "application/json"; init.body = JSON.stringify(options.body); } const response = await fetch(path, init); let value; try { value = await response.json(); } catch { throw new Error(`Server returned ${response.status}`); } if (!response.ok) throw new Error(value.error || `Request failed with ${response.status}`); return value; }
 function titleCase(value) { return String(value || "").replaceAll("_", " ").replaceAll("-", " ").split(/\s+/).map((item) => item.charAt(0).toUpperCase() + item.slice(1)).join(" "); }
 function formatNumber(value) { return Number(value || 0).toLocaleString("en-IN"); }
+function driftLevel(value) { const score = Number(value || 0); return score <= 33.3 ? "Low" : score <= 66.6 ? "Medium" : "High"; }
+function excerpt(value, maximum = 900) { const text = String(value || "No excerpt was returned.").replace(/\s+/g, " ").trim(); return text.length <= maximum ? text : `${text.slice(0, maximum - 1).trim()}…`; }
