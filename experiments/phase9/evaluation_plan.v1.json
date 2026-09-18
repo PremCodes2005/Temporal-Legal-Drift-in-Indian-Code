@@ -9,24 +9,24 @@
   ],
   "execution": {
     "batch_invocation_count": 1,
-    "client": "v0.149.0-alpha.4",
+    "client": "v0.149.0-alpha.4.1",
     "completed_run_count": 78,
-    "finished_at": "2026-08-29T17:27:37.751132+00:00",
+    "finished_at": "2026-09-18T16:44:48.780914+00:00",
     "model": "gpt-5.6-sol",
     "planned_run_count": 78,
     "provider": "openai_codex_cli",
-    "response_sha256": "864e275fac9b247e2310ca19a706439a66d87046d886ac011f5ea62d5f81b29f",
+    "response_sha256": "3dad99b8de4d2dcc42a274c2add9ab52730c7c784ba7eeebb7197c8b2150c87f",
     "scoring_status": "not_scored_missing_independent_legal_gold",
-    "started_at": "2026-08-29T17:25:35.411756+00:00"
+    "started_at": "2026-09-18T16:42:47.207808+00:00"
   },
   "experiment_id": "phase9-temporal-drift-controlled-smoke-v1",
   "failure_attributions": [],
   "input_fingerprints": {
-    "baseline_run_sha256": "c3ceb95d7b72f979ad71c6b027a29569c337f0c072c22b8e47a717ab53c88f0e",
+    "baseline_run_sha256": "31f24225ffca36d00326c69d22b06d650c6a8ea910fafbe89f38ab05d02935ac",
     "experiment_config_sha256": "c94a22011b0bc8ac839cd2b220a993a81aad598e18c44a68ca848e6c0368f150",
     "prompt_config_sha256": "e91716274e2ba19a3f38c3edd55bacaddb6929f1f2da8ad61562886420e51730",
-    "release_sha256": "1bec7d9cb17ba5a7d9466fa24cb2a789cfefa72bfea15ed26a2b8333efc04d10",
-    "scenario_scaffolds_sha256": "926d99932f3a87f2b91b926bc087460d3b1ebfaa3fc4a6a06ec76a5335ba4bcf"
+    "release_sha256": "85bdf4c184c1d5c431bd28c2e8f3dfbdaeabd11c1350c397fcd4848d7c026dcc",
+    "scenario_scaffolds_sha256": "7e4012abbf1c52fd4aa9060af04055df2e29129870f17267ae2eaa418dbfd2dd"
   },
   "limitations": [
     "The controlled LLM pipeline was executed on non-gold scenario scaffolds.",
@@ -40,625 +40,625 @@
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_064ec9263f5195c2a5f11141",
-      "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is also unavailable."
+      "uncertainty": "Facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_08629a503d2a6cb0cf774f68",
-      "uncertainty": "Scenario facts and the issue to decide are missing."
+      "uncertainty": "Facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_089d16d7759bfac11b8afb20",
-      "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+      "uncertainty": "Facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_0f52349fceb922ca68eaa38e",
-      "uncertainty": "Scenario facts and the issue to decide are missing."
+      "uncertainty": "Facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts, legal question, or legal context are supplied.",
+      "explanation": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
       "run_id": "run_0f8e26c0869173d4b191078d",
-      "uncertainty": "There is no basis for a compliance determination."
+      "uncertainty": "Facts, legal question, and legal context are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_11f20ff92445dfc7918fe04a",
-      "uncertainty": "Scenario facts and the issue to decide are missing."
+      "uncertainty": "Facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_21da609a5ca4e863c6b8f694",
-      "uncertainty": "Scenario facts and the issue to decide are missing."
+      "uncertainty": "Facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_2f45099871897c6d9fb84342",
-      "uncertainty": "Scenario facts and the issue to decide are missing."
+      "uncertainty": "Facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_322ef0d0e575c7d46b0609b1",
-      "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+      "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_327a6a4e90fb42fba1456529",
-      "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+      "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts, legal question, or legal context are supplied.",
+      "explanation": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
       "run_id": "run_33d2fa4876eb4b00faeea6e8",
-      "uncertainty": "There is no basis for a compliance determination."
+      "uncertainty": "Facts, legal question, and legal context are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_34b7fcf3274604a7bc7ab76b",
-      "uncertainty": "Scenario facts and the issue to decide are missing."
+      "uncertainty": "Facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_36f061bb94a5445769246042",
-      "uncertainty": "Scenario facts and the issue to decide are missing."
+      "uncertainty": "Facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_3734e5bd0ec4b43e6d40ea35",
-      "uncertainty": "Scenario facts and the issue to decide are missing."
+      "uncertainty": "Facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_3a92d457193343b7dfd414c5",
-      "uncertainty": "Scenario facts and the issue to decide are missing."
+      "uncertainty": "Facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts, legal question, or legal context are supplied.",
+      "explanation": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
       "run_id": "run_3bdf6a5f41c4369c1451b607",
-      "uncertainty": "There is no basis for a compliance determination."
+      "uncertainty": "Facts, legal question, and legal context are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_3e961129f9a4cf1742c7487f",
-      "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+      "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_3f0708cf25bc4fd9c25eff11",
-      "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+      "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts, legal question, or legal context are supplied.",
+      "explanation": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
       "run_id": "run_418c2a7897370df626f52f53",
-      "uncertainty": "There is no basis for a compliance determination."
+      "uncertainty": "Facts, legal question, and legal context are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_43b84d47a089204059acd469",
-      "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+      "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_445b2e4b5470b0b2229b30f0",
-      "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+      "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_45b84f25c21abbaa73de37f1",
-      "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+      "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_4b91a0ff2bda608138cd5354",
-      "uncertainty": "Scenario facts and the issue to decide are missing."
+      "uncertainty": "Facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_4bca9e8a07d0f6a91977657e",
-      "uncertainty": "Scenario facts and the issue to decide are missing."
+      "uncertainty": "Facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts, legal question, or legal context are supplied.",
+      "explanation": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
       "run_id": "run_4c58486248e10f6dc93d7511",
-      "uncertainty": "There is no basis for a compliance determination."
+      "uncertainty": "Facts, legal question, and legal context are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_4ef75c8bcad75860dbd2f33d",
-      "uncertainty": "Scenario facts and the issue to decide are missing."
+      "uncertainty": "Facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts, legal question, or legal context are supplied.",
+      "explanation": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
       "run_id": "run_4fa2947a53eeabda5da18b74",
-      "uncertainty": "There is no basis for a compliance determination."
+      "uncertainty": "Facts, legal question, and legal context are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_5478a75c4976dece12ec1dad",
-      "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+      "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
+      "explanation": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
       "run_id": "run_57193f88b240b5ffb72ce557",
-      "uncertainty": "There is no basis for a compliance determination as of 2009-10-26."
+      "uncertainty": "The pre-amendment version is unavailable, and facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_586d4eeb1eb70f1fa5ed5a93",
-      "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+      "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_605cb94cc17c5872c3df7c7b",
-      "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+      "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_606ef8c720fdf693b0571659",
-      "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+      "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts, legal question, or legal context are supplied.",
+      "explanation": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
       "run_id": "run_62b009df329cd3557ad9e909",
-      "uncertainty": "There is no basis for a compliance determination."
+      "uncertainty": "Facts, legal question, and legal context are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
+      "explanation": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
       "run_id": "run_644c547dd4646d579eaa1d31",
-      "uncertainty": "There is no basis for a compliance determination as of 2009-10-26."
+      "uncertainty": "The pre-amendment version is unavailable, and facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts, legal question, or legal context are supplied.",
+      "explanation": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
       "run_id": "run_67572b3134bed3360409165b",
-      "uncertainty": "There is no basis for a compliance determination."
+      "uncertainty": "Facts, legal question, and legal context are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_6c145ef466719e52cf8b4726",
-      "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+      "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts, legal question, or legal context are supplied.",
+      "explanation": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
       "run_id": "run_6d65393a50901a31b3d78d33",
-      "uncertainty": "There is no basis for a compliance determination."
+      "uncertainty": "Facts, legal question, and legal context are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_70663048475f0bbe1451d8e8",
-      "uncertainty": "Scenario facts and the issue to decide are missing."
+      "uncertainty": "Facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_7112091abb12b67cc8536c6a",
-      "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+      "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_7773dada1da1707cb47ac903",
-      "uncertainty": "Scenario facts and the issue to decide are missing."
+      "uncertainty": "Facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_794045334239b4510d833cdf",
-      "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+      "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
+      "explanation": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
       "run_id": "run_7e8435421cc30fa09a5ebd57",
-      "uncertainty": "There is no basis for a compliance determination as of 2009-10-26."
+      "uncertainty": "The pre-amendment version is unavailable, and facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_844a7ba9d1e98bad4d9239af",
-      "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+      "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_8602f233f8791e7005431db1",
-      "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+      "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_86d1fdc7a060ac50b7df0aff",
-      "uncertainty": "Scenario facts and the issue to decide are missing."
+      "uncertainty": "Facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
+      "explanation": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
       "run_id": "run_8b619ef6d071d96bacf27cdb",
-      "uncertainty": "There is no basis for a compliance determination as of 2009-10-26."
+      "uncertainty": "The pre-amendment version is unavailable, and facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_900101d9e788c5146c81ab00",
-      "uncertainty": "Scenario facts and the issue to decide are missing."
+      "uncertainty": "Facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_932ad2861c49ec1c77a47eac",
-      "uncertainty": "Scenario facts and the issue to decide are missing."
+      "uncertainty": "Facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_97f7b8e7641bf14b8e1d0511",
-      "uncertainty": "Scenario facts and the issue to decide are missing."
+      "uncertainty": "Facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_99a8fb977dbc32ff0009842e",
-      "uncertainty": "Scenario facts and the issue to decide are missing."
+      "uncertainty": "Facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_a40ac86627202a5846ec5534",
-      "uncertainty": "Scenario facts and the issue to decide are missing."
+      "uncertainty": "Facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
+      "explanation": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
       "run_id": "run_a81fc7196837214cd6fd2c3f",
-      "uncertainty": "There is no basis for a compliance determination as of 2009-10-26."
+      "uncertainty": "The pre-amendment version is unavailable, and facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_ad1e058700e078d034ebfef0",
-      "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+      "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_ad7b61df6f04fe27265fff12",
-      "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+      "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
+      "explanation": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
       "run_id": "run_b045149e89cb572aa04cfc12",
-      "uncertainty": "There is no basis for a compliance determination as of 2009-10-26."
+      "uncertainty": "The pre-amendment version is unavailable, and facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_b4f966525df8b57beea597f5",
-      "uncertainty": "Scenario facts and the issue to decide are missing."
+      "uncertainty": "Facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts, legal question, or legal context are supplied.",
+      "explanation": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
       "run_id": "run_b83bc9116b2ad2ba0d9ce59c",
-      "uncertainty": "There is no basis for a compliance determination."
+      "uncertainty": "Facts, legal question, and legal context are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_b8dafc2d2129e4d4d837851b",
-      "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+      "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
+      "explanation": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
       "run_id": "run_ba7bd139398b622dd0194bb6",
-      "uncertainty": "There is no basis for a compliance determination as of 2009-10-26."
+      "uncertainty": "The pre-amendment version is unavailable, and facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
+      "explanation": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
       "run_id": "run_bcf6d50c825c326aab1ddff7",
-      "uncertainty": "There is no basis for a compliance determination as of 2009-10-26."
+      "uncertainty": "The pre-amendment version is unavailable, and facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
+      "explanation": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
       "run_id": "run_bf53253c0fb25e4868de697d",
-      "uncertainty": "There is no basis for a compliance determination as of 2009-10-26."
+      "uncertainty": "The pre-amendment version is unavailable, and facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_bfd8036e85e479dd51c35e0b",
-      "uncertainty": "Scenario facts and the issue to decide are missing."
+      "uncertainty": "Facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_c2b9961461242b487a9708c6",
-      "uncertainty": "Scenario facts and the issue to decide are missing."
+      "uncertainty": "Facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_cb0e7df97bf214f2218ec212",
-      "uncertainty": "Scenario facts and the issue to decide are missing."
+      "uncertainty": "Facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_cbcebec661394a04ac1c4a64",
-      "uncertainty": "Scenario facts and the issue to decide are missing."
+      "uncertainty": "Facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_d0cae0f9073da961602f8d7f",
-      "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+      "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
+      "explanation": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
       "run_id": "run_d0f0a21b6379a234b7e90741",
-      "uncertainty": "There is no basis for a compliance determination as of 2009-10-26."
+      "uncertainty": "The pre-amendment version is unavailable, and facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts, legal question, or legal context are supplied.",
+      "explanation": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
       "run_id": "run_e373daf55ce13272635b1a2f",
-      "uncertainty": "There is no basis for a compliance determination."
+      "uncertainty": "Facts, legal question, and legal context are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts, legal question, or legal context are supplied.",
+      "explanation": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
       "run_id": "run_e38142cbb3a9721c9068f31b",
-      "uncertainty": "There is no basis for a compliance determination."
+      "uncertainty": "Facts, legal question, and legal context are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
+      "explanation": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
       "run_id": "run_e38364eb274e9650464e9c85",
-      "uncertainty": "There is no basis for a compliance determination as of 2009-10-26."
+      "uncertainty": "The pre-amendment version is unavailable, and facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts, legal question, or legal context are supplied.",
+      "explanation": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
       "run_id": "run_e98745d9262cfb5dc20f750c",
-      "uncertainty": "There is no basis for a compliance determination."
+      "uncertainty": "Facts, legal question, and legal context are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
+      "explanation": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
       "run_id": "run_e9c22a1f5b563fafeb113bb2",
-      "uncertainty": "There is no basis for a compliance determination as of 2009-10-26."
+      "uncertainty": "The pre-amendment version is unavailable, and facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_ea175927c5e7dd213d1c892d",
-      "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+      "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_ee1ec5e812d6a9f2895c5f4b",
-      "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+      "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_ef0f14eeb0ad1c355c132dbe",
-      "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+      "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_f349491deb315f67ac8dda9b",
-      "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+      "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
+      "explanation": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
       "run_id": "run_fe0a4a524c2c08550c2531e9",
-      "uncertainty": "There is no basis for a compliance determination as of 2009-10-26."
+      "uncertainty": "The pre-amendment version is unavailable, and facts and legal question are missing."
     },
     {
       "citations": [],
       "cited_version_id": null,
       "conclusion": "indeterminate",
-      "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "explanation": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_ff3f6cf02a9ea7c19cda768f",
-      "uncertainty": "Scenario facts and the issue to decide are missing."
+      "uncertainty": "Facts and legal question are missing."
     }
   ],
   "runs": [
@@ -674,8 +674,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
-        "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is also unavailable."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_064ec9263f5195c2a5f11141",
@@ -694,8 +694,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
-        "uncertainty": "Scenario facts and the issue to decide are missing."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_08629a503d2a6cb0cf774f68",
@@ -714,8 +714,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
-        "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_089d16d7759bfac11b8afb20",
@@ -734,8 +734,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
-        "uncertainty": "Scenario facts and the issue to decide are missing."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_0f52349fceb922ca68eaa38e",
@@ -754,8 +754,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts, legal question, or legal context are supplied.",
-        "uncertainty": "There is no basis for a compliance determination."
+        "explanation": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
+        "uncertainty": "Facts, legal question, and legal context are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_0f8e26c0869173d4b191078d",
@@ -774,8 +774,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
-        "uncertainty": "Scenario facts and the issue to decide are missing."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_11f20ff92445dfc7918fe04a",
@@ -794,8 +794,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
-        "uncertainty": "Scenario facts and the issue to decide are missing."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_21da609a5ca4e863c6b8f694",
@@ -814,8 +814,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
-        "uncertainty": "Scenario facts and the issue to decide are missing."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_2f45099871897c6d9fb84342",
@@ -834,8 +834,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
-        "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_322ef0d0e575c7d46b0609b1",
@@ -854,8 +854,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
-        "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_327a6a4e90fb42fba1456529",
@@ -874,8 +874,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts, legal question, or legal context are supplied.",
-        "uncertainty": "There is no basis for a compliance determination."
+        "explanation": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
+        "uncertainty": "Facts, legal question, and legal context are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_33d2fa4876eb4b00faeea6e8",
@@ -894,8 +894,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
-        "uncertainty": "Scenario facts and the issue to decide are missing."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_34b7fcf3274604a7bc7ab76b",
@@ -914,8 +914,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
-        "uncertainty": "Scenario facts and the issue to decide are missing."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_36f061bb94a5445769246042",
@@ -934,8 +934,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
-        "uncertainty": "Scenario facts and the issue to decide are missing."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_3734e5bd0ec4b43e6d40ea35",
@@ -954,8 +954,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
-        "uncertainty": "Scenario facts and the issue to decide are missing."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_3a92d457193343b7dfd414c5",
@@ -974,8 +974,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts, legal question, or legal context are supplied.",
-        "uncertainty": "There is no basis for a compliance determination."
+        "explanation": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
+        "uncertainty": "Facts, legal question, and legal context are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_3bdf6a5f41c4369c1451b607",
@@ -994,8 +994,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
-        "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_3e961129f9a4cf1742c7487f",
@@ -1014,8 +1014,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
-        "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_3f0708cf25bc4fd9c25eff11",
@@ -1034,8 +1034,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts, legal question, or legal context are supplied.",
-        "uncertainty": "There is no basis for a compliance determination."
+        "explanation": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
+        "uncertainty": "Facts, legal question, and legal context are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_418c2a7897370df626f52f53",
@@ -1054,8 +1054,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
-        "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_43b84d47a089204059acd469",
@@ -1074,8 +1074,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
-        "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_445b2e4b5470b0b2229b30f0",
@@ -1094,8 +1094,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
-        "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_45b84f25c21abbaa73de37f1",
@@ -1114,8 +1114,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
-        "uncertainty": "Scenario facts and the issue to decide are missing."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_4b91a0ff2bda608138cd5354",
@@ -1134,8 +1134,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
-        "uncertainty": "Scenario facts and the issue to decide are missing."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_4bca9e8a07d0f6a91977657e",
@@ -1154,8 +1154,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts, legal question, or legal context are supplied.",
-        "uncertainty": "There is no basis for a compliance determination."
+        "explanation": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
+        "uncertainty": "Facts, legal question, and legal context are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_4c58486248e10f6dc93d7511",
@@ -1174,8 +1174,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
-        "uncertainty": "Scenario facts and the issue to decide are missing."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_4ef75c8bcad75860dbd2f33d",
@@ -1194,8 +1194,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts, legal question, or legal context are supplied.",
-        "uncertainty": "There is no basis for a compliance determination."
+        "explanation": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
+        "uncertainty": "Facts, legal question, and legal context are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_4fa2947a53eeabda5da18b74",
@@ -1214,8 +1214,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
-        "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_5478a75c4976dece12ec1dad",
@@ -1234,8 +1234,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
-        "uncertainty": "There is no basis for a compliance determination as of 2009-10-26."
+        "explanation": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
+        "uncertainty": "The pre-amendment version is unavailable, and facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_57193f88b240b5ffb72ce557",
@@ -1254,8 +1254,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
-        "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_586d4eeb1eb70f1fa5ed5a93",
@@ -1274,8 +1274,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
-        "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_605cb94cc17c5872c3df7c7b",
@@ -1294,8 +1294,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
-        "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_606ef8c720fdf693b0571659",
@@ -1314,8 +1314,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts, legal question, or legal context are supplied.",
-        "uncertainty": "There is no basis for a compliance determination."
+        "explanation": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
+        "uncertainty": "Facts, legal question, and legal context are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_62b009df329cd3557ad9e909",
@@ -1334,8 +1334,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
-        "uncertainty": "There is no basis for a compliance determination as of 2009-10-26."
+        "explanation": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
+        "uncertainty": "The pre-amendment version is unavailable, and facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_644c547dd4646d579eaa1d31",
@@ -1354,8 +1354,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts, legal question, or legal context are supplied.",
-        "uncertainty": "There is no basis for a compliance determination."
+        "explanation": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
+        "uncertainty": "Facts, legal question, and legal context are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_67572b3134bed3360409165b",
@@ -1374,8 +1374,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
-        "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_6c145ef466719e52cf8b4726",
@@ -1394,8 +1394,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts, legal question, or legal context are supplied.",
-        "uncertainty": "There is no basis for a compliance determination."
+        "explanation": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
+        "uncertainty": "Facts, legal question, and legal context are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_6d65393a50901a31b3d78d33",
@@ -1414,8 +1414,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
-        "uncertainty": "Scenario facts and the issue to decide are missing."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_70663048475f0bbe1451d8e8",
@@ -1434,8 +1434,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
-        "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_7112091abb12b67cc8536c6a",
@@ -1454,8 +1454,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
-        "uncertainty": "Scenario facts and the issue to decide are missing."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_7773dada1da1707cb47ac903",
@@ -1474,8 +1474,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
-        "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_794045334239b4510d833cdf",
@@ -1494,8 +1494,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
-        "uncertainty": "There is no basis for a compliance determination as of 2009-10-26."
+        "explanation": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
+        "uncertainty": "The pre-amendment version is unavailable, and facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_7e8435421cc30fa09a5ebd57",
@@ -1514,8 +1514,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
-        "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_844a7ba9d1e98bad4d9239af",
@@ -1534,8 +1534,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
-        "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_8602f233f8791e7005431db1",
@@ -1554,8 +1554,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
-        "uncertainty": "Scenario facts and the issue to decide are missing."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_86d1fdc7a060ac50b7df0aff",
@@ -1574,8 +1574,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
-        "uncertainty": "There is no basis for a compliance determination as of 2009-10-26."
+        "explanation": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
+        "uncertainty": "The pre-amendment version is unavailable, and facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_8b619ef6d071d96bacf27cdb",
@@ -1594,8 +1594,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
-        "uncertainty": "Scenario facts and the issue to decide are missing."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_900101d9e788c5146c81ab00",
@@ -1614,8 +1614,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
-        "uncertainty": "Scenario facts and the issue to decide are missing."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_932ad2861c49ec1c77a47eac",
@@ -1634,8 +1634,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
-        "uncertainty": "Scenario facts and the issue to decide are missing."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_97f7b8e7641bf14b8e1d0511",
@@ -1654,8 +1654,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
-        "uncertainty": "Scenario facts and the issue to decide are missing."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_99a8fb977dbc32ff0009842e",
@@ -1674,8 +1674,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
-        "uncertainty": "Scenario facts and the issue to decide are missing."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_a40ac86627202a5846ec5534",
@@ -1694,8 +1694,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
-        "uncertainty": "There is no basis for a compliance determination as of 2009-10-26."
+        "explanation": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
+        "uncertainty": "The pre-amendment version is unavailable, and facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_a81fc7196837214cd6fd2c3f",
@@ -1714,8 +1714,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
-        "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_ad1e058700e078d034ebfef0",
@@ -1734,8 +1734,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
-        "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_ad7b61df6f04fe27265fff12",
@@ -1754,8 +1754,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
-        "uncertainty": "There is no basis for a compliance determination as of 2009-10-26."
+        "explanation": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
+        "uncertainty": "The pre-amendment version is unavailable, and facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_b045149e89cb572aa04cfc12",
@@ -1774,8 +1774,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
-        "uncertainty": "Scenario facts and the issue to decide are missing."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_b4f966525df8b57beea597f5",
@@ -1794,8 +1794,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts, legal question, or legal context are supplied.",
-        "uncertainty": "There is no basis for a compliance determination."
+        "explanation": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
+        "uncertainty": "Facts, legal question, and legal context are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_b83bc9116b2ad2ba0d9ce59c",
@@ -1814,8 +1814,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
-        "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_b8dafc2d2129e4d4d837851b",
@@ -1834,8 +1834,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
-        "uncertainty": "There is no basis for a compliance determination as of 2009-10-26."
+        "explanation": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
+        "uncertainty": "The pre-amendment version is unavailable, and facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_ba7bd139398b622dd0194bb6",
@@ -1854,8 +1854,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
-        "uncertainty": "There is no basis for a compliance determination as of 2009-10-26."
+        "explanation": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
+        "uncertainty": "The pre-amendment version is unavailable, and facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_bcf6d50c825c326aab1ddff7",
@@ -1874,8 +1874,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
-        "uncertainty": "There is no basis for a compliance determination as of 2009-10-26."
+        "explanation": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
+        "uncertainty": "The pre-amendment version is unavailable, and facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_bf53253c0fb25e4868de697d",
@@ -1894,8 +1894,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
-        "uncertainty": "Scenario facts and the issue to decide are missing."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_bfd8036e85e479dd51c35e0b",
@@ -1914,8 +1914,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
-        "uncertainty": "Scenario facts and the issue to decide are missing."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_c2b9961461242b487a9708c6",
@@ -1934,8 +1934,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
-        "uncertainty": "Scenario facts and the issue to decide are missing."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_cb0e7df97bf214f2218ec212",
@@ -1954,8 +1954,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
-        "uncertainty": "Scenario facts and the issue to decide are missing."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_cbcebec661394a04ac1c4a64",
@@ -1974,8 +1974,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
-        "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_d0cae0f9073da961602f8d7f",
@@ -1994,8 +1994,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
-        "uncertainty": "There is no basis for a compliance determination as of 2009-10-26."
+        "explanation": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
+        "uncertainty": "The pre-amendment version is unavailable, and facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_d0f0a21b6379a234b7e90741",
@@ -2014,8 +2014,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts, legal question, or legal context are supplied.",
-        "uncertainty": "There is no basis for a compliance determination."
+        "explanation": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
+        "uncertainty": "Facts, legal question, and legal context are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_e373daf55ce13272635b1a2f",
@@ -2034,8 +2034,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts, legal question, or legal context are supplied.",
-        "uncertainty": "There is no basis for a compliance determination."
+        "explanation": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
+        "uncertainty": "Facts, legal question, and legal context are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_e38142cbb3a9721c9068f31b",
@@ -2054,8 +2054,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
-        "uncertainty": "There is no basis for a compliance determination as of 2009-10-26."
+        "explanation": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
+        "uncertainty": "The pre-amendment version is unavailable, and facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_e38364eb274e9650464e9c85",
@@ -2074,8 +2074,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts, legal question, or legal context are supplied.",
-        "uncertainty": "There is no basis for a compliance determination."
+        "explanation": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
+        "uncertainty": "Facts, legal question, and legal context are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_e98745d9262cfb5dc20f750c",
@@ -2094,8 +2094,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
-        "uncertainty": "There is no basis for a compliance determination as of 2009-10-26."
+        "explanation": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
+        "uncertainty": "The pre-amendment version is unavailable, and facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_e9c22a1f5b563fafeb113bb2",
@@ -2114,8 +2114,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
-        "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_ea175927c5e7dd213d1c892d",
@@ -2134,8 +2134,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
-        "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_ee1ec5e812d6a9f2895c5f4b",
@@ -2154,8 +2154,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
-        "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_ef0f14eeb0ad1c355c132dbe",
@@ -2174,8 +2174,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so compliance cannot be assessed.",
-        "uncertainty": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing; the pre-amendment version is unavailable."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_f349491deb315f67ac8dda9b",
@@ -2194,8 +2194,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
-        "uncertainty": "There is no basis for a compliance determination as of 2009-10-26."
+        "explanation": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
+        "uncertainty": "The pre-amendment version is unavailable, and facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_fe0a4a524c2c08550c2531e9",
@@ -2214,8 +2214,8 @@
         "citations": [],
         "cited_version_id": null,
         "conclusion": "indeterminate",
-        "explanation": "No facts or legal question are supplied, so the provision cannot be applied.",
-        "uncertainty": "Scenario facts and the issue to decide are missing."
+        "explanation": "No compliance determination is possible without scenario facts or a legal question.",
+        "uncertainty": "Facts and legal question are missing."
       },
       "retrieval_configuration": "version_graph_evidence_excerpt_v1",
       "run_id": "run_ff3f6cf02a9ea7c19cda768f",

@@ -1,15 +1,15 @@
 {
   "feature_row_count": 50,
   "input_fingerprints": {
-    "annotation_workload_sha256": "c8cbd269a27f80cb022b721740dd2cf72c334a91806c6b77b8d80567ace81b9b",
+    "annotation_workload_sha256": "d79083d2d3db329e7f60d93afeb995e598b7d8bd0566ff61b38648ebc8eb9ad5",
     "baseline_config_sha256": "a0d0f59fde0b86df8e678721a55ab1a1c0e813573f3d223f9b86c44b66e14d42",
-    "release_sha256": "1bec7d9cb17ba5a7d9466fa24cb2a789cfefa72bfea15ed26a2b8333efc04d10"
+    "release_sha256": "85bdf4c184c1d5c431bd28c2e8f3dfbdaeabd11c1350c397fcd4848d7c026dcc"
   },
   "metrics_reported": false,
   "non_neural_feature_families_present": true,
   "registered_baseline_count": 12,
   "research_gate_passed": false,
-  "run_sha256": "c3ceb95d7b72f979ad71c6b027a29569c337f0c072c22b8e47a717ab53c88f0e",
+  "run_sha256": "31f24225ffca36d00326c69d22b06d650c6a8ea910fafbe89f38ab05d02935ac",
   "schema_version": "1.0.0",
   "status": "features_prepared_evaluation_blocked_no_gold",
   "unsupported_performance_claims_absent": true

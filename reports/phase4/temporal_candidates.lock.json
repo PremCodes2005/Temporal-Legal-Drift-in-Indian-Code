@@ -2,12 +2,13 @@
   "all_candidates_have_evidence": true,
   "all_candidates_unreviewed": true,
   "approved_candidate_count": 0,
-  "candidate_count": 1873,
-  "candidate_document_sha256": "445141fb7ccf4e0f4ae31d3668433ac2dc51b0f009bc7e5ff61b4d7078e01007",
+  "candidate_count": 6619,
+  "candidate_document_sha256": "6193880645e1d1525dd9f3fc2b8052c09fb9d58eb42c833c7cf780539a824430",
   "fact_type_counts": {
-    "commencement": 1826,
-    "partial_commencement": 1,
-    "publication": 46
+    "commencement": 6499,
+    "deferred_commencement": 1,
+    "partial_commencement": 2,
+    "publication": 117
   },
   "schema_version": "1.0.0",
   "status": "machine_extracted_candidates_not_legal_gold"

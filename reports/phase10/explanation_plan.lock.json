@@ -4,14 +4,14 @@
   "automated_evaluation_count": 78,
   "expert_evaluation_count": 0,
   "input_fingerprints": {
-    "annotation_workload_sha256": "c8cbd269a27f80cb022b721740dd2cf72c334a91806c6b77b8d80567ace81b9b",
-    "llm_plan_sha256": "cbd385ed6770bbadc55f7fcf6c4722e2427267c33a42a9b36f769ee9239400a3",
+    "annotation_workload_sha256": "d79083d2d3db329e7f60d93afeb995e598b7d8bd0566ff61b38648ebc8eb9ad5",
+    "llm_plan_sha256": "46084ade6113f440d119ae4e47371a5039ee1d5d26012fc10bc4db0592d51f1f",
     "rubric_sha256": "751cdb53e6bb7a7273b5f85815d9ab203c505ef9bfd614749f175420198ad9ef",
-    "scenario_scaffolds_sha256": "926d99932f3a87f2b91b926bc087460d3b1ebfaa3fc4a6a06ec76a5335ba4bcf",
-    "version_graph_sha256": "364bf11a3334f1b426281c5596f975bf70cd2ae4054f3cee09cf9b5b1bcf27d0"
+    "scenario_scaffolds_sha256": "7e4012abbf1c52fd4aa9060af04055df2e29129870f17267ae2eaa418dbfd2dd",
+    "version_graph_sha256": "73b8f9c50738329022b75a5840821e2c9ae89db7835817706628f9e6fe3497c1"
   },
   "legal_quality_metrics_reported": false,
-  "plan_sha256": "24005504c373d50cb3033fd747c96feff4801f795698a542d13f7970e87849f1",
+  "plan_sha256": "c0e30969f8970a9b00eae6ab263d334da0b66a375352e004c3f02f9082d8910e",
   "planned_evaluation_count": 78,
   "research_gate_passed": false,
   "schema_version": "1.0.0",

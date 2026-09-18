@@ -6,9 +6,9 @@
   "event_count": 76,
   "independent_legal_review_status": "not_performed_reviewer_unavailable",
   "input_fingerprints": {
-    "temporal_facts_sha256": "445141fb7ccf4e0f4ae31d3668433ac2dc51b0f009bc7e5ff61b4d7078e01007",
+    "temporal_facts_sha256": "6193880645e1d1525dd9f3fc2b8052c09fb9d58eb42c833c7cf780539a824430",
     "validation_config_sha256": "0f76de09cf01a56ebc5b98fbff07e76cac29abf2bbf5af8e4a56bcb4318c715a",
-    "version_graph_sha256": "364bf11a3334f1b426281c5596f975bf70cd2ae4054f3cee09cf9b5b1bcf27d0"
+    "version_graph_sha256": "73b8f9c50738329022b75a5840821e2c9ae89db7835817706628f9e6fe3497c1"
   },
   "legal_validation_claimed": false,
   "relation_summaries": [
@@ -24,5 +24,5 @@
   "schema_version": "1.0.0",
   "status": "automated_cross_source_consistency_not_legal_validation",
   "unresolved_count": 63,
-  "validation_sha256": "cd64f02f38dd9b53d0502ee7f4fd4710d97b1c8c1cf1031adde1db9445bda7eb"
+  "validation_sha256": "7d3ba529159c230f7cbc941a53846d81b84672e7f58d2742183af55348ed9e71"
 }

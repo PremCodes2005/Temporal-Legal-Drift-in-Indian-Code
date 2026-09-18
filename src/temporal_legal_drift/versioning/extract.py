@@ -125,7 +125,19 @@ def extract_amending_clauses(document: dict[str, object]) -> tuple[ExtractedProv
                 current["lines"].append(line.strip())  # type: ignore[union-attr]
     if current is not None:
         results.append(_finish(current))
-    return tuple(results)
+    # OCR and repeated Gazette headers can expose the same numbered clause more
+    # than once. A lineage is provision identity, so emitting both candidates
+    # creates duplicate graph IDs. Keep the longest evidence-bearing candidate
+    # deterministically; the generic section extractor already records duplicate
+    # section ambiguity for review.
+    selected: dict[str, ExtractedProvision] = {}
+    for item in results:
+        current_item = selected.get(item.number)
+        if current_item is None or (len(item.exact_text), item.locator) > (
+            len(current_item.exact_text), current_item.locator
+        ):
+            selected[item.number] = item
+    return tuple(selected[number] for number in sorted(selected, key=_section_sort_key))
 
 
 def _finish(value: dict[str, object]) -> ExtractedProvision:

@@ -5,13 +5,13 @@
   "freeze_refused_for_non_gold_inputs": true,
   "infeasible_splits_explicit": true,
   "input_checksums": {
-    "annotation_workload_sha256": "c8cbd269a27f80cb022b721740dd2cf72c334a91806c6b77b8d80567ace81b9b",
+    "annotation_workload_sha256": "d79083d2d3db329e7f60d93afeb995e598b7d8bd0566ff61b38648ebc8eb9ad5",
     "release_config_sha256": "204cb585e1d3a9ddc828a9e08511a57fabb2613de9ee99b0d98e8756407411a5",
-    "scenario_scaffolds_sha256": "926d99932f3a87f2b91b926bc087460d3b1ebfaa3fc4a6a06ec76a5335ba4bcf",
-    "version_graph_sha256": "364bf11a3334f1b426281c5596f975bf70cd2ae4054f3cee09cf9b5b1bcf27d0"
+    "scenario_scaffolds_sha256": "7e4012abbf1c52fd4aa9060af04055df2e29129870f17267ae2eaa418dbfd2dd",
+    "version_graph_sha256": "73b8f9c50738329022b75a5840821e2c9ae89db7835817706628f9e6fe3497c1"
   },
   "release_id": "tech-preview-v0.1.0",
-  "release_sha256": "1bec7d9cb17ba5a7d9466fa24cb2a789cfefa72bfea15ed26a2b8333efc04d10",
+  "release_sha256": "85bdf4c184c1d5c431bd28c2e8f3dfbdaeabd11c1350c397fcd4848d7c026dcc",
   "required_strategies_reported": true,
   "research_gate_passed": false,
   "schema_version": "1.0.0",

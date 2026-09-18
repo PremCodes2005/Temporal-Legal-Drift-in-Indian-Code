@@ -3,7 +3,7 @@ from __future__ import annotations
 import unittest
 from hashlib import sha256
 
-from temporal_legal_drift.versioning.extract import extract_provisions
+from temporal_legal_drift.versioning.extract import extract_amending_clauses, extract_provisions
 from temporal_legal_drift.versioning.models import (
     AmendmentEvent,
     EvidenceReference,
@@ -60,6 +60,25 @@ class VersioningTests(unittest.TestCase):
         backward = VersionTransition("trn_2", "ver_after", "ver_before", "amd_1", "substitution", self.evidence)
         cyclic = VersionGraph((instrument,), (lineage,), (before, after), (event,), (forward, backward))
         self.assertIn("version graph contains a cycle", cyclic.validate())
+
+    def test_duplicate_amending_clauses_do_not_create_duplicate_lineages(self) -> None:
+        document = {
+            "blocks": [
+                {
+                    "block_id": "blk_1",
+                    "source_anchor": "pdf:page:1",
+                    "normalized_text": "2. In the principal Act, short amendment.",
+                },
+                {
+                    "block_id": "blk_2",
+                    "source_anchor": "pdf:page:2",
+                    "normalized_text": "2. In the principal Act, a longer amendment instruction shall be substituted.",
+                },
+            ]
+        }
+        provisions = extract_amending_clauses(document)
+        self.assertEqual(len(provisions), 1)
+        self.assertIn("longer amendment", provisions[0].exact_text)
 
 
 if __name__ == "__main__":

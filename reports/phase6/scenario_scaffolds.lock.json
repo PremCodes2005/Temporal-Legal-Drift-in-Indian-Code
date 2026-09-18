@@ -15,14 +15,14 @@
   "coverage_complete": false,
   "expert_validated_scenario_count": 0,
   "input_fingerprints": {
-    "annotation_workload_sha256": "c8cbd269a27f80cb022b721740dd2cf72c334a91806c6b77b8d80567ace81b9b",
+    "annotation_workload_sha256": "d79083d2d3db329e7f60d93afeb995e598b7d8bd0566ff61b38648ebc8eb9ad5",
     "coverage_config_sha256": "cbe18961348f4b25e56ff63f26b697afdbcc052eb15a508920ddb359d450064f",
-    "cross_validation_sha256": "cd64f02f38dd9b53d0502ee7f4fd4710d97b1c8c1cf1031adde1db9445bda7eb"
+    "cross_validation_sha256": "7d3ba529159c230f7cbc941a53846d81b84672e7f58d2742183af55348ed9e71"
   },
   "no_expected_answers_invented": true,
   "research_gate_passed": false,
   "scenario_count": 13,
-  "scenario_document_sha256": "926d99932f3a87f2b91b926bc087460d3b1ebfaa3fc4a6a06ec76a5335ba4bcf",
+  "scenario_document_sha256": "7e4012abbf1c52fd4aa9060af04055df2e29129870f17267ae2eaa418dbfd2dd",
   "schema_version": "1.0.0",
   "status": "scenario_scaffolds_not_compliance_gold",
   "unique_scenario_count": 13

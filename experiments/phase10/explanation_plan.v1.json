@@ -45,11 +45,11 @@
     "expert_acceptability"
   ],
   "input_fingerprints": {
-    "annotation_workload_sha256": "c8cbd269a27f80cb022b721740dd2cf72c334a91806c6b77b8d80567ace81b9b",
-    "llm_plan_sha256": "cbd385ed6770bbadc55f7fcf6c4722e2427267c33a42a9b36f769ee9239400a3",
+    "annotation_workload_sha256": "d79083d2d3db329e7f60d93afeb995e598b7d8bd0566ff61b38648ebc8eb9ad5",
+    "llm_plan_sha256": "46084ade6113f440d119ae4e47371a5039ee1d5d26012fc10bc4db0592d51f1f",
     "rubric_sha256": "751cdb53e6bb7a7273b5f85815d9ab203c505ef9bfd614749f175420198ad9ef",
-    "scenario_scaffolds_sha256": "926d99932f3a87f2b91b926bc087460d3b1ebfaa3fc4a6a06ec76a5335ba4bcf",
-    "version_graph_sha256": "364bf11a3334f1b426281c5596f975bf70cd2ae4054f3cee09cf9b5b1bcf27d0"
+    "scenario_scaffolds_sha256": "7e4012abbf1c52fd4aa9060af04055df2e29129870f17267ae2eaa418dbfd2dd",
+    "version_graph_sha256": "73b8f9c50738329022b75a5840821e2c9ae89db7835817706628f9e6fe3497c1"
   },
   "limitations": [
     "No materiality or compliance gold exists for legal correctness scoring.",
@@ -85,11 +85,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:84",
-        "uncertainty_or_escalation": "There is no basis for a compliance determination.",
+        "uncertainty_or_escalation": "Facts, legal question, and legal context are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts, legal question, or legal context are supplied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
       "run_id": "run_3bdf6a5f41c4369c1451b607",
       "scenario_id": "scenario_efdf7322958aa4222ffd5e57",
       "status": "automated_support_evaluated_expert_review_required"
@@ -121,11 +121,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:19",
-        "uncertainty_or_escalation": "There is no basis for a compliance determination.",
+        "uncertainty_or_escalation": "Facts, legal question, and legal context are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts, legal question, or legal context are supplied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
       "run_id": "run_4fa2947a53eeabda5da18b74",
       "scenario_id": "scenario_f4883150aa86b5b2573fa907",
       "status": "automated_support_evaluated_expert_review_required"
@@ -157,11 +157,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:68",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing.",
+        "uncertainty_or_escalation": "Facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_70663048475f0bbe1451d8e8",
       "scenario_id": "scenario_68e783d96abfe2405220edfc",
       "status": "automated_support_evaluated_expert_review_required"
@@ -193,11 +193,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:3",
-        "uncertainty_or_escalation": "There is no basis for a compliance determination.",
+        "uncertainty_or_escalation": "Facts, legal question, and legal context are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts, legal question, or legal context are supplied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
       "run_id": "run_0f8e26c0869173d4b191078d",
       "scenario_id": "scenario_241ac2b98552005e4410f9d8",
       "status": "automated_support_evaluated_expert_review_required"
@@ -229,11 +229,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:70",
-        "uncertainty_or_escalation": "There is no basis for a compliance determination.",
+        "uncertainty_or_escalation": "Facts, legal question, and legal context are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts, legal question, or legal context are supplied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
       "run_id": "run_e373daf55ce13272635b1a2f",
       "scenario_id": "scenario_376cd72a8acc5e49df166552",
       "status": "automated_support_evaluated_expert_review_required"
@@ -265,11 +265,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:84",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing.",
+        "uncertainty_or_escalation": "Facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_36f061bb94a5445769246042",
       "scenario_id": "scenario_1f02f95d109087097680f8a5",
       "status": "automated_support_evaluated_expert_review_required"
@@ -301,11 +301,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:43",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing.",
+        "uncertainty_or_escalation": "Facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_11f20ff92445dfc7918fe04a",
       "scenario_id": "scenario_30af89ea924ddee701286dd6",
       "status": "automated_support_evaluated_expert_review_required"
@@ -337,11 +337,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:25",
-        "uncertainty_or_escalation": "There is no basis for a compliance determination.",
+        "uncertainty_or_escalation": "Facts, legal question, and legal context are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts, legal question, or legal context are supplied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
       "run_id": "run_418c2a7897370df626f52f53",
       "scenario_id": "scenario_e45d9137432fd49abf4aea9a",
       "status": "automated_support_evaluated_expert_review_required"
@@ -373,11 +373,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:2",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable.",
+        "uncertainty_or_escalation": "Facts and legal question are missing; the pre-amendment version is unavailable.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_45b84f25c21abbaa73de37f1",
       "scenario_id": "scenario_e63b93a56cc0e7c91f2ad04e",
       "status": "automated_support_evaluated_expert_review_required"
@@ -409,11 +409,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:13",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing.",
+        "uncertainty_or_escalation": "Facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_cbcebec661394a04ac1c4a64",
       "scenario_id": "scenario_28f1ac7204b60f0cb4db1eae",
       "status": "automated_support_evaluated_expert_review_required"
@@ -445,11 +445,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:25",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable.",
+        "uncertainty_or_escalation": "Facts and legal question are missing; the pre-amendment version is unavailable.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_5478a75c4976dece12ec1dad",
       "scenario_id": "scenario_c46445efc42aa98181247b62",
       "status": "automated_support_evaluated_expert_review_required"
@@ -481,11 +481,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:25",
-        "uncertainty_or_escalation": "There is no basis for a compliance determination as of 2009-10-26.",
+        "uncertainty_or_escalation": "The pre-amendment version is unavailable, and facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
       "run_id": "run_b045149e89cb572aa04cfc12",
       "scenario_id": "scenario_e45d9137432fd49abf4aea9a",
       "status": "automated_support_evaluated_expert_review_required"
@@ -517,11 +517,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:2",
-        "uncertainty_or_escalation": "There is no basis for a compliance determination as of 2009-10-26.",
+        "uncertainty_or_escalation": "The pre-amendment version is unavailable, and facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
       "run_id": "run_8b619ef6d071d96bacf27cdb",
       "scenario_id": "scenario_e63b93a56cc0e7c91f2ad04e",
       "status": "automated_support_evaluated_expert_review_required"
@@ -553,11 +553,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:43",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing.",
+        "uncertainty_or_escalation": "Facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_34b7fcf3274604a7bc7ab76b",
       "scenario_id": "scenario_30af89ea924ddee701286dd6",
       "status": "automated_support_evaluated_expert_review_required"
@@ -589,11 +589,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:3",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable.",
+        "uncertainty_or_escalation": "Facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_089d16d7759bfac11b8afb20",
       "scenario_id": "scenario_920e38ad9223b1215d92fc07",
       "status": "automated_support_evaluated_expert_review_required"
@@ -625,11 +625,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:70",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing.",
+        "uncertainty_or_escalation": "Facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_b4f966525df8b57beea597f5",
       "scenario_id": "scenario_376cd72a8acc5e49df166552",
       "status": "automated_support_evaluated_expert_review_required"
@@ -661,11 +661,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:3",
-        "uncertainty_or_escalation": "There is no basis for a compliance determination as of 2009-10-26.",
+        "uncertainty_or_escalation": "The pre-amendment version is unavailable, and facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
       "run_id": "run_a81fc7196837214cd6fd2c3f",
       "scenario_id": "scenario_920e38ad9223b1215d92fc07",
       "status": "automated_support_evaluated_expert_review_required"
@@ -697,11 +697,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:84",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable.",
+        "uncertainty_or_escalation": "Facts and legal question are missing; the pre-amendment version is unavailable.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_ad1e058700e078d034ebfef0",
       "scenario_id": "scenario_1f02f95d109087097680f8a5",
       "status": "automated_support_evaluated_expert_review_required"
@@ -733,11 +733,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:25",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable.",
+        "uncertainty_or_escalation": "Facts and legal question are missing; the pre-amendment version is unavailable.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_d0cae0f9073da961602f8d7f",
       "scenario_id": "scenario_e45d9137432fd49abf4aea9a",
       "status": "automated_support_evaluated_expert_review_required"
@@ -769,11 +769,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:43",
-        "uncertainty_or_escalation": "There is no basis for a compliance determination.",
+        "uncertainty_or_escalation": "Facts, legal question, and legal context are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts, legal question, or legal context are supplied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
       "run_id": "run_6d65393a50901a31b3d78d33",
       "scenario_id": "scenario_30af89ea924ddee701286dd6",
       "status": "automated_support_evaluated_expert_review_required"
@@ -805,11 +805,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:13",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing.",
+        "uncertainty_or_escalation": "Facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_c2b9961461242b487a9708c6",
       "scenario_id": "scenario_28f1ac7204b60f0cb4db1eae",
       "status": "automated_support_evaluated_expert_review_required"
@@ -841,11 +841,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:19",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing.",
+        "uncertainty_or_escalation": "Facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_08629a503d2a6cb0cf774f68",
       "scenario_id": "scenario_f4883150aa86b5b2573fa907",
       "status": "automated_support_evaluated_expert_review_required"
@@ -877,11 +877,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:19",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable.",
+        "uncertainty_or_escalation": "Facts and legal question are missing; the pre-amendment version is unavailable.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_ef0f14eeb0ad1c355c132dbe",
       "scenario_id": "scenario_f4883150aa86b5b2573fa907",
       "status": "automated_support_evaluated_expert_review_required"
@@ -913,11 +913,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:25",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable.",
+        "uncertainty_or_escalation": "Facts and legal question are missing; the pre-amendment version is unavailable.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_ee1ec5e812d6a9f2895c5f4b",
       "scenario_id": "scenario_c46445efc42aa98181247b62",
       "status": "automated_support_evaluated_expert_review_required"
@@ -949,11 +949,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:84",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing.",
+        "uncertainty_or_escalation": "Facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_97f7b8e7641bf14b8e1d0511",
       "scenario_id": "scenario_efdf7322958aa4222ffd5e57",
       "status": "automated_support_evaluated_expert_review_required"
@@ -985,11 +985,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:43",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable.",
+        "uncertainty_or_escalation": "Facts and legal question are missing; the pre-amendment version is unavailable.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_b8dafc2d2129e4d4d837851b",
       "scenario_id": "scenario_30af89ea924ddee701286dd6",
       "status": "automated_support_evaluated_expert_review_required"
@@ -1021,11 +1021,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:13",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable.",
+        "uncertainty_or_escalation": "Facts and legal question are missing; the pre-amendment version is unavailable.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_794045334239b4510d833cdf",
       "scenario_id": "scenario_28f1ac7204b60f0cb4db1eae",
       "status": "automated_support_evaluated_expert_review_required"
@@ -1057,11 +1057,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:17",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing.",
+        "uncertainty_or_escalation": "Facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_2f45099871897c6d9fb84342",
       "scenario_id": "scenario_d9c04a37c28330689aa4e96c",
       "status": "automated_support_evaluated_expert_review_required"
@@ -1093,11 +1093,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:70",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable.",
+        "uncertainty_or_escalation": "Facts and legal question are missing; the pre-amendment version is unavailable.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_7112091abb12b67cc8536c6a",
       "scenario_id": "scenario_376cd72a8acc5e49df166552",
       "status": "automated_support_evaluated_expert_review_required"
@@ -1129,11 +1129,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:25",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing; the pre-amendment version is also unavailable.",
+        "uncertainty_or_escalation": "Facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_064ec9263f5195c2a5f11141",
       "scenario_id": "scenario_e45d9137432fd49abf4aea9a",
       "status": "automated_support_evaluated_expert_review_required"
@@ -1165,11 +1165,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:19",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable.",
+        "uncertainty_or_escalation": "Facts and legal question are missing; the pre-amendment version is unavailable.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_3f0708cf25bc4fd9c25eff11",
       "scenario_id": "scenario_f4883150aa86b5b2573fa907",
       "status": "automated_support_evaluated_expert_review_required"
@@ -1201,11 +1201,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:2",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable.",
+        "uncertainty_or_escalation": "Facts and legal question are missing; the pre-amendment version is unavailable.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_43b84d47a089204059acd469",
       "scenario_id": "scenario_e63b93a56cc0e7c91f2ad04e",
       "status": "automated_support_evaluated_expert_review_required"
@@ -1237,11 +1237,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:68",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable.",
+        "uncertainty_or_escalation": "Facts and legal question are missing; the pre-amendment version is unavailable.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_3e961129f9a4cf1742c7487f",
       "scenario_id": "scenario_68e783d96abfe2405220edfc",
       "status": "automated_support_evaluated_expert_review_required"
@@ -1273,11 +1273,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:3",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable.",
+        "uncertainty_or_escalation": "Facts and legal question are missing; the pre-amendment version is unavailable.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_ad7b61df6f04fe27265fff12",
       "scenario_id": "scenario_920e38ad9223b1215d92fc07",
       "status": "automated_support_evaluated_expert_review_required"
@@ -1309,11 +1309,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:17",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable.",
+        "uncertainty_or_escalation": "Facts and legal question are missing; the pre-amendment version is unavailable.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_605cb94cc17c5872c3df7c7b",
       "scenario_id": "scenario_d9c04a37c28330689aa4e96c",
       "status": "automated_support_evaluated_expert_review_required"
@@ -1345,11 +1345,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:19",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing.",
+        "uncertainty_or_escalation": "Facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_21da609a5ca4e863c6b8f694",
       "scenario_id": "scenario_f4883150aa86b5b2573fa907",
       "status": "automated_support_evaluated_expert_review_required"
@@ -1381,11 +1381,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:43",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable.",
+        "uncertainty_or_escalation": "Facts and legal question are missing; the pre-amendment version is unavailable.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_606ef8c720fdf693b0571659",
       "scenario_id": "scenario_30af89ea924ddee701286dd6",
       "status": "automated_support_evaluated_expert_review_required"
@@ -1417,11 +1417,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:84",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable.",
+        "uncertainty_or_escalation": "Facts and legal question are missing; the pre-amendment version is unavailable.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_844a7ba9d1e98bad4d9239af",
       "scenario_id": "scenario_1f02f95d109087097680f8a5",
       "status": "automated_support_evaluated_expert_review_required"
@@ -1453,11 +1453,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:70",
-        "uncertainty_or_escalation": "There is no basis for a compliance determination as of 2009-10-26.",
+        "uncertainty_or_escalation": "The pre-amendment version is unavailable, and facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
       "run_id": "run_e9c22a1f5b563fafeb113bb2",
       "scenario_id": "scenario_376cd72a8acc5e49df166552",
       "status": "automated_support_evaluated_expert_review_required"
@@ -1489,11 +1489,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:3",
-        "uncertainty_or_escalation": "There is no basis for a compliance determination.",
+        "uncertainty_or_escalation": "Facts, legal question, and legal context are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts, legal question, or legal context are supplied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
       "run_id": "run_33d2fa4876eb4b00faeea6e8",
       "scenario_id": "scenario_920e38ad9223b1215d92fc07",
       "status": "automated_support_evaluated_expert_review_required"
@@ -1525,11 +1525,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:68",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing.",
+        "uncertainty_or_escalation": "Facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_932ad2861c49ec1c77a47eac",
       "scenario_id": "scenario_68e783d96abfe2405220edfc",
       "status": "automated_support_evaluated_expert_review_required"
@@ -1561,11 +1561,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:70",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing.",
+        "uncertainty_or_escalation": "Facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_4b91a0ff2bda608138cd5354",
       "scenario_id": "scenario_376cd72a8acc5e49df166552",
       "status": "automated_support_evaluated_expert_review_required"
@@ -1597,11 +1597,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:3",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing.",
+        "uncertainty_or_escalation": "Facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_0f52349fceb922ca68eaa38e",
       "scenario_id": "scenario_920e38ad9223b1215d92fc07",
       "status": "automated_support_evaluated_expert_review_required"
@@ -1633,11 +1633,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:68",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable.",
+        "uncertainty_or_escalation": "Facts and legal question are missing; the pre-amendment version is unavailable.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_327a6a4e90fb42fba1456529",
       "scenario_id": "scenario_68e783d96abfe2405220edfc",
       "status": "automated_support_evaluated_expert_review_required"
@@ -1669,11 +1669,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:13",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable.",
+        "uncertainty_or_escalation": "Facts and legal question are missing; the pre-amendment version is unavailable.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_ea175927c5e7dd213d1c892d",
       "scenario_id": "scenario_28f1ac7204b60f0cb4db1eae",
       "status": "automated_support_evaluated_expert_review_required"
@@ -1705,11 +1705,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:84",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing.",
+        "uncertainty_or_escalation": "Facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_99a8fb977dbc32ff0009842e",
       "scenario_id": "scenario_efdf7322958aa4222ffd5e57",
       "status": "automated_support_evaluated_expert_review_required"
@@ -1741,11 +1741,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:2",
-        "uncertainty_or_escalation": "There is no basis for a compliance determination.",
+        "uncertainty_or_escalation": "Facts, legal question, and legal context are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts, legal question, or legal context are supplied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
       "run_id": "run_b83bc9116b2ad2ba0d9ce59c",
       "scenario_id": "scenario_e63b93a56cc0e7c91f2ad04e",
       "status": "automated_support_evaluated_expert_review_required"
@@ -1777,11 +1777,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:13",
-        "uncertainty_or_escalation": "There is no basis for a compliance determination as of 2009-10-26.",
+        "uncertainty_or_escalation": "The pre-amendment version is unavailable, and facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
       "run_id": "run_57193f88b240b5ffb72ce557",
       "scenario_id": "scenario_28f1ac7204b60f0cb4db1eae",
       "status": "automated_support_evaluated_expert_review_required"
@@ -1813,11 +1813,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:3",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing.",
+        "uncertainty_or_escalation": "Facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_900101d9e788c5146c81ab00",
       "scenario_id": "scenario_241ac2b98552005e4410f9d8",
       "status": "automated_support_evaluated_expert_review_required"
@@ -1849,11 +1849,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:2",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing.",
+        "uncertainty_or_escalation": "Facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_cb0e7df97bf214f2218ec212",
       "scenario_id": "scenario_e63b93a56cc0e7c91f2ad04e",
       "status": "automated_support_evaluated_expert_review_required"
@@ -1885,11 +1885,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:25",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing.",
+        "uncertainty_or_escalation": "Facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_bfd8036e85e479dd51c35e0b",
       "scenario_id": "scenario_c46445efc42aa98181247b62",
       "status": "automated_support_evaluated_expert_review_required"
@@ -1921,11 +1921,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:19",
-        "uncertainty_or_escalation": "There is no basis for a compliance determination as of 2009-10-26.",
+        "uncertainty_or_escalation": "The pre-amendment version is unavailable, and facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
       "run_id": "run_644c547dd4646d579eaa1d31",
       "scenario_id": "scenario_f4883150aa86b5b2573fa907",
       "status": "automated_support_evaluated_expert_review_required"
@@ -1957,11 +1957,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:68",
-        "uncertainty_or_escalation": "There is no basis for a compliance determination as of 2009-10-26.",
+        "uncertainty_or_escalation": "The pre-amendment version is unavailable, and facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
       "run_id": "run_ba7bd139398b622dd0194bb6",
       "scenario_id": "scenario_68e783d96abfe2405220edfc",
       "status": "automated_support_evaluated_expert_review_required"
@@ -1993,11 +1993,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:17",
-        "uncertainty_or_escalation": "There is no basis for a compliance determination as of 2009-10-26.",
+        "uncertainty_or_escalation": "The pre-amendment version is unavailable, and facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
       "run_id": "run_d0f0a21b6379a234b7e90741",
       "scenario_id": "scenario_d9c04a37c28330689aa4e96c",
       "status": "automated_support_evaluated_expert_review_required"
@@ -2029,11 +2029,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:84",
-        "uncertainty_or_escalation": "There is no basis for a compliance determination as of 2009-10-26.",
+        "uncertainty_or_escalation": "The pre-amendment version is unavailable, and facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
       "run_id": "run_e38364eb274e9650464e9c85",
       "scenario_id": "scenario_1f02f95d109087097680f8a5",
       "status": "automated_support_evaluated_expert_review_required"
@@ -2065,11 +2065,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:2",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing.",
+        "uncertainty_or_escalation": "Facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_86d1fdc7a060ac50b7df0aff",
       "scenario_id": "scenario_e63b93a56cc0e7c91f2ad04e",
       "status": "automated_support_evaluated_expert_review_required"
@@ -2101,11 +2101,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:84",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable.",
+        "uncertainty_or_escalation": "Facts and legal question are missing; the pre-amendment version is unavailable.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_6c145ef466719e52cf8b4726",
       "scenario_id": "scenario_efdf7322958aa4222ffd5e57",
       "status": "automated_support_evaluated_expert_review_required"
@@ -2137,11 +2137,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:13",
-        "uncertainty_or_escalation": "There is no basis for a compliance determination.",
+        "uncertainty_or_escalation": "Facts, legal question, and legal context are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts, legal question, or legal context are supplied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
       "run_id": "run_e98745d9262cfb5dc20f750c",
       "scenario_id": "scenario_28f1ac7204b60f0cb4db1eae",
       "status": "automated_support_evaluated_expert_review_required"
@@ -2173,11 +2173,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:3",
-        "uncertainty_or_escalation": "There is no basis for a compliance determination as of 2009-10-26.",
+        "uncertainty_or_escalation": "The pre-amendment version is unavailable, and facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
       "run_id": "run_bf53253c0fb25e4868de697d",
       "scenario_id": "scenario_241ac2b98552005e4410f9d8",
       "status": "automated_support_evaluated_expert_review_required"
@@ -2209,11 +2209,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:3",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable.",
+        "uncertainty_or_escalation": "Facts and legal question are missing; the pre-amendment version is unavailable.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_f349491deb315f67ac8dda9b",
       "scenario_id": "scenario_241ac2b98552005e4410f9d8",
       "status": "automated_support_evaluated_expert_review_required"
@@ -2245,11 +2245,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:25",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing.",
+        "uncertainty_or_escalation": "Facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_a40ac86627202a5846ec5534",
       "scenario_id": "scenario_c46445efc42aa98181247b62",
       "status": "automated_support_evaluated_expert_review_required"
@@ -2281,11 +2281,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:3",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable.",
+        "uncertainty_or_escalation": "Facts and legal question are missing; the pre-amendment version is unavailable.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_586d4eeb1eb70f1fa5ed5a93",
       "scenario_id": "scenario_241ac2b98552005e4410f9d8",
       "status": "automated_support_evaluated_expert_review_required"
@@ -2317,11 +2317,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:43",
-        "uncertainty_or_escalation": "There is no basis for a compliance determination as of 2009-10-26.",
+        "uncertainty_or_escalation": "The pre-amendment version is unavailable, and facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
       "run_id": "run_fe0a4a524c2c08550c2531e9",
       "scenario_id": "scenario_30af89ea924ddee701286dd6",
       "status": "automated_support_evaluated_expert_review_required"
@@ -2353,11 +2353,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:84",
-        "uncertainty_or_escalation": "There is no basis for a compliance determination.",
+        "uncertainty_or_escalation": "Facts, legal question, and legal context are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts, legal question, or legal context are supplied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
       "run_id": "run_e38142cbb3a9721c9068f31b",
       "scenario_id": "scenario_1f02f95d109087097680f8a5",
       "status": "automated_support_evaluated_expert_review_required"
@@ -2389,11 +2389,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:84",
-        "uncertainty_or_escalation": "There is no basis for a compliance determination as of 2009-10-26.",
+        "uncertainty_or_escalation": "The pre-amendment version is unavailable, and facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
       "run_id": "run_7e8435421cc30fa09a5ebd57",
       "scenario_id": "scenario_efdf7322958aa4222ffd5e57",
       "status": "automated_support_evaluated_expert_review_required"
@@ -2425,11 +2425,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:25",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing.",
+        "uncertainty_or_escalation": "Facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_3a92d457193343b7dfd414c5",
       "scenario_id": "scenario_e45d9137432fd49abf4aea9a",
       "status": "automated_support_evaluated_expert_review_required"
@@ -2461,11 +2461,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:17",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable.",
+        "uncertainty_or_escalation": "Facts and legal question are missing; the pre-amendment version is unavailable.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_8602f233f8791e7005431db1",
       "scenario_id": "scenario_d9c04a37c28330689aa4e96c",
       "status": "automated_support_evaluated_expert_review_required"
@@ -2497,11 +2497,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:84",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing.",
+        "uncertainty_or_escalation": "Facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_ff3f6cf02a9ea7c19cda768f",
       "scenario_id": "scenario_1f02f95d109087097680f8a5",
       "status": "automated_support_evaluated_expert_review_required"
@@ -2533,11 +2533,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:68",
-        "uncertainty_or_escalation": "There is no basis for a compliance determination.",
+        "uncertainty_or_escalation": "Facts, legal question, and legal context are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts, legal question, or legal context are supplied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
       "run_id": "run_67572b3134bed3360409165b",
       "scenario_id": "scenario_68e783d96abfe2405220edfc",
       "status": "automated_support_evaluated_expert_review_required"
@@ -2569,11 +2569,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:17",
-        "uncertainty_or_escalation": "There is no basis for a compliance determination.",
+        "uncertainty_or_escalation": "Facts, legal question, and legal context are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts, legal question, or legal context are supplied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
       "run_id": "run_62b009df329cd3557ad9e909",
       "scenario_id": "scenario_d9c04a37c28330689aa4e96c",
       "status": "automated_support_evaluated_expert_review_required"
@@ -2605,11 +2605,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:3",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing.",
+        "uncertainty_or_escalation": "Facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_7773dada1da1707cb47ac903",
       "scenario_id": "scenario_241ac2b98552005e4410f9d8",
       "status": "automated_support_evaluated_expert_review_required"
@@ -2641,11 +2641,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:25",
-        "uncertainty_or_escalation": "There is no basis for a compliance determination.",
+        "uncertainty_or_escalation": "Facts, legal question, and legal context are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts, legal question, or legal context are supplied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts, a legal question, or legal context.",
       "run_id": "run_4c58486248e10f6dc93d7511",
       "scenario_id": "scenario_c46445efc42aa98181247b62",
       "status": "automated_support_evaluated_expert_review_required"
@@ -2677,11 +2677,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:70",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable.",
+        "uncertainty_or_escalation": "Facts and legal question are missing; the pre-amendment version is unavailable.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_322ef0d0e575c7d46b0609b1",
       "scenario_id": "scenario_376cd72a8acc5e49df166552",
       "status": "automated_support_evaluated_expert_review_required"
@@ -2713,11 +2713,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:25",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing.",
+        "uncertainty_or_escalation": "Facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_4ef75c8bcad75860dbd2f33d",
       "scenario_id": "scenario_e45d9137432fd49abf4aea9a",
       "status": "automated_support_evaluated_expert_review_required"
@@ -2749,11 +2749,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:17",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing.",
+        "uncertainty_or_escalation": "Facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_3734e5bd0ec4b43e6d40ea35",
       "scenario_id": "scenario_d9c04a37c28330689aa4e96c",
       "status": "automated_support_evaluated_expert_review_required"
@@ -2785,11 +2785,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:3",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing.",
+        "uncertainty_or_escalation": "Facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so the provision cannot be applied.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_4bca9e8a07d0f6a91977657e",
       "scenario_id": "scenario_920e38ad9223b1215d92fc07",
       "status": "automated_support_evaluated_expert_review_required"
@@ -2821,11 +2821,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:84",
-        "uncertainty_or_escalation": "Scenario facts and the issue to decide are missing; the pre-amendment version is unavailable.",
+        "uncertainty_or_escalation": "Facts and legal question are missing; the pre-amendment version is unavailable.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "No facts or legal question are supplied, so compliance cannot be assessed.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts or a legal question.",
       "run_id": "run_445b2e4b5470b0b2229b30f0",
       "scenario_id": "scenario_efdf7322958aa4222ffd5e57",
       "status": "automated_support_evaluated_expert_review_required"
@@ -2857,11 +2857,11 @@
         "materiality_dimensions": [],
         "materiality_level": null,
         "provision_path": "section:25",
-        "uncertainty_or_escalation": "There is no basis for a compliance determination as of 2009-10-26.",
+        "uncertainty_or_escalation": "The pre-amendment version is unavailable, and facts and legal question are missing.",
         "version_id": null
       },
       "known_post_version_exists": true,
-      "model_explanation_text": "The applicable pre-amendment legal text, facts, and legal question are unavailable.",
+      "model_explanation_text": "No compliance determination is possible without scenario facts, a legal question, or the applicable legal text.",
       "run_id": "run_bcf6d50c825c326aab1ddff7",
       "scenario_id": "scenario_c46445efc42aa98181247b62",
       "status": "automated_support_evaluated_expert_review_required"
