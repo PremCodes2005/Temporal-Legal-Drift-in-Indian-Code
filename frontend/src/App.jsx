@@ -4,8 +4,9 @@ const sections = [
   { id: "assistant", number: "01", label: "Legal drift assistant" },
   { id: "corpus", number: "02", label: "Document repository" },
   { id: "drift", number: "03", label: "Drift explanation" },
-  { id: "method", number: "04", label: "How it works" },
-  { id: "faq", number: "05", label: "Recent changes FAQ" },
+  { id: "calculation", number: "04", label: "Score calculation" },
+  { id: "method", number: "05", label: "How it works" },
+  { id: "faq", number: "06", label: "Recent changes FAQ" },
 ];
 
 const suggestions = [
@@ -21,13 +22,20 @@ export default function App() {
   const [status, setStatus] = useState(null);
   const [loadError, setLoadError] = useState("");
   const [starterQuery, setStarterQuery] = useState("");
-  const [lastResult, setLastResult] = useState(null);
+  const [lastResult, setLastResult] = useState(() => {
+    try { return JSON.parse(window.sessionStorage.getItem("tldrift:last-result")) || null; }
+    catch { return null; }
+  });
 
   useEffect(() => {
     Promise.all([api("/api/corpus"), api("/api/rag/status")])
       .then(([corpusData, statusData]) => { setCorpus(corpusData); setStatus(statusData); })
       .catch((error) => setLoadError(error.message));
   }, []);
+
+  useEffect(() => {
+    if (lastResult) window.sessionStorage.setItem("tldrift:last-result", JSON.stringify(lastResult));
+  }, [lastResult]);
 
   const navigate = (next) => {
     setSection(next); setMenuOpen(false); window.scrollTo({ top: 0, behavior: "smooth" });
@@ -51,6 +59,7 @@ export default function App() {
         {section === "assistant" && <AssistantWorkspace status={status} error={loadError} starterQuery={starterQuery} result={lastResult} onResult={setLastResult} onExplain={() => navigate("drift")} />}
         {section === "corpus" && <CorpusBrowser corpus={corpus} error={loadError} status={status} />}
         {section === "drift" && <DriftExplanation result={lastResult} onAnalyse={() => navigate("assistant")} />}
+        {section === "calculation" && <ScoreCalculation result={lastResult} onAnalyse={() => navigate("assistant")} />}
         {section === "method" && <Method />}
         {section === "faq" && <RecentChangesFaq onAsk={askFromFaq} />}
       </main>
@@ -176,6 +185,61 @@ function DriftExplanation({ result, onAnalyse }) {
 
 function EvidenceExcerpt({ title, citation, chunk }) {
   return <article className="evidence-excerpt"><span className="section-kicker">{title}</span><h3>{citation?.act_name || chunk?.metadata?.act_name || "Evidence unavailable"}</h3><div className="evidence-meta">{citation?.version || chunk?.metadata?.version || "Unknown version"} · {citation?.source_anchor || chunk?.metadata?.source_anchor || "No anchor"}</div><blockquote>{excerpt(chunk?.text)}</blockquote>{(citation?.source_url || citation?.official_portal_url) && <a href={citation.source_url || citation.official_portal_url} target="_blank" rel="noreferrer">Open cited source ↗</a>}</article>;
+}
+
+function ScoreCalculation({ result, onAnalyse }) {
+  if (!result?.metrics) return <section className="page-section"><div className="section-header"><span className="section-kicker">Reproducible calculation</span><h2>Run a pre/post comparison first.</h2><p>This tab explains the percentages from the latest response and identifies the exact retrieved PDF pages used.</p></div><button className="send-button" type="button" onClick={onAnalyse}>Open legal drift assistant <span>→</span></button></section>;
+
+  const { metrics, retrieval, citations, answer, query } = result;
+  const hasServerTrace = Boolean(metrics.calculation_trace);
+  const trace = metrics.calculation_trace || legacyCalculationTrace(metrics);
+  const basis = metrics.score_basis || {};
+  const preCitation = citations?.find((item) => item.label === "pre");
+  const postCitation = citations?.find((item) => item.label === "post");
+  const contribution = trace.overall.weighted_square_contributions;
+  const rows = [
+    ["Semantic drift", `${trace.semantic.cosine_similarity_percent}% similarity`, trace.semantic.formula, metrics.semantic_drift_percent],
+    ["Lexical drift", `${trace.lexical.jaccard_similarity_percent}% Jaccard · ${trace.lexical.sequence_similarity_percent}% sequence`, trace.lexical.formula, metrics.lexical_drift_percent],
+    ["Conceptual drift", titleCase(trace.conceptual.method), trace.conceptual.formula, metrics.conceptual_drift_percent],
+    ["Evidence alignment", `${trace.alignment.average_retrieval_confidence_percent}% retrieval · ${trace.alignment.paired_evidence_completeness_percent}% evidence · ${trace.alignment.metadata_coverage_percent}% metadata`, trace.alignment.formula, metrics.alignment_accuracy_percent],
+  ];
+  return <section className="page-section calculation-page">
+    <div className="section-header"><span className="section-kicker">Latest response audit</span><h2>How these percentages were calculated</h2><p>You supplied only this prompt: “{query}”. The backend automatically found the relevant versions and selected comparable evidence. No before/after passage was entered by the user.</p></div>
+    {!hasServerTrace && <div className="calculation-warning">This result came from an older running backend. The final percentages and formulas are shown, but detailed token, cue and similarity inputs require restarting the backend and running the question again.</div>}
+    <div className="calculation-sources">
+      <CalculationSource label="Automatically selected before evidence" citation={preCitation} chunk={retrieval.pre} scoringExcerpt={basis.pre_excerpt} />
+      <CalculationSource label="Automatically selected after evidence" citation={postCitation} chunk={retrieval.post} scoringExcerpt={basis.post_excerpt} />
+    </div>
+    <article className="calculation-card"><span className="section-kicker">Automatic score basis</span><h3>Prompt → retrieval → {titleCase(basis.selection_method || "query relevant evidence")}</h3><p className="panel-note">The scoring basis is fixed across Generic and Specific display modes. Those modes change answer detail, not the selected evidence or percentages.</p></article>
+    <article className="calculation-card"><span className="section-kicker">Backend values and formulas</span><div className="calculation-rows">{rows.map(([name, inputs, formula, score]) => <div className="calculation-row" key={name}><div><strong>{name}</strong><span>{inputs}</span><code>{formula}</code></div><b>{score}%</b></div>)}</div></article>
+    <article className="calculation-card"><span className="section-kicker">Overall weighted-RMS calculation</span><h3>Why the final score is {metrics.overall_drift_percent}%</h3><p className="formula-display">{trace.overall.formula}</p><div className="contribution-grid"><div><span>Semantic contribution</span><strong>{contribution.semantic}</strong></div><div><span>Lexical contribution</span><strong>{contribution.lexical}</strong></div><div><span>Conceptual contribution</span><strong>{contribution.conceptual}</strong></div><div><span>Sum before square root</span><strong>{trace.overall.sum_of_weighted_squares}</strong></div></div>{metrics.component_disagreement && <p className="calculation-warning">The component scores differ substantially. Weighted RMS prevents a strong change signal from being cancelled by a weak one.</p>}</article>
+    <article className="calculation-card"><span className="section-kicker">Connection to the response</span><h3>Detected changes supported by those pages</h3><ul>{answer.key_differences.map((item, index) => <li key={index}>{item}</li>)}</ul><div className="cue-grid"><div><strong>Before legal cues</strong><span>{trace.conceptual.pre_legal_cues.join(", ") || "None detected"}</span><small>Numbers: {trace.conceptual.pre_numbers.join(", ") || "none"}</small></div><div><strong>After legal cues</strong><span>{trace.conceptual.post_legal_cues.join(", ") || "None detected"}</span><small>Numbers: {trace.conceptual.post_numbers.join(", ") || "none"}</small></div></div></article>
+    <p className="research-note">These calculations measure retrieved-text movement and evidence alignment. They are not probabilities, legal correctness scores or legal advice.</p>
+  </section>;
+}
+
+function CalculationSource({ label, citation, chunk, scoringExcerpt }) {
+  const anchor = citation?.source_anchor || chunk?.metadata?.source_anchor || "No page anchor";
+  const sourceUrl = citation?.source_url || citation?.official_portal_url;
+  return <article><span className="section-kicker">{label}</span><h3>{citation?.act_name || chunk?.metadata?.act_name || "Evidence unavailable"}</h3><strong>{anchor}</strong><p>{excerpt(scoringExcerpt || chunk?.text, 520)}</p>{sourceUrl && <a href={sourceUrl} target="_blank" rel="noreferrer">Open cited PDF page source ↗</a>}</article>;
+}
+
+function legacyCalculationTrace(metrics) {
+  const semantic = Number(metrics.semantic_drift_percent || 0);
+  const lexical = Number(metrics.lexical_drift_percent || 0);
+  const conceptual = Number(metrics.conceptual_drift_percent || 0);
+  const contributions = {
+    semantic: Number((0.4 * semantic * semantic).toFixed(2)),
+    lexical: Number((0.3 * lexical * lexical).toFixed(2)),
+    conceptual: Number((0.3 * conceptual * conceptual).toFixed(2)),
+  };
+  return {
+    semantic: { cosine_similarity_percent: Number((100 - semantic).toFixed(1)), formula: "100 × (1 - cosine similarity)" },
+    lexical: { jaccard_similarity_percent: "Unavailable", sequence_similarity_percent: "Unavailable", formula: "100 × (1 - (0.55 × Jaccard similarity + 0.45 × sequence similarity))" },
+    conceptual: { method: metrics.conceptual_method || "Unavailable", formula: "Evidence-bound LLM score when available; otherwise deterministic legal-cue, numeric and polarity changes", pre_legal_cues: [], post_legal_cues: [], pre_numbers: [], post_numbers: [] },
+    overall: { formula: "sqrt(0.40 × semantic² + 0.30 × lexical² + 0.30 × conceptual²)", weighted_square_contributions: contributions, sum_of_weighted_squares: Number(Object.values(contributions).reduce((sum, value) => sum + value, 0).toFixed(2)) },
+    alignment: { average_retrieval_confidence_percent: "Unavailable", paired_evidence_completeness_percent: "Unavailable", metadata_coverage_percent: "Unavailable", formula: "0.50 × retrieval confidence + 0.30 × evidence completeness + 0.20 × metadata coverage" },
+  };
 }
 
 function VerificationPanel({ verification }) { return <article className="panel compact"><span className="section-kicker">Objective verification</span><h3>{verification.passed ? "Alignment checks passed" : "Review required"}</h3><div className="check-list">{verification.checks.map((check) => <div key={check.id} className={check.passed ? "pass" : "fail"}><span>{check.passed ? "✓" : "!"}</span>{check.label}</div>)}</div><p className="panel-note">{verification.note}</p></article>; }

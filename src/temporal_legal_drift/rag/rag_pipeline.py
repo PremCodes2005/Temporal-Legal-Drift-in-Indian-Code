@@ -152,14 +152,12 @@ class RagPipeline:
                 "record_type": "listed_in_current_consolidated_act",
             })
             known_titles.add(title.lower())
-        pre_text = pre.text if pre else ""
-        post_text = post.text if post else ""
-        reconstructed_pre, comparable_post, _ = _reconstructed_comparison(pre, post, query)
-        metric_pre_text = reconstructed_pre or pre_text
-        metric_post_text = comparable_post or post_text
         metadata_coverage = _metadata_coverage(pre, post)
         metric_document = None
         if pre is not None and post is not None:
+            metric_pre_text, metric_post_text, selection_method = _select_scoring_evidence(
+                pre, post, query
+            )
             metric_document = calculate_drift_metrics(
                 metric_pre_text,
                 metric_post_text,
@@ -170,6 +168,17 @@ class RagPipeline:
                 retrieval_scores=(pre.score, post.score),
                 metadata_coverage=metadata_coverage,
             )
+            metric_document["score_basis"] = {
+                "selection": "automatic_backend_retrieval_from_user_prompt",
+                "query": query,
+                "selection_method": selection_method,
+                "presentation_mode_independent": True,
+                "pre_source_anchor": pre.metadata.get("source_anchor"),
+                "post_source_anchor": post.metadata.get("source_anchor"),
+                "pre_excerpt": _bounded_text(metric_pre_text, 1200),
+                "post_excerpt": _bounded_text(metric_post_text, 1200),
+                "user_supplied_before_after_text": False,
+            }
         citations = _citations(pre, post)
         verification = _verification(query, pre, post, pair_status, generation, citations)
         answer_markdown = _answer_markdown(generation, citations, guidance, answer_type)
@@ -658,6 +667,25 @@ def _reconstructed_comparison(
             )
             return reconstructed, provision, (old_clean, current_clean)
     return None, None, None
+
+
+def _select_scoring_evidence(
+    pre: RetrievedChunk, post: RetrievedChunk, query: str
+) -> tuple[str, str, str]:
+    """Select comparable evidence from the prompt without user-supplied clauses.
+
+    Scoring deliberately uses a fixed clause-focused extraction policy so the
+    same prompt produces the same metric basis in Generic and Specific display
+    modes. Display mode changes the explanation, not the evidence or score.
+    """
+    reconstructed_pre, comparable_post, _ = _reconstructed_comparison(pre, post, query)
+    if reconstructed_pre and comparable_post:
+        return reconstructed_pre, comparable_post, "query_section_reconstruction"
+    return (
+        _best_excerpt(pre, query, "specific"),
+        _best_excerpt(post, query, "specific"),
+        "query_relevant_excerpt_selection",
+    )
 
 
 def _best_excerpt(item: RetrievedChunk, query: str, mode: str) -> str:

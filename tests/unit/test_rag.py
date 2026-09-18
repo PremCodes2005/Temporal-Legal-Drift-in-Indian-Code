@@ -48,6 +48,19 @@ class RagPipelineTests(unittest.TestCase):
                 self.assertGreaterEqual(value, 0, name)
                 self.assertLessEqual(value, 100, name)
         self.assertEqual(result["source_guidance"]["url"].split("?")[0], INDIA_CODE_HOME)
+        self.assertEqual(
+            result["metrics"]["score_basis"]["selection"],
+            "automatic_backend_retrieval_from_user_prompt",
+        )
+        self.assertFalse(result["metrics"]["score_basis"]["user_supplied_before_after_text"])
+
+    def test_display_mode_does_not_change_prompt_selected_score_basis(self) -> None:
+        query = "Compare Section 19 before and after the IT Amendment Act, 2008."
+        with patch.object(rag_pipeline, "_llm_configured", return_value=False):
+            specific = self.pipeline.answer(query, "specific")
+            generic = self.pipeline.answer(query, "generic")
+        self.assertEqual(specific["metrics"]["score_basis"], generic["metrics"]["score_basis"])
+        self.assertEqual(specific["metrics"]["overall_drift_percent"], generic["metrics"]["overall_drift_percent"])
 
     def test_section_substitution_reconstructs_a_narrow_baseline(self) -> None:
         result = self.pipeline.answer(
@@ -139,6 +152,10 @@ class RagPipelineTests(unittest.TestCase):
         self.assertEqual(metrics["aggregation_method"], "weighted_root_mean_square")
         self.assertTrue(metrics["component_disagreement"])
         self.assertEqual(metrics["component_spread_percent"], 100.0)
+        trace = metrics["calculation_trace"]
+        self.assertEqual(trace["overall"]["formula"], "sqrt(0.40 × semantic² + 0.30 × lexical² + 0.30 × conceptual²)")
+        self.assertIn("jaccard_similarity_percent", trace["lexical"])
+        self.assertIn("pre_legal_cues", trace["conceptual"])
 
     def test_legacy_and_current_india_code_hosts_are_recognised(self) -> None:
         self.assertTrue(is_india_code_url("https://indiacode.gov.in/"))

@@ -68,6 +68,11 @@ def calculate_drift_metrics(
         "conceptual": conceptual,
         "overall": overall_drift,
     }
+    weight_total = sum(DRIFT_WEIGHTS.values())
+    weighted_square_contributions = {
+        name: round(DRIFT_WEIGHTS[name] * score * score / weight_total, 2)
+        for name, score in component_scores.items()
+    }
     return {
         "semantic_drift_percent": round(semantic_drift, 1),
         "lexical_drift_percent": round(lexical_drift, 1),
@@ -86,6 +91,38 @@ def calculate_drift_metrics(
         "level_thresholds": DRIFT_LEVEL_THRESHOLDS,
         "conceptual_method": conceptual_method,
         "accuracy_definition": "retrieval confidence, paired-evidence completeness and metadata coverage; not legal correctness",
+        "calculation_trace": {
+            "semantic": {
+                "cosine_similarity_percent": round(cosine_similarity * 100, 1),
+                "formula": "100 × (1 - cosine similarity)",
+            },
+            "lexical": {
+                "pre_token_count": len(pre_tokens),
+                "post_token_count": len(post_tokens),
+                "jaccard_similarity_percent": round(jaccard_similarity * 100, 1),
+                "sequence_similarity_percent": round(sequence_similarity * 100, 1),
+                "formula": "100 × (1 - (0.55 × Jaccard similarity + 0.45 × sequence similarity))",
+            },
+            "conceptual": {
+                "method": conceptual_method,
+                "pre_legal_cues": _present_cues(pre_chunk),
+                "post_legal_cues": _present_cues(post_chunk),
+                "pre_numbers": sorted(set(re.findall(r"\b\d+(?:\.\d+)?\b", pre_chunk))),
+                "post_numbers": sorted(set(re.findall(r"\b\d+(?:\.\d+)?\b", post_chunk))),
+                "formula": "Evidence-bound LLM score when available; otherwise deterministic legal-cue, numeric and polarity changes",
+            },
+            "overall": {
+                "formula": "sqrt(0.40 × semantic² + 0.30 × lexical² + 0.30 × conceptual²)",
+                "weighted_square_contributions": weighted_square_contributions,
+                "sum_of_weighted_squares": round(sum(weighted_square_contributions.values()), 2),
+            },
+            "alignment": {
+                "average_retrieval_confidence_percent": round(retrieval * 100, 1),
+                "paired_evidence_completeness_percent": round(evidence_completeness * 100, 1),
+                "metadata_coverage_percent": round(max(0.0, min(1.0, metadata_coverage)) * 100, 1),
+                "formula": "0.50 × retrieval confidence + 0.30 × evidence completeness + 0.20 × metadata coverage",
+            },
+        },
     }
 
 
@@ -142,3 +179,13 @@ def _conceptual_proxy(pre: str, post: str) -> float:
     ):
         category_shift = 65
     return min(100.0, max(category_shift, cue_score + numeric_score + polarity_score))
+
+
+def _present_cues(text: str) -> list[str]:
+    lowered = text.lower()
+    return sorted(
+        f"{group}:{cue}"
+        for group, values in CUES.items()
+        for cue in values
+        if cue in lowered
+    )
