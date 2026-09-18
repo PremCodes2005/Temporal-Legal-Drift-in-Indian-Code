@@ -141,7 +141,7 @@ function DriftPanel({ metrics }) {
     { label: "Conceptual / legal intent shift", value: metrics.conceptual_drift_percent, tone: "purple", help: metrics.conceptual_method === "llm_judge" ? "Evidence-bound LLM judgment of operative legal change." : "Deterministic legal-cue proxy; no LLM judgment was available." },
     { label: "Retrieval & extraction alignment", value: metrics.alignment_accuracy_percent, tone: "gold", help: "Retrieval confidence, metadata coverage and paired evidence completeness." },
   ];
-  return <article className="analytics-panel"><div className="analytics-heading"><div><span className="section-kicker">Drift score breakdown</span><h3>How far the retrieved versions moved</h3></div><div className="overall-score"><strong>{metrics.overall_drift_percent}%</strong><span>weighted drift</span></div></div><div className="metric-bars">{rows.map((row) => <div className="metric-row" key={row.label}><div><strong>{row.label}</strong><span>{row.help}</span></div><div className="bar-line"><div className={`bar-fill ${row.tone}`} style={{ width: `${Math.max(0, Math.min(100, row.value))}%` }} /></div><b>{row.value}%</b></div>)}</div></article>;
+  return <article className="analytics-panel"><div className="analytics-heading"><div><span className="section-kicker">Drift score breakdown</span><h3>How far the retrieved versions moved</h3></div><div className="overall-score"><strong>{metrics.overall_drift_percent}%</strong><span>weighted RMS drift</span></div></div><div className="metric-bars">{rows.map((row) => <div className="metric-row" key={row.label}><div><strong>{row.label}</strong><span>{row.help}</span></div><div className="bar-line"><div className={`bar-fill ${row.tone}`} style={{ width: `${Math.max(0, Math.min(100, row.value))}%` }} /></div><b>{row.value}%</b></div>)}</div>{metrics.component_disagreement && <p className="panel-note">The component scores strongly disagree. Review each score and its cited evidence separately; the overall score must not be interpreted as ordinary averaging.</p>}</article>;
 }
 
 function DriftExplanation({ result, onAnalyse }) {
@@ -153,7 +153,7 @@ function DriftExplanation({ result, onAnalyse }) {
     ["Semantic drift", metrics.semantic_drift_percent, levels.semantic, "How far the deterministic vector representations moved."],
     ["Lexical shift", metrics.lexical_drift_percent, levels.lexical, "How much the words and token sequence changed."],
     ["Conceptual drift", metrics.conceptual_drift_percent, levels.conceptual, "How much the detected legal cues, numbers or model-assessed intent changed."],
-    ["Overall drift", metrics.overall_drift_percent, levels.overall, "Weighted result: 40% semantic, 30% lexical and 30% conceptual."],
+    ["Overall drift", metrics.overall_drift_percent, levels.overall, "Weighted root-mean-square result: 40% semantic, 30% lexical and 30% conceptual. A strong signal is not cancelled by a weak one."],
   ];
   const preCitation = citations?.find((item) => item.label === "pre");
   const postCitation = citations?.find((item) => item.label === "post");

@@ -53,6 +53,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             "/api/demo": self.dashboard_service.demo,
             "/api/architecture": self.dashboard_service.architecture,
             "/api/rag/status": self.dashboard_service.rag_status,
+            "/api/audit": self.dashboard_service.project_audit,
         }
         try:
             if path in api_routes:

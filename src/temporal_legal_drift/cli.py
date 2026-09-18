@@ -23,6 +23,7 @@ from .corpus.normalize import normalize_corpus
 from .corpus.report import build_corpus_report, write_corpus_report
 from .errors import TemporalLegalDriftError
 from .explanations import build_explanation_evaluation_plan, write_explanation_plan_and_lock
+from .evaluation_agent import ProjectEvaluationAgent
 from .gates import check_engineering_gates
 from .jsonio import load_json
 from .materiality import build_annotation_workload, write_annotation_workload_and_lock
@@ -99,6 +100,13 @@ def build_parser() -> argparse.ArgumentParser:
 
     check_gates = subparsers.add_parser("check-gates")
     check_gates.add_argument("--through-phase", type=int)
+
+    audit = subparsers.add_parser("audit-project")
+    audit.add_argument(
+        "--output",
+        type=Path,
+        help="Optional JSON report path. The audit is printed even when this is omitted.",
+    )
 
     build_graph = subparsers.add_parser("build-version-graph")
     build_graph.add_argument(
@@ -458,6 +466,15 @@ def run(args: argparse.Namespace) -> int:
             )
         )
         return 0 if passed else 2
+
+    if args.command == "audit-project":
+        result = ProjectEvaluationAgent(root).evaluate()
+        if args.output:
+            from .jsonio import atomic_replace, canonical_json_bytes
+
+            atomic_replace(_resolve(root, args.output), canonical_json_bytes(result))
+        print(json.dumps(result, indent=2, ensure_ascii=False))
+        return 0
 
     if args.command == "build-version-graph":
         manifest = CorpusManifest.from_file(_resolve(root, args.manifest))

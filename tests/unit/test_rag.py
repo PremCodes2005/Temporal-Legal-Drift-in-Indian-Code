@@ -8,8 +8,10 @@ from unittest.mock import patch
 
 from temporal_legal_drift.rag import RagPipeline
 from temporal_legal_drift.rag import rag_pipeline
+from temporal_legal_drift.rag.rag_pipeline import _extractive_generate
 from temporal_legal_drift.rag.indiacode import INDIA_CODE_HOME, is_india_code_url
-from temporal_legal_drift.rag.metrics import _drift_level, calculate_drift_metrics
+from temporal_legal_drift.rag.metrics import _aggregate_drift, _drift_level, calculate_drift_metrics
+from temporal_legal_drift.rag.retriever import RetrievedChunk
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -77,6 +79,28 @@ class RagPipelineTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "specific or generic"):
             self.pipeline.answer("What changed?", "verbose")
 
+    def test_specific_and_generic_modes_have_distinct_response_contracts(self) -> None:
+        pre = RetrievedChunk(
+            "amendment", "In section 19, digital signature shall be substituted.",
+            0.9, 0.9, 0.9,
+            {"document_type": "amending_act", "source_anchor": "pdf:page:2"},
+        )
+        post = RetrievedChunk(
+            "consolidated",
+            "Section 19. The Certifying Authority shall validate the 1[electronic signature] Certificate. "
+            "1. Subs. for digital signature (w.e.f. 27-10-2009).",
+            0.9, 0.9, 0.9,
+            {"document_type": "principal_act", "version": "consolidated", "source_anchor": "pdf:page:13"},
+        )
+        query = "Compare Section 19 before and after the amendment."
+        specific = _extractive_generate(query, "specific", pre, post)
+        generic = _extractive_generate(query, "generic", pre, post)
+
+        self.assertNotEqual(specific.pre_baseline, generic.pre_baseline)
+        self.assertIn("Reconstructed baseline", specific.pre_baseline)
+        self.assertIn("At a high level", generic.differences[1])
+        self.assertEqual(generic.method, "extractive_fallback_generic")
+
     def test_drift_metrics_keep_drift_and_alignment_separate(self) -> None:
         metrics = calculate_drift_metrics(
             "A company shall file within ten days.",
@@ -97,6 +121,24 @@ class RagPipelineTests(unittest.TestCase):
         self.assertEqual(_drift_level(33.4), "Medium")
         self.assertEqual(_drift_level(66.6), "Medium")
         self.assertEqual(_drift_level(66.7), "High")
+
+    def test_opposing_component_scores_do_not_average_to_fifty(self) -> None:
+        score = _aggregate_drift(
+            {"semantic": 0.0, "conceptual": 100.0},
+            {"semantic": 0.5, "conceptual": 0.5},
+        )
+        self.assertAlmostEqual(score, 70.710678, places=5)
+        self.assertNotEqual(round(score, 1), 50.0)
+
+    def test_metric_output_flags_large_component_disagreement(self) -> None:
+        metrics = calculate_drift_metrics(
+            "The company may file.",
+            "The company may file.",
+            conceptual_override=100.0,
+        )
+        self.assertEqual(metrics["aggregation_method"], "weighted_root_mean_square")
+        self.assertTrue(metrics["component_disagreement"])
+        self.assertEqual(metrics["component_spread_percent"], 100.0)
 
     def test_legacy_and_current_india_code_hosts_are_recognised(self) -> None:
         self.assertTrue(is_india_code_url("https://indiacode.gov.in/"))

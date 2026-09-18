@@ -13,6 +13,7 @@ from pathlib import Path
 from uuid import uuid4
 
 from temporal_legal_drift.comparison import analyze_legal_drift
+from temporal_legal_drift.evaluation_agent import ProjectEvaluationAgent
 from temporal_legal_drift.gates import check_engineering_gates
 from temporal_legal_drift.jsonio import atomic_write_new, canonical_json_bytes, load_json
 from temporal_legal_drift.llm_evaluation import build_drift_evaluation_from_executed_plan
@@ -34,6 +35,10 @@ class DashboardService:
     def rag_status(self) -> dict[str, object]:
         """Describe the automatically ingested local legal repository."""
         return self.rag.status()
+
+    def project_audit(self) -> dict[str, object]:
+        """Run the bounded read-only evaluation agent for API consumers."""
+        return ProjectEvaluationAgent(self.root).evaluate()
 
     def query_rag(self, value: dict[str, object]) -> dict[str, object]:
         query = _required_text(value, "query", 4000)

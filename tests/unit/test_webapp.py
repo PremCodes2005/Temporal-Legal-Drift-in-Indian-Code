@@ -68,6 +68,12 @@ class DashboardServiceTests(unittest.TestCase):
         self.assertIn("semantic_drift_percent", result["metrics"])
         self.assertIn("source_guidance", result)
 
+    def test_project_audit_api_is_read_only_and_evidence_bounded(self) -> None:
+        audit = DashboardService(ROOT).project_audit()
+        self.assertEqual(len(audit["components"]), 7)
+        self.assertTrue(audit["agent_policy"]["read_only_evaluation"])
+        self.assertFalse(audit["agent_policy"]["autonomous_legal_approval"])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -31,6 +31,18 @@ DEFAULT_OLLAMA_MODEL = "qwen3:4b"
 DEFAULT_OLLAMA_TIMEOUT_SECONDS = 180
 DEFAULT_REMOTE_TIMEOUT_SECONDS = 90
 DEFAULT_OLLAMA_CONTEXT_TOKENS = 8192
+MODE_INSTRUCTIONS = {
+    "specific": (
+        "Produce a clause-level comparison. Identify the section or provision, amendment operation, "
+        "exact operative wording before and after, changed duties/rights/penalties/thresholds, and the "
+        "source anchor. Prefer precision over general background."
+    ),
+    "generic": (
+        "Produce a short high-level overview for a non-specialist. Explain the Act's purpose, the main "
+        "legal themes that changed, and likely practical significance. Avoid line-by-line wording and "
+        "do not list raw token differences unless essential."
+    ),
+}
 
 
 @dataclass(frozen=True)
@@ -357,7 +369,7 @@ def _llm_generate(
 ) -> GenerationResult:
     prompt = "\n\n".join([
         "Answer the legal query only from the supplied excerpts. Do not invent missing text, dates, applicability, or citations.",
-        f"Analysis mode: {mode}\nQuestion: {query}",
+        f"Analysis mode: {mode}\nMode contract: {MODE_INSTRUCTIONS[mode]}\nQuestion: {query}",
         _evidence_prompt_block("PRE-AMENDMENT EVIDENCE", pre),
         _evidence_prompt_block("POST-AMENDMENT EVIDENCE", post),
         (
@@ -395,6 +407,18 @@ def _extractive_generate(
 ) -> GenerationResult:
     reconstructed, comparable_post, substitution = _reconstructed_comparison(pre, post, query)
     if reconstructed and comparable_post:
+        if mode == "generic":
+            subject = _provision_subject(query)
+            return GenerationResult(
+                f"Before the amendment, {subject} used the narrower concept “{substitution[0]}”.",
+                f"After the amendment, {subject} uses the broader or revised concept “{substitution[1]}”.",
+                [
+                    f"The amendment changes the governing concept from “{substitution[0]}” to “{substitution[1]}”.",
+                    "At a high level, this changes the legal scope while retaining the surrounding statutory framework.",
+                ],
+                None,
+                "extractive_fallback_generic",
+            )
         differences = [
             f"The operative wording changes from “{substitution[0]}” to “{substitution[1]}”.",
             "The earlier wording is reconstructed from the cited consolidated-text substitution footnote and must be checked against the complete official provision.",
@@ -428,7 +452,7 @@ def _generate_single_document(
         try:
             return _llm_single_document_generate(query, mode, document, document_chunks)
         except (ValueError, HTTPError, URLError, TimeoutError, json.JSONDecodeError) as error:
-            fallback = _single_document_generate(query, document, document_chunks)
+            fallback = _single_document_generate(query, mode, document, document_chunks)
             return GenerationResult(
                 fallback.pre_baseline,
                 fallback.post_revision,
@@ -438,7 +462,7 @@ def _generate_single_document(
                 f"Configured local model was unavailable: {type(error).__name__}",
                 fallback.short_answer,
             )
-    return _single_document_generate(query, document, document_chunks)
+    return _single_document_generate(query, mode, document, document_chunks)
 
 
 def _llm_single_document_generate(
@@ -474,7 +498,7 @@ def _llm_single_document_generate(
             "and 2-5 concrete key points. Do not claim that the excerpts cover the whole Act. "
             "Do not invent dates, effects, applicability, or provisions."
         ),
-        f"Analysis mode: {mode}\nQuestion: {query}",
+        f"Analysis mode: {mode}\nMode contract: {MODE_INSTRUCTIONS[mode]}\nQuestion: {query}",
         (
             f"Document: {document.metadata.get('act_name')}\n"
             f"Version: {document.metadata.get('version')}\n"
@@ -510,6 +534,7 @@ def _llm_single_document_generate(
 
 def _single_document_generate(
     query: str,
+    mode: str,
     document: RetrievedChunk,
     document_chunks: list[RetrievedChunk],
 ) -> GenerationResult:
@@ -537,7 +562,9 @@ def _single_document_generate(
     )
 
     title = str(document.metadata.get("act_name") or "This Act")
-    if purpose:
+    if mode == "specific":
+        short_answer = "Clause-focused evidence: " + _best_excerpt(document, query, "specific")
+    elif purpose:
         purpose_text = _bounded_text(purpose.group(1).strip(), 600)
         short_answer = f"{title} was enacted to {purpose_text}"
         short_answer = short_answer.rstrip(".") + "."
@@ -551,8 +578,11 @@ def _single_document_generate(
             point = point[0].upper() + point[1:] if point else point
             if point and point not in key_points:
                 key_points.append(point)
-    if len(key_points) < 3:
-        key_points.extend(_representative_changes(document_chunks, existing=key_points, limit=4))
+    target_points = 5 if mode == "specific" else 3
+    if len(key_points) < target_points:
+        key_points.extend(
+            _representative_changes(document_chunks, existing=key_points, limit=target_points)
+        )
     if not key_points:
         key_points.append("The available opening-page evidence supports only this high-level summary; consult the cited Act for its complete provisions.")
 
@@ -657,6 +687,23 @@ def _difference_summary(pre: str, post: str, mode: str) -> list[str]:
     after = set(re.findall(r"[a-z][a-z0-9]+|\d+(?:\.\d+)?", post.lower()))
     legal_added = sorted(term for term in after - before if term in LEGAL_CUES or term.isdigit())
     legal_removed = sorted(term for term in before - after if term in LEGAL_CUES or term.isdigit())
+    if mode == "generic":
+        changed_cues = sorted(
+            cue for cue in LEGAL_CUES
+            if (cue in pre.lower()) != (cue in post.lower())
+        )
+        rows = [
+            (
+                "The amendment changes operative legal concepts involving "
+                + ", ".join(changed_cues[:5])
+                + "."
+            ) if changed_cues else
+            "The retrieved versions differ in wording, but the high-level legal theme requires review of the cited provisions."
+        ]
+        rows.append(
+            "The practical significance depends on commencement, applicability and the facts of the user's scenario."
+        )
+        return rows
     rows = []
     if legal_removed:
         rows.append(f"Terms present only in the baseline evidence: {', '.join(legal_removed[:12])}.")
@@ -668,6 +715,11 @@ def _difference_summary(pre: str, post: str, mode: str) -> list[str]:
     if mode == "specific" and pre and post:
         rows.append("Review the cited page anchors for the exact clause wording and amendment operation.")
     return rows
+
+
+def _provision_subject(query: str) -> str:
+    section = re.search(r"\bsection\s+(\d+[a-z]?)", query, re.I)
+    return f"Section {section.group(1)}" if section else "the relevant provision"
 
 
 def _citations(pre: RetrievedChunk | None, post: RetrievedChunk | None) -> list[dict[str, object]]:
@@ -707,7 +759,7 @@ def _verification(
         {"id": "clause_coverage", "label": "Relevant clause coverage", "passed": bool(query_terms & evidence_terms)},
         {"id": "paired_context", "label": "Pre/post version pair found", "passed": pre is not None and post is not None},
         {"id": "citation_anchors", "label": "Evidence anchors attached", "passed": bool(citations) and all(item.get("source_anchor") for item in citations)},
-        {"id": "alignment", "label": "Post-generation alignment check", "passed": generation.method in {"llm_grounded", "extractive_fallback"} and bool(citations)},
+        {"id": "alignment", "label": "Post-generation alignment check", "passed": generation.method in {"llm_grounded", "extractive_fallback", "extractive_fallback_generic"} and bool(citations)},
     ]
     return {
         "passed": all(item["passed"] for item in checks),

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 import re
 from difflib import SequenceMatcher
 
@@ -19,6 +20,8 @@ DRIFT_LEVEL_THRESHOLDS = {
     "Medium": "33.4-66.6",
     "High": "66.7-100.0",
 }
+DRIFT_WEIGHTS = {"semantic": 0.40, "lexical": 0.30, "conceptual": 0.30}
+DRIFT_DISAGREEMENT_THRESHOLD = 60.0
 
 
 def calculate_drift_metrics(
@@ -48,7 +51,13 @@ def calculate_drift_metrics(
 
     conceptual = conceptual_override if conceptual_override is not None else _conceptual_proxy(pre_chunk, post_chunk)
     conceptual = max(0.0, min(100.0, conceptual))
-    overall_drift = semantic_drift * 0.40 + lexical_drift * 0.30 + conceptual * 0.30
+    component_scores = {
+        "semantic": semantic_drift,
+        "lexical": lexical_drift,
+        "conceptual": conceptual,
+    }
+    overall_drift = _aggregate_drift(component_scores, DRIFT_WEIGHTS)
+    component_spread = max(component_scores.values()) - min(component_scores.values())
 
     retrieval = max(0.0, min(1.0, sum(retrieval_scores) / 2))
     evidence_completeness = 1.0 if pre_chunk.strip() and post_chunk.strip() else 0.5 if pre_chunk.strip() or post_chunk.strip() else 0.0
@@ -65,12 +74,40 @@ def calculate_drift_metrics(
         "conceptual_drift_percent": round(conceptual, 1),
         "overall_drift_percent": round(overall_drift, 1),
         "alignment_accuracy_percent": round(alignment, 1),
-        "weights": {"semantic": 0.40, "lexical": 0.30, "conceptual": 0.30},
+        "weights": DRIFT_WEIGHTS,
+        "aggregation_method": "weighted_root_mean_square",
+        "component_spread_percent": round(component_spread, 1),
+        "component_disagreement": component_spread >= DRIFT_DISAGREEMENT_THRESHOLD,
+        "aggregation_note": (
+            "Weighted RMS preserves strong drift signals instead of allowing a low component "
+            "to cancel a high component. Component scores remain visible and must be interpreted separately."
+        ),
         "levels": {name: _drift_level(value) for name, value in metric_values.items()},
         "level_thresholds": DRIFT_LEVEL_THRESHOLDS,
         "conceptual_method": conceptual_method,
         "accuracy_definition": "retrieval confidence, paired-evidence completeness and metadata coverage; not legal correctness",
     }
+
+
+def _aggregate_drift(
+    scores: dict[str, float], weights: dict[str, float]
+) -> float:
+    """Aggregate drift without cancellation between opposing component scores.
+
+    A weighted arithmetic mean maps equally weighted 0 and 100 signals to 50,
+    which can misleadingly imply moderate agreement. Weighted RMS retains the
+    magnitude of the high signal while keeping every component independently
+    auditable.
+    """
+    active = [
+        (max(0.0, min(100.0, float(value))), float(weights.get(name, 0.0)))
+        for name, value in scores.items()
+        if float(weights.get(name, 0.0)) > 0
+    ]
+    total_weight = sum(weight for _, weight in active)
+    if total_weight <= 0:
+        return 0.0
+    return math.sqrt(sum(weight * value * value for value, weight in active) / total_weight)
 
 
 def _drift_level(value: float) -> str:
