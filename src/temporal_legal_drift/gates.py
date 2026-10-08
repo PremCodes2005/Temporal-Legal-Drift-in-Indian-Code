@@ -42,6 +42,31 @@ class PhaseGateResult:
 
 def _phase0(root: Path) -> PhaseGateResult:
     contract = validate_contract_file(root / "configs" / "research_contract.v1.json")
+    baseline = load_json(root / "data" / "manifests" / "baseline.v0.1.json")
+    baseline_lock = load_json(root / "data" / "manifests" / "baseline.v0.1.lock.json")
+    version_registry = load_json(root / "data" / "manifests" / "artifact_versions.json")
+    expected_baseline = {
+        "dataset_version": "v0.1",
+        "graph_version": "v0.1",
+        "rag_index_version": "v0.1",
+        "documents": 100,
+        "provision_snapshots": 6320,
+        "amendment_events": 76,
+        "unresolved_records": 175,
+        "tests_passed": 56,
+        "tests_total": 58,
+    }
+    frozen_artifacts = baseline_lock.get("artifacts", {})
+    frozen_hashes_match = isinstance(frozen_artifacts, dict) and all(
+        isinstance(record, dict)
+        and isinstance(record.get("path"), str)
+        and (root / str(record["path"])).is_file()
+        and sha256((root / str(record["path"])).read_bytes()).hexdigest()
+        == record.get("sha256")
+        for record in frozen_artifacts.values()
+    )
+    active_version = version_registry.get("active_version")
+    active_record = version_registry.get("versions", {}).get(active_version, {})
     checks = {
         "research_contract_structurally_valid": contract.structurally_valid,
         "terminology_registry_present": (root / "configs" / "terminology_registry.v1.json").is_file(),
@@ -49,6 +74,19 @@ def _phase0(root: Path) -> PhaseGateResult:
             root / "configs" / "temporal_semantics" / "registry.v1.json"
         ).is_file(),
         "novelty_audit_present": (root / "reports" / "phase0" / "novelty_audit.md").is_file(),
+        "baseline_manifest_frozen_as_v0_1": baseline == expected_baseline,
+        "frozen_artifact_hashes_match": frozen_hashes_match,
+        "corpus_graph_index_versions_advance_together": (
+            active_version == "v0.1"
+            and isinstance(active_record, dict)
+            and active_record.get("dataset_version") == "v0.1"
+            and active_record.get("graph_version") == "v0.1"
+            and active_record.get("rag_index_version") == "v0.1"
+        ),
+        "baseline_overwrite_policy_is_explicit": (
+            baseline_lock.get("immutable") is True
+            and baseline_lock.get("overwrite_policy") == "refuse_if_snapshot_exists"
+        ),
     }
     return PhaseGateResult(
         0,

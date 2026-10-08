@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0.0",
+  "active_version": "v0.1",
+  "versions": {
+    "v0.1": {
+      "dataset_version": "v0.1",
+      "graph_version": "v0.1",
+      "rag_index_version": "v0.1",
+      "corpus_fingerprint": "cfcbc384dd15bb0d3c39145915147210896c19c378406d1da2d1b7333d3bcdf4",
+      "graph_fingerprint": "73b8f9c50738329022b75a5840821e2c9ae89db7835817706628f9e6fe3497c1",
+      "rag_index_archive": "data/manifests/artifacts/v0.1/rag_index.v0.1.json.gz",
+      "rag_index_archive_sha256": "2ee150d14296a2051292e70b12ca03a8076c775c3d48898c781c51abed6ef2bb",
+      "rag_index_content_sha256": "55bf9ee455bc1fa3b35ff56acef51fe5d52f914fa0e1da4a4eee27dd3172dba4"
+    }
+  }
+}

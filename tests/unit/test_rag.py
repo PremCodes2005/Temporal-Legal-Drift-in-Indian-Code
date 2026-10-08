@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
+import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
@@ -11,7 +13,7 @@ from temporal_legal_drift.rag import rag_pipeline
 from temporal_legal_drift.rag.rag_pipeline import _extractive_generate
 from temporal_legal_drift.rag.indiacode import INDIA_CODE_HOME, is_india_code_url
 from temporal_legal_drift.rag.metrics import _aggregate_drift, _drift_level, calculate_drift_metrics
-from temporal_legal_drift.rag.retriever import RetrievedChunk
+from temporal_legal_drift.rag.retriever import HybridRetriever, RetrievedChunk
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -20,17 +22,57 @@ ROOT = Path(__file__).resolve().parents[2]
 class RagPipelineTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
+        cls._environment = {
+            name: os.environ.get(name)
+            for name in ("TLD_LIVE_INDIA_CODE", "TLD_RAG_PROVIDER", "TLD_RAG_API_KEY", "OPENAI_API_KEY")
+        }
+        os.environ.update({
+            "TLD_LIVE_INDIA_CODE": "0",
+            "TLD_RAG_PROVIDER": "openai_compatible",
+            "TLD_RAG_API_KEY": "",
+            "OPENAI_API_KEY": "",
+        })
         cls.pipeline = RagPipeline(ROOT)
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        for name, value in cls._environment.items():
+            if value is None:
+                os.environ.pop(name, None)
+            else:
+                os.environ[name] = value
 
     def test_repository_is_automatically_indexed_with_required_metadata(self) -> None:
         status = self.pipeline.status()
         self.assertTrue(status["ready"])
         self.assertEqual(status["document_count"], 100)
         self.assertGreater(status["chunk_count"], 100)
+        self.assertEqual(status["dataset_version"], "v0.1")
+        self.assertEqual(status["graph_version"], "v0.1")
+        self.assertEqual(status["rag_index_version"], "v0.1")
+        self.assertEqual(len(status["graph_fingerprint"]), 64)
+        self.assertEqual(len(status["index_identity"]), 64)
         self.assertEqual(
             status["metadata_fields"],
             ["document_type", "version", "act_name", "date"],
         )
+        incompatible = HybridRetriever(ROOT)
+        incompatible._version = {**incompatible._version, "graph_fingerprint": "0" * 64}
+        with self.assertRaisesRegex(ValueError, "changed without a new registered artifact version"):
+            incompatible.ensure_index()
+        with tempfile.TemporaryDirectory() as directory:
+            clean_root = Path(directory)
+            for relative in (
+                "data/corpus/index.json",
+                "data/interim/version_graph.v1.json",
+                "data/manifests/artifact_versions.json",
+                "data/manifests/artifacts/v0.1/rag_index.v0.1.json.gz",
+            ):
+                destination = clean_root / relative
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(ROOT / relative, destination)
+            restored = HybridRetriever(clean_root).status()
+            self.assertEqual(restored["index_identity"], status["index_identity"])
 
     def test_it_act_query_retrieves_an_amendment_pair_and_metrics(self) -> None:
         result = self.pipeline.answer(

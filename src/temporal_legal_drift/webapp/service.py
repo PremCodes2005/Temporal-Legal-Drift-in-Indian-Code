@@ -30,7 +30,18 @@ ALLOWED_UPLOAD_SUFFIXES = {".pdf", ".json"}
 class DashboardService:
     def __init__(self, root: Path) -> None:
         self.root = root.resolve()
-        self.rag = RagPipeline(self.root)
+        self._rag: RagPipeline | None = None
+
+    @property
+    def rag(self) -> RagPipeline:
+        """Create the repository-bound RAG service only for RAG operations.
+
+        Submission and upload queues are intentionally usable in isolated
+        temporary roots and must not require a corpus version registry.
+        """
+        if self._rag is None:
+            self._rag = RagPipeline(self.root)
+        return self._rag
 
     def rag_status(self) -> dict[str, object]:
         """Describe the automatically ingested local legal repository."""

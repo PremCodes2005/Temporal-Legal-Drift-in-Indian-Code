@@ -1,0 +1,11 @@
+{
+  "dataset_version": "v0.1",
+  "graph_version": "v0.1",
+  "rag_index_version": "v0.1",
+  "documents": 100,
+  "provision_snapshots": 6320,
+  "amendment_events": 76,
+  "unresolved_records": 175,
+  "tests_passed": 56,
+  "tests_total": 58
+}

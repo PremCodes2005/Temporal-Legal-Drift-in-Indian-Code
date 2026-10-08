@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import base64
+import os
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from temporal_legal_drift.webapp.service import DashboardService
 
@@ -57,13 +59,19 @@ class DashboardServiceTests(unittest.TestCase):
             self.assertEqual(result["byte_length"], len(payload))
 
     def test_single_prompt_rag_api_contract(self) -> None:
-        service = DashboardService(ROOT)
-        result = service.query_rag(
-            {
-                "query": "Compare Section 19 before and after the IT Amendment Act, 2008.",
-                "mode": "specific",
-            }
-        )
+        with patch.dict(os.environ, {
+            "TLD_LIVE_INDIA_CODE": "0",
+            "TLD_RAG_PROVIDER": "openai_compatible",
+            "TLD_RAG_API_KEY": "",
+            "OPENAI_API_KEY": "",
+        }):
+            service = DashboardService(ROOT)
+            result = service.query_rag(
+                {
+                    "query": "Compare Section 19 before and after the IT Amendment Act, 2008.",
+                    "mode": "specific",
+                }
+            )
         self.assertEqual(result["mode"], "specific")
         self.assertIn("semantic_drift_percent", result["metrics"])
         self.assertIn("source_guidance", result)

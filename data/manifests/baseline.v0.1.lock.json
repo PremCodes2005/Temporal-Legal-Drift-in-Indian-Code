@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0.0",
+  "baseline_version": "v0.1",
+  "immutable": true,
+  "artifacts": {
+    "corpus": {
+      "path": "data/processed/baselines/v0.1/corpus_index.json",
+      "sha256": "ef65e51db44777f1153d9b95745b4a383d302234ba5e36e81c5e828a026bb9ac",
+      "content_fingerprint": "cfcbc384dd15bb0d3c39145915147210896c19c378406d1da2d1b7333d3bcdf4"
+    },
+    "graph": {
+      "path": "data/manifests/artifacts/v0.1/version_graph.json.gz",
+      "sha256": "199b3f178203230c9ad1239db722239c88c7d8a0685313d858e7fb738b76e0b5",
+      "content_sha256": "73b8f9c50738329022b75a5840821e2c9ae89db7835817706628f9e6fe3497c1",
+      "encoding": "gzip_mtime_0"
+    },
+    "rag_index_before_phase0_fix": {
+      "path": "data/manifests/artifacts/v0.1/rag_index.pre_phase0.json.gz",
+      "sha256": "121312fe36ee5165be0ca8898a4ed69d587b9e82abba18e101b68f4d55fa97fa",
+      "content_sha256": "baf78de461dac64752b5b36e86bb7eabfa1be8df2ec9bff5d11f8ca965030a6a",
+      "encoding": "gzip_mtime_0",
+      "note": "Preserved unchanged before adding graph-aware index compatibility checks."
+    }
+  },
+  "overwrite_policy": "refuse_if_snapshot_exists",
+  "legal_validation_claimed": false
+}

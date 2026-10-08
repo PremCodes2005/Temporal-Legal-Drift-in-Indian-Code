@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0.0",
+  "phase": 0,
+  "checkpoint": "baseline_freeze",
+  "status": "passed",
+  "baseline_version": "v0.1",
+  "tests": {
+    "passed": 58,
+    "total": 58,
+    "fresh_virtual_environment": true
+  },
+  "version_chain": {
+    "dataset_version": "v0.1",
+    "graph_version": "v0.1",
+    "rag_index_version": "v0.1",
+    "index_identity": "5e8be5c684fef9a3b7f4497aeb45e06680704aefdda33dba21c54d090c6a3aa1"
+  },
+  "checks": {
+    "existing_dataset_frozen": true,
+    "existing_graph_frozen": true,
+    "existing_rag_index_versioned": true,
+    "baseline_manifest_exists": true,
+    "no_existing_snapshot_overwritten": true,
+    "graph_index_mismatch_fails_closed": true,
+    "clean_environment_reproduced": true
+  },
+  "fresh_environment_manifest_sha256": "ca293654d67935c794080c00faec8318e1cb43c2492894b49c39fe2434d70328",
+  "legal_validation_claimed": false
+}

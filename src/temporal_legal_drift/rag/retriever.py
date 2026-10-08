@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import gzip
 import math
 import os
 import re
@@ -20,6 +21,7 @@ YEAR_RE = re.compile(r"(?:19|20)\d{2}")
 SECTION_RE = re.compile(r"\b(?:section|sections|sec\.?|s\.)\s*(\d+[A-Za-z]?)", re.IGNORECASE)
 EMBEDDING_DIMENSIONS = 256
 INDEX_SCHEMA_VERSION = "1.2.0"
+VERSION_REGISTRY_PATH = Path("data/manifests/artifact_versions.json")
 STOPWORDS = {
     "a", "an", "and", "are", "as", "at", "be", "by", "for", "from", "has",
     "in", "is", "of", "on", "or", "that", "the", "this", "to", "was",
@@ -63,7 +65,12 @@ class HybridRetriever:
 
     def __init__(self, root: Path) -> None:
         self.root = root.resolve()
-        self.index_path = self.root / "data/runtime/rag_index.v1.json"
+        self._version = self._active_version()
+        self.index_path = (
+            self.root
+            / "data/runtime"
+            / f"rag_index.{self._version['rag_index_version']}.json"
+        )
         self._document: dict[str, object] | None = None
         self.backend = os.environ.get("TLD_VECTOR_BACKEND", "local").strip().lower()
         if self.backend not in {"local", "chroma"}:
@@ -79,6 +86,11 @@ class HybridRetriever:
             "vector_backend": "chromadb" if self.backend == "chroma" else "local_persistent_cosine",
             "hybrid_search": True,
             "index_fingerprint": document.get("corpus_fingerprint"),
+            "dataset_version": document.get("dataset_version"),
+            "graph_version": document.get("graph_version"),
+            "rag_index_version": document.get("rag_index_version"),
+            "graph_fingerprint": document.get("graph_fingerprint"),
+            "index_identity": document.get("index_identity"),
             "official_repository": INDIA_CODE_HOME,
             "metadata_fields": ["document_type", "version", "act_name", "date"],
         }
@@ -89,7 +101,8 @@ class HybridRetriever:
         return _embedding(_tokens(value))
 
     def rebuild(self) -> dict[str, object]:
-        self._document = self._build_index()
+        identity = self._validated_identity()
+        self._document = self._build_index(identity)
         self._persist(self._document)
         if self.backend == "chroma":
             self._sync_chroma(self._document)
@@ -98,24 +111,30 @@ class HybridRetriever:
     def ensure_index(self) -> dict[str, object]:
         if self._document is not None:
             return self._document
-        fingerprint = self._corpus_fingerprint()
+        identity = self._validated_identity()
+        if not self.index_path.is_file():
+            self._restore_registered_index()
         if self.index_path.is_file():
             try:
                 existing = load_json(self.index_path)
                 if (
                     existing.get("schema_version") == INDEX_SCHEMA_VERSION
-                    and existing.get("corpus_fingerprint") == fingerprint
+                    and all(existing.get(key) == value for key, value in identity.items())
                 ):
                     self._document = existing
                     if self.backend == "chroma" and self._chroma_collection().count() == 0:
                         self._sync_chroma(existing)
                     return existing
-            except (OSError, ValueError, json.JSONDecodeError):
-                pass
-        return self.rebuild_document(fingerprint)
+            except (OSError, ValueError, json.JSONDecodeError) as error:
+                raise ValueError(f"RAG index could not be validated: {error}") from error
+            raise ValueError(
+                f"Refusing to overwrite incompatible versioned RAG index {self.index_path}. "
+                "Register a new corpus/graph/index version before rebuilding."
+            )
+        return self.rebuild_document(identity)
 
-    def rebuild_document(self, fingerprint: str | None = None) -> dict[str, object]:
-        self._document = self._build_index(fingerprint)
+    def rebuild_document(self, identity: dict[str, str] | None = None) -> dict[str, object]:
+        self._document = self._build_index(identity or self._validated_identity())
         self._persist(self._document)
         if self.backend == "chroma":
             self._sync_chroma(self._document)
@@ -315,7 +334,7 @@ class HybridRetriever:
 
         return sorted(rows, key=order)[:limit]
 
-    def _build_index(self, fingerprint: str | None = None) -> dict[str, object]:
+    def _build_index(self, identity: dict[str, str]) -> dict[str, object]:
         corpus = load_json(self.root / "data/corpus/index.json")
         normalized_by_source: dict[str, dict[str, object]] = {}
         for path in sorted((self.root / "data/normalized").glob("*.json")):
@@ -355,7 +374,7 @@ class HybridRetriever:
         self._add_version_graph_chunks(chunks, corpus)
         return {
             "schema_version": INDEX_SCHEMA_VERSION,
-            "corpus_fingerprint": fingerprint or self._corpus_fingerprint(),
+            **identity,
             "document_count": document_count,
             "embedding": {"algorithm": "stable_feature_hashing", "dimensions": EMBEDDING_DIMENSIONS},
             "chunks": chunks,
@@ -463,6 +482,74 @@ class HybridRetriever:
             for item in corpus.get("entries", []) if isinstance(item, dict)
         ]
         return sha256(canonical_json_bytes(evidence)).hexdigest()
+
+    def _graph_fingerprint(self) -> str:
+        graph_path = self.root / "data/interim/version_graph.v1.json"
+        if not graph_path.is_file():
+            raise ValueError("Version graph is missing; a RAG index cannot be built without it")
+        return sha256(canonical_json_bytes(load_json(graph_path))).hexdigest()
+
+    def _active_version(self) -> dict[str, str]:
+        registry_path = self.root / VERSION_REGISTRY_PATH
+        registry = load_json(registry_path)
+        active = registry.get("active_version")
+        versions = registry.get("versions")
+        if not isinstance(active, str) or not isinstance(versions, dict):
+            raise ValueError("Artifact version registry is malformed")
+        record = versions.get(active)
+        if not isinstance(record, dict):
+            raise ValueError(f"Active artifact version {active!r} is not registered")
+        required = (
+            "dataset_version", "graph_version", "rag_index_version",
+            "corpus_fingerprint", "graph_fingerprint",
+            "rag_index_archive", "rag_index_archive_sha256", "rag_index_content_sha256",
+        )
+        if not all(isinstance(record.get(key), str) and record[key] for key in required):
+            raise ValueError(f"Artifact version {active!r} is incomplete")
+        if len({record["dataset_version"], record["graph_version"], record["rag_index_version"]}) != 1:
+            raise ValueError("Dataset, graph and RAG index versions must advance together")
+        return {key: str(record[key]) for key in required}
+
+    def _restore_registered_index(self) -> None:
+        archive_path = self.root / self._version["rag_index_archive"]
+        if not archive_path.is_file():
+            return
+        archive_hash = sha256(archive_path.read_bytes()).hexdigest()
+        if archive_hash != self._version["rag_index_archive_sha256"]:
+            raise ValueError("Registered RAG index archive failed its SHA-256 check")
+        self.index_path.parent.mkdir(parents=True, exist_ok=True)
+        temporary = self.index_path.with_suffix(".restore.tmp")
+        digest = sha256()
+        try:
+            with gzip.open(archive_path, "rb") as source, temporary.open("wb") as output:
+                while chunk := source.read(1024 * 1024):
+                    digest.update(chunk)
+                    output.write(chunk)
+            if digest.hexdigest() != self._version["rag_index_content_sha256"]:
+                raise ValueError("Restored RAG index failed its SHA-256 check")
+            temporary.replace(self.index_path)
+        finally:
+            temporary.unlink(missing_ok=True)
+
+    def _validated_identity(self) -> dict[str, str]:
+        current_corpus = self._corpus_fingerprint()
+        current_graph = self._graph_fingerprint()
+        expected_corpus = self._version["corpus_fingerprint"]
+        expected_graph = self._version["graph_fingerprint"]
+        if current_corpus != expected_corpus or current_graph != expected_graph:
+            raise ValueError(
+                "Corpus or version graph changed without a new registered artifact version; "
+                "refusing to combine a changed graph/corpus with the active RAG index."
+            )
+        identity = {
+            "dataset_version": self._version["dataset_version"],
+            "graph_version": self._version["graph_version"],
+            "rag_index_version": self._version["rag_index_version"],
+            "corpus_fingerprint": current_corpus,
+            "graph_fingerprint": current_graph,
+        }
+        identity["index_identity"] = sha256(canonical_json_bytes(identity)).hexdigest()
+        return identity
 
     def _persist(self, document: dict[str, object]) -> None:
         self.index_path.parent.mkdir(parents=True, exist_ok=True)

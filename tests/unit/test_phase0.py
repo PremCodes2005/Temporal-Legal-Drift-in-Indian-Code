@@ -16,6 +16,13 @@ class ResearchContractTests(unittest.TestCase):
         self.assertTrue(result.structurally_valid, result.errors)
         self.assertFalse(result.gate_passed)
         self.assertGreater(len(result.blockers), 0)
+        baseline = json.loads((ROOT / "data/manifests/baseline.v0.1.json").read_text())
+        self.assertEqual(baseline["dataset_version"], "v0.1")
+        self.assertEqual(baseline["documents"], 100)
+        self.assertEqual(baseline["provision_snapshots"], 6320)
+        self.assertEqual(baseline["amendment_events"], 76)
+        self.assertEqual(baseline["unresolved_records"], 175)
+        self.assertEqual((baseline["tests_passed"], baseline["tests_total"]), (56, 58))
 
     def test_materiality_cannot_become_primary_or_absorb_consequence(self) -> None:
         contract = json.loads((ROOT / "configs" / "research_contract.v1.json").read_text())

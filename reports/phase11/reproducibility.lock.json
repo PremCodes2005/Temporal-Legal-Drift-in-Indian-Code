@@ -6,7 +6,7 @@
   "fresh_environment_reproduction_passed": true,
   "independent_expert_validation_status": "not_performed_reviewer_unavailable",
   "legal_correctness_claimed": false,
-  "manifest_sha256": "12558ce7538e030f4dace73701964e73fa9da8b8aafd3b0e508bb7a10447ff5d",
+  "manifest_sha256": "ca293654d67935c794080c00faec8318e1cb43c2492894b49c39fe2434d70328",
   "release_id": "phase11-reproducibility-engineering-v0.1.0",
   "research_gate_passed": false,
   "schema_version": "1.0.0"
