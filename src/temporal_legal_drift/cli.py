@@ -10,6 +10,8 @@ from pathlib import Path
 
 from .acquisition import AcquisitionService, RawArtifactStore, SourcePolicy, SourceRequest
 from .acquisition.models import SourceArtifact
+from .amendment_extraction.checkpoint import build_phase2_checkpoint
+from .amendment_extraction.silver_checkpoint import build_silver_label_checkpoint
 from .applicability import ApplicabilityQuery, ApplicabilityResolver, TemporalFact
 from .applicability.candidates import extract_temporal_candidates, write_candidates_and_lock
 from .applicability.cross_validation import (
@@ -40,8 +42,9 @@ from .parsing.store import NormalizedDocumentStore, QuarantineStore
 from .phase0 import validate_contract_file
 from .reproducibility import verify_fresh_environment, write_reproducibility_manifest_and_lock
 from .scenarios import build_scenario_scaffolds, write_scenarios_and_lock
-from .versioning import VersionGraph, VersionGraphBuilder
+from .versioning import TemporalGraph, TemporalGraphBuilder, VersionGraph, VersionGraphBuilder
 from .versioning.builder import write_graph_and_lock
+from .versioning.temporal_graph import write_temporal_graph_and_checkpoint
 from .webapp import serve_dashboard
 
 
@@ -65,6 +68,8 @@ def build_parser() -> argparse.ArgumentParser:
     acquire.add_argument("--policy", type=Path, default=Path("configs/source_policy.v1.json"))
 
     subparsers.add_parser("build-ingestion-checkpoint")
+    subparsers.add_parser("build-amendment-extraction-checkpoint")
+    subparsers.add_parser("build-amendment-silver-labels")
 
     normalize = subparsers.add_parser("normalize")
     normalize.add_argument("--metadata", type=Path, required=True)
@@ -131,6 +136,15 @@ def build_parser() -> argparse.ArgumentParser:
     build_graph.add_argument(
         "--lock", type=Path, default=Path("reports/phase3/version_graph.lock.json")
     )
+
+    subparsers.add_parser("build-temporal-knowledge-graph")
+    point_query = subparsers.add_parser("get-provision-version")
+    point_query.add_argument(
+        "--graph", type=Path, default=Path("data/interim/temporal_legal_knowledge_graph.v2.json")
+    )
+    point_query.add_argument("--act", required=True)
+    point_query.add_argument("--section", required=True)
+    point_query.add_argument("--date", required=True)
 
     resolve = subparsers.add_parser("resolve-applicability")
     resolve.add_argument(
@@ -402,6 +416,16 @@ def run(args: argparse.Namespace) -> int:
         print(json.dumps(result, indent=2, ensure_ascii=False))
         return 0
 
+    if args.command == "build-amendment-extraction-checkpoint":
+        result = build_phase2_checkpoint(root)
+        print(json.dumps(result, indent=2, ensure_ascii=False))
+        return 0
+
+    if args.command == "build-amendment-silver-labels":
+        result = build_silver_label_checkpoint(root)
+        print(json.dumps(result, indent=2, ensure_ascii=False))
+        return 0
+
     if args.command == "normalize":
         value = load_json(_resolve(root, args.metadata))
         artifact = SourceArtifact(**value)
@@ -498,6 +522,18 @@ def run(args: argparse.Namespace) -> int:
             _resolve(root, args.lock),
         )
         print(json.dumps(summary.to_dict(), indent=2, ensure_ascii=False))
+        return 0
+
+    if args.command == "build-temporal-knowledge-graph":
+        graph = TemporalGraphBuilder().build(root)
+        checkpoint = write_temporal_graph_and_checkpoint(graph, root)
+        print(json.dumps(checkpoint, indent=2, ensure_ascii=False))
+        return 0
+
+    if args.command == "get-provision-version":
+        graph = TemporalGraph.from_dict(load_json(_resolve(root, args.graph)))
+        result = graph.get_provision_version(args.act, args.section, args.date)
+        print(json.dumps(result, indent=2, ensure_ascii=False))
         return 0
 
     if args.command == "resolve-applicability":

@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://temporal-legal-drift.local/schemas/temporal/temporal_legal_knowledge_graph.v2.schema.json",
+  "title": "Temporal Legal Knowledge Graph v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "graph_status", "legal_sources", "acts", "provisions",
+    "provision_versions", "amendment_acts", "amendment_events",
+    "commencement_events", "transitions", "unresolved_transitions"
+  ],
+  "properties": {
+    "schema_version": {"const": "2.0.0"},
+    "graph_status": {"const": "evidence_validated_technical_graph_not_legal_gold"},
+    "legal_sources": {"type": "array", "items": {"type": "object", "required": ["source_id", "sha256", "source_url"]}},
+    "acts": {"type": "array", "items": {"type": "object", "required": ["act_id", "source_id", "official_identifier"]}},
+    "provisions": {"type": "array", "items": {"type": "object", "required": ["provision_id", "act_id", "canonical_path", "section"]}},
+    "provision_versions": {"type": "array", "items": {"$ref": "#/$defs/version"}},
+    "amendment_acts": {"type": "array", "items": {"type": "object", "required": ["amendment_act_id", "source_id", "official_identifier"]}},
+    "amendment_events": {"type": "array", "items": {"type": "object", "required": ["amendment_event_id", "amendment_act_id", "operation", "evidence"]}},
+    "commencement_events": {"type": "array", "items": {"type": "object", "required": ["commencement_event_id", "amendment_event_id", "status", "source_id"]}},
+    "transitions": {"type": "array", "items": {"$ref": "#/$defs/transition"}},
+    "unresolved_transitions": {"type": "array", "items": {"type": "object", "required": ["unresolved_transition_id", "amendment_event_id", "reason_codes", "requires_review"]}}
+  },
+  "$defs": {
+    "version": {
+      "type": "object",
+      "required": [
+        "version_id", "provision_id", "text", "text_sha256", "text_scope",
+        "valid_from", "valid_to", "temporal_status", "derivation", "source_ids"
+      ]
+    },
+    "transition": {
+      "type": "object",
+      "required": [
+        "transition_id", "target_provision_id", "before_version_id",
+        "after_version_id", "amendment_event_id", "commencement_event_id",
+        "operation", "effective_date", "validation_status", "validation_checks",
+        "source_ids"
+      ]
+    }
+  }
+}

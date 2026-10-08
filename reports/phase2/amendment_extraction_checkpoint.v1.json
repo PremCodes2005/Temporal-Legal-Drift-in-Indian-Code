@@ -1,0 +1,25 @@
+{
+  "amendment_event_count": 864,
+  "artifact_sha256": "e7cd6fe15ef4b2e155b8a1b0220301b9c714cb6d6f66954d60bd12f17f98fca0",
+  "checks": {
+    "all_configured_amending_acts_processed": true,
+    "all_events_require_human_review": true,
+    "all_events_traceable_to_evidence": true,
+    "all_required_unresolved_categories_reported": true,
+    "all_unresolved_records_are_classified": true,
+    "amendment_events_extracted": true,
+    "controlled_fixture_accuracies_measured": true,
+    "coverage_and_unresolved_metrics_measured": true,
+    "every_document_accounted_for": true,
+    "real_corpus_accuracy_not_fabricated": true
+  },
+  "configured_amending_act_count": 37,
+  "deliverable": "generalised legal amendment extractor v1",
+  "frozen_v0_1_unresolved_record_count": 175,
+  "human_review_required": true,
+  "legal_correctness_claimed": false,
+  "phase": 2,
+  "schema_version": "1.0.0",
+  "status": "passed",
+  "unresolved_count": 1525
+}

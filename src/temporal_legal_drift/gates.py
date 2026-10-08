@@ -192,6 +192,17 @@ def _phase1(root: Path) -> PhaseGateResult:
 
 def _phase2(root: Path) -> PhaseGateResult:
     manifest, report = _load_reconciled_corpus(root)
+    extraction_checkpoint = load_json(
+        root / "reports/phase2/amendment_extraction_checkpoint.v1.json"
+    )
+    extraction_provenance = load_json(
+        root / "data/manifests/amendment_extraction_v1.provenance.json"
+    )
+    silver_checkpoint = load_json(
+        root / "reports/phase2/silver_label_checkpoint.v1.json"
+    )
+    extraction_artifact = root / str(extraction_provenance["artifact_path"])
+    silver_artifact = root / str(silver_checkpoint["artifact_path"])
     report_entries = report.get("entries")
     entries = report_entries if isinstance(report_entries, list) else []
     parser_provenance = all(
@@ -223,6 +234,43 @@ def _phase2(root: Path) -> PhaseGateResult:
             and report.get("total_normalized_blocks") == sum(block_counts)
         ),
         "known_extraction_risks_explicit": manifest_risks == reported_risks,
+        "amendment_extraction_schemas_present": all(
+            (root / "schemas/amendments" / name).is_file()
+            for name in (
+                "amendment_event.schema.json",
+                "unresolved_amendment.schema.json",
+                "silver_amendment_label.schema.json",
+            )
+        ),
+        "all_configured_amending_acts_processed": (
+            extraction_checkpoint.get("configured_amending_act_count") == 37
+            and extraction_checkpoint.get("status") == "passed"
+        ),
+        "extraction_artifact_is_hash_locked": (
+            extraction_artifact.is_file()
+            and sha256(extraction_artifact.read_bytes()).hexdigest()
+            == extraction_provenance.get("artifact_sha256")
+            == extraction_checkpoint.get("artifact_sha256")
+        ),
+        "events_are_evidence_linked_and_failures_classified": (
+            all(extraction_checkpoint.get("checks", {}).values())
+            and extraction_checkpoint.get("unresolved_count", 0) > 0
+        ),
+        "real_corpus_accuracy_not_fabricated": all(
+            value is None
+            for key, value in extraction_provenance.get("metrics", {})
+            .get("real_corpus_accuracy", {})
+            .items()
+            if key.endswith("_accuracy")
+        ),
+        "silver_labels_are_hash_locked_and_evidence_constrained": (
+            silver_checkpoint.get("status") == "passed"
+            and silver_artifact.is_file()
+            and sha256(silver_artifact.read_bytes()).hexdigest()
+            == silver_checkpoint.get("artifact_sha256")
+            and all(silver_checkpoint.get("checks", {}).values())
+            and silver_checkpoint.get("legal_gold_created") is False
+        ),
     }
     return PhaseGateResult(
         2,
@@ -231,6 +279,7 @@ def _phase2(root: Path) -> PhaseGateResult:
         "pending_fidelity_and_legal_review",
         (
             "authoritative hand-checked extraction fixtures are not approved",
+            "silver labels measure rule agreement and evidence support, not legal accuracy",
             "the 2008 IT Amendment extraction requires OCR or manual fidelity review",
             "cross-reference and legal-structure fidelity are not expert validated",
         ),
@@ -239,6 +288,10 @@ def _phase2(root: Path) -> PhaseGateResult:
 
 def _phase3(root: Path) -> PhaseGateResult:
     lock = load_json(root / "reports" / "phase3" / "version_graph.lock.json")
+    temporal_checkpoint = load_json(
+        root / "reports" / "phase3" / "temporal_graph_checkpoint.v2.json"
+    )
+    temporal_graph_path = root / str(temporal_checkpoint["graph_path"])
     manifest = CorpusManifest.from_file(root / "configs" / "corpus" / "pilot_v1.json")
     checks = {
         "version_graph_schema_present": (
@@ -258,6 +311,32 @@ def _phase3(root: Path) -> PhaseGateResult:
         ),
         "all_versions_have_evidence": lock.get("all_versions_have_evidence") is True,
         "graph_invariants_pass": lock.get("graph_validation_errors") == [],
+        "temporal_graph_v2_schema_present": (
+            root / "schemas/temporal/temporal_legal_knowledge_graph.v2.schema.json"
+        ).is_file(),
+        "temporal_graph_v2_checkpoint_passed": (
+            temporal_checkpoint.get("engineering_status") == "passed"
+            and all(temporal_checkpoint.get("checks", {}).values())
+        ),
+        "temporal_graph_v2_hash_reconciles": (
+            temporal_graph_path.is_file()
+            and sha256(temporal_graph_path.read_bytes()).hexdigest()
+            == temporal_checkpoint.get("graph_sha256")
+        ),
+        "all_phase2_events_and_sources_accounted_for": (
+            temporal_checkpoint.get("counts", {}).get("legal_sources") == 100
+            and temporal_checkpoint.get("counts", {}).get("amendment_events") == 864
+            and temporal_checkpoint.get("counts", {}).get("commencement_events") == 864
+        ),
+        "evidence_validated_transition_candidates_available": (
+            temporal_checkpoint.get("counts", {}).get("validated_transitions", 0) >= 20
+            and temporal_checkpoint.get("counts", {}).get("dated_transitions", 0) > 0
+        ),
+        "human_validation_not_fabricated": (
+            temporal_checkpoint.get("counts", {}).get("human_validated_transitions") == 0
+            and temporal_checkpoint.get("scientific_gate_status")
+            == "pending_human_legal_validation"
+        ),
     }
     return PhaseGateResult(
         3,
@@ -265,9 +344,10 @@ def _phase3(root: Path) -> PhaseGateResult:
         checks,
         "pending_historical_reconstruction_legal_review",
         (
-            "real historical before/after provision pairs are not yet legally validated",
+            "twenty transition candidates are machine-evidence validated, not manually human validated",
+            "complete historical provision consolidations are not available for every date",
             "candidate amendment links and duplicate section candidates require adjudication",
-            "the real-corpus graph contains snapshots and unresolved events, not approved transitions",
+            "amendment-fragment transitions are not legal gold until independently reviewed",
         ),
     )
 

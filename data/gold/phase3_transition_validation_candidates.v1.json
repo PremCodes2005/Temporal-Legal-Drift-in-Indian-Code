@@ -1,0 +1,470 @@
+{
+  "machine_evidence_validation_count": 20,
+  "manual_human_validation_count": 0,
+  "schema_version": "1.0.0",
+  "selection_policy": "deterministic first 20, prioritising evidenced effective dates",
+  "status": "machine_evidence_validated_human_legal_review_pending",
+  "transition_count": 20,
+  "transitions": [
+    {
+      "after_version_id": "pver_697b8c3dbbd016f00827afa1",
+      "amendment_event_id": "aevent_8f0e287318e0d062e92b0bce",
+      "before_version_id": "pver_2e448c55daae4b455ccf8e24",
+      "commencement_event_id": "comm_8fa56174fd79eb799353b09c",
+      "effective_date": "2015-10-23",
+      "operation": "INSERT",
+      "source_ids": [
+        "src_0ad4e9c72da39b6e2ffcbafb"
+      ],
+      "target_provision_id": "prov_aba7a4fc1a7bf5a350ac106e",
+      "transition_id": "transition_00cfa74eda65b9268f4c582f",
+      "validation_checks": {
+        "effective_date_evidenced": true,
+        "forward_operation_round_trip": true,
+        "human_legal_reviewed": false,
+        "old_new_fragments_reconstructable": true,
+        "silver_label_auto_accepted": true,
+        "source_hash_verified": true,
+        "target_provision_exists": true
+      },
+      "validation_status": "MACHINE_EVIDENCE_VALIDATED"
+    },
+    {
+      "after_version_id": "pver_6720fd6560550a6046485a0b",
+      "amendment_event_id": "aevent_15dc5d13c5131e069e1a0dbe",
+      "before_version_id": "pver_fc8c24a646f3251a59cf66fb",
+      "commencement_event_id": "comm_5981c53a7c512f4202f85e24",
+      "effective_date": "2018-11-02",
+      "operation": "INSERT",
+      "source_ids": [
+        "src_73ff6b08cbbe209ab709e642"
+      ],
+      "target_provision_id": "prov_c2a631a7d40a09f13eb59238",
+      "transition_id": "transition_01d945986991421f41b11889",
+      "validation_checks": {
+        "effective_date_evidenced": true,
+        "forward_operation_round_trip": true,
+        "human_legal_reviewed": false,
+        "old_new_fragments_reconstructable": true,
+        "silver_label_auto_accepted": true,
+        "source_hash_verified": true,
+        "target_provision_exists": true
+      },
+      "validation_status": "MACHINE_EVIDENCE_VALIDATED"
+    },
+    {
+      "after_version_id": "pver_3460bce2e1ef05d86b53d101",
+      "amendment_event_id": "aevent_1651ad1465acffe2bbb06682",
+      "before_version_id": "pver_877362d0fda01b1d280512cf",
+      "commencement_event_id": "comm_adf21a50142c057fcd1208cf",
+      "effective_date": "2018-11-02",
+      "operation": "SUBSTITUTE",
+      "source_ids": [
+        "src_73ff6b08cbbe209ab709e642"
+      ],
+      "target_provision_id": "prov_5478d9fae2257cd55bbb349f",
+      "transition_id": "transition_04e14ce506cbdefbc36cb314",
+      "validation_checks": {
+        "effective_date_evidenced": true,
+        "forward_operation_round_trip": true,
+        "human_legal_reviewed": false,
+        "old_new_fragments_reconstructable": true,
+        "silver_label_auto_accepted": true,
+        "source_hash_verified": true,
+        "target_provision_exists": true
+      },
+      "validation_status": "MACHINE_EVIDENCE_VALIDATED"
+    },
+    {
+      "after_version_id": "pver_3105695afcd53ac289bd9337",
+      "amendment_event_id": "aevent_3aa1f951a787e04058006146",
+      "before_version_id": "pver_27f7c68d06c965d372d1aae6",
+      "commencement_event_id": "comm_43b2bbf52763c3644f54b8c1",
+      "effective_date": "2015-10-23",
+      "operation": "INSERT",
+      "source_ids": [
+        "src_0ad4e9c72da39b6e2ffcbafb"
+      ],
+      "target_provision_id": "prov_43c68fedb13be6c6e062aad6",
+      "transition_id": "transition_0c533c5c336dc42fc2af4971",
+      "validation_checks": {
+        "effective_date_evidenced": true,
+        "forward_operation_round_trip": true,
+        "human_legal_reviewed": false,
+        "old_new_fragments_reconstructable": true,
+        "silver_label_auto_accepted": true,
+        "source_hash_verified": true,
+        "target_provision_exists": true
+      },
+      "validation_status": "MACHINE_EVIDENCE_VALIDATED"
+    },
+    {
+      "after_version_id": "pver_42e0765c87e1a94620953196",
+      "amendment_event_id": "aevent_c7cb99ed724811fc9f09659d",
+      "before_version_id": "pver_b66cd33b3f2077d11971946b",
+      "commencement_event_id": "comm_612d45f89bcad5eec1b39b2b",
+      "effective_date": "2018-11-02",
+      "operation": "SUBSTITUTE",
+      "source_ids": [
+        "src_73ff6b08cbbe209ab709e642"
+      ],
+      "target_provision_id": "prov_9b1fe999e81c83663509f68d",
+      "transition_id": "transition_0f65e2ca34061f85e0b738c1",
+      "validation_checks": {
+        "effective_date_evidenced": true,
+        "forward_operation_round_trip": true,
+        "human_legal_reviewed": false,
+        "old_new_fragments_reconstructable": true,
+        "silver_label_auto_accepted": true,
+        "source_hash_verified": true,
+        "target_provision_exists": true
+      },
+      "validation_status": "MACHINE_EVIDENCE_VALIDATED"
+    },
+    {
+      "after_version_id": "pver_3c82e61b29b210fb0c04a823",
+      "amendment_event_id": "aevent_9cc5776a03383f9a24c21784",
+      "before_version_id": "pver_74b58e384116b6f54f31de51",
+      "commencement_event_id": "comm_3b77be519138ad894e2ef936",
+      "effective_date": "2015-10-23",
+      "operation": "INSERT",
+      "source_ids": [
+        "src_0ad4e9c72da39b6e2ffcbafb"
+      ],
+      "target_provision_id": "prov_fc66d794572ade9e2fae5ab8",
+      "transition_id": "transition_308d35784dfd748e7ce3360d",
+      "validation_checks": {
+        "effective_date_evidenced": true,
+        "forward_operation_round_trip": true,
+        "human_legal_reviewed": false,
+        "old_new_fragments_reconstructable": true,
+        "silver_label_auto_accepted": true,
+        "source_hash_verified": true,
+        "target_provision_exists": true
+      },
+      "validation_status": "MACHINE_EVIDENCE_VALIDATED"
+    },
+    {
+      "after_version_id": "pver_8990707a1a03c43c557e672f",
+      "amendment_event_id": "aevent_8e039b90e2306462462875f8",
+      "before_version_id": "pver_b723075c19c401bd498701a6",
+      "commencement_event_id": "comm_cd6ad66648b575779facb188",
+      "effective_date": "2015-10-23",
+      "operation": "INSERT",
+      "source_ids": [
+        "src_0ad4e9c72da39b6e2ffcbafb"
+      ],
+      "target_provision_id": "prov_5ff3790b7969e06573ffeb0c",
+      "transition_id": "transition_416b57390ba679cd8e4d5c4f",
+      "validation_checks": {
+        "effective_date_evidenced": true,
+        "forward_operation_round_trip": true,
+        "human_legal_reviewed": false,
+        "old_new_fragments_reconstructable": true,
+        "silver_label_auto_accepted": true,
+        "source_hash_verified": true,
+        "target_provision_exists": true
+      },
+      "validation_status": "MACHINE_EVIDENCE_VALIDATED"
+    },
+    {
+      "after_version_id": "pver_7fd5e1009735c26fade89506",
+      "amendment_event_id": "aevent_956e902279dedbb48c9e26d1",
+      "before_version_id": "pver_39c702527705920a3ca22d34",
+      "commencement_event_id": "comm_c5ebbb1dfefd4e0533421c07",
+      "effective_date": "2018-11-02",
+      "operation": "SUBSTITUTE",
+      "source_ids": [
+        "src_73ff6b08cbbe209ab709e642"
+      ],
+      "target_provision_id": "prov_ffa6434f463275797ab9ad59",
+      "transition_id": "transition_4ce696594d1f507f82dd7988",
+      "validation_checks": {
+        "effective_date_evidenced": true,
+        "forward_operation_round_trip": true,
+        "human_legal_reviewed": false,
+        "old_new_fragments_reconstructable": true,
+        "silver_label_auto_accepted": true,
+        "source_hash_verified": true,
+        "target_provision_exists": true
+      },
+      "validation_status": "MACHINE_EVIDENCE_VALIDATED"
+    },
+    {
+      "after_version_id": "pver_c0849fbe32e8964318171c82",
+      "amendment_event_id": "aevent_1a72b249626f18283df5f03f",
+      "before_version_id": "pver_68cee1f692512cdf5ed8af6d",
+      "commencement_event_id": "comm_2362f177bba19f95102f7be3",
+      "effective_date": "2018-11-02",
+      "operation": "SUBSTITUTE",
+      "source_ids": [
+        "src_73ff6b08cbbe209ab709e642"
+      ],
+      "target_provision_id": "prov_8dbde623f4ea54c7c62326dd",
+      "transition_id": "transition_51768ff48648e9db8d40be29",
+      "validation_checks": {
+        "effective_date_evidenced": true,
+        "forward_operation_round_trip": true,
+        "human_legal_reviewed": false,
+        "old_new_fragments_reconstructable": true,
+        "silver_label_auto_accepted": true,
+        "source_hash_verified": true,
+        "target_provision_exists": true
+      },
+      "validation_status": "MACHINE_EVIDENCE_VALIDATED"
+    },
+    {
+      "after_version_id": "pver_ee2763b34b7fa2cc49985c39",
+      "amendment_event_id": "aevent_e7c6664e74284a8e00c0be98",
+      "before_version_id": "pver_be16ec3b61b42841f6968aa1",
+      "commencement_event_id": "comm_1d0c101c52fdcfd720af49ab",
+      "effective_date": "2018-11-02",
+      "operation": "INSERT",
+      "source_ids": [
+        "src_73ff6b08cbbe209ab709e642"
+      ],
+      "target_provision_id": "prov_76a56b9d2fe0bb3ac7445f38",
+      "transition_id": "transition_77c7e64d9679b9e40ae2da54",
+      "validation_checks": {
+        "effective_date_evidenced": true,
+        "forward_operation_round_trip": true,
+        "human_legal_reviewed": false,
+        "old_new_fragments_reconstructable": true,
+        "silver_label_auto_accepted": true,
+        "source_hash_verified": true,
+        "target_provision_exists": true
+      },
+      "validation_status": "MACHINE_EVIDENCE_VALIDATED"
+    },
+    {
+      "after_version_id": "pver_9f2a135daa62f37f618ec696",
+      "amendment_event_id": "aevent_e16bf2cf0d1f00861f44969b",
+      "before_version_id": "pver_aa189130b4b00dc6ec45cc91",
+      "commencement_event_id": "comm_f556db611af862390d69154b",
+      "effective_date": "2018-11-02",
+      "operation": "INSERT",
+      "source_ids": [
+        "src_73ff6b08cbbe209ab709e642"
+      ],
+      "target_provision_id": "prov_a0af22e927aa31d48f5bf408",
+      "transition_id": "transition_7d8f5fd0a9ca5f5d995858a5",
+      "validation_checks": {
+        "effective_date_evidenced": true,
+        "forward_operation_round_trip": true,
+        "human_legal_reviewed": false,
+        "old_new_fragments_reconstructable": true,
+        "silver_label_auto_accepted": true,
+        "source_hash_verified": true,
+        "target_provision_exists": true
+      },
+      "validation_status": "MACHINE_EVIDENCE_VALIDATED"
+    },
+    {
+      "after_version_id": "pver_dd9ec780afb4f236e8a31133",
+      "amendment_event_id": "aevent_aa20b90374a137a4a2b383fc",
+      "before_version_id": "pver_fb86b8770ec40798af6c5fed",
+      "commencement_event_id": "comm_706cd97e9ba08989abd74c69",
+      "effective_date": "2018-11-02",
+      "operation": "INSERT",
+      "source_ids": [
+        "src_73ff6b08cbbe209ab709e642"
+      ],
+      "target_provision_id": "prov_bbedcd88a61dcf68be7309f0",
+      "transition_id": "transition_7f38af157ff36851d67ba807",
+      "validation_checks": {
+        "effective_date_evidenced": true,
+        "forward_operation_round_trip": true,
+        "human_legal_reviewed": false,
+        "old_new_fragments_reconstructable": true,
+        "silver_label_auto_accepted": true,
+        "source_hash_verified": true,
+        "target_provision_exists": true
+      },
+      "validation_status": "MACHINE_EVIDENCE_VALIDATED"
+    },
+    {
+      "after_version_id": "pver_a0f577218859703ba9fdcb8f",
+      "amendment_event_id": "aevent_4388c4d95692df62911ad792",
+      "before_version_id": "pver_d861a340c397ac9d3ecf7e9f",
+      "commencement_event_id": "comm_15956a8db373160b63f7f7f3",
+      "effective_date": "2018-11-02",
+      "operation": "SUBSTITUTE",
+      "source_ids": [
+        "src_73ff6b08cbbe209ab709e642"
+      ],
+      "target_provision_id": "prov_d898971561d1c7ed9911b258",
+      "transition_id": "transition_b459913647db61fdffdea2f9",
+      "validation_checks": {
+        "effective_date_evidenced": true,
+        "forward_operation_round_trip": true,
+        "human_legal_reviewed": false,
+        "old_new_fragments_reconstructable": true,
+        "silver_label_auto_accepted": true,
+        "source_hash_verified": true,
+        "target_provision_exists": true
+      },
+      "validation_status": "MACHINE_EVIDENCE_VALIDATED"
+    },
+    {
+      "after_version_id": "pver_bf7c2498b6fb2d19f3f102ca",
+      "amendment_event_id": "aevent_59e4f65561edb42a27ea30d1",
+      "before_version_id": "pver_7f37a9e8fd4e7a1bb170b29c",
+      "commencement_event_id": "comm_5438f3316054d74235f2a422",
+      "effective_date": "2015-10-23",
+      "operation": "INSERT",
+      "source_ids": [
+        "src_0ad4e9c72da39b6e2ffcbafb"
+      ],
+      "target_provision_id": "prov_b8135771787f360533906e07",
+      "transition_id": "transition_b74572025857a0c756b22a6d",
+      "validation_checks": {
+        "effective_date_evidenced": true,
+        "forward_operation_round_trip": true,
+        "human_legal_reviewed": false,
+        "old_new_fragments_reconstructable": true,
+        "silver_label_auto_accepted": true,
+        "source_hash_verified": true,
+        "target_provision_exists": true
+      },
+      "validation_status": "MACHINE_EVIDENCE_VALIDATED"
+    },
+    {
+      "after_version_id": "pver_61434fa13a6646c7bc9cda95",
+      "amendment_event_id": "aevent_fc1d0eb7ced78af6ebe9d75e",
+      "before_version_id": "pver_1cbfeadbdd9bdaad46dcbe03",
+      "commencement_event_id": "comm_3589e01040d1c62c305b4c02",
+      "effective_date": "2018-11-02",
+      "operation": "OMIT",
+      "source_ids": [
+        "src_73ff6b08cbbe209ab709e642"
+      ],
+      "target_provision_id": "prov_3006aabb6e3228e7f9f19769",
+      "transition_id": "transition_bb98e2358713e90168954221",
+      "validation_checks": {
+        "effective_date_evidenced": true,
+        "forward_operation_round_trip": true,
+        "human_legal_reviewed": false,
+        "old_new_fragments_reconstructable": true,
+        "silver_label_auto_accepted": true,
+        "source_hash_verified": true,
+        "target_provision_exists": true
+      },
+      "validation_status": "MACHINE_EVIDENCE_VALIDATED"
+    },
+    {
+      "after_version_id": "pver_edadbfcc360d9a802c02f0b8",
+      "amendment_event_id": "aevent_8579929e296deda5c294623e",
+      "before_version_id": "pver_aed64aea8a027c986b743060",
+      "commencement_event_id": "comm_d1b6e38ffb8287245f615708",
+      "effective_date": "2018-11-02",
+      "operation": "SUBSTITUTE",
+      "source_ids": [
+        "src_73ff6b08cbbe209ab709e642"
+      ],
+      "target_provision_id": "prov_e8df1f4725ccb11bb9d53c5f",
+      "transition_id": "transition_c8a34914083ce5365d724bd8",
+      "validation_checks": {
+        "effective_date_evidenced": true,
+        "forward_operation_round_trip": true,
+        "human_legal_reviewed": false,
+        "old_new_fragments_reconstructable": true,
+        "silver_label_auto_accepted": true,
+        "source_hash_verified": true,
+        "target_provision_exists": true
+      },
+      "validation_status": "MACHINE_EVIDENCE_VALIDATED"
+    },
+    {
+      "after_version_id": "pver_d16324d2eec0fb6ba768af96",
+      "amendment_event_id": "aevent_e47c6ba3aca1276bbb9985b0",
+      "before_version_id": "pver_116ceaaf7027d466ea195eee",
+      "commencement_event_id": "comm_eadaa468bb99ec28c3f2c48c",
+      "effective_date": "2015-10-23",
+      "operation": "SUBSTITUTE",
+      "source_ids": [
+        "src_0ad4e9c72da39b6e2ffcbafb"
+      ],
+      "target_provision_id": "prov_0cae136163d9103326efde5c",
+      "transition_id": "transition_dbb723f2bd878121cccd9ac5",
+      "validation_checks": {
+        "effective_date_evidenced": true,
+        "forward_operation_round_trip": true,
+        "human_legal_reviewed": false,
+        "old_new_fragments_reconstructable": true,
+        "silver_label_auto_accepted": true,
+        "source_hash_verified": true,
+        "target_provision_exists": true
+      },
+      "validation_status": "MACHINE_EVIDENCE_VALIDATED"
+    },
+    {
+      "after_version_id": "pver_335288cec0e4ec94360acb43",
+      "amendment_event_id": "aevent_fbff125f81a31f7a8c6e5ac5",
+      "before_version_id": "pver_14a0a943a0eaf964004cf114",
+      "commencement_event_id": "comm_0031eaf57e33e522045e972e",
+      "effective_date": "2018-11-02",
+      "operation": "INSERT",
+      "source_ids": [
+        "src_73ff6b08cbbe209ab709e642"
+      ],
+      "target_provision_id": "prov_31136ba3d4e9fc710cbb977b",
+      "transition_id": "transition_ea11e7b4d95623f57b2bd80d",
+      "validation_checks": {
+        "effective_date_evidenced": true,
+        "forward_operation_round_trip": true,
+        "human_legal_reviewed": false,
+        "old_new_fragments_reconstructable": true,
+        "silver_label_auto_accepted": true,
+        "source_hash_verified": true,
+        "target_provision_exists": true
+      },
+      "validation_status": "MACHINE_EVIDENCE_VALIDATED"
+    },
+    {
+      "after_version_id": "pver_f97ded869c054c7048b218cc",
+      "amendment_event_id": "aevent_cd269c0a45cfdd4f5cf395cf",
+      "before_version_id": "pver_83046c0cdefa1df66a707b99",
+      "commencement_event_id": "comm_f134826666e9c9b25155bd73",
+      "effective_date": null,
+      "operation": "INSERT",
+      "source_ids": [
+        "src_c402849814141b3fe1696d92"
+      ],
+      "target_provision_id": "prov_3f60a5d89a4ca8cfaf5c7756",
+      "transition_id": "transition_01a993cb54b3c93544e95539",
+      "validation_checks": {
+        "effective_date_evidenced": false,
+        "forward_operation_round_trip": true,
+        "human_legal_reviewed": false,
+        "old_new_fragments_reconstructable": true,
+        "silver_label_auto_accepted": true,
+        "source_hash_verified": true,
+        "target_provision_exists": true
+      },
+      "validation_status": "MACHINE_EVIDENCE_VALIDATED"
+    },
+    {
+      "after_version_id": "pver_4e0c4f2fd1d1ed8326805e3f",
+      "amendment_event_id": "aevent_5bd3bdd8bfc1cf534ff4ac07",
+      "before_version_id": "pver_47961f4126874b3ef832f057",
+      "commencement_event_id": "comm_75f4f6e9302d845632b0c519",
+      "effective_date": null,
+      "operation": "INSERT",
+      "source_ids": [
+        "src_c81daaf704eb5583145bd290"
+      ],
+      "target_provision_id": "prov_78ccabf23330cff5fb6e41a8",
+      "transition_id": "transition_0579aae32b02012a85b0b31b",
+      "validation_checks": {
+        "effective_date_evidenced": false,
+        "forward_operation_round_trip": true,
+        "human_legal_reviewed": false,
+        "old_new_fragments_reconstructable": true,
+        "silver_label_auto_accepted": true,
+        "source_hash_verified": true,
+        "target_provision_exists": true
+      },
+      "validation_status": "MACHINE_EVIDENCE_VALIDATED"
+    }
+  ]
+}

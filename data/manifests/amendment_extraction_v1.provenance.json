@@ -1,0 +1,81 @@
+{
+  "amendment_event_count": 864,
+  "artifact_path": "data/processed/amendments/v1/extraction.json",
+  "artifact_sha256": "e7cd6fe15ef4b2e155b8a1b0220301b9c714cb6d6f66954d60bd12f17f98fca0",
+  "configured_amending_act_count": 37,
+  "extractor_version": "generalised-amendment-extractor-v1",
+  "frozen_v0_1_unresolved_record_count": 175,
+  "human_review_required": true,
+  "legal_correctness_claimed": false,
+  "metrics": {
+    "commencement_extraction_coverage": {
+      "denominator": 864,
+      "numerator": 162,
+      "percent": 18.75
+    },
+    "controlled_fixture_accuracy": {
+      "commencement_extraction_accuracy": {
+        "denominator": 8,
+        "numerator": 8,
+        "percent": 100.0
+      },
+      "fixture_count": 8,
+      "old_new_extraction_accuracy": {
+        "denominator": 6,
+        "numerator": 6,
+        "percent": 100.0
+      },
+      "operation_accuracy": {
+        "denominator": 8,
+        "numerator": 8,
+        "percent": 100.0
+      },
+      "scope": "controlled parser fixtures only; not real-corpus legal accuracy",
+      "target_identification_accuracy": {
+        "denominator": 8,
+        "numerator": 8,
+        "percent": 100.0
+      }
+    },
+    "old_new_extraction_coverage": {
+      "denominator": 864,
+      "numerator": 286,
+      "percent": 33.1
+    },
+    "operation_resolution_coverage": {
+      "denominator": 864,
+      "numerator": 627,
+      "percent": 72.57
+    },
+    "real_corpus_accuracy": {
+      "commencement_extraction_accuracy": null,
+      "old_new_extraction_accuracy": null,
+      "operation_accuracy": null,
+      "reason": "human-reviewed gold labels are not available",
+      "target_identification_accuracy": null
+    },
+    "target_identification_coverage": {
+      "denominator": 864,
+      "numerator": 765,
+      "percent": 88.54
+    },
+    "unresolved_event_rate": {
+      "denominator": 864,
+      "numerator": 818,
+      "percent": 94.68
+    },
+    "unresolved_reason_counts": {
+      "ambiguous_section": 27,
+      "commencement_unclear": 657,
+      "missing_new_text": 307,
+      "missing_old_text": 198,
+      "parsing_failure": 0,
+      "target_not_found": 99,
+      "unclear_operation": 237
+    },
+    "unresolved_record_count": 1525
+  },
+  "schema_version": "1.0.0",
+  "unresolved_count": 1525,
+  "unresolved_count_comparability": "Phase 2 counts reason records and may assign multiple reasons per event; it is not directly comparable to the frozen graph's 175 unresolved records."
+}

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://temporal-legal-drift.local/schemas/amendments/amendment_event.schema.json",
+  "title": "AmendmentEvent",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "amendment_id", "amending_act", "principal_act", "target_provision", "operation",
+    "old_text", "new_text", "effective_date", "assent_date", "publication_date",
+    "source_document", "source_page", "source_line", "source_sha256", "evidence_text",
+    "confidence", "review_status", "extraction_version"
+  ],
+  "properties": {
+    "amendment_id": {"type": "string", "minLength": 1},
+    "amending_act": {"type": "string", "minLength": 1},
+    "principal_act": {"type": ["string", "null"]},
+    "target_provision": {"type": ["string", "null"]},
+    "operation": {"enum": ["INSERT", "SUBSTITUTE", "OMIT", "REPEAL", "RENUMBER", "REPLACE", "MODIFY", "UNKNOWN"]},
+    "old_text": {"type": ["string", "null"]},
+    "new_text": {"type": ["string", "null"]},
+    "effective_date": {"type": ["string", "null"]},
+    "assent_date": {"type": ["string", "null"]},
+    "publication_date": {"type": ["string", "null"]},
+    "source_document": {"type": "string", "minLength": 1},
+    "source_page": {"type": ["integer", "null"], "minimum": 1},
+    "source_line": {"type": ["integer", "null"], "minimum": 1},
+    "source_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "evidence_text": {"type": "string", "minLength": 1},
+    "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+    "review_status": {"const": "HUMAN_REVIEW_PENDING"},
+    "extraction_version": {"const": "generalised-amendment-extractor-v1"}
+  }
+}

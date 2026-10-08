@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://temporal-legal-drift.local/schemas/amendments/silver_amendment_label.schema.json",
+  "title": "SilverAmendmentLabel",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "label_id", "amendment_id", "source_document", "principal_act",
+    "target_provision", "operation", "old_text", "new_text", "effective_date",
+    "field_status", "validator_checks", "agreement_score", "confidence_tier",
+    "label_status", "abstention_reasons", "evidence_text", "source_sha256",
+    "labelling_version"
+  ],
+  "properties": {
+    "label_id": {"type": "string", "pattern": "^silver_[0-9a-f]{24}$"},
+    "amendment_id": {"type": "string", "minLength": 1},
+    "source_document": {"type": "string", "minLength": 1},
+    "principal_act": {"type": ["string", "null"]},
+    "target_provision": {"type": ["string", "null"]},
+    "operation": {"enum": ["INSERT", "SUBSTITUTE", "OMIT", "REPEAL", "RENUMBER", "REPLACE", "MODIFY", null]},
+    "old_text": {"type": ["string", "null"]},
+    "new_text": {"type": ["string", "null"]},
+    "effective_date": {"type": ["string", "null"]},
+    "field_status": {"type": "object"},
+    "validator_checks": {"type": "object"},
+    "agreement_score": {"type": "number", "minimum": 0, "maximum": 1},
+    "confidence_tier": {"enum": ["HIGH", "MEDIUM", "LOW", "ABSTAIN"]},
+    "label_status": {"enum": ["AUTO_ACCEPTED", "ABSTAIN"]},
+    "abstention_reasons": {"type": "array", "items": {"type": "string"}},
+    "evidence_text": {"type": "string", "minLength": 1},
+    "source_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "labelling_version": {"const": "amendment-silver-labeller-v1"}
+  }
+}

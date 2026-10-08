@@ -15,6 +15,8 @@
     "configs/terminology_registry.v1.json": "d05b0a1b5e78900b0dbaf1177b2d21f39094201cacdf922129622775fc888e27",
     "configs/validation/cross_version.v1.json": "5c58616d1e6175c6c29354474651d2d5152b0bc94d9b9db24b2bbaad9245f305",
     "configs/versioning/instrument_relations.v1.json": "2e56654119e366de2a558a51fed8ee8e1fb1ead300259a9164d22636626aba5d",
+    "data/processed/amendments/v1/extraction.json": "e7cd6fe15ef4b2e155b8a1b0220301b9c714cb6d6f66954d60bd12f17f98fca0",
+    "data/processed/amendments/v1/silver_labels.v1.json": "c4aba6378dbb4d3ef7ed112f3da1438c012cd33f690c806d3aef02441f07af6c",
     "data/scenarios/temporal_drift_demo.v1.json": "ac78b978f75628bd5facdb06feaaf5710720ba9fca8a4eea766c247b3d41bbcc",
     "experiments/phase9/temporal_drift_demo.results.v1.json": "40f2a730ed033d921b907d4e8d4e22decfb22778fb1522cff34261801df39123",
     "experiments/phase9/temporal_drift_demo.v1.json": "60565bb4ec48c8748a6dbb2d2b25d9be98a89b59cbba4066d0167597a8a2a109",
@@ -26,6 +28,7 @@
     "frontend/src/main.jsx": "c74c6bbb5f94cd1c995b2a352c243f16b229b8f1b8628933ad8c2ec4282524e6",
     "frontend/src/styles.css": "0a3ee7f4dd28de502f415f9b8d466f85aa843029ec3ee155537ce96fc0cfdf55",
     "frontend/vite.config.js": "9cc986da9616d5d7caf5f51993058bd730771dc84e78b2b16223b84e9c490586",
+    "protocols/amendment_extraction_protocol.md": "799c0a23476c9d371f8b220e80101423b744dac86150124b86aebf45cd6a2cb1",
     "protocols/applicability_protocol.md": "41c4782869b66bfa9eb4590b459167472ef9463b32128c6b5cc5504516110f4a",
     "protocols/baseline_protocol.md": "b3d84d4b6d5a98e66a13636e96b83e14f6f5b4b86b0c7231effdd518332be730",
     "protocols/benchmark_release_protocol.md": "398446555a3f5c04ea8d94dc9bf98c7daaf354f6cbc17b3c9b7b541c406af336",
@@ -40,6 +43,8 @@
     "pyproject.toml": "3dd0cca9dc6f9d5a0467b31d6c0b71bdb3495d46eec9d00169ec2c1ffec6584d",
     "reports/corpus/india-code-temporal-pilot-v1.lock.json": "f90185ba7d1214c9fa5144a7c6af1f131c47a62bc9eba10b10c978793fc36243",
     "reports/phase10/explanation_plan.lock.json": "8820612781c94cbec8b21dd8949c0736c5cf593eb223f23e15bc45dacda6286a",
+    "reports/phase2/amendment_extraction_checkpoint.v1.json": "06d10283103e7f24b3483f13959a8e5ea0071450666b1096d61bfb5e9669e1af",
+    "reports/phase2/silver_label_checkpoint.v1.json": "367a2e9134859f30a5b614868a5bf3991429e38e64dc5ae2922aa4dd49045cb5",
     "reports/phase3/version_graph.lock.json": "6df8262597e59b992966d80f005ae76b277050553e3e5bba4b3c7316975d59c2",
     "reports/phase4/cross_version_validation.lock.json": "5a253b3503e28a9eb549c36f8f117a9646f85472c14f33294ee56695e55ef922",
     "reports/phase5/annotation_workload.lock.json": "ce90e06a0e94909028c86c6d3435614dce16b9995cf5766e09d951cffbaf4673",
@@ -48,6 +53,9 @@
     "reports/phase8/baseline_dry_run.lock.json": "63aef740cf20df383ffeff17491a342276258201c44d69c05b29713a66d4ee96",
     "reports/phase9/evaluation_plan.lock.json": "15ac65e9bbe1a7355170cd91ec02e0efd4248eb36875c03480d767a6a26b3a94",
     "reports/phase9/temporal_drift_demo.lock.json": "15342998bfc3bbb0dcd715b95965060191626acdf6b68e092f4027c170c5b47a",
+    "schemas/amendments/amendment_event.schema.json": "cac339668d56bc7a25613aeea7a5043c50f82bda1b46062748345e480e79cfdb",
+    "schemas/amendments/silver_amendment_label.schema.json": "177982df317bb66d5b9c727119902890ba5ee06b1feb450591049d61da4b6d68",
+    "schemas/amendments/unresolved_amendment.schema.json": "65b89c8f0fd9eb9eb14a18e8636bdac154d46da7bdb07226f7d8a2d76ab05c2a",
     "schemas/annotation/amendment_pair.schema.json": "5d8aea515c6f4bbae9cb491f09c5205d6945d3948f8222c93e1430cc75736b82",
     "schemas/annotation/materiality_annotation.schema.json": "b6a4207f38f75932352fecaaf8c41de759516b953310df88f34801447020c60b",
     "schemas/evaluation/baseline_run.schema.json": "2f2ae61c3e4ab109e9ef849a76ddfd5401fa624bdb6afd7d7a19bdad7c8fab3b",
@@ -76,6 +84,13 @@
     "src/temporal_legal_drift/acquisition/models.py": "9df36b53cb1855c990732d552c75513b72b826d84cb756964d25e2a3c0493908",
     "src/temporal_legal_drift/acquisition/policy.py": "30d17d737e4c7115373dab72796c03906376f8c07df9d94da98c6342595a494b",
     "src/temporal_legal_drift/acquisition/store.py": "9c1c922ba9bc07e3a658876bdfbf462ca105ea426c3624a40495fd821e4e408f",
+    "src/temporal_legal_drift/amendment_extraction/__init__.py": "ba91746a95a00e79074c09d4cc8c57950e4816853b365ca9ec8f7999ec09dd9b",
+    "src/temporal_legal_drift/amendment_extraction/checkpoint.py": "e0b6a0987816b8f5c580ee7b83ac4adf8a8ea8df1371dccb42493a8e549005de",
+    "src/temporal_legal_drift/amendment_extraction/extractor.py": "b0ff54c33b18c3d6fc5083c620e29bd482754787eae0463ef161c72a04488644",
+    "src/temporal_legal_drift/amendment_extraction/models.py": "0328051c655684df864af9c9ffcfbfd28def01b97a8f19c7b3901a0379192e6b",
+    "src/temporal_legal_drift/amendment_extraction/pipeline.py": "1dc4d55d0d8d47de4ec87b043a1bd24e3dc6170cd593b36c749e2558a6b2668c",
+    "src/temporal_legal_drift/amendment_extraction/silver.py": "beb15e71621179a6ee4137e6794e17ae4f8a3b734bfa8b010c70cbe8243400e9",
+    "src/temporal_legal_drift/amendment_extraction/silver_checkpoint.py": "a71769dcefa6130447a2b1dc8f48d0bf23d72fe02bb612d8064b4bf693cc1e9f",
     "src/temporal_legal_drift/applicability/__init__.py": "85db270bf38f17bba855a3bcee16f631010366dbbd97da9bfd39ae60228b6439",
     "src/temporal_legal_drift/applicability/candidates.py": "720a280212b30cd05402244b3362ce43cbd4db5e18edd9194054988139718ce6",
     "src/temporal_legal_drift/applicability/cross_validation.py": "20c0734cdafc46cc5bf7b65ebaba20224a89a92974c05d451af9668aa273866f",
@@ -86,7 +101,7 @@
     "src/temporal_legal_drift/baselines/runner.py": "0e7d8b99d70f7c9fd4f86338a18043d1dcb924cae3012d80b4d9cd8d58aef59b",
     "src/temporal_legal_drift/benchmark/__init__.py": "00836c651557f932abcc62f5fa8834a7e0a97570cfb3a6dc92bcda1a6fc4bf1f",
     "src/temporal_legal_drift/benchmark/builder.py": "04bcbc19bac29790b260a67d3c0d997ace775a0b8500cd1040a8e2e43f2b6cb7",
-    "src/temporal_legal_drift/cli.py": "b44fcc96a2be72258e38c5505ded0e37dbb1a92122d7af8916d0d965a1137f35",
+    "src/temporal_legal_drift/cli.py": "ac62241f350a3f2a9b9d565032f95514f388abf535543d45ceb012ff627a24e3",
     "src/temporal_legal_drift/comparison/__init__.py": "a0ed513adcd20e683adc1a4f91f7c2480f4e41fca5215b0606c03b4dcbbc10b2",
     "src/temporal_legal_drift/comparison/analyzer.py": "ecfddf7a94a4c0689ef89faa80edbf01aca28ff582fa9bfc8b83d61f6b79e40a",
     "src/temporal_legal_drift/corpus/__init__.py": "7baa6ce358159b55d688d6fb637bb61ae340e2004c2bde7b74260ffbf4f0549b",
@@ -100,7 +115,7 @@
     "src/temporal_legal_drift/evaluation_agent/agent.py": "8601a2708c139e110a96cc4b8d56ababc3c6ca427331a3f8c6ecd83abc9fc444",
     "src/temporal_legal_drift/explanations/__init__.py": "a30f0184ff98dfcfb742046a0b1208b9f8f5430d13f69faf577678c034e307c5",
     "src/temporal_legal_drift/explanations/evaluator.py": "2e98868beeeb36f7e49696cea5d1acc872d1b33431c278b654ad9832200683fc",
-    "src/temporal_legal_drift/gates.py": "d0aab2419950cbc7521db30b08ba8e8d6dcc58727366ef4964fa0424de882988",
+    "src/temporal_legal_drift/gates.py": "1875ef2e0dae68a2d7021744cb0dbffd952c7f883624c6ee51164128ea8ee831",
     "src/temporal_legal_drift/ingestion/__init__.py": "35df1811ef58fc59f7687e1e9cdef099d928a18e101e62df48b93415a70065dd",
     "src/temporal_legal_drift/ingestion/checkpoint.py": "408f67f464ed362735721d693d49566f71aa40af51e9a6f63048638395433672",
     "src/temporal_legal_drift/ingestion/deduplicator.py": "98a8bed04faec5d04b8d7d93d343854ae55da21afadcee042454ffcb8bbc14c3",
@@ -134,7 +149,7 @@
     "src/temporal_legal_drift/rag/rag_pipeline.py": "2ffddcb70f84e92fe693dfcabe1552eb33dd4ea5ebd8dabc2988029917e3751e",
     "src/temporal_legal_drift/rag/retriever.py": "d0d34d1124f1edf3cddc39635d1b39b9c5d0f8e2aed34e7a39b7bac8d24ec670",
     "src/temporal_legal_drift/reproducibility/__init__.py": "40d4bc2addfb7a53da7cd2df7a2d865dfe0ef8f5765b2ad793e3acc1d5a72bfd",
-    "src/temporal_legal_drift/reproducibility/builder.py": "88202f313243e798358f4531ee170470854e22a3d5813f69ce48bb2875b093ae",
+    "src/temporal_legal_drift/reproducibility/builder.py": "594d369781e5342c7b870ff766774a87f5eb6480ab886944e4bad03ca5e4101d",
     "src/temporal_legal_drift/scenarios/__init__.py": "6a4eecdee4f4c4b329cad2a8a6c1fee06f6974473e8d103879854f49e3a31424",
     "src/temporal_legal_drift/scenarios/builder.py": "1ecf3452ef91f3871a58211775da3cb3ceeb621beccdd3cd8d00a5cfedc18526",
     "src/temporal_legal_drift/versioning/__init__.py": "9a3fd9a7b15599313ae3cf3a94723425f3c570544c4dbdc6b6bfd4de111a0d5d",
@@ -149,6 +164,7 @@
     "tests/integration/test_normalization_pipeline.py": "4da777ba2bec46754427fc22d422f542261df5216829c17fbc46bd3b1b29629a",
     "tests/unit/__init__.py": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
     "tests/unit/test_acquisition.py": "2bf9ced5ebcb2380188d4cd43dc3075d782103946103ceb0002029984571ac1b",
+    "tests/unit/test_amendment_extraction.py": "e383cf76da12f29fb21a219232ac0e86c8b3feab9f8f9d192513b78be71c00ab",
     "tests/unit/test_applicability.py": "533a0c64ad1097d93f5746f08cb6681504adb515ad4dc835239ef86f0a6492b3",
     "tests/unit/test_comparison.py": "ab0b2283f103890252b5349b794baac3f684232a0715c88755469e04e54aa8ee",
     "tests/unit/test_corpus.py": "fd11db86e7fa620a8f089584c899a32cd4d0fa4b78a1b38f05848156cd4afe6d",
@@ -178,7 +194,7 @@
   "executions": [
     {
       "command": [
-        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "<project-root>/.venv/bin/python",
         "-m",
         "venv",
         "--system-site-packages",
@@ -204,7 +220,7 @@
       "exit_code": 0,
       "output_tail": "lity gold labels and complete before/after pairs are unavailable\",\n        \"neural and LLM baselines have no selected models or approved execution configuration\",\n        \"no baseline metric or model-performance claim can be reported\"\n      ]\n    },\n    {\n      \"phase\": 9,\n      \"engineering_passed\": true,\n      \"checks\": {\n        \"model_run_schema_present\": true,\n        \"normalized_assertion_schema_present\": true,\n        \"drift_metrics_schema_present\": true,\n        \"six_controlled_conditions_present\": true,\n        \"scenario_facts_held_constant\": true,\n        \"drift_metric_self_check\": true,\n        \"phase9_inputs_reconciled\": true,\n        \"controlled_execution_configuration_documented\": true,\n        \"controlled_llm_pipeline_executed\": true,\n        \"unsupported_performance_results_absent\": true\n      },\n      \"review_status\": \"controlled_llm_pipeline_executed_performance_unscored_without_gold\",\n      \"review_blockers\": [\n        \"scenario gold and expected-change labels are unavailable\",\n        \"the benchmark is not frozen\",\n        \"the executed smoke run cannot yield temporal-drift performance metrics\"\n      ]\n    },\n    {\n      \"phase\": 10,\n      \"engineering_passed\": true,\n      \"checks\": {\n        \"explanation_record_schema_present\": true,\n        \"explanation_evaluation_schema_present\": true,\n        \"evidence_support_self_check\": true,\n        \"phase10_inputs_reconciled\": true,\n        \"all_planned_post_versions_resolve\": true,\n        \"rubric_separates_automated_and_expert_review\": true,\n        \"automated_support_evaluation_completed\": true,\n        \"unsupported_explanation_results_absent\": true\n      },\n      \"review_status\": \"automated_explanation_support_evaluated_legal_quality_unscored\",\n      \"review_blockers\": [\n        \"materiality, applicability and compliance gold are unavailable\",\n        \"independent expert explanation review is unavailable\",\n        \"automated support diagnostics cannot establish legal correctness\"\n      ]\n    }\n  ]\n}\n",
       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "stdout_sha256": "1f43fff73d2fbaec7f09efef84aa4221edeb5c6289f1922dc827d6e02ed19687",
+      "stdout_sha256": "71463c66862b35eb6e72087513a678161da42de0eedbe16c33a7b37e76407c2c",
       "step": 2
     },
     {
@@ -218,8 +234,8 @@
         "-v"
       ],
       "exit_code": 0,
-      "output_tail": "not_average_to_fifty) ... ok\ntest_repository_is_automatically_indexed_with_required_metadata (unit.test_rag.RagPipelineTests.test_repository_is_automatically_indexed_with_required_metadata) ... ok\ntest_section_substitution_reconstructs_a_narrow_baseline (unit.test_rag.RagPipelineTests.test_section_substitution_reconstructs_a_narrow_baseline) ... ok\ntest_single_document_lookup_does_not_report_fake_pair_drift (unit.test_rag.RagPipelineTests.test_single_document_lookup_does_not_report_fake_pair_drift) ... ok\ntest_specific_and_generic_modes_have_distinct_response_contracts (unit.test_rag.RagPipelineTests.test_specific_and_generic_modes_have_distinct_response_contracts) ... ok\ntest_duplicate_amending_clauses_do_not_create_duplicate_lineages (unit.test_versioning.VersioningTests.test_duplicate_amending_clauses_do_not_create_duplicate_lineages) ... ok\ntest_graph_reconstructs_exact_version_and_rejects_cycles (unit.test_versioning.VersioningTests.test_graph_reconstructs_exact_version_and_rejects_cycles) ... ok\ntest_section_extraction_is_stable_and_reports_duplicate_candidates (unit.test_versioning.VersioningTests.test_section_extraction_is_stable_and_reports_duplicate_candidates) ... ok\ntest_dashboard_reads_connected_project_artifacts (unit.test_webapp.DashboardServiceTests.test_dashboard_reads_connected_project_artifacts) ... ok\ntest_pdf_upload_is_hashed_and_not_added_to_corpus (unit.test_webapp.DashboardServiceTests.test_pdf_upload_is_hashed_and_not_added_to_corpus) ... ok\ntest_project_audit_api_is_read_only_and_evidence_bounded (unit.test_webapp.DashboardServiceTests.test_project_audit_api_is_read_only_and_evidence_bounded) ... ok\ntest_scenario_submission_is_review_only (unit.test_webapp.DashboardServiceTests.test_scenario_submission_is_review_only) ... ok\ntest_single_prompt_rag_api_contract (unit.test_webapp.DashboardServiceTests.test_single_prompt_rag_api_contract) ... ok\n\n----------------------------------------------------------------------\nRan 61 tests in 9.323s\n\nOK\n",
-      "stderr_sha256": "21f35fe22e2a29f091fbda88d903a580ecd230186706a5276465de3a365b0a10",
+      "output_tail": "not_average_to_fifty) ... ok\ntest_repository_is_automatically_indexed_with_required_metadata (unit.test_rag.RagPipelineTests.test_repository_is_automatically_indexed_with_required_metadata) ... ok\ntest_section_substitution_reconstructs_a_narrow_baseline (unit.test_rag.RagPipelineTests.test_section_substitution_reconstructs_a_narrow_baseline) ... ok\ntest_single_document_lookup_does_not_report_fake_pair_drift (unit.test_rag.RagPipelineTests.test_single_document_lookup_does_not_report_fake_pair_drift) ... ok\ntest_specific_and_generic_modes_have_distinct_response_contracts (unit.test_rag.RagPipelineTests.test_specific_and_generic_modes_have_distinct_response_contracts) ... ok\ntest_duplicate_amending_clauses_do_not_create_duplicate_lineages (unit.test_versioning.VersioningTests.test_duplicate_amending_clauses_do_not_create_duplicate_lineages) ... ok\ntest_graph_reconstructs_exact_version_and_rejects_cycles (unit.test_versioning.VersioningTests.test_graph_reconstructs_exact_version_and_rejects_cycles) ... ok\ntest_section_extraction_is_stable_and_reports_duplicate_candidates (unit.test_versioning.VersioningTests.test_section_extraction_is_stable_and_reports_duplicate_candidates) ... ok\ntest_dashboard_reads_connected_project_artifacts (unit.test_webapp.DashboardServiceTests.test_dashboard_reads_connected_project_artifacts) ... ok\ntest_pdf_upload_is_hashed_and_not_added_to_corpus (unit.test_webapp.DashboardServiceTests.test_pdf_upload_is_hashed_and_not_added_to_corpus) ... ok\ntest_project_audit_api_is_read_only_and_evidence_bounded (unit.test_webapp.DashboardServiceTests.test_project_audit_api_is_read_only_and_evidence_bounded) ... ok\ntest_scenario_submission_is_review_only (unit.test_webapp.DashboardServiceTests.test_scenario_submission_is_review_only) ... ok\ntest_single_prompt_rag_api_contract (unit.test_webapp.DashboardServiceTests.test_single_prompt_rag_api_contract) ... ok\n\n----------------------------------------------------------------------\nRan 66 tests in 9.477s\n\nOK\n",
+      "stderr_sha256": "e70664a3a1f6a54f99e8e3195ff8b28ca0ea6ac62bc4479532cf863c68fd24fc",
       "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "step": 3
     }
@@ -238,5 +254,5 @@
   "research_gate_passed": false,
   "schema_version": "1.0.0",
   "status": "fresh_environment_engineering_reproduction_passed_expert_review_unavailable",
-  "verified_at": "2026-10-08T05:47:40.621070+00:00"
+  "verified_at": "2026-10-08T06:07:24.291808+00:00"
 }

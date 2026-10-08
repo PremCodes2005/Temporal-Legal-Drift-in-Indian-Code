@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://temporal-legal-drift.local/schemas/amendments/unresolved_amendment.schema.json",
+  "title": "UnresolvedAmendment",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "unresolved_id", "source_document", "reason_code", "evidence_text", "source_page",
+    "source_line", "amendment_id", "detail", "review_status"
+  ],
+  "properties": {
+    "unresolved_id": {"type": "string", "minLength": 1},
+    "source_document": {"type": "string", "minLength": 1},
+    "reason_code": {"enum": ["target_not_found", "ambiguous_section", "unclear_operation", "missing_old_text", "missing_new_text", "commencement_unclear", "parsing_failure"]},
+    "evidence_text": {"type": "string", "minLength": 1},
+    "source_page": {"type": ["integer", "null"]},
+    "source_line": {"type": ["integer", "null"]},
+    "amendment_id": {"type": ["string", "null"]},
+    "detail": {"type": "string", "minLength": 1},
+    "review_status": {"const": "HUMAN_REVIEW_REQUIRED"}
+  }
+}

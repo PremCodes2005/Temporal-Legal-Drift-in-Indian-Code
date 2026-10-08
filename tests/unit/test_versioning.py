@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import unittest
 from hashlib import sha256
+from pathlib import Path
 
 from temporal_legal_drift.versioning.extract import extract_amending_clauses, extract_provisions
 from temporal_legal_drift.versioning.models import (
@@ -13,6 +14,10 @@ from temporal_legal_drift.versioning.models import (
     VersionGraph,
     VersionTransition,
 )
+from temporal_legal_drift.versioning.temporal_graph import TemporalGraphBuilder
+
+
+ROOT = Path(__file__).resolve().parents[2]
 
 
 class VersioningTests(unittest.TestCase):
@@ -79,6 +84,43 @@ class VersioningTests(unittest.TestCase):
         provisions = extract_amending_clauses(document)
         self.assertEqual(len(provisions), 1)
         self.assertIn("longer amendment", provisions[0].exact_text)
+
+
+class TemporalKnowledgeGraphTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.graph = TemporalGraphBuilder().build(ROOT)
+
+    def test_all_sources_events_and_entity_relationships_are_accounted_for(self) -> None:
+        self.assertEqual(len(self.graph.legal_sources), 100)
+        self.assertEqual(len(self.graph.amendment_acts), 37)
+        self.assertEqual(len(self.graph.amendment_events), 864)
+        self.assertEqual(len(self.graph.commencement_events), 864)
+        self.assertGreaterEqual(len(self.graph.transitions), 20)
+        self.assertTrue(self.graph.unresolved_transitions)
+        self.assertEqual(self.graph.validate(), ())
+
+    def test_point_in_time_query_selects_before_and_after_fragment(self) -> None:
+        before = self.graph.get_provision_version(
+            "arbitration-and-conciliation-act-1996", "7", "2015-01-01"
+        )
+        after = self.graph.get_provision_version(
+            "arbitration-and-conciliation-act-1996", "7", "2016-01-01"
+        )
+        self.assertEqual(before["status"], "RESOLVED_FRAGMENT")
+        self.assertEqual(before["version"]["text"], "")
+        self.assertEqual(
+            after["version"]["text"], "including communication through electronic means"
+        )
+        self.assertEqual(after["transition"]["effective_date"], "2015-10-23")
+        self.assertIn("not a complete historical consolidation", after["scope_warning"])
+
+    def test_point_in_time_query_abstains_without_effective_date(self) -> None:
+        result = self.graph.get_provision_version(
+            "it-act-2000-consolidated", "19", "2010-01-01"
+        )
+        self.assertEqual(result["status"], "UNRESOLVED")
+        self.assertIn("effective date", result["reason"])
 
 
 if __name__ == "__main__":
