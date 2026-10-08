@@ -1,0 +1,25 @@
+{
+  "checks": {
+    "all_document_ids_unique": true,
+    "all_sha256_recorded": true,
+    "duplicate_download_detected": true,
+    "duplicate_reuses_document_id": true,
+    "failed_download_logged": true,
+    "new_documents_enter_review_queue": true,
+    "no_legal_change_claimed": true,
+    "publication_dates_preserved": true,
+    "retrieval_timestamps_preserved": true,
+    "revised_file_creates_new_version": true,
+    "source_urls_preserved": true,
+    "test_set_between_20_and_30": true
+  },
+  "deliverable": "Gazette ingestion pipeline v1 + source registry + immutable provenance manifest",
+  "document_count": 25,
+  "human_review_required": true,
+  "legal_change_claimed": false,
+  "phase": 1,
+  "provenance_manifest": "data/manifests/gazette_ingestion_v1.provenance.json",
+  "registry_id": "india-code-phase1-checkpoint-v1",
+  "schema_version": "1.0.0",
+  "status": "passed"
+}

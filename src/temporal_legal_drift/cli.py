@@ -25,6 +25,7 @@ from .errors import TemporalLegalDriftError
 from .explanations import build_explanation_evaluation_plan, write_explanation_plan_and_lock
 from .evaluation_agent import ProjectEvaluationAgent
 from .gates import check_engineering_gates
+from .ingestion.checkpoint import build_phase1_checkpoint
 from .jsonio import load_json
 from .materiality import build_annotation_workload, write_annotation_workload_and_lock
 from .llm_evaluation import (
@@ -62,6 +63,8 @@ def build_parser() -> argparse.ArgumentParser:
     acquire.add_argument("--instrument-type", required=True)
     acquire.add_argument("--notes")
     acquire.add_argument("--policy", type=Path, default=Path("configs/source_policy.v1.json"))
+
+    subparsers.add_parser("build-ingestion-checkpoint")
 
     normalize = subparsers.add_parser("normalize")
     normalize.add_argument("--metadata", type=Path, required=True)
@@ -392,6 +395,11 @@ def run(args: argparse.Namespace) -> int:
             SourceRequest(args.url, args.official_id, args.instrument_type, args.notes)
         )
         print(json.dumps(artifact.to_dict(), indent=2, ensure_ascii=False))
+        return 0
+
+    if args.command == "build-ingestion-checkpoint":
+        result = build_phase1_checkpoint(root)
+        print(json.dumps(result, indent=2, ensure_ascii=False))
         return 0
 
     if args.command == "normalize":

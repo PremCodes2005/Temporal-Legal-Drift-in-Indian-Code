@@ -6,6 +6,7 @@
     "configs/experiments/baselines.v1.json": "adad8a405366104c997f00240c7f849e4f3053528c94e7c53395b2e1ef2525c6",
     "configs/experiments/explanation_rubric.v1.json": "f8b277a14eaa7b5c9fcd4a84edbc36395f4b76d401fe96c3d4bd63a1e586f190",
     "configs/experiments/temporal_llm.v1.json": "9e13f1ac614460a920af3586c98f62017fedd08a9496a799b5d9c8451b40d114",
+    "configs/ingestion/source_registry.v1.json": "3795334d26d25d4a2ab9aa68237092c2871a08903c2c49c181bb1b95ab7be93e",
     "configs/prompts/compliance_reasoning.v1.json": "99961e5a6f8dc3cdd375a2293f3cabe8c404358721fa97e9858a8af02fc7c08c",
     "configs/research_contract.v1.json": "30c988e37109e4ef94de342132b14513fa5f75c55548307503533d829edc5e51",
     "configs/scenarios/coverage_requirements.v1.json": "d0d7d139ad57a2a2fd1aed7d594d1a38819b7b7b3c681694b203c57f0eb76cae",
@@ -29,6 +30,7 @@
     "protocols/baseline_protocol.md": "b3d84d4b6d5a98e66a13636e96b83e14f6f5b4b86b0c7231effdd518332be730",
     "protocols/benchmark_release_protocol.md": "398446555a3f5c04ea8d94dc9bf98c7daaf354f6cbc17b3c9b7b541c406af336",
     "protocols/explanation_evaluation_protocol.md": "a696a06b616807ba7f0b8535aba9ea9f13a2fb34e31d552c429307ff512f7e9f",
+    "protocols/ingestion_protocol.md": "dc660ff8f9f7320633aafe7321dd7ebf8653f272cf79a8aac70325b71d6b4a3b",
     "protocols/materiality_annotation_protocol.md": "9abcefe780f77cb3d524c334f556e966b56b1fb67b28aa1f4cd88cc2b1f7a06b",
     "protocols/normalization_protocol.md": "df1360ea391119c3e76b60fd761936f3777e197d6d0dea627382232eb992053b",
     "protocols/scenario_protocol.md": "1859f259174efc7d60a21482f4ab955deff9710a7a5a980cf254826dc9b89c6f",
@@ -56,6 +58,9 @@
     "schemas/evaluation/model_run.schema.json": "64b25a882379d18c423ff475708ed36442a48d494c3b7e783dd5c1fe1985eb64",
     "schemas/evaluation/normalized_assertion.schema.json": "a9a13cd8e3679bd18ade78d2644f4bcb730b2e449bff8c87f147a8e50a4529f5",
     "schemas/evaluation/reproducibility_manifest.schema.json": "bba6f9eec7026b35af2a1effde5c97d2e6804185be1d15f88167c5f7522f102b",
+    "schemas/ingestion/document_record.schema.json": "3b253da3da7105b84bdba87b3f9f7f0389de250ec64949db10144367111df3ae",
+    "schemas/ingestion/legal_source.schema.json": "537b45b7533f497fee92689f8db19f30b8f0326b704df7c19fc388dee1af7f91",
+    "schemas/ingestion/provenance_manifest.schema.json": "6018820d78e3da1f07894e6f091392d7294173b20792730c5aa5b64be6f54128",
     "schemas/phase0/research_contract.schema.json": "823948824af7d0081f152734d9033ea0e7b57aac0790a2c3fc8127d28f0e314c",
     "schemas/scenario/compliance_scenario.schema.json": "bd153b46da64ff92c3566eb85592f6e374fe27353f4db43650f55d89f13c4d8d",
     "schemas/source/normalized_document.schema.json": "16da7bbeeae035d2f8d91c1531a896843bfe4216f840bf4ad7592ff8fe92f544",
@@ -81,7 +86,7 @@
     "src/temporal_legal_drift/baselines/runner.py": "0e7d8b99d70f7c9fd4f86338a18043d1dcb924cae3012d80b4d9cd8d58aef59b",
     "src/temporal_legal_drift/benchmark/__init__.py": "00836c651557f932abcc62f5fa8834a7e0a97570cfb3a6dc92bcda1a6fc4bf1f",
     "src/temporal_legal_drift/benchmark/builder.py": "04bcbc19bac29790b260a67d3c0d997ace775a0b8500cd1040a8e2e43f2b6cb7",
-    "src/temporal_legal_drift/cli.py": "b1ff3f8b7b4a31bd39f9272113419ef0b88a2303320913aa24f33cc65c24d25e",
+    "src/temporal_legal_drift/cli.py": "b44fcc96a2be72258e38c5505ded0e37dbb1a92122d7af8916d0d965a1137f35",
     "src/temporal_legal_drift/comparison/__init__.py": "a0ed513adcd20e683adc1a4f91f7c2480f4e41fca5215b0606c03b4dcbbc10b2",
     "src/temporal_legal_drift/comparison/analyzer.py": "ecfddf7a94a4c0689ef89faa80edbf01aca28ff582fa9bfc8b83d61f6b79e40a",
     "src/temporal_legal_drift/corpus/__init__.py": "7baa6ce358159b55d688d6fb637bb61ae340e2004c2bde7b74260ffbf4f0549b",
@@ -95,7 +100,16 @@
     "src/temporal_legal_drift/evaluation_agent/agent.py": "8601a2708c139e110a96cc4b8d56ababc3c6ca427331a3f8c6ecd83abc9fc444",
     "src/temporal_legal_drift/explanations/__init__.py": "a30f0184ff98dfcfb742046a0b1208b9f8f5430d13f69faf577678c034e307c5",
     "src/temporal_legal_drift/explanations/evaluator.py": "2e98868beeeb36f7e49696cea5d1acc872d1b33431c278b654ad9832200683fc",
-    "src/temporal_legal_drift/gates.py": "a84bb8037289ebc1b756dbce51eb53ec38ac7ddf496f4a64bfc222f4fc87e950",
+    "src/temporal_legal_drift/gates.py": "d0aab2419950cbc7521db30b08ba8e8d6dcc58727366ef4964fa0424de882988",
+    "src/temporal_legal_drift/ingestion/__init__.py": "35df1811ef58fc59f7687e1e9cdef099d928a18e101e62df48b93415a70065dd",
+    "src/temporal_legal_drift/ingestion/checkpoint.py": "408f67f464ed362735721d693d49566f71aa40af51e9a6f63048638395433672",
+    "src/temporal_legal_drift/ingestion/deduplicator.py": "98a8bed04faec5d04b8d7d93d343854ae55da21afadcee042454ffcb8bbc14c3",
+    "src/temporal_legal_drift/ingestion/discover.py": "51c5ba6db7adba53ed5ff2f53d69c734161e957b72fb0410331d33271ce6aa15",
+    "src/temporal_legal_drift/ingestion/downloader.py": "8fd88276414fb2d16d5d05fb3de14df2dc0d044d5fa9aa8162595b9bc38584ec",
+    "src/temporal_legal_drift/ingestion/metadata.py": "6dbea730bed8c5eb05085d07be30afc5d9433bcc64563ac44e92f378536767de",
+    "src/temporal_legal_drift/ingestion/pipeline.py": "ef9dd02efb302bc4230073c4a4bbb514b13ead158f5ab0f77590d329fbaf8e52",
+    "src/temporal_legal_drift/ingestion/scheduler.py": "a687c057650c9770e9d2b21195c65664593269b0bd340920641bc6e4ce848555",
+    "src/temporal_legal_drift/ingestion/sources.py": "fbcd31c7abe0c44ed99ba3d08c6761e7704c09fdb7cdee621a53b32f5d5d2d71",
     "src/temporal_legal_drift/jsonio.py": "cf34a726e100a2d81d678fbbc0fe955eb93aa88fa5a85313e9d71ffc1483ae1e",
     "src/temporal_legal_drift/llm_evaluation/__init__.py": "09771441c84ec8e1ab7d3606dc3be1f971f137245f7052fa4ca6d00ac38a6745",
     "src/temporal_legal_drift/llm_evaluation/runner.py": "10e183ad0cba09f757b0e6353dad06f7f7ddf3169cf57a4157ae8394406e7e47",
@@ -141,6 +155,7 @@
     "tests/unit/test_cross_validation.py": "783beba1fa91d2b7cc945dc112ea6660f93e1addffe01e26f0e12b78488cedfe",
     "tests/unit/test_evaluation_agent.py": "afd245b9de21380140af68c2bb5399d5113f4616ade251fda0ea91b2c5312786",
     "tests/unit/test_gates.py": "25ccf1f8542452996be9aa103669a633f8a2f95a31b2d9ef4da5ea2775ec9626",
+    "tests/unit/test_ingestion.py": "9873efee09bdbe68e323f25046da9e4a5181e55c640ec653c85b8ddfe17b5aa0",
     "tests/unit/test_parsers.py": "b811851151545f3a5574bfa12ae76db0479a8ddebaafe2df5411115abbaf19f5",
     "tests/unit/test_phase0.py": "d86b672efb7772ded194cd7c9b759a519a034ea5cde0ef225f39201a2179497e",
     "tests/unit/test_phases_5_7.py": "18604aa0823fe3f1b337ed35bbc30a375262826354429fbd5ceeafca23ddf09e",
@@ -189,7 +204,7 @@
       "exit_code": 0,
       "output_tail": "lity gold labels and complete before/after pairs are unavailable\",\n        \"neural and LLM baselines have no selected models or approved execution configuration\",\n        \"no baseline metric or model-performance claim can be reported\"\n      ]\n    },\n    {\n      \"phase\": 9,\n      \"engineering_passed\": true,\n      \"checks\": {\n        \"model_run_schema_present\": true,\n        \"normalized_assertion_schema_present\": true,\n        \"drift_metrics_schema_present\": true,\n        \"six_controlled_conditions_present\": true,\n        \"scenario_facts_held_constant\": true,\n        \"drift_metric_self_check\": true,\n        \"phase9_inputs_reconciled\": true,\n        \"controlled_execution_configuration_documented\": true,\n        \"controlled_llm_pipeline_executed\": true,\n        \"unsupported_performance_results_absent\": true\n      },\n      \"review_status\": \"controlled_llm_pipeline_executed_performance_unscored_without_gold\",\n      \"review_blockers\": [\n        \"scenario gold and expected-change labels are unavailable\",\n        \"the benchmark is not frozen\",\n        \"the executed smoke run cannot yield temporal-drift performance metrics\"\n      ]\n    },\n    {\n      \"phase\": 10,\n      \"engineering_passed\": true,\n      \"checks\": {\n        \"explanation_record_schema_present\": true,\n        \"explanation_evaluation_schema_present\": true,\n        \"evidence_support_self_check\": true,\n        \"phase10_inputs_reconciled\": true,\n        \"all_planned_post_versions_resolve\": true,\n        \"rubric_separates_automated_and_expert_review\": true,\n        \"automated_support_evaluation_completed\": true,\n        \"unsupported_explanation_results_absent\": true\n      },\n      \"review_status\": \"automated_explanation_support_evaluated_legal_quality_unscored\",\n      \"review_blockers\": [\n        \"materiality, applicability and compliance gold are unavailable\",\n        \"independent expert explanation review is unavailable\",\n        \"automated support diagnostics cannot establish legal correctness\"\n      ]\n    }\n  ]\n}\n",
       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "stdout_sha256": "5cc32716645686066e2226c63edf2786f486cb32e96b31cb6320b62cc6215caa",
+      "stdout_sha256": "1f43fff73d2fbaec7f09efef84aa4221edeb5c6289f1922dc827d6e02ed19687",
       "step": 2
     },
     {
@@ -203,8 +218,8 @@
         "-v"
       ],
       "exit_code": 0,
-      "output_tail": "not_average_to_fifty) ... ok\ntest_repository_is_automatically_indexed_with_required_metadata (unit.test_rag.RagPipelineTests.test_repository_is_automatically_indexed_with_required_metadata) ... ok\ntest_section_substitution_reconstructs_a_narrow_baseline (unit.test_rag.RagPipelineTests.test_section_substitution_reconstructs_a_narrow_baseline) ... ok\ntest_single_document_lookup_does_not_report_fake_pair_drift (unit.test_rag.RagPipelineTests.test_single_document_lookup_does_not_report_fake_pair_drift) ... ok\ntest_specific_and_generic_modes_have_distinct_response_contracts (unit.test_rag.RagPipelineTests.test_specific_and_generic_modes_have_distinct_response_contracts) ... ok\ntest_duplicate_amending_clauses_do_not_create_duplicate_lineages (unit.test_versioning.VersioningTests.test_duplicate_amending_clauses_do_not_create_duplicate_lineages) ... ok\ntest_graph_reconstructs_exact_version_and_rejects_cycles (unit.test_versioning.VersioningTests.test_graph_reconstructs_exact_version_and_rejects_cycles) ... ok\ntest_section_extraction_is_stable_and_reports_duplicate_candidates (unit.test_versioning.VersioningTests.test_section_extraction_is_stable_and_reports_duplicate_candidates) ... ok\ntest_dashboard_reads_connected_project_artifacts (unit.test_webapp.DashboardServiceTests.test_dashboard_reads_connected_project_artifacts) ... ok\ntest_pdf_upload_is_hashed_and_not_added_to_corpus (unit.test_webapp.DashboardServiceTests.test_pdf_upload_is_hashed_and_not_added_to_corpus) ... ok\ntest_project_audit_api_is_read_only_and_evidence_bounded (unit.test_webapp.DashboardServiceTests.test_project_audit_api_is_read_only_and_evidence_bounded) ... ok\ntest_scenario_submission_is_review_only (unit.test_webapp.DashboardServiceTests.test_scenario_submission_is_review_only) ... ok\ntest_single_prompt_rag_api_contract (unit.test_webapp.DashboardServiceTests.test_single_prompt_rag_api_contract) ... ok\n\n----------------------------------------------------------------------\nRan 58 tests in 9.358s\n\nOK\n",
-      "stderr_sha256": "dda11fcecf9d8272deda58bbc404884ac2755be300ead163e6805d8e9e173824",
+      "output_tail": "not_average_to_fifty) ... ok\ntest_repository_is_automatically_indexed_with_required_metadata (unit.test_rag.RagPipelineTests.test_repository_is_automatically_indexed_with_required_metadata) ... ok\ntest_section_substitution_reconstructs_a_narrow_baseline (unit.test_rag.RagPipelineTests.test_section_substitution_reconstructs_a_narrow_baseline) ... ok\ntest_single_document_lookup_does_not_report_fake_pair_drift (unit.test_rag.RagPipelineTests.test_single_document_lookup_does_not_report_fake_pair_drift) ... ok\ntest_specific_and_generic_modes_have_distinct_response_contracts (unit.test_rag.RagPipelineTests.test_specific_and_generic_modes_have_distinct_response_contracts) ... ok\ntest_duplicate_amending_clauses_do_not_create_duplicate_lineages (unit.test_versioning.VersioningTests.test_duplicate_amending_clauses_do_not_create_duplicate_lineages) ... ok\ntest_graph_reconstructs_exact_version_and_rejects_cycles (unit.test_versioning.VersioningTests.test_graph_reconstructs_exact_version_and_rejects_cycles) ... ok\ntest_section_extraction_is_stable_and_reports_duplicate_candidates (unit.test_versioning.VersioningTests.test_section_extraction_is_stable_and_reports_duplicate_candidates) ... ok\ntest_dashboard_reads_connected_project_artifacts (unit.test_webapp.DashboardServiceTests.test_dashboard_reads_connected_project_artifacts) ... ok\ntest_pdf_upload_is_hashed_and_not_added_to_corpus (unit.test_webapp.DashboardServiceTests.test_pdf_upload_is_hashed_and_not_added_to_corpus) ... ok\ntest_project_audit_api_is_read_only_and_evidence_bounded (unit.test_webapp.DashboardServiceTests.test_project_audit_api_is_read_only_and_evidence_bounded) ... ok\ntest_scenario_submission_is_review_only (unit.test_webapp.DashboardServiceTests.test_scenario_submission_is_review_only) ... ok\ntest_single_prompt_rag_api_contract (unit.test_webapp.DashboardServiceTests.test_single_prompt_rag_api_contract) ... ok\n\n----------------------------------------------------------------------\nRan 61 tests in 9.323s\n\nOK\n",
+      "stderr_sha256": "21f35fe22e2a29f091fbda88d903a580ecd230186706a5276465de3a365b0a10",
       "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "step": 3
     }
@@ -223,5 +238,5 @@
   "research_gate_passed": false,
   "schema_version": "1.0.0",
   "status": "fresh_environment_engineering_reproduction_passed_expert_review_unavailable",
-  "verified_at": "2026-10-08T05:35:33.594114+00:00"
+  "verified_at": "2026-10-08T05:47:40.621070+00:00"
 }

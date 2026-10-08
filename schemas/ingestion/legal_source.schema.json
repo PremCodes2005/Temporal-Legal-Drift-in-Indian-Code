@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://temporal-legal-drift.local/schemas/ingestion/legal_source.schema.json",
+  "title": "LegalSource",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "source_id", "source_type", "authority", "title", "url",
+    "publication_date", "publication_date_precision", "retrieved_at",
+    "document_hash", "mime_type", "status"
+  ],
+  "properties": {
+    "source_id": {"type": "string", "minLength": 1},
+    "source_type": {"type": "string", "minLength": 1},
+    "authority": {"type": "string", "minLength": 1},
+    "title": {"type": "string", "minLength": 1},
+    "url": {"type": "string", "pattern": "^https://"},
+    "publication_date": {"type": ["string", "null"]},
+    "publication_date_precision": {"type": "string"},
+    "retrieved_at": {"type": ["string", "null"]},
+    "document_hash": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+    "mime_type": {"type": ["string", "null"]},
+    "status": {"enum": ["REGISTERED", "DISCOVERED", "DISABLED"]}
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://temporal-legal-drift.local/schemas/ingestion/provenance_manifest.schema.json",
+  "title": "IngestionProvenanceManifest",
+  "type": "object",
+  "required": [
+    "schema_version", "pipeline_version", "document_count", "unique_document_ids",
+    "unique_artifact_hashes", "review_queue_count", "failure_count", "documents",
+    "failures", "legal_change_claimed"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "pipeline_version": {"const": "gazette-ingestion-v1"},
+    "document_count": {"type": "integer", "minimum": 0},
+    "unique_document_ids": {"type": "integer", "minimum": 0},
+    "unique_artifact_hashes": {"type": "integer", "minimum": 0},
+    "review_queue_count": {"type": "integer", "minimum": 0},
+    "failure_count": {"type": "integer", "minimum": 0},
+    "documents": {"type": "array"},
+    "failures": {"type": "array"},
+    "legal_change_claimed": {"const": false}
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://temporal-legal-drift.local/schemas/ingestion/document_record.schema.json",
+  "title": "ImmutableDocumentRecord",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "document_id", "source_id", "source_url", "final_url", "retrieved_at",
+    "publication_date", "publication_date_precision", "sha256", "content_type",
+    "file_path", "version", "previous_document_id", "status", "workflow_status",
+    "review_status", "stage_history", "schema_version"
+  ],
+  "properties": {
+    "document_id": {"type": "string", "minLength": 1},
+    "source_id": {"type": "string", "minLength": 1},
+    "source_url": {"type": "string", "pattern": "^https://"},
+    "final_url": {"type": "string", "pattern": "^https://"},
+    "retrieved_at": {"type": "string", "minLength": 1},
+    "publication_date": {"type": ["string", "null"]},
+    "publication_date_precision": {"type": "string"},
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "content_type": {"type": "string", "minLength": 1},
+    "file_path": {"type": "string", "minLength": 1},
+    "version": {"type": "integer", "minimum": 1},
+    "previous_document_id": {"type": ["string", "null"]},
+    "status": {"const": "INGESTED"},
+    "workflow_status": {"const": "EXTRACTION_QUEUE"},
+    "review_status": {"const": "HUMAN_REVIEW_PENDING"},
+    "stage_history": {"type": "array", "items": {"type": "string"}, "minItems": 6},
+    "schema_version": {"const": "1.0.0"}
+  }
+}

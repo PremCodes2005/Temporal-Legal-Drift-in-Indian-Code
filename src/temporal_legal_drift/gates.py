@@ -16,6 +16,7 @@ from .applicability.selfcheck import run_resolver_self_check
 from .baselines import ClassPriorBaseline, MajorityBaseline, OperationPriorBaseline
 from .corpus import CorpusManifest
 from .explanations import evaluate_explanation_support
+from .ingestion import SourceRegistry
 from .jsonio import canonical_json_bytes, load_json
 from .llm_evaluation import score_paired_assertions
 from .metrics import classification_metrics, multiclass_brier_score
@@ -106,6 +107,15 @@ def _load_reconciled_corpus(root: Path) -> tuple[CorpusManifest, dict[str, objec
 def _phase1(root: Path) -> PhaseGateResult:
     manifest, report = _load_reconciled_corpus(root)
     policy = SourcePolicy.from_file(root / "configs" / "source_policy.v1.json")
+    source_registry = SourceRegistry.from_file(
+        root / "configs" / "ingestion" / "source_registry.v1.json"
+    )
+    ingestion_manifest = load_json(
+        root / "data" / "manifests" / "gazette_ingestion_v1.provenance.json"
+    )
+    ingestion_checkpoint = load_json(
+        root / "reports" / "phase1" / "ingestion_checkpoint.v1.json"
+    )
     report_entries = report.get("entries")
     entries = report_entries if isinstance(report_entries, list) else []
     report_by_id = {
@@ -133,6 +143,40 @@ def _phase1(root: Path) -> PhaseGateResult:
             and set(report_by_id) == {entry.entry_id for entry in manifest.entries}
         ),
         "provenance_fields_complete": provenance_complete,
+        "source_registry_has_checkpoint_scale": 20 <= len(source_registry.sources) <= 30,
+        "ingestion_schemas_present": all(
+            (root / "schemas" / "ingestion" / name).is_file()
+            for name in (
+                "legal_source.schema.json",
+                "document_record.schema.json",
+                "provenance_manifest.schema.json",
+            )
+        ),
+        "gazette_ingestion_checkpoint_passed": (
+            ingestion_checkpoint.get("status") == "passed"
+            and all(ingestion_checkpoint.get("checks", {}).values())
+        ),
+        "immutable_ingestion_provenance_complete": (
+            ingestion_manifest.get("document_count") == len(source_registry.sources)
+            and ingestion_manifest.get("unique_document_ids") == len(source_registry.sources)
+            and ingestion_manifest.get("unique_artifact_hashes") == len(source_registry.sources)
+            and all(
+                isinstance(item, dict)
+                and len(str(item.get("sha256", ""))) == 64
+                and bool(item.get("source_url"))
+                and bool(item.get("retrieved_at"))
+                and bool(item.get("publication_date"))
+                for item in ingestion_manifest.get("documents", [])
+            )
+        ),
+        "all_new_documents_await_human_review": (
+            ingestion_manifest.get("review_queue_count") == len(source_registry.sources)
+            and ingestion_manifest.get("legal_change_claimed") is False
+        ),
+        "download_failures_are_preserved": (
+            isinstance(ingestion_manifest.get("failure_count"), int)
+            and int(ingestion_manifest["failure_count"]) >= 1
+        ),
     }
     return PhaseGateResult(
         1,
