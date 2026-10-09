@@ -113,6 +113,12 @@ class TemporalKnowledgeGraphTests(unittest.TestCase):
             after["version"]["text"], "including communication through electronic means"
         )
         self.assertEqual(after["transition"]["effective_date"], "2015-10-23")
+        self.assertEqual(
+            after["temporal_basis"],
+            "ACT_WIDE_COMMENCEMENT_NOT_SCENARIO_APPLICABILITY",
+        )
+        self.assertGreaterEqual(len(after["sources"]), 2)
+        self.assertTrue(after["corroborating_consolidated_versions"])
         self.assertIn("not a complete historical consolidation", after["scope_warning"])
 
     def test_point_in_time_query_abstains_without_effective_date(self) -> None:

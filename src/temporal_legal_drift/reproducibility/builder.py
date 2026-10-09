@@ -11,7 +11,7 @@ from hashlib import sha256
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from temporal_legal_drift.jsonio import atomic_replace, canonical_json_bytes
+from temporal_legal_drift.jsonio import atomic_replace, canonical_json_bytes, load_json
 
 
 REQUIRED_ARTIFACTS = (
@@ -23,6 +23,12 @@ REQUIRED_ARTIFACTS = (
     "reports/phase2/amendment_extraction_checkpoint.v1.json",
     "reports/phase2/silver_label_checkpoint.v1.json",
     "reports/phase3/version_graph.lock.json",
+    "data/interim/temporal_legal_knowledge_graph.v2.json",
+    "data/interim/phase3_transition_validation_candidates.v1.json",
+    "reports/phase3/temporal_graph_checkpoint.v2.json",
+    "schemas/temporal/temporal_legal_knowledge_graph.v2.schema.json",
+    "schemas/temporal/phase3_transition_validation_candidates.v1.schema.json",
+    "protocols/temporal_graph_protocol.v2.md",
     "reports/phase4/cross_version_validation.lock.json",
     "reports/phase5/annotation_workload.lock.json",
     "reports/phase6/scenario_scaffolds.lock.json",
@@ -35,6 +41,30 @@ REQUIRED_ARTIFACTS = (
     "experiments/phase9/temporal_drift_demo.results.v1.json",
     "reports/phase9/temporal_drift_demo.lock.json",
 )
+
+
+def stage_current_artifact_checksums(
+    root: Path, manifest_path: Path, lock_path: Path
+) -> tuple[bytes, bytes]:
+    """Stage the checksum snapshot so the Phase 11 gate can run inside its own test suite.
+
+    The manifest and lock are excluded from the hashed artifact set, avoiding
+    recursive self-hashing. The caller must restore the returned bytes if fresh
+    verification fails; successful verification replaces the staged record.
+    """
+    original_manifest = manifest_path.read_bytes()
+    original_lock = lock_path.read_bytes()
+    document = load_json(manifest_path)
+    paths = _reproducibility_paths(root)
+    missing = [relative for relative in paths if not (root / relative).is_file()]
+    if missing:
+        raise ValueError(f"Required reproducibility artifacts are missing: {missing}")
+    document["artifact_checksums"] = {
+        relative: sha256((root / relative).read_bytes()).hexdigest()
+        for relative in paths
+    }
+    write_reproducibility_manifest_and_lock(document, manifest_path, lock_path)
+    return original_manifest, original_lock
 
 
 def verify_fresh_environment(root: Path, *, timeout_seconds: int = 900) -> dict[str, object]:

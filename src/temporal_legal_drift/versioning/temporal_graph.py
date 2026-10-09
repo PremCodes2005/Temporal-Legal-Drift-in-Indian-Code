@@ -21,6 +21,19 @@ from .models import VersionGraph
 
 
 RECONSTRUCTABLE_OPERATIONS = frozenset({"INSERT", "SUBSTITUTE", "OMIT", "REPLACE", "REPEAL"})
+_GENERAL_COMMENCEMENT = re.compile(
+    r"\b(?:this\s+act|it)\s+(?:shall\s+be\s+deemed\s+to\s+have\s+come|"
+    r"shall\s+come)\s+into\s+force\s+on\s+the\s+"
+    r"(?P<day>\d{1,2})(?:st|nd|rd|th)?(?:\s+day\s+of)?\s+"
+    r"(?P<month>January|February|March|April|May|June|July|August|September|October|November|December)"
+    r",?\s*(?P<year>\d{4})",
+    re.I,
+)
+_PARTIAL_COMMENCEMENT = re.compile(
+    r"\b(?:provisions?\s+of\s+sections?|different\s+dates|such\s+date\s+as\s+the\s+"
+    r"(?:central\s+)?government\s+may|appointed\s+by\s+notification)\b",
+    re.I,
+)
 
 
 def _id(prefix: str, *parts: object) -> str:
@@ -85,6 +98,17 @@ class TemporalGraph:
         event_ids = identifiers["amendment event"]
         amendment_act_ids = identifiers["amendment act"]
         commencement_ids = identifiers["commencement event"]
+        source_by_id = {str(item["source_id"]): item for item in self.legal_sources}
+        provision_by_id = {str(item["provision_id"]): item for item in self.provisions}
+        event_by_id = {str(item["amendment_event_id"]): item for item in self.amendment_events}
+        for item in self.legal_sources:
+            digest = str(item.get("sha256", ""))
+            if len(digest) != 64 or any(character not in "0123456789abcdef" for character in digest):
+                errors.append(f"source {item.get('source_id')} has invalid SHA-256")
+            if not str(item.get("source_url", "")).startswith("https://"):
+                errors.append(f"source {item.get('source_id')} has invalid authoritative URL")
+            if item.get("source_integrity_verified") is not True:
+                errors.append(f"source {item.get('source_id')} integrity was not verified")
         for item in self.acts:
             if item.get("source_id") not in source_ids:
                 errors.append(f"act {item.get('act_id')} has no legal source")
@@ -111,9 +135,20 @@ class TemporalGraph:
                 errors.append(f"event {item.get('amendment_event_id')} has no amending Act")
             if item.get("target_provision_id") and item.get("target_provision_id") not in provision_ids:
                 errors.append(f"event {item.get('amendment_event_id')} has unknown target")
+            evidence = item.get("evidence", {})
+            source = source_by_id.get(str(evidence.get("source_id")))
+            if source is None or source.get("sha256") != evidence.get("source_sha256"):
+                errors.append(f"event {item.get('amendment_event_id')} source hash does not reconcile")
+            if sha256(str(evidence.get("exact_text", "")).encode()).hexdigest() != evidence.get("exact_text_sha256"):
+                errors.append(f"event {item.get('amendment_event_id')} evidence text hash mismatch")
+            target = provision_by_id.get(str(item.get("target_provision_id")))
+            if target and target.get("act_id") != item.get("principal_act_id"):
+                errors.append(f"event {item.get('amendment_event_id')} principal Act conflicts with target provision")
         for item in self.commencement_events:
             if item.get("amendment_event_id") not in event_ids:
                 errors.append(f"commencement {item.get('commencement_event_id')} has no event")
+            if item.get("source_id") not in source_ids:
+                errors.append(f"commencement {item.get('commencement_event_id')} has no source")
         for item in self.transitions:
             before = str(item.get("before_version_id", ""))
             after = str(item.get("after_version_id", ""))
@@ -123,6 +158,31 @@ class TemporalGraph:
                 errors.append(f"transition {item.get('transition_id')} has unknown event")
             if item.get("commencement_event_id") not in commencement_ids:
                 errors.append(f"transition {item.get('transition_id')} has unknown commencement")
+            before_version = next(
+                (version for version in self.provision_versions if version.get("version_id") == before), None
+            )
+            after_version = next(
+                (version for version in self.provision_versions if version.get("version_id") == after), None
+            )
+            if before_version and after_version:
+                if before_version.get("provision_id") != after_version.get("provision_id"):
+                    errors.append(f"transition {item.get('transition_id')} crosses provision identities")
+                if item.get("target_provision_id") != before_version.get("provision_id"):
+                    errors.append(f"transition {item.get('transition_id')} target does not match its versions")
+            if item.get("operation") not in RECONSTRUCTABLE_OPERATIONS:
+                errors.append(f"transition {item.get('transition_id')} has unsupported operation")
+            if not set(item.get("source_ids", [])) <= source_ids:
+                errors.append(f"transition {item.get('transition_id')} has unknown provenance source")
+            event = event_by_id.get(str(item.get("amendment_event_id")))
+            if event and event.get("target_provision_id") != item.get("target_provision_id"):
+                errors.append(f"transition {item.get('transition_id')} target does not match event")
+            if item.get("effective_date"):
+                commencement = next(
+                    (fact for fact in self.commencement_events
+                     if fact.get("commencement_event_id") == item.get("commencement_event_id")), None
+                )
+                if commencement and commencement.get("effective_date") != item.get("effective_date"):
+                    errors.append(f"transition {item.get('transition_id')} date disagrees with commencement evidence")
             edges.setdefault(before, []).append(after)
         if _has_cycle(version_ids, edges):
             errors.append("temporal graph contains a cycle")
@@ -163,6 +223,26 @@ class TemporalGraph:
                 "reference_date": on_date,
             }
         applicable = [item for item in transitions if date.fromisoformat(str(item["effective_date"])) <= query_date]
+        if len(applicable) > 1:
+            applicable.sort(key=lambda item: (str(item["effective_date"]), str(item["transition_id"])))
+            for previous, current in zip(applicable, applicable[1:]):
+                previous_after = next(
+                    version for version in self.provision_versions
+                    if version["version_id"] == previous["after_version_id"]
+                )
+                current_before = next(
+                    version for version in self.provision_versions
+                    if version["version_id"] == current["before_version_id"]
+                )
+                if previous_after["text"] != current_before["text"]:
+                    return {
+                        "status": "UNRESOLVED",
+                        "reason": "dated amendment fragments do not form a proven version chain",
+                        "act": matching_acts[0],
+                        "provision": provision,
+                        "reference_date": on_date,
+                        "candidate_transition_ids": [item["transition_id"] for item in applicable],
+                    }
         chosen = applicable[-1] if applicable else transitions[0]
         version_id = chosen["after_version_id"] if applicable else chosen["before_version_id"]
         version = next(item for item in self.provision_versions if item["version_id"] == version_id)
@@ -175,6 +255,26 @@ class TemporalGraph:
             "version": version,
             "transition": chosen,
             "amendment_event": event,
+            "source": next(
+                item for item in self.legal_sources
+                if item["source_id"] == event["evidence"]["source_id"]
+            ),
+            "sources": [
+                item for item in self.legal_sources
+                if item["source_id"] in chosen["source_ids"]
+            ],
+            "corroborating_consolidated_versions": [
+                item for item in self.provision_versions
+                if item["version_id"] in chosen.get("corroborating_consolidated_version_ids", [])
+            ],
+            "valid_from": version.get("valid_from"),
+            "valid_to": version.get("valid_to"),
+            "temporal_basis": chosen.get("date_basis"),
+            "fragment_state": (
+                "ABSENT_BEFORE_INSERTION"
+                if chosen.get("operation") == "INSERT" and version["version_id"] == chosen["before_version_id"]
+                else "AMENDMENT_CONTROLLED_TEXT"
+            ),
             "scope_warning": (
                 "The returned text is the amendment-controlled fragment, not a complete "
                 "historical consolidation of the provision."
@@ -193,6 +293,15 @@ class TemporalGraphBuilder:
         report_by_entry = {
             str(item["entry_id"]): item for item in report.get("entries", []) if isinstance(item, dict)
         }
+        integrity = _verify_all_source_hashes(root, report_by_entry)
+        normalized_by_entry = {
+            entry_id: load_json(root / "data/normalized" / f"{report_entry['normalized_document_id']}.json")
+            for entry_id, report_entry in report_by_entry.items()
+        }
+        commencement_by_entry = {
+            entry.entry_id: _general_commencement(normalized_by_entry[entry.entry_id])
+            for entry in manifest.entries if entry.instrument_type == "amending_act"
+        }
         entry_by_id = {entry.entry_id: entry for entry in manifest.entries}
 
         legal_sources = tuple(sorted((
@@ -204,6 +313,7 @@ class TemporalGraphBuilder:
                 "retrieval_url": str(item["request_url"]),
                 "sha256": str(item["sha256"]),
                 "normalized_document_id": str(item["normalized_document_id"]),
+                "source_integrity_verified": integrity == len(report_by_entry),
             }
             for entry_id, item in report_by_entry.items()
         ), key=lambda item: str(item["source_id"])))
@@ -288,11 +398,18 @@ class TemporalGraphBuilder:
         for amendment_id, raw_event in phase2_events.items():
             label = label_by_event.get(amendment_id, {})
             source_entry = str(raw_event["source_document"])
-            target_entry = _resolve_target_entry(label, source_entry, principal_entries, principal_mapping)
+            field_status = label.get("field_status", {}) if isinstance(label, dict) else {}
+            target_entry = (
+                _resolve_target_entry(label, source_entry, principal_entries, principal_mapping)
+                if field_status.get("principal_act") == "ACCEPTED"
+                and field_status.get("target_provision") == "ACCEPTED"
+                else None
+            )
             section = str(raw_event.get("target_provision") or "").split(":")[-1].upper()
             target_provision = provision_by_entry_section.get((target_entry, section)) if target_entry else None
             graph_event_id = _id("aevent", amendment_id)
             label_status = str(label.get("label_status", "ABSTAIN"))
+            act_commencement = commencement_by_entry.get(source_entry)
             event_record = {
                 "amendment_event_id": graph_event_id,
                 "phase2_amendment_id": amendment_id,
@@ -302,7 +419,10 @@ class TemporalGraphBuilder:
                 "operation": label.get("operation") if label_status == "AUTO_ACCEPTED" else raw_event.get("operation"),
                 "old_text": label.get("old_text") if label_status == "AUTO_ACCEPTED" else None,
                 "new_text": label.get("new_text") if label_status == "AUTO_ACCEPTED" else None,
-                "effective_date": label.get("effective_date") if label_status == "AUTO_ACCEPTED" else None,
+                # Never use Phase 2's document-wide date copied to each clause.
+                # Re-derive only an unambiguous Act-wide commencement statement.
+                "effective_date": act_commencement["effective_date"] if act_commencement and act_commencement["status"] == "ACT_WIDE_UNAMBIGUOUS" else None,
+                "target_path_detail": _target_path_detail(str(raw_event["evidence_text"])),
                 "resolution_status": (
                     "SILVER_EVIDENCE_RESOLVED" if label_status == "AUTO_ACCEPTED" and target_provision
                     else "UNRESOLVED"
@@ -322,11 +442,22 @@ class TemporalGraphBuilder:
                 "commencement_event_id": commencement_id,
                 "amendment_event_id": graph_event_id,
                 "effective_date": event_record["effective_date"],
+                "temporal_facts": _temporal_facts(
+                    act_commencement,
+                    source_by_entry[source_entry],
+                ),
+                "retrospective_effect_status": "NOT_ASSESSED",
+                "transitional_provision_status": "NOT_ASSESSED",
+                "source_sha256": source_by_entry[source_entry]["sha256"],
                 "status": (
                     "EFFECTIVE_DATE_EVIDENCED" if event_record["effective_date"]
                     else "COMMENCEMENT_UNRESOLVED"
                 ),
                 "source_id": source_by_entry[source_entry]["source_id"],
+                "evidence_text": act_commencement.get("evidence_text") if act_commencement else None,
+                "source_page": act_commencement.get("source_page") if act_commencement else None,
+                "source_line": act_commencement.get("source_line") if act_commencement else None,
+                "scope": act_commencement.get("scope") if act_commencement else "unknown_or_partial",
             })
             event_context[graph_event_id] = (event_record, target_provision)
 
@@ -396,15 +527,32 @@ class TemporalGraphBuilder:
                     "source_ids": [source_id],
                 },
             ))
+            consolidated_versions = [
+                item for item in versions
+                if item.get("provision_id") == provision["provision_id"]
+                and item.get("text_scope") == "COMPLETE_CONSOLIDATED_SOURCE_SNAPSHOT"
+            ]
+            after_supported_versions = [
+                item for item in consolidated_versions
+                if _normalise_for_match(after_text)
+                and _normalise_for_match(after_text) in _normalise_for_match(str(item["text"]))
+            ]
             checks = {
                 "silver_label_auto_accepted": True,
                 "target_provision_exists": True,
                 "source_hash_verified": len(str(event_record["evidence"]["source_sha256"])) == 64,
                 "old_new_fragments_reconstructable": True,
-                "forward_operation_round_trip": _forward_round_trip(operation, before_text, after_text),
+                "forward_operation_round_trip": _forward_round_trip(
+                    operation, before_text, after_text, str(event_record["evidence"]["exact_text"])
+                ),
+                "after_fragment_matches_consolidated_principal_act": bool(after_supported_versions),
                 "effective_date_evidenced": effective_date is not None,
                 "human_legal_reviewed": False,
             }
+            corroborating_source_ids = sorted({
+                source_id,
+                *(str(item["source_ids"][0]) for item in after_supported_versions if item.get("source_ids")),
+            })
             transitions.append({
                 "transition_id": _id("transition", before_id, after_id, event_record["amendment_event_id"]),
                 "target_provision_id": provision["provision_id"],
@@ -414,9 +562,18 @@ class TemporalGraphBuilder:
                 "commencement_event_id": _id("comm", event_record["amendment_event_id"]),
                 "operation": operation,
                 "effective_date": effective_date,
-                "validation_status": "MACHINE_EVIDENCE_VALIDATED",
+                "date_basis": (
+                    "ACT_WIDE_COMMENCEMENT_NOT_SCENARIO_APPLICABILITY"
+                    if effective_date else "UNRESOLVED"
+                ),
+                "validation_status": (
+                    "MACHINE_CROSS_SOURCE_CORROBORATED"
+                    if checks["after_fragment_matches_consolidated_principal_act"]
+                    else "MACHINE_INTERNAL_CHECKS_ONLY"
+                ),
                 "validation_checks": checks,
-                "source_ids": [source_id],
+                "source_ids": corroborating_source_ids,
+                "corroborating_consolidated_version_ids": [item["version_id"] for item in after_supported_versions],
             })
 
         graph = TemporalGraph(
@@ -454,32 +611,87 @@ def write_temporal_graph_and_checkpoint(graph: TemporalGraph, root: Path) -> dic
         fully_checked,
         key=lambda item: (item.get("effective_date") is None, str(item["transition_id"])),
     )[:20]
+    versions_by_id = {str(item["version_id"]): item for item in graph.provision_versions}
+    events_by_id = {str(item["amendment_event_id"]): item for item in graph.amendment_events}
+    sources_by_id = {str(item["source_id"]): item for item in graph.legal_sources}
+    provisions_by_id = {str(item["provision_id"]): item for item in graph.provisions}
+    validation_cases = []
+    for transition in validation_set:
+        event = events_by_id[str(transition["amendment_event_id"])]
+        before = versions_by_id[str(transition["before_version_id"])]
+        after = versions_by_id[str(transition["after_version_id"])]
+        corroborating_versions = [
+            versions_by_id[str(version_id)]
+            for version_id in transition.get("corroborating_consolidated_version_ids", [])
+        ]
+        validation_cases.append({
+            "transition": transition,
+            "act": provisions_by_id[str(transition["target_provision_id"])],
+            "before_version": before,
+            "amendment_event": event,
+            "after_version": after,
+            "corroborating_consolidated_versions": corroborating_versions,
+            "sources": [sources_by_id[source_id] for source_id in transition["source_ids"]],
+            "human_review": {
+                "status": "PENDING",
+                "reviewer_id": None,
+                "decision": None,
+                "rationale": None,
+                "reviewed_at": None,
+            },
+        })
     validation_document = {
         "schema_version": "1.0.0",
         "status": "machine_evidence_validated_human_legal_review_pending",
-        "selection_policy": "deterministic first 20, prioritising evidenced effective dates",
+        "selection_policy": "20 deterministic cross-source cases, prioritising evidenced effective dates",
         "transition_count": len(validation_set),
         "manual_human_validation_count": 0,
         "machine_evidence_validation_count": len(validation_set),
-        "transitions": validation_set,
+        "independent_consolidated_text_corroboration_count": sum(
+            item["transition"]["validation_checks"].get("after_fragment_matches_consolidated_principal_act") is True
+            for item in validation_cases
+        ),
+        "manual_review_completed_count": 0,
+        "cases": validation_cases,
     }
     validation_path = root / "data/interim/phase3_transition_validation_candidates.v1.json"
-    atomic_replace(validation_path, canonical_json_bytes(validation_document))
+    validation_payload = canonical_json_bytes(validation_document)
+    atomic_replace(validation_path, validation_payload)
     checks = {
         "all_seven_entity_types_present": all((
             graph.acts, graph.provisions, graph.provision_versions, graph.amendment_acts,
             graph.amendment_events, graph.legal_sources, graph.commencement_events,
         )),
         "all_100_documents_have_legal_sources": len(graph.legal_sources) == 100,
+        "all_100_raw_and_normalized_source_hashes_recomputed": (
+            len(graph.legal_sources) == 100
+            and all(item.get("source_integrity_verified") is True for item in graph.legal_sources)
+        ),
         "all_37_amending_acts_are_represented": len(graph.amendment_acts) == 37,
         "all_864_phase2_events_are_accounted_for": len(graph.amendment_events) == 864,
         "at_least_20_machine_evidence_validated_transitions": len(fully_checked) >= 20,
         "twenty_transition_validation_candidates_created": len(validation_set) == 20,
+        "validation_candidate_ids_are_unique": (
+            len({item["transition"]["transition_id"] for item in validation_cases}) == 20
+        ),
         "before_after_versions_linked": all(
             item.get("before_version_id") and item.get("after_version_id") for item in graph.transitions
         ),
         "commencement_status_represented_for_every_event": (
             len(graph.commencement_events) == len(graph.amendment_events)
+        ),
+        "temporal_date_types_are_kept_distinct": all(
+            {fact.get("fact_type") for fact in item.get("temporal_facts", [])}
+            == {"commencement", "publication", "assent", "applicability", "legal_effect"}
+            and item.get("retrospective_effect_status") == "NOT_ASSESSED"
+            and item.get("transitional_provision_status") == "NOT_ASSESSED"
+            for item in graph.commencement_events
+        ),
+        "commencement_not_mislabeled_as_scenario_applicability": all(
+            item.get("date_basis") in {
+                "ACT_WIDE_COMMENCEMENT_NOT_SCENARIO_APPLICABILITY", "UNRESOLVED"
+            }
+            for item in graph.transitions
         ),
         "unresolved_transitions_explicit": bool(graph.unresolved_transitions),
         "provenance_end_to_end": all(
@@ -488,6 +700,19 @@ def write_temporal_graph_and_checkpoint(graph: TemporalGraph, root: Path) -> dic
         ),
         "graph_invariants_pass": not graph.validate(),
         "point_in_time_query_has_evidenced_examples": bool(dated),
+        "selected_transitions_cross_source_corroborated": all(
+            item["transition"]["validation_checks"].get("after_fragment_matches_consolidated_principal_act") is True
+            for item in validation_cases
+        ),
+        "validation_cases_include_two_sources_and_review_fields": all(
+            len(item["sources"]) >= 2
+            and item["corroborating_consolidated_versions"]
+            and item["before_version"].get("text_scope") == "AMENDMENT_CONTROLLED_FRAGMENT"
+            and item["after_version"].get("text_scope") == "AMENDMENT_CONTROLLED_FRAGMENT"
+            and item["human_review"].get("decision") is None
+            and item["human_review"].get("status") == "PENDING"
+            for item in validation_cases
+        ),
         "no_false_human_validation_claim": validation_document["manual_human_validation_count"] == 0,
     }
     checkpoint = {
@@ -499,8 +724,12 @@ def write_temporal_graph_and_checkpoint(graph: TemporalGraph, root: Path) -> dic
         "graph_path": str(graph_path.relative_to(root)),
         "graph_sha256": sha256(payload).hexdigest(),
         "validation_dataset_path": str(validation_path.relative_to(root)),
+        "validation_dataset_sha256": sha256(validation_payload).hexdigest(),
         "counts": {
             "legal_sources": len(graph.legal_sources),
+            "raw_and_normalized_source_hashes_recomputed": sum(
+                item.get("source_integrity_verified") is True for item in graph.legal_sources
+            ),
             "acts": len(graph.acts),
             "provisions": len(graph.provisions),
             "provision_versions": len(graph.provision_versions),
@@ -511,6 +740,11 @@ def write_temporal_graph_and_checkpoint(graph: TemporalGraph, root: Path) -> dic
             "dated_transitions": len(dated),
             "unresolved_transitions": len(graph.unresolved_transitions),
             "human_validated_transitions": 0,
+            "cross_source_corroborated_transitions": sum(
+                item["validation_checks"].get("after_fragment_matches_consolidated_principal_act") is True
+                and item["validation_checks"].get("forward_operation_round_trip") is True
+                for item in graph.transitions
+            ),
         },
         "claim_boundary": (
             "The graph contains evidence-validated amendment-fragment transitions. "
@@ -579,14 +813,60 @@ def _fragments(operation: str, old_text: object, new_text: object) -> tuple[str 
     return None, None
 
 
-def _forward_round_trip(operation: str, before: str, after: str) -> bool:
+def _forward_round_trip(operation: str, before: str, after: str, evidence: str) -> bool:
+    normalized_evidence = _normalise_for_match(evidence)
+    if before and _normalise_for_match(before) not in normalized_evidence:
+        return False
+    if after and _normalise_for_match(after) not in normalized_evidence:
+        return False
     if operation in {"SUBSTITUTE", "REPLACE"}:
-        return bool(before) and bool(after) and before != after
+        cue = "substituted" if operation == "SUBSTITUTE" else "replaced"
+        return bool(before) and bool(after) and before != after and bool(
+            re.search(rf"\bshall\s+be\s+{cue}\b", evidence, re.I)
+        )
     if operation == "INSERT":
-        return before == "" and bool(after)
+        return before == "" and bool(after) and bool(re.search(r"\bshall\s+be\s+inserted\b", evidence, re.I))
     if operation in {"OMIT", "REPEAL"}:
-        return bool(before) and after == ""
+        cue = "omitted" if operation == "OMIT" else "repealed"
+        return bool(before) and after == "" and bool(
+            re.search(rf"\bshall\s+be\s+{cue}\b", evidence, re.I)
+        )
     return False
+
+
+def _target_path_detail(text: str) -> str | None:
+    section = re.search(r"\bin\s+section\s+(\d{1,3}[A-Z]{0,3})", text, re.I)
+    if not section:
+        return None
+    parts = [f"section:{section.group(1).upper()}"]
+    for label, pattern in (
+        ("sub-section", r"\bin\s+sub-section\s*\(?([0-9A-Za-z]+)\)?"),
+        ("clause", r"\bin\s+clause\s*\(?([0-9A-Za-z]+)\)?"),
+        ("sub-clause", r"\bin\s+sub-clause\s*\(?([0-9A-Za-z]+)\)?"),
+        ("proviso", r"\bin\s+(?:the\s+)?(?:(\d+)(?:st|nd|rd|th)\s+)?proviso"),
+    ):
+        match = re.search(pattern, text, re.I)
+        if match:
+            value = next((group for group in match.groups() if group is not None), "1")
+            parts.append(f"{label}:{value.lower()}")
+    return "/".join(parts)
+
+
+def _verify_all_source_hashes(root: Path, report_by_entry: dict[str, dict[str, object]]) -> int:
+    verified = 0
+    for entry_id, item in report_by_entry.items():
+        expected = str(item.get("sha256", ""))
+        raw_path = root / "data/raw" / str(item["blob_path"])
+        if not raw_path.is_file() or sha256(raw_path.read_bytes()).hexdigest() != expected:
+            raise ValueError(f"Raw legal source is missing or has a hash mismatch: {entry_id}")
+        normalized_path = root / "data/normalized" / f"{item['normalized_document_id']}.json"
+        normalized = load_json(normalized_path)
+        if normalized.get("source_sha256") != expected:
+            raise ValueError(f"Normalized legal source hash mismatch: {entry_id}")
+        if normalized.get("source_artifact_id") != item.get("source_artifact_id"):
+            raise ValueError(f"Normalized source artifact ID mismatch: {entry_id}")
+        verified += 1
+    return verified
 
 
 def _unresolved_transition(event: dict[str, object], reasons: list[str]) -> dict[str, object]:
@@ -596,6 +876,112 @@ def _unresolved_transition(event: dict[str, object], reasons: list[str]) -> dict
         "reason_codes": sorted(set(reasons)),
         "requires_review": True,
     }
+
+
+def _general_commencement(document: dict[str, object]) -> dict[str, object] | None:
+    blocks = document.get("blocks", [])
+    all_text = "\n".join(
+        str(block.get("normalized_text", ""))
+        for block in blocks if isinstance(block, dict)
+    )
+    first_clause = _first_commencement_clause(all_text)
+    matches = list(_GENERAL_COMMENCEMENT.finditer(first_clause))
+    if len(matches) != 1:
+        return None
+    match = matches[0]
+    if _PARTIAL_COMMENCEMENT.search(first_clause):
+        return {
+            "status": "PARTIAL_OR_DEFERRED_COMMENCEMENT",
+            "effective_date": None,
+            "evidence_text": match.group(0),
+            "scope": "partial_or_deferred_scope_unresolved",
+        }
+    month_names = (
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December",
+    )
+    month = next(index for index, name in enumerate(month_names, 1) if name.lower() == match.group("month").lower())
+    effective = date(int(match.group("year")), month, int(match.group("day"))).isoformat()
+    offset = 0
+    evidence = None
+    for block in blocks:
+        if not isinstance(block, dict):
+            continue
+        text = str(block.get("normalized_text", ""))
+        local = _GENERAL_COMMENCEMENT.search(text)
+        if local:
+            page_match = re.search(r"page:(\d+)", str(block.get("source_anchor", "")))
+            line = text[:local.start()].count("\n") + 1
+            evidence = {
+                "status": "ACT_WIDE_UNAMBIGUOUS",
+                "effective_date": effective,
+                "evidence_text": local.group(0),
+                "source_page": int(page_match.group(1)) if page_match else None,
+                "source_line": line,
+                "scope": "whole_act_clause",
+            }
+            break
+        offset += len(text)
+    return evidence or {
+        "status": "ACT_WIDE_UNAMBIGUOUS",
+        "effective_date": effective,
+        "evidence_text": match.group(0),
+        "source_page": None,
+        "source_line": None,
+        "scope": "whole_act_clause",
+    }
+
+
+def _temporal_facts(
+    commencement: dict[str, object] | None,
+    source: dict[str, object],
+) -> list[dict[str, object]]:
+    """Preserve distinct legal date types without treating unknown dates as absent in law."""
+    commencement_fact = {
+        "fact_type": "commencement",
+        "date_value": commencement.get("effective_date") if commencement else None,
+        "status": (
+            "EVIDENCED" if commencement and commencement.get("effective_date")
+            else "UNRESOLVED"
+        ),
+        "scope": commencement.get("scope", "unknown_or_partial") if commencement else "unknown_or_partial",
+        "source_id": source["source_id"],
+        "source_sha256": source["sha256"],
+        "evidence_text": commencement.get("evidence_text") if commencement else None,
+        "source_page": commencement.get("source_page") if commencement else None,
+        "source_line": commencement.get("source_line") if commencement else None,
+    }
+    additional_fact_types = ("publication", "assent", "applicability", "legal_effect")
+    return [
+        commencement_fact,
+        *(
+            {
+                "fact_type": fact_type,
+                "date_value": None,
+                "status": "NOT_CAPTURED",
+                "scope": "not_assessed_by_phase3_commencement_extractor",
+                "source_id": source["source_id"],
+                "source_sha256": source["sha256"],
+                "evidence_text": None,
+                "source_page": None,
+                "source_line": None,
+            }
+            for fact_type in additional_fact_types
+        ),
+    ]
+
+
+def _first_commencement_clause(text: str) -> str:
+    start = re.search(r"(?m)^\s*1\.\s+", text)
+    if start is None:
+        return text[:5000]
+    next_clause = re.search(r"(?m)^\s*2\.\s+", text[start.end():])
+    end = start.end() + next_clause.start() if next_clause else min(len(text), start.start() + 5000)
+    return text[start.start():end]
+
+
+def _normalise_for_match(text: str) -> str:
+    return " ".join(re.sub(r"[^\w]+", " ", text.casefold()).split())
 
 
 def _has_cycle(nodes: set[str], edges: dict[str, list[str]]) -> bool:

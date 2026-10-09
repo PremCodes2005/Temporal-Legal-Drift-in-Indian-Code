@@ -41,6 +41,7 @@ from .parsing.service import NormalizationService
 from .parsing.store import NormalizedDocumentStore, QuarantineStore
 from .phase0 import validate_contract_file
 from .reproducibility import verify_fresh_environment, write_reproducibility_manifest_and_lock
+from .reproducibility.builder import stage_current_artifact_checksums
 from .scenarios import build_scenario_scaffolds, write_scenarios_and_lock
 from .versioning import TemporalGraph, TemporalGraphBuilder, VersionGraph, VersionGraphBuilder
 from .versioning.builder import write_graph_and_lock
@@ -710,10 +711,20 @@ def run(args: argparse.Namespace) -> int:
         return 0
 
     if args.command == "verify-reproducibility":
-        document = verify_fresh_environment(root, timeout_seconds=args.timeout_seconds)
-        lock = write_reproducibility_manifest_and_lock(
-            document, _resolve(root, args.output), _resolve(root, args.lock)
+        manifest_path = _resolve(root, args.output)
+        lock_path = _resolve(root, args.lock)
+        original_manifest, original_lock = stage_current_artifact_checksums(
+            root, manifest_path, lock_path
         )
+        try:
+            document = verify_fresh_environment(root, timeout_seconds=args.timeout_seconds)
+            lock = write_reproducibility_manifest_and_lock(document, manifest_path, lock_path)
+        except Exception:
+            from .jsonio import atomic_replace
+
+            atomic_replace(manifest_path, original_manifest)
+            atomic_replace(lock_path, original_lock)
+            raise
         print(json.dumps(lock, indent=2, ensure_ascii=False))
         return 0
 

@@ -292,6 +292,7 @@ def _phase3(root: Path) -> PhaseGateResult:
         root / "reports" / "phase3" / "temporal_graph_checkpoint.v2.json"
     )
     temporal_graph_path = root / str(temporal_checkpoint["graph_path"])
+    validation_dataset_path = root / str(temporal_checkpoint["validation_dataset_path"])
     manifest = CorpusManifest.from_file(root / "configs" / "corpus" / "pilot_v1.json")
     checks = {
         "version_graph_schema_present": (
@@ -314,6 +315,9 @@ def _phase3(root: Path) -> PhaseGateResult:
         "temporal_graph_v2_schema_present": (
             root / "schemas/temporal/temporal_legal_knowledge_graph.v2.schema.json"
         ).is_file(),
+        "transition_validation_queue_schema_present": (
+            root / "schemas/temporal/phase3_transition_validation_candidates.v1.schema.json"
+        ).is_file(),
         "temporal_graph_v2_checkpoint_passed": (
             temporal_checkpoint.get("engineering_status") == "passed"
             and all(temporal_checkpoint.get("checks", {}).values())
@@ -322,6 +326,17 @@ def _phase3(root: Path) -> PhaseGateResult:
             temporal_graph_path.is_file()
             and sha256(temporal_graph_path.read_bytes()).hexdigest()
             == temporal_checkpoint.get("graph_sha256")
+        ),
+        "transition_validation_dataset_hash_reconciles": (
+            validation_dataset_path.is_file()
+            and sha256(validation_dataset_path.read_bytes()).hexdigest()
+            == temporal_checkpoint.get("validation_dataset_sha256")
+        ),
+        "twenty_self_contained_review_candidates_present": (
+            validation_dataset_path.is_file()
+            and load_json(validation_dataset_path).get("transition_count") == 20
+            and load_json(validation_dataset_path).get("manual_human_validation_count") == 0
+            and len(load_json(validation_dataset_path).get("cases", [])) == 20
         ),
         "all_phase2_events_and_sources_accounted_for": (
             temporal_checkpoint.get("counts", {}).get("legal_sources") == 100

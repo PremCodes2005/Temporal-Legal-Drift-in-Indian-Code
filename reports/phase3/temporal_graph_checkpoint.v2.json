@@ -1,18 +1,24 @@
 {
   "checks": {
     "all_100_documents_have_legal_sources": true,
+    "all_100_raw_and_normalized_source_hashes_recomputed": true,
     "all_37_amending_acts_are_represented": true,
     "all_864_phase2_events_are_accounted_for": true,
     "all_seven_entity_types_present": true,
     "at_least_20_machine_evidence_validated_transitions": true,
     "before_after_versions_linked": true,
+    "commencement_not_mislabeled_as_scenario_applicability": true,
     "commencement_status_represented_for_every_event": true,
     "graph_invariants_pass": true,
     "no_false_human_validation_claim": true,
     "point_in_time_query_has_evidenced_examples": true,
     "provenance_end_to_end": true,
+    "selected_transitions_cross_source_corroborated": true,
+    "temporal_date_types_are_kept_distinct": true,
     "twenty_transition_validation_candidates_created": true,
-    "unresolved_transitions_explicit": true
+    "unresolved_transitions_explicit": true,
+    "validation_candidate_ids_are_unique": true,
+    "validation_cases_include_two_sources_and_review_fields": true
   },
   "claim_boundary": "The graph contains evidence-validated amendment-fragment transitions. It does not claim complete historical consolidations or human legal validation.",
   "counts": {
@@ -20,19 +26,22 @@
     "amendment_acts": 37,
     "amendment_events": 864,
     "commencement_events": 864,
-    "dated_transitions": 18,
+    "cross_source_corroborated_transitions": 66,
+    "dated_transitions": 6,
     "human_validated_transitions": 0,
     "legal_sources": 100,
     "provision_versions": 5891,
     "provisions": 5657,
+    "raw_and_normalized_source_hashes_recomputed": 100,
     "unresolved_transitions": 747,
-    "validated_transitions": 116
+    "validated_transitions": 66
   },
   "engineering_status": "passed",
   "graph_path": "data/interim/temporal_legal_knowledge_graph.v2.json",
-  "graph_sha256": "e907004719d45630dfe57ab0bb0f69cbd3759f417bb7e61205557550f0815123",
+  "graph_sha256": "b7d70f01a2efe23409e0e840b7762866f89af94e36626e8ce57b24649cc1fd77",
   "phase": 3,
   "schema_version": "1.0.0",
   "scientific_gate_status": "pending_human_legal_validation",
-  "validation_dataset_path": "data/gold/phase3_transition_validation_candidates.v1.json"
+  "validation_dataset_path": "data/interim/phase3_transition_validation_candidates.v1.json",
+  "validation_dataset_sha256": "dc6c2a2cef5f18c2b37d362d7fb3ffd88e2e221dbfb108f16147615a06637f4c"
 }

@@ -12,13 +12,36 @@
   "properties": {
     "schema_version": {"const": "2.0.0"},
     "graph_status": {"const": "evidence_validated_technical_graph_not_legal_gold"},
-    "legal_sources": {"type": "array", "items": {"type": "object", "required": ["source_id", "sha256", "source_url"]}},
-    "acts": {"type": "array", "items": {"type": "object", "required": ["act_id", "source_id", "official_identifier"]}},
-    "provisions": {"type": "array", "items": {"type": "object", "required": ["provision_id", "act_id", "canonical_path", "section"]}},
+    "legal_sources": {"type": "array", "items": {"type": "object", "required": ["source_id", "corpus_entry_id", "official_identifier", "source_url", "retrieval_url", "sha256", "normalized_document_id", "source_integrity_verified"]}},
+    "acts": {"type": "array", "items": {"type": "object", "required": ["act_id", "corpus_entry_id", "source_id", "official_identifier", "title"]}},
+    "provisions": {"type": "array", "items": {"type": "object", "required": ["provision_id", "act_id", "canonical_path", "section", "title"]}},
     "provision_versions": {"type": "array", "items": {"$ref": "#/$defs/version"}},
-    "amendment_acts": {"type": "array", "items": {"type": "object", "required": ["amendment_act_id", "source_id", "official_identifier"]}},
-    "amendment_events": {"type": "array", "items": {"type": "object", "required": ["amendment_event_id", "amendment_act_id", "operation", "evidence"]}},
-    "commencement_events": {"type": "array", "items": {"type": "object", "required": ["commencement_event_id", "amendment_event_id", "status", "source_id"]}},
+    "amendment_acts": {"type": "array", "items": {"type": "object", "required": ["amendment_act_id", "corpus_entry_id", "source_id", "official_identifier", "title"]}},
+    "amendment_events": {"type": "array", "items": {"type": "object", "required": ["amendment_event_id", "phase2_amendment_id", "amendment_act_id", "principal_act_id", "target_provision_id", "target_path_detail", "operation", "old_text", "new_text", "effective_date", "resolution_status", "evidence"]}},
+    "commencement_events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["commencement_event_id", "amendment_event_id", "effective_date", "temporal_facts", "retrospective_effect_status", "transitional_provision_status", "source_sha256", "status", "source_id", "evidence_text", "source_page", "source_line", "scope"],
+        "properties": {
+          "temporal_facts": {
+            "type": "array",
+            "minItems": 5,
+            "items": {
+              "type": "object",
+              "required": ["fact_type", "date_value", "status", "scope", "source_id", "source_sha256", "evidence_text", "source_page", "source_line"],
+              "properties": {
+                "fact_type": {"enum": ["publication", "assent", "commencement", "applicability", "legal_effect"]},
+                "date_value": {"type": ["string", "null"], "format": "date"},
+                "status": {"enum": ["EVIDENCED", "UNRESOLVED", "NOT_CAPTURED"]}
+              }
+            }
+          },
+          "retrospective_effect_status": {"const": "NOT_ASSESSED"},
+          "transitional_provision_status": {"const": "NOT_ASSESSED"}
+        }
+      }
+    },
     "transitions": {"type": "array", "items": {"$ref": "#/$defs/transition"}},
     "unresolved_transitions": {"type": "array", "items": {"type": "object", "required": ["unresolved_transition_id", "amendment_event_id", "reason_codes", "requires_review"]}}
   },
@@ -27,7 +50,7 @@
       "type": "object",
       "required": [
         "version_id", "provision_id", "text", "text_sha256", "text_scope",
-        "valid_from", "valid_to", "temporal_status", "derivation", "source_ids"
+        "valid_from", "valid_to", "temporal_status", "created_by_amendment_event_id", "derivation", "source_ids"
       ]
     },
     "transition": {
@@ -35,8 +58,8 @@
       "required": [
         "transition_id", "target_provision_id", "before_version_id",
         "after_version_id", "amendment_event_id", "commencement_event_id",
-        "operation", "effective_date", "validation_status", "validation_checks",
-        "source_ids"
+        "operation", "effective_date", "date_basis", "validation_status", "validation_checks",
+        "source_ids", "corroborating_consolidated_version_ids"
       ]
     }
   }

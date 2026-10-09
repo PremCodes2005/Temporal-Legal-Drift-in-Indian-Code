@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://temporal-legal-drift.local/schemas/temporal/phase3_transition_validation_candidates.v1.schema.json",
+  "title": "Phase 3 machine-corroborated transition review queue",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "status", "selection_policy", "transition_count",
+    "manual_human_validation_count", "machine_evidence_validation_count",
+    "independent_consolidated_text_corroboration_count", "manual_review_completed_count", "cases"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "status": {"const": "machine_evidence_validated_human_legal_review_pending"},
+    "selection_policy": {"type": "string", "minLength": 1},
+    "transition_count": {"const": 20},
+    "manual_human_validation_count": {"const": 0},
+    "machine_evidence_validation_count": {"const": 20},
+    "independent_consolidated_text_corroboration_count": {"const": 20},
+    "manual_review_completed_count": {"const": 0},
+    "cases": {
+      "type": "array",
+      "minItems": 20,
+      "maxItems": 20,
+      "items": {
+        "type": "object",
+        "required": [
+          "transition", "act", "before_version", "amendment_event", "after_version",
+          "corroborating_consolidated_versions", "sources", "human_review"
+        ],
+        "properties": {
+          "transition": {"type": "object", "required": ["transition_id", "validation_checks"]},
+          "act": {"type": "object", "required": ["provision_id", "act_id", "canonical_path"]},
+          "before_version": {"type": "object", "required": ["version_id", "provision_id", "text", "text_sha256", "text_scope"]},
+          "amendment_event": {"type": "object", "required": ["amendment_event_id", "operation", "evidence"]},
+          "after_version": {"type": "object", "required": ["version_id", "provision_id", "text", "text_sha256", "text_scope"]},
+          "corroborating_consolidated_versions": {"type": "array", "minItems": 1},
+          "sources": {"type": "array", "minItems": 2},
+          "human_review": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["status", "reviewer_id", "decision", "rationale", "reviewed_at"],
+            "properties": {
+              "status": {"const": "PENDING"},
+              "reviewer_id": {"type": "null"},
+              "decision": {"type": "null"},
+              "rationale": {"type": "null"},
+              "reviewed_at": {"type": "null"}
+            }
+          }
+        }
+      }
+    }
+  }
+}

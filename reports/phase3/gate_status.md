@@ -1,50 +1,34 @@
-# Phase 3 Gate Status
+# Phase 3 — Temporal Legal Knowledge Graph Status
 
-**Engineering/automated gate: PASSED**
+**Engineering checkpoint: PASSED**
 
-**Historical-reconstruction legal-validation gate: PENDING**
+**Independent legal-validation checkpoint: PENDING**
 
-**Temporal graph v2 engineering checkpoint: PASSED**
+## Graph coverage
 
-## Implemented
+- 100 immutable legal sources; raw-file and normalized-source hashes recomputed.
+- 63 principal Acts, 5,657 provision identities, and 5,891 version records.
+- 37 amending Acts, all 864 Phase 2 amendment events, and 864 commencement-status records represented.
+- 66 transitions pass the defined machine evidence checks; 66 have an exact amendment-fragment match in a consolidated principal-Act source.
+- 6 transitions have an unambiguous, evidence-backed effective date under the conservative Act-wide commencement rule.
+- 747 unresolved transition records remain explicit and require additional evidence or review.
+- 20 deterministic, self-contained transition cases are available for independent review.
+- 0 transitions have been represented as manually or independently legally validated.
 
-- Stable legal-instrument, provision-lineage, version, amendment-event and transition identifiers.
-- Conservative section extraction with duplicate-candidate escalation.
-- Exact provision text hashes and source-artifact, document, block and page/line evidence links.
-- Version-graph invariants for duplicates, orphan nodes, missing evidence, text hashes and cycles.
-- Exact-version reconstruction query.
-- Amendment-operation candidate extraction for substitution, insertion, omission, repeal and renumbering.
-- Explicit unresolved records when real before/after reconstruction is unsupported.
-- JSON schema, CLI build command, lock report and automated tests.
-- Separate `Act`, `Provision`, `ProvisionVersion`, `AmendmentAct`, `AmendmentEvent`, `LegalSource`, and `CommencementEvent` entities.
-- Evidence-constrained `before → amendment → after` fragment transitions with deterministic round-trip checks.
-- Point-in-time query command with explicit unresolved and fragment-scope responses.
-- A twenty-transition machine-evidence validation queue for later independent human review.
+## Implemented query and provenance behavior
 
-## Current technical graph
+The `get-provision-version` command resolves an Act, provision, and reference date against dated transitions, then returns the selected amendment-controlled fragment, its before/after event, commencement evidence, source links, and a scope warning. Queries without supported commencement evidence abstain as `UNRESOLVED`. A fragment is not represented as a complete historical consolidated provision.
 
-- 14 legal instruments.
-- 1,395 provision lineages.
-- 1,395 consolidated-source snapshot versions.
-- 76 amendment-event candidates.
-- 0 approved historical transitions.
-- 78 unresolved items requiring review or additional evidence.
-- 0 graph-validation errors.
+The graph validates stable identities, source and text hashes, provenance links, provision/event alignment, transition linkage, commencement-date consistency, interval sanity, and cycle freedom. Missing or ambiguous data is retained as unresolved rather than silently inferred.
 
-## Legal/research blockers
+## Review and claim boundary
 
-- Historical before/after provision pairs require authoritative source completion and qualified review.
-- Amendment targets and duplicate extraction candidates require adjudication.
-- The 2008 IT Amendment extraction requires OCR or manual fidelity review.
-- No real-corpus transition may be treated as gold until its before text, after text, operation and temporal evidence are approved.
+The 20-case file is a machine-corroborated review queue with reviewer decision and rationale fields pending; cross-source matching is an engineering check, not legal adjudication. The temporal graph supports evidence-linked amendment fragments and selected date queries, but does not establish complete historical consolidations for all provisions or dates. Independent qualified legal review is still required before treating transitions as legal gold.
 
-## Temporal graph v2 results
+Artifacts:
 
-- 100 immutable legal sources and 37 amending Acts represented.
-- All 864 Phase 2 amendment events and commencement statuses accounted for.
-- 116 machine-evidence-validated amendment-fragment transitions.
-- 18 transitions with an evidence-supported effective date.
-- 747 unresolved transition records preserved for review.
-- 0 transitions falsely labelled as manually human validated.
-
-The engineering subsystem is complete and executable. The Phase 3 scientific gate remains pending because the repository does not contain complete authoritative historical consolidations for every date and no independent human reviewer has validated the twenty transition candidates. Amendment fragments are never presented as complete historical provisions.
+- Graph: `data/interim/temporal_legal_knowledge_graph.v2.json`
+- Review queue: `data/interim/phase3_transition_validation_candidates.v1.json`
+- Machine checkpoint: `reports/phase3/temporal_graph_checkpoint.v2.json`
+- Graph contract: `schemas/temporal/temporal_legal_knowledge_graph.v2.schema.json`
+- Construction and evidence rules: `protocols/temporal_graph_protocol.v2.md`
