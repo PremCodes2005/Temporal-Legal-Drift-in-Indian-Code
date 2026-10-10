@@ -1,29 +1,23 @@
-# Phase 5 Gate Status
+# Phase 5 — Benchmark and Materiality Integration Status
 
-**Engineering/automated gate: PASSED**
+**Engineering gate: PASSED**
+**Automated silver-label checkpoint: PASSED**
+**Legal/research gold checkpoint: NOT PASSED**
 
-**Research annotation and taxonomy-freeze gate: NOT PERFORMED**
+## Automated materiality silver run
 
-## Implemented
+- 50 evidence-linked amendment-fragment cases processed by two deterministic rule systems.
+- 50 provisional higher-label machine consensus outputs; 0 cases abstained for a >1-category disagreement.
+- Raw algorithm agreement: 62%; Cohen's kappa between algorithms: 0.474.
+- Machine agreement is not human inter-annotator agreement. The test set contains no `None` examples, so that class lacks empirical coverage.
+- Scores against one rule system are included only as rule-to-rule comparison; they do not establish classifier accuracy.
 
-- Complete draft definitions, inclusion/exclusion rules, abstract positive/negative patterns, boundary rules and adjudication rules for `High`, `Medium`, `Low` and `None`.
-- Ten-dimension technical draft with its unresolved Phase 0 status explicit.
-- Amendment-pair and independent-annotation schemas.
-- Deterministic 50-task workload with immutable evidence links.
-- Separate materiality and compliance-consequence fields.
-- Explicit missing-before-version, unannotated and unresolved states.
+## What is still not established
 
-## Checks
+- No independent human annotations or independent human adjudications exist.
+- No legal gold labels, legal reviewer approval, or approved frozen taxonomy exists.
+- The current ten-dimension registry is still a draft pending the Phase 0 dimension-count decision.
+- The 50 records contain operation-controlled fragments, not complete historical provision contexts.
+- Classifier precision/recall/F1 against legal gold and validated classifier status remain unavailable.
 
-- 50 unique tasks: passed.
-- Evidence completeness: passed.
-- No machine-assigned materiality labels: passed.
-- No invented compliance consequences: passed.
-- Canonical taxonomy structure: passed.
-
-## Research limitations
-
-- Complete historical before/after pairs: 0.
-- Double-annotated pairs: 0.
-- Agreement/adjudication: unavailable.
-- Taxonomy freeze: refused until annotations and complete evidence exist.
+Machine-generated silver outputs remain useful for triage and identifying disagreements, but they are not legally validated materiality labels and do not close the scientific checkpoint.

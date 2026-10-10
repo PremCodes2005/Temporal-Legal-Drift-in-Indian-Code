@@ -1,0 +1,13 @@
+{
+  "artifacts": {
+    "data/risk/compliance_scenarios.v1.json": "d4fb7af82a63854b18a0efa69cf151633805c714d096d9569858c27701477702",
+    "data/risk/obligation_registry.v1.json": "d4d4fd6d083857178b7e2b4656b5154a2d57f95833c0fdebd000428006a483b8",
+    "experiments/risk/baseline_results.v1.json": "5fbf6795abe3e6ddb191cc896144417f448fad8ff4fc66732c48d78614382d46",
+    "reports/risk/phase4_preflight.v1.json": "162a338d1be2c7f1946b0c75ff213bea7c81596ba17861323c82a6c771124b8f"
+  },
+  "conditional_demonstrations": 2,
+  "engineering_checks_passed": true,
+  "expert_validation": "NOT_PERFORMED",
+  "migrated_scenarios": 13,
+  "research_checkpoint_passed": false
+}

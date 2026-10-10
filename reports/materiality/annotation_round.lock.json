@@ -1,0 +1,12 @@
+{
+  "all_labels_unassigned": true,
+  "all_tasks_have_two_source_anchors": true,
+  "all_tasks_machine_corroborated": true,
+  "gold_labels_created": 0,
+  "research_gate_passed": false,
+  "round_sha256": "0d573528b7057adc0d0a4c92ffc6ed64d4f7e0cdebab3e70d097e8ae6a4ad365",
+  "schema_version": "1.0.0",
+  "status": "annotation_round_open_not_gold",
+  "task_count": 50,
+  "unique_pair_count": 50
+}

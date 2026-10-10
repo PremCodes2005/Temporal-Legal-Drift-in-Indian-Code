@@ -1,0 +1,14 @@
+{
+  "additional_review_required_cases": 4,
+  "checks": {
+    "all_original_disagreements_audited": true,
+    "audit_reconciles_to_frozen_silver": true,
+    "fifty_unique_cases": true,
+    "frozen_silver_bytes_unchanged": true,
+    "legal_uncertainty_retained": true
+  },
+  "confirmed_extraction_defects": 5,
+  "cross_source_revalidation_cases": 2,
+  "engineering_preflight_passed": true,
+  "legal_validation": "UNVERIFIED"
+}

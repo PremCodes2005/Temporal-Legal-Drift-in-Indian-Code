@@ -70,9 +70,10 @@ def analyze_legal_drift(
     temporal_interpretation = _temporal_document_interpretation(pre, post)
     signature_scenario = _signature_certificate_scenario(pre, post, question, facts)
 
-    materiality, materiality_reason, materiality_points = _materiality(
+    materiality_triage, materiality_reason, materiality_points = _materiality_triage(
         exact_match, numeric_changes, cue_changes, text_change_percent
     )
+    materiality = materiality_triage
     obligation_stable = not cue_changes.get("obligation") and _has_any(pre, _CUE_GROUPS["obligation"]) and _has_any(post, _CUE_GROUPS["obligation"])
     consequence = (
         signature_scenario["compliance"]
@@ -130,6 +131,9 @@ def analyze_legal_drift(
         "classification": {
             "text_changed": not exact_match,
             "legal_rule_changed": materiality in {"High", "Medium"},
+            "materiality_triage": materiality,
+            "materiality_classifier_status": "untrained_no_adjudicated_gold",
+            # Compatibility alias for existing clients. New clients should read materiality_triage.
             "materiality": materiality,
             "materiality_reason": materiality_reason,
             "obligation_type_stable": obligation_stable,
@@ -213,7 +217,7 @@ def _has_any(text: str, cues: tuple[str, ...]) -> bool:
     return bool(_present_cues(text, cues))
 
 
-def _materiality(
+def _materiality_triage(
     exact_match: bool,
     numeric_changes: list[dict[str, object]],
     cue_changes: dict[str, bool],

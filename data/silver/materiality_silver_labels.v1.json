@@ -1,0 +1,2282 @@
+{
+  "agreement": {
+    "classification_metrics_method_a_against_method_b": {
+      "accuracy": 0.62,
+      "compared_method": "operation-delta-rules-v1",
+      "confusion_matrix": {
+        "High": {
+          "High": 16,
+          "Low": 0,
+          "Medium": 0,
+          "None": 0
+        },
+        "Low": {
+          "High": 0,
+          "Low": 3,
+          "Medium": 19,
+          "None": 0
+        },
+        "Medium": {
+          "High": 0,
+          "Low": 0,
+          "Medium": 12,
+          "None": 0
+        },
+        "None": {
+          "High": 0,
+          "Low": 0,
+          "Medium": 0,
+          "None": 0
+        }
+      },
+      "interpretation": "Inter-method agreement only; method A is not human-verified ground truth.",
+      "macro_f1": 0.5993798449612403,
+      "per_class": {
+        "High": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 16
+        },
+        "Low": {
+          "f1": 0.24000000000000002,
+          "precision": 1.0,
+          "recall": 0.13636363636363635,
+          "support": 22
+        },
+        "Medium": {
+          "f1": 0.5581395348837209,
+          "precision": 0.3870967741935484,
+          "recall": 1.0,
+          "support": 12
+        },
+        "None": {
+          "f1": null,
+          "precision": null,
+          "recall": null,
+          "support": 0
+        }
+      },
+      "reference_method": "legal-cue-transition-rules-v1"
+    },
+    "cohens_kappa_between_automated_methods": 0.4739756367663345,
+    "confusion_matrix_method_a_rows_method_b_columns": {
+      "High": {
+        "High": 16,
+        "Low": 0,
+        "Medium": 0,
+        "None": 0
+      },
+      "Low": {
+        "High": 0,
+        "Low": 3,
+        "Medium": 19,
+        "None": 0
+      },
+      "Medium": {
+        "High": 0,
+        "Low": 0,
+        "Medium": 12,
+        "None": 0
+      },
+      "None": {
+        "High": 0,
+        "Low": 0,
+        "Medium": 0,
+        "None": 0
+      }
+    },
+    "disagreement_pair_ids": [
+      "mat_fdb2b87808bcb525a732632e",
+      "mat_390c72d9d6d3e4ca87e8b0d2",
+      "mat_99dd581f7b342e821361f4fa",
+      "mat_9c042001b4e5dc62cae919ba",
+      "mat_0773a4d10672e49537242824",
+      "mat_9563a4579cd8c87fb2ebf8dd",
+      "mat_0e781f2b5e6feb33660fe843",
+      "mat_d7c70e6e86904b596cdb7209",
+      "mat_590ac03da167238d7d338824",
+      "mat_f110320fba1c8f219054c648",
+      "mat_95f88055beb515b1226fe96d",
+      "mat_123a9e691b0291bf0eb5fec8",
+      "mat_83cb8f64c8cf9597131f36e5",
+      "mat_688beef91bf9956c6f7b8319",
+      "mat_db938a0f0eb92bab6fb078cc",
+      "mat_08031e98498c98fa32a2e951",
+      "mat_ca8210674f56599734ad7a8e",
+      "mat_da9a0c78b92e51330bd0b0f1",
+      "mat_b52f18d09b58658c1547c5fa"
+    ],
+    "expected_agreement": 0.2776,
+    "item_count": 50,
+    "method_a_distribution": {
+      "High": 16,
+      "Low": 22,
+      "Medium": 12
+    },
+    "method_b_distribution": {
+      "High": 16,
+      "Low": 3,
+      "Medium": 31
+    },
+    "not_human_inter_annotator_agreement": true,
+    "raw_agreement": 0.62
+  },
+  "annotator_independence": "distinct rule logic with a shared cue lexicon; not independent humans or statistically independent evidence",
+  "case_count": 50,
+  "dataset_id": "materiality-silver-v1",
+  "guideline_version": "1.0.0-draft",
+  "is_gold": false,
+  "label_order": [
+    "High",
+    "Medium",
+    "Low",
+    "None"
+  ],
+  "labeling_method": "two deterministic, separately specified rule labelers plus conservative rule adjudicator",
+  "legal_correctness_claimed": false,
+  "legal_validation_status": "not_performed",
+  "limitations": [
+    "The labels are rule-generated silver hypotheses and may reflect rule bias.",
+    "The two rule systems share a legal-cue lexicon and corpus cases, so their agreement is not evidence from independent sources.",
+    "Source evidence proves text provenance, not legal interpretation or materiality.",
+    "The conservative tie-break is not an independent legal adjudicator.",
+    "Agreement and kappa measure only agreement between these two implemented rule systems.",
+    "Do not train/evaluate a classifier against these labels and report the result as legal accuracy."
+  ],
+  "provisional_class_distribution": {
+    "High": 16,
+    "Low": 3,
+    "Medium": 31
+  },
+  "provisional_dimension_distribution": {
+    "definition": 1,
+    "exemption": 4,
+    "obligation": 12,
+    "procedure": 4,
+    "prohibition": 2,
+    "right": 1,
+    "scope": 7,
+    "threshold": 16,
+    "time": 11
+  },
+  "provisional_label_count": 50,
+  "rows": [
+    {
+      "after_version_id": "pver_697b8c3dbbd016f00827afa1",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "obligation",
+          "procedure",
+          "right"
+        ],
+        "label": "High",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "The wording changes the presence of one or more high-impact legal-effect cues: obligation, right."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "obligation",
+          "procedure",
+          "right"
+        ],
+        "label": "High",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a detected duty, right, prohibition, scope, liability, or exception cue: obligation, right.",
+        "similarity": 0.0
+      },
+      "automated_adjudication": {
+        "dimensions": [
+          "obligation",
+          "procedure",
+          "right"
+        ],
+        "label": "High",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_2e448c55daae4b455ccf8e24",
+      "gold_status": "NOT_GOLD",
+      "operation": "INSERT",
+      "pair_id": "mat_7cb4c31122dad86e30aa4021",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_0ad4e9c72da39b6e2ffcbafb",
+        "src_d25cf228044dc23c84892ea7"
+      ],
+      "transition_id": "transition_00cfa74eda65b9268f4c582f"
+    },
+    {
+      "after_version_id": "pver_d16324d2eec0fb6ba768af96",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Low",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "Text changed without a detected high-impact or procedural cue transition."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "obligation"
+        ],
+        "label": "Low",
+        "method_id": "operation-delta-v1",
+        "rationale": "A limited lexical delta is detected without an explicit legal-effect or procedural cue change.",
+        "similarity": 0.6667
+      },
+      "automated_adjudication": {
+        "dimensions": [
+          "obligation"
+        ],
+        "label": "Low",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_116ceaaf7027d466ea195eee",
+      "gold_status": "NOT_GOLD",
+      "operation": "SUBSTITUTE",
+      "pair_id": "mat_e27898c6847505312aa05fec",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_0ad4e9c72da39b6e2ffcbafb",
+        "src_d25cf228044dc23c84892ea7"
+      ],
+      "transition_id": "transition_dbb723f2bd878121cccd9ac5"
+    },
+    {
+      "after_version_id": "pver_3105695afcd53ac289bd9337",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "definition",
+          "scope"
+        ],
+        "label": "High",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "The wording changes the presence of one or more high-impact legal-effect cues: scope."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "definition",
+          "scope"
+        ],
+        "label": "High",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a detected duty, right, prohibition, scope, liability, or exception cue: scope.",
+        "similarity": 0.0
+      },
+      "automated_adjudication": {
+        "dimensions": [
+          "definition",
+          "scope"
+        ],
+        "label": "High",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_27f7c68d06c965d372d1aae6",
+      "gold_status": "NOT_GOLD",
+      "operation": "INSERT",
+      "pair_id": "mat_1037bf61be63655a13f6f7af",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_0ad4e9c72da39b6e2ffcbafb",
+        "src_d25cf228044dc23c84892ea7"
+      ],
+      "transition_id": "transition_0c533c5c336dc42fc2af4971"
+    },
+    {
+      "after_version_id": "pver_3460bce2e1ef05d86b53d101",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "obligation",
+          "procedure",
+          "prohibition",
+          "scope"
+        ],
+        "label": "High",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "The wording changes the presence of one or more high-impact legal-effect cues: obligation, prohibition, scope."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "obligation",
+          "procedure",
+          "prohibition",
+          "scope",
+          "threshold"
+        ],
+        "label": "High",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a detected duty, right, prohibition, scope, liability, or exception cue: obligation, prohibition, scope.",
+        "similarity": 0.046
+      },
+      "automated_adjudication": {
+        "dimensions": [
+          "obligation",
+          "procedure",
+          "prohibition",
+          "scope",
+          "threshold"
+        ],
+        "label": "High",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_877362d0fda01b1d280512cf",
+      "gold_status": "NOT_GOLD",
+      "operation": "SUBSTITUTE",
+      "pair_id": "mat_5058fcf9b63e3c8345f6d7c8",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_16b1c0f2d1da3c6bf098efa1",
+        "src_73ff6b08cbbe209ab709e642"
+      ],
+      "transition_id": "transition_04e14ce506cbdefbc36cb314"
+    },
+    {
+      "after_version_id": "pver_3c82e61b29b210fb0c04a823",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "obligation",
+          "procedure",
+          "time"
+        ],
+        "label": "High",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "The wording changes the presence of one or more high-impact legal-effect cues: obligation."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "obligation",
+          "procedure",
+          "time"
+        ],
+        "label": "High",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a detected duty, right, prohibition, scope, liability, or exception cue: obligation.",
+        "similarity": 0.0
+      },
+      "automated_adjudication": {
+        "dimensions": [
+          "obligation",
+          "procedure",
+          "time"
+        ],
+        "label": "High",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_74b58e384116b6f54f31de51",
+      "gold_status": "NOT_GOLD",
+      "operation": "INSERT",
+      "pair_id": "mat_06d03c5ce4d0d00dc77ebdaa",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_0ad4e9c72da39b6e2ffcbafb",
+        "src_d25cf228044dc23c84892ea7"
+      ],
+      "transition_id": "transition_308d35784dfd748e7ce3360d"
+    },
+    {
+      "after_version_id": "pver_1787e86186e056787b00e197",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Low",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "Text changed without a detected high-impact or procedural cue transition."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "scope"
+        ],
+        "label": "Medium",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "similarity": 0.4103
+      },
+      "automated_adjudication": {
+        "dimensions": [
+          "scope"
+        ],
+        "label": "Medium",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_08467e9cca10c9cbf058e792",
+      "gold_status": "NOT_GOLD",
+      "operation": "SUBSTITUTE",
+      "pair_id": "mat_fdb2b87808bcb525a732632e",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_0cbccfdb70e8e9f057dbb00e",
+        "src_16b1c0f2d1da3c6bf098efa1"
+      ],
+      "transition_id": "transition_063f3f5e680afbf865143e8b"
+    },
+    {
+      "after_version_id": "pver_8990707a1a03c43c557e672f",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Low",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "Text changed without a detected high-impact or procedural cue transition."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Medium",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "similarity": 0.0
+      },
+      "automated_adjudication": {
+        "dimensions": [],
+        "label": "Medium",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_b723075c19c401bd498701a6",
+      "gold_status": "NOT_GOLD",
+      "operation": "INSERT",
+      "pair_id": "mat_390c72d9d6d3e4ca87e8b0d2",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_0ad4e9c72da39b6e2ffcbafb",
+        "src_d25cf228044dc23c84892ea7"
+      ],
+      "transition_id": "transition_416b57390ba679cd8e4d5c4f"
+    },
+    {
+      "after_version_id": "pver_42e0765c87e1a94620953196",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "exemption",
+          "obligation",
+          "procedure",
+          "scope",
+          "time"
+        ],
+        "label": "High",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "The wording changes the presence of one or more high-impact legal-effect cues: exemption, obligation, scope."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "exemption",
+          "obligation",
+          "procedure",
+          "scope",
+          "time"
+        ],
+        "label": "High",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a detected duty, right, prohibition, scope, liability, or exception cue: exemption, obligation, scope.",
+        "similarity": 0.0331
+      },
+      "automated_adjudication": {
+        "dimensions": [
+          "exemption",
+          "obligation",
+          "procedure",
+          "scope",
+          "time"
+        ],
+        "label": "High",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_b66cd33b3f2077d11971946b",
+      "gold_status": "NOT_GOLD",
+      "operation": "SUBSTITUTE",
+      "pair_id": "mat_9e349bb1642e64225e9503a1",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_16b1c0f2d1da3c6bf098efa1",
+        "src_73ff6b08cbbe209ab709e642"
+      ],
+      "transition_id": "transition_0f65e2ca34061f85e0b738c1"
+    },
+    {
+      "after_version_id": "pver_bf7c2498b6fb2d19f3f102ca",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "obligation",
+          "time"
+        ],
+        "label": "High",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "The wording changes the presence of one or more high-impact legal-effect cues: obligation."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "obligation",
+          "time"
+        ],
+        "label": "High",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a detected duty, right, prohibition, scope, liability, or exception cue: obligation.",
+        "similarity": 0.0
+      },
+      "automated_adjudication": {
+        "dimensions": [
+          "obligation",
+          "time"
+        ],
+        "label": "High",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_7f37a9e8fd4e7a1bb170b29c",
+      "gold_status": "NOT_GOLD",
+      "operation": "INSERT",
+      "pair_id": "mat_a1406890a695e5217ea3311d",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_0ad4e9c72da39b6e2ffcbafb",
+        "src_d25cf228044dc23c84892ea7"
+      ],
+      "transition_id": "transition_b74572025857a0c756b22a6d"
+    },
+    {
+      "after_version_id": "pver_7a8e0377b6d9eefbe24e982e",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "Numeric tokens changed; rule-based labeling cannot determine their legal importance."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a detected time, threshold, procedure, or numeric value.",
+        "similarity": 0.0
+      },
+      "automated_adjudication": {
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_864eb741fb56525d9c8b9fe9",
+      "gold_status": "NOT_GOLD",
+      "operation": "SUBSTITUTE",
+      "pair_id": "mat_f6b73bb3602ae415caa163a1",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_064ee4aeaa87093bfccb78ce",
+        "src_294c0d2fedc5374a906e0e92"
+      ],
+      "transition_id": "transition_16d0efaf96c3ea89874620da"
+    },
+    {
+      "after_version_id": "pver_f97ded869c054c7048b218cc",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Low",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "Text changed without a detected high-impact or procedural cue transition."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Medium",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "similarity": 0.0
+      },
+      "automated_adjudication": {
+        "dimensions": [],
+        "label": "Medium",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_83046c0cdefa1df66a707b99",
+      "gold_status": "NOT_GOLD",
+      "operation": "INSERT",
+      "pair_id": "mat_99dd581f7b342e821361f4fa",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_c402849814141b3fe1696d92",
+        "src_fd6e97ace0e9ca13218db910"
+      ],
+      "transition_id": "transition_01a993cb54b3c93544e95539"
+    },
+    {
+      "after_version_id": "pver_3bef17ea57a6b06b04682aab",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "Numeric tokens changed; rule-based labeling cannot determine their legal importance."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a detected time, threshold, procedure, or numeric value.",
+        "similarity": 0.25
+      },
+      "automated_adjudication": {
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_68bacd73fd07e76d0d87bf89",
+      "gold_status": "NOT_GOLD",
+      "operation": "SUBSTITUTE",
+      "pair_id": "mat_1d047b61abe3fdec714bf1fc",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_7262d4ebd8eada169c2a8bc3",
+        "src_95267bd1a6e6edd43848c03f"
+      ],
+      "transition_id": "transition_17c4ae80284ea6cb3c51aafb"
+    },
+    {
+      "after_version_id": "pver_c0b41d22a4a649512f639b34",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "exemption",
+          "obligation",
+          "time"
+        ],
+        "label": "High",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "The wording changes the presence of one or more high-impact legal-effect cues: exemption, obligation."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "exemption",
+          "obligation",
+          "time"
+        ],
+        "label": "High",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a detected duty, right, prohibition, scope, liability, or exception cue: exemption, obligation.",
+        "similarity": 0.0
+      },
+      "automated_adjudication": {
+        "dimensions": [
+          "exemption",
+          "obligation",
+          "time"
+        ],
+        "label": "High",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_729d61ca9317471c2739902d",
+      "gold_status": "NOT_GOLD",
+      "operation": "INSERT",
+      "pair_id": "mat_8712bef392cb1761c552d536",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_5887fd2ae598de655e2223a6",
+        "src_a234a3f5c6ac749e32f6f075"
+      ],
+      "transition_id": "transition_0ba0d5ac1563c6ce515cd3e8"
+    },
+    {
+      "after_version_id": "pver_3e82756d13959a1be4b78e24",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "obligation"
+        ],
+        "label": "High",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "The wording changes the presence of one or more high-impact legal-effect cues: obligation."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "obligation"
+        ],
+        "label": "High",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a detected duty, right, prohibition, scope, liability, or exception cue: obligation.",
+        "similarity": 0.0
+      },
+      "automated_adjudication": {
+        "dimensions": [
+          "obligation"
+        ],
+        "label": "High",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_021a34d1f8aa084c2b26f600",
+      "gold_status": "NOT_GOLD",
+      "operation": "SUBSTITUTE",
+      "pair_id": "mat_5bb9130dc72b18a8dd0463a5",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_7262d4ebd8eada169c2a8bc3",
+        "src_95267bd1a6e6edd43848c03f"
+      ],
+      "transition_id": "transition_1c321b30b0cfb0f66cd79f34"
+    },
+    {
+      "after_version_id": "pver_5f5b7561be9906257cd948ac",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Low",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "Text changed without a detected high-impact or procedural cue transition."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Medium",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "similarity": 0.0
+      },
+      "automated_adjudication": {
+        "dimensions": [],
+        "label": "Medium",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_91ead3516eea2a772cc0744d",
+      "gold_status": "NOT_GOLD",
+      "operation": "INSERT",
+      "pair_id": "mat_9c042001b4e5dc62cae919ba",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_11904b65043477e7e664fe54",
+        "src_53c55ae5c2470ca158488216"
+      ],
+      "transition_id": "transition_0d856f7478ed8cd04bafc77c"
+    },
+    {
+      "after_version_id": "pver_5978acbbee16a03043145297",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Low",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "Text changed without a detected high-impact or procedural cue transition."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Medium",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "similarity": 0.4444
+      },
+      "automated_adjudication": {
+        "dimensions": [],
+        "label": "Medium",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_ea8316921155e52e675b6b17",
+      "gold_status": "NOT_GOLD",
+      "operation": "SUBSTITUTE",
+      "pair_id": "mat_0773a4d10672e49537242824",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_7262d4ebd8eada169c2a8bc3",
+        "src_95267bd1a6e6edd43848c03f"
+      ],
+      "transition_id": "transition_1f050d212743c312bdbcf55b"
+    },
+    {
+      "after_version_id": "pver_d5e9b3bbb6613420794e4f77",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "exemption",
+          "obligation",
+          "prohibition"
+        ],
+        "label": "High",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "The wording changes the presence of one or more high-impact legal-effect cues: exemption, obligation, prohibition."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "exemption",
+          "obligation",
+          "prohibition",
+          "threshold"
+        ],
+        "label": "High",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a detected duty, right, prohibition, scope, liability, or exception cue: exemption, obligation, prohibition.",
+        "similarity": 0.0
+      },
+      "automated_adjudication": {
+        "dimensions": [
+          "exemption",
+          "obligation",
+          "prohibition",
+          "threshold"
+        ],
+        "label": "High",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_781b122c431744a5de4b553a",
+      "gold_status": "NOT_GOLD",
+      "operation": "INSERT",
+      "pair_id": "mat_d1acc86ed566f3a993e1c036",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_7262d4ebd8eada169c2a8bc3",
+        "src_95267bd1a6e6edd43848c03f"
+      ],
+      "transition_id": "transition_10e21003b5d476d1a6f0bdf0"
+    },
+    {
+      "after_version_id": "pver_b8472e772393a844caa4e7be",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "scope",
+          "time"
+        ],
+        "label": "High",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "The wording changes the presence of one or more high-impact legal-effect cues: scope."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "scope",
+          "time"
+        ],
+        "label": "High",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a detected duty, right, prohibition, scope, liability, or exception cue: scope.",
+        "similarity": 0.2258
+      },
+      "automated_adjudication": {
+        "dimensions": [
+          "scope",
+          "time"
+        ],
+        "label": "High",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_0d8489a57dae59bff41ec2c5",
+      "gold_status": "NOT_GOLD",
+      "operation": "SUBSTITUTE",
+      "pair_id": "mat_859f1a5bc4b6b3208d6a6994",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_5887fd2ae598de655e2223a6",
+        "src_a234a3f5c6ac749e32f6f075"
+      ],
+      "transition_id": "transition_33b304616ea046db238f4029"
+    },
+    {
+      "after_version_id": "pver_953eedc19c5cfc1f30cbb29e",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Low",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "Text changed without a detected high-impact or procedural cue transition."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Medium",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "similarity": 0.0
+      },
+      "automated_adjudication": {
+        "dimensions": [],
+        "label": "Medium",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_1573dbda90878f2f38c89dcf",
+      "gold_status": "NOT_GOLD",
+      "operation": "INSERT",
+      "pair_id": "mat_9563a4579cd8c87fb2ebf8dd",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_7262d4ebd8eada169c2a8bc3",
+        "src_95267bd1a6e6edd43848c03f"
+      ],
+      "transition_id": "transition_17a15d5b9fe7a9a3074810eb"
+    },
+    {
+      "after_version_id": "pver_73d87692b4216ad817f7b402",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "time"
+        ],
+        "label": "Medium",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "The wording changes an operative time, threshold, or procedure cue: time."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "time"
+        ],
+        "label": "Medium",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a detected time, threshold, procedure, or numeric value.",
+        "similarity": 0.1212
+      },
+      "automated_adjudication": {
+        "dimensions": [
+          "time"
+        ],
+        "label": "Medium",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_1c50ddf9046102996a5fdb15",
+      "gold_status": "NOT_GOLD",
+      "operation": "SUBSTITUTE",
+      "pair_id": "mat_61bdc9abc22419bc811f4af8",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_0530e08f12edbc47c3ca7a48",
+        "src_b23f8e535a7fc91af0cbc097"
+      ],
+      "transition_id": "transition_463fa1bfb7ab2de7e3254c0f"
+    },
+    {
+      "after_version_id": "pver_6c06602c3cfd3c07e486d065",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Low",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "Text changed without a detected high-impact or procedural cue transition."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Medium",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "similarity": 0.0
+      },
+      "automated_adjudication": {
+        "dimensions": [],
+        "label": "Medium",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_74ab0df1d754a646f57f8f65",
+      "gold_status": "NOT_GOLD",
+      "operation": "INSERT",
+      "pair_id": "mat_0e781f2b5e6feb33660fe843",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_7262d4ebd8eada169c2a8bc3",
+        "src_95267bd1a6e6edd43848c03f"
+      ],
+      "transition_id": "transition_2ffd3b0b1c64152063faf51f"
+    },
+    {
+      "after_version_id": "pver_8b83a0695c3c6c79fa17b5ce",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Low",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "Text changed without a detected high-impact or procedural cue transition."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "time"
+        ],
+        "label": "Medium",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "similarity": 0.5
+      },
+      "automated_adjudication": {
+        "dimensions": [
+          "time"
+        ],
+        "label": "Medium",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_4745e2739a7727e1786b5237",
+      "gold_status": "NOT_GOLD",
+      "operation": "SUBSTITUTE",
+      "pair_id": "mat_d7c70e6e86904b596cdb7209",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_203c20c1dc80222dfa5989d6",
+        "src_c81daaf704eb5583145bd290"
+      ],
+      "transition_id": "transition_4963dcdd1b5d3a87e898d55a"
+    },
+    {
+      "after_version_id": "pver_8b67a21643e5032ac2ccc4b8",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "Numeric tokens changed; rule-based labeling cannot determine their legal importance."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a detected time, threshold, procedure, or numeric value.",
+        "similarity": 0.0
+      },
+      "automated_adjudication": {
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_b87ed3c2e1dfea3fec3eb33f",
+      "gold_status": "NOT_GOLD",
+      "operation": "INSERT",
+      "pair_id": "mat_3a027c7f4cc70391e6c0a97c",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_7262d4ebd8eada169c2a8bc3",
+        "src_95267bd1a6e6edd43848c03f"
+      ],
+      "transition_id": "transition_35d89b76fb86435bfe2c4145"
+    },
+    {
+      "after_version_id": "pver_52772bd8aa04c15190c1dc59",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Low",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "Text changed without a detected high-impact or procedural cue transition."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Medium",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "similarity": 0.2857
+      },
+      "automated_adjudication": {
+        "dimensions": [],
+        "label": "Medium",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_45c6553388890af450fc3bd6",
+      "gold_status": "NOT_GOLD",
+      "operation": "SUBSTITUTE",
+      "pair_id": "mat_590ac03da167238d7d338824",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_064ee4aeaa87093bfccb78ce",
+        "src_294c0d2fedc5374a906e0e92"
+      ],
+      "transition_id": "transition_524e633ce10d09fcec3f536b"
+    },
+    {
+      "after_version_id": "pver_8446bf8f21097b7fd7c00c1b",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "Numeric tokens changed; rule-based labeling cannot determine their legal importance."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a detected time, threshold, procedure, or numeric value.",
+        "similarity": 0.0
+      },
+      "automated_adjudication": {
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_54c990541af79860e75a9f01",
+      "gold_status": "NOT_GOLD",
+      "operation": "INSERT",
+      "pair_id": "mat_fcb1a39752da9c08f09a3504",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_7262d4ebd8eada169c2a8bc3",
+        "src_95267bd1a6e6edd43848c03f"
+      ],
+      "transition_id": "transition_52bdf414449d6836bb5c4dfd"
+    },
+    {
+      "after_version_id": "pver_dbdb2d6ac21db48790432e8b",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Low",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "Text changed without a detected high-impact or procedural cue transition."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Medium",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "similarity": 0.0
+      },
+      "automated_adjudication": {
+        "dimensions": [],
+        "label": "Medium",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_712992009ab67e45a7cf21fb",
+      "gold_status": "NOT_GOLD",
+      "operation": "SUBSTITUTE",
+      "pair_id": "mat_f110320fba1c8f219054c648",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_7262d4ebd8eada169c2a8bc3",
+        "src_95267bd1a6e6edd43848c03f"
+      ],
+      "transition_id": "transition_56025f003716d226bbc02d5a"
+    },
+    {
+      "after_version_id": "pver_89a2dc01d197b2f63e0a6171",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "obligation",
+          "time"
+        ],
+        "label": "High",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "The wording changes the presence of one or more high-impact legal-effect cues: obligation."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "obligation",
+          "time"
+        ],
+        "label": "High",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a detected duty, right, prohibition, scope, liability, or exception cue: obligation.",
+        "similarity": 0.0
+      },
+      "automated_adjudication": {
+        "dimensions": [
+          "obligation",
+          "time"
+        ],
+        "label": "High",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_9b72650b20946f1e7deb4fb7",
+      "gold_status": "NOT_GOLD",
+      "operation": "INSERT",
+      "pair_id": "mat_0e12529c90eed9079b2ebc59",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_11904b65043477e7e664fe54",
+        "src_618aa45bac01b76de19ff611"
+      ],
+      "transition_id": "transition_55f576c6cf3d257aa12e317c"
+    },
+    {
+      "after_version_id": "pver_aa01e07cea1c9051819bfc84",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "Numeric tokens changed; rule-based labeling cannot determine their legal importance."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a detected time, threshold, procedure, or numeric value.",
+        "similarity": 0.0
+      },
+      "automated_adjudication": {
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_542f7bc16b6e2dec43b723da",
+      "gold_status": "NOT_GOLD",
+      "operation": "SUBSTITUTE",
+      "pair_id": "mat_3729e9c6bbccb8fa4bb132b1",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_064ee4aeaa87093bfccb78ce",
+        "src_294c0d2fedc5374a906e0e92"
+      ],
+      "transition_id": "transition_584f804b6bdff1b67ecfad63"
+    },
+    {
+      "after_version_id": "pver_8238510196b05dc7a8ee87ee",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Low",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "Text changed without a detected high-impact or procedural cue transition."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Medium",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "similarity": 0.0
+      },
+      "automated_adjudication": {
+        "dimensions": [],
+        "label": "Medium",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_4efa4cbfa1b5da118160c73b",
+      "gold_status": "NOT_GOLD",
+      "operation": "INSERT",
+      "pair_id": "mat_95f88055beb515b1226fe96d",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_0530e08f12edbc47c3ca7a48",
+        "src_b23f8e535a7fc91af0cbc097"
+      ],
+      "transition_id": "transition_5b481f4f69052593ba0008b7"
+    },
+    {
+      "after_version_id": "pver_f69be4cd22a39dad0c72c4d5",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Low",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "Text changed without a detected high-impact or procedural cue transition."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "similarity": 0.2
+      },
+      "automated_adjudication": {
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_b124f3d5ca1495495285a939",
+      "gold_status": "NOT_GOLD",
+      "operation": "SUBSTITUTE",
+      "pair_id": "mat_123a9e691b0291bf0eb5fec8",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_7262d4ebd8eada169c2a8bc3",
+        "src_95267bd1a6e6edd43848c03f"
+      ],
+      "transition_id": "transition_616a53788481a7c687bc46fb"
+    },
+    {
+      "after_version_id": "pver_ee2763b34b7fa2cc49985c39",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "Numeric tokens changed; rule-based labeling cannot determine their legal importance."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a detected time, threshold, procedure, or numeric value.",
+        "similarity": 0.0
+      },
+      "automated_adjudication": {
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_be16ec3b61b42841f6968aa1",
+      "gold_status": "NOT_GOLD",
+      "operation": "INSERT",
+      "pair_id": "mat_e20dcc1843f5295412f0547a",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_16b1c0f2d1da3c6bf098efa1",
+        "src_73ff6b08cbbe209ab709e642"
+      ],
+      "transition_id": "transition_77c7e64d9679b9e40ae2da54"
+    },
+    {
+      "after_version_id": "pver_eea2af3de7067ac1af50745d",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "scope",
+          "time"
+        ],
+        "label": "High",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "The wording changes the presence of one or more high-impact legal-effect cues: scope."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "scope",
+          "time"
+        ],
+        "label": "High",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a detected duty, right, prohibition, scope, liability, or exception cue: scope.",
+        "similarity": 0.6316
+      },
+      "automated_adjudication": {
+        "dimensions": [
+          "scope",
+          "time"
+        ],
+        "label": "High",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_f85e323f9f987bddda281245",
+      "gold_status": "NOT_GOLD",
+      "operation": "SUBSTITUTE",
+      "pair_id": "mat_3bf4e1de2910e0639568f12f",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_726705f7fc61363b6e330510",
+        "src_79c27e7b13282442fb1462b4"
+      ],
+      "transition_id": "transition_671374bc07fb4c870687ae99"
+    },
+    {
+      "after_version_id": "pver_9f2a135daa62f37f618ec696",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "Numeric tokens changed; rule-based labeling cannot determine their legal importance."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a detected time, threshold, procedure, or numeric value.",
+        "similarity": 0.0
+      },
+      "automated_adjudication": {
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_aa189130b4b00dc6ec45cc91",
+      "gold_status": "NOT_GOLD",
+      "operation": "INSERT",
+      "pair_id": "mat_398dac09f25a41f5fe085757",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_16b1c0f2d1da3c6bf098efa1",
+        "src_73ff6b08cbbe209ab709e642"
+      ],
+      "transition_id": "transition_7d8f5fd0a9ca5f5d995858a5"
+    },
+    {
+      "after_version_id": "pver_269bf6bd3e570e3e56acdd4a",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Low",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "Text changed without a detected high-impact or procedural cue transition."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Medium",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "similarity": 0.5714
+      },
+      "automated_adjudication": {
+        "dimensions": [],
+        "label": "Medium",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_6de5ca7c11ed6d2a4327ed6f",
+      "gold_status": "NOT_GOLD",
+      "operation": "SUBSTITUTE",
+      "pair_id": "mat_83cb8f64c8cf9597131f36e5",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_7262d4ebd8eada169c2a8bc3",
+        "src_95267bd1a6e6edd43848c03f"
+      ],
+      "transition_id": "transition_67ee8c750088efe38d075781"
+    },
+    {
+      "after_version_id": "pver_54c901e42afb40ad76cea7b7",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Low",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "Text changed without a detected high-impact or procedural cue transition."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Medium",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "similarity": 0.0
+      },
+      "automated_adjudication": {
+        "dimensions": [],
+        "label": "Medium",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_8350396827389fbecaa113e3",
+      "gold_status": "NOT_GOLD",
+      "operation": "INSERT",
+      "pair_id": "mat_688beef91bf9956c6f7b8319",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_11904b65043477e7e664fe54",
+        "src_618aa45bac01b76de19ff611"
+      ],
+      "transition_id": "transition_7f9a9d4487a838dca934f26a"
+    },
+    {
+      "after_version_id": "pver_d879ec90003a5059f8d9f8bc",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Low",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "Text changed without a detected high-impact or procedural cue transition."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "time"
+        ],
+        "label": "Medium",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "similarity": 0.5
+      },
+      "automated_adjudication": {
+        "dimensions": [
+          "time"
+        ],
+        "label": "Medium",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_ce7c111fa4ef2316bb3e56e0",
+      "gold_status": "NOT_GOLD",
+      "operation": "SUBSTITUTE",
+      "pair_id": "mat_db938a0f0eb92bab6fb078cc",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_203c20c1dc80222dfa5989d6",
+        "src_c81daaf704eb5583145bd290"
+      ],
+      "transition_id": "transition_73941604c62faea61288c183"
+    },
+    {
+      "after_version_id": "pver_dd1641469ea4de7c6c9beb62",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Low",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "Text changed without a detected high-impact or procedural cue transition."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Medium",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "similarity": 0.0
+      },
+      "automated_adjudication": {
+        "dimensions": [],
+        "label": "Medium",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_47ae2910c52f8cc5ad1ec624",
+      "gold_status": "NOT_GOLD",
+      "operation": "INSERT",
+      "pair_id": "mat_08031e98498c98fa32a2e951",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_11904b65043477e7e664fe54",
+        "src_2f4b081203dd22bf8f6a9f7a"
+      ],
+      "transition_id": "transition_8ef5d3d30aca8c1227839e06"
+    },
+    {
+      "after_version_id": "pver_28913c4556d3e999466ccb72",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "The wording changes an operative time, threshold, or procedure cue: threshold."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a detected time, threshold, procedure, or numeric value.",
+        "similarity": 0.0
+      },
+      "automated_adjudication": {
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_e6f6c3d7a908826f27e45927",
+      "gold_status": "NOT_GOLD",
+      "operation": "SUBSTITUTE",
+      "pair_id": "mat_bc4acfabeb51f81d44d17bfc",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_7262d4ebd8eada169c2a8bc3",
+        "src_95267bd1a6e6edd43848c03f"
+      ],
+      "transition_id": "transition_853a0dc88af5422e6970868e"
+    },
+    {
+      "after_version_id": "pver_ed1369826b79e533bee69ed4",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "Numeric tokens changed; rule-based labeling cannot determine their legal importance."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a detected time, threshold, procedure, or numeric value.",
+        "similarity": 0.0
+      },
+      "automated_adjudication": {
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_6a26d0c2e857329a3d7ec8b9",
+      "gold_status": "NOT_GOLD",
+      "operation": "INSERT",
+      "pair_id": "mat_70db190e17bf249b7b42387b",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_7262d4ebd8eada169c2a8bc3",
+        "src_95267bd1a6e6edd43848c03f"
+      ],
+      "transition_id": "transition_9366b1034bb43dedd5e56e6f"
+    },
+    {
+      "after_version_id": "pver_19e2937649fde91481a386b3",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "Numeric tokens changed; rule-based labeling cannot determine their legal importance."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a detected time, threshold, procedure, or numeric value.",
+        "similarity": 0.5
+      },
+      "automated_adjudication": {
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_d79b4cf0bdb7eb86332fe94a",
+      "gold_status": "NOT_GOLD",
+      "operation": "SUBSTITUTE",
+      "pair_id": "mat_4c42b65249ca48221952c7f7",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_7262d4ebd8eada169c2a8bc3",
+        "src_95267bd1a6e6edd43848c03f"
+      ],
+      "transition_id": "transition_86c7edc5c490ac18e52e9a36"
+    },
+    {
+      "after_version_id": "pver_36017412765a481ddf41b161",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "Numeric tokens changed; rule-based labeling cannot determine their legal importance."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a detected time, threshold, procedure, or numeric value.",
+        "similarity": 0.0
+      },
+      "automated_adjudication": {
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_de7c40b6607c2a0efa18e1e5",
+      "gold_status": "NOT_GOLD",
+      "operation": "INSERT",
+      "pair_id": "mat_cc42b7cdc91c25c19b971c18",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_7262d4ebd8eada169c2a8bc3",
+        "src_95267bd1a6e6edd43848c03f"
+      ],
+      "transition_id": "transition_a5258fb3ac127c91471122b1"
+    },
+    {
+      "after_version_id": "pver_3356f05fbaf23b59b83142ec",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Low",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "Text changed without a detected high-impact or procedural cue transition."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Low",
+        "method_id": "operation-delta-v1",
+        "rationale": "A limited lexical delta is detected without an explicit legal-effect or procedural cue change.",
+        "similarity": 0.75
+      },
+      "automated_adjudication": {
+        "dimensions": [],
+        "label": "Low",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_7a64a912f9a8e58ff5328748",
+      "gold_status": "NOT_GOLD",
+      "operation": "SUBSTITUTE",
+      "pair_id": "mat_9251893450a9c8bd3d7a8590",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_0cbccfdb70e8e9f057dbb00e",
+        "src_16b1c0f2d1da3c6bf098efa1"
+      ],
+      "transition_id": "transition_86c9dac0194597b7e658880e"
+    },
+    {
+      "after_version_id": "pver_dd5462c3462222089942053f",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "exemption"
+        ],
+        "label": "High",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "The wording changes the presence of one or more high-impact legal-effect cues: exemption."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "exemption"
+        ],
+        "label": "High",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a detected duty, right, prohibition, scope, liability, or exception cue: exemption.",
+        "similarity": 0.0
+      },
+      "automated_adjudication": {
+        "dimensions": [
+          "exemption"
+        ],
+        "label": "High",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_07ef89052f0fcd962c97857e",
+      "gold_status": "NOT_GOLD",
+      "operation": "INSERT",
+      "pair_id": "mat_e2b212ca6b91884eeccab0fd",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_7262d4ebd8eada169c2a8bc3",
+        "src_95267bd1a6e6edd43848c03f"
+      ],
+      "transition_id": "transition_a85dcff58c5ed023c079ec8e"
+    },
+    {
+      "after_version_id": "pver_acb70ecb90ec2e1b1eb63b5e",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "scope",
+          "time"
+        ],
+        "label": "High",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "The wording changes the presence of one or more high-impact legal-effect cues: scope."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "scope",
+          "time"
+        ],
+        "label": "High",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a detected duty, right, prohibition, scope, liability, or exception cue: scope.",
+        "similarity": 0.2571
+      },
+      "automated_adjudication": {
+        "dimensions": [
+          "scope",
+          "time"
+        ],
+        "label": "High",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_e89dd0beae4f187c3d9e40d3",
+      "gold_status": "NOT_GOLD",
+      "operation": "SUBSTITUTE",
+      "pair_id": "mat_f073384e10cbf86405d1be3d",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_5887fd2ae598de655e2223a6",
+        "src_a234a3f5c6ac749e32f6f075"
+      ],
+      "transition_id": "transition_8d70ca5841b37351a0d2e097"
+    },
+    {
+      "after_version_id": "pver_2e7192d252d001940dfa22f1",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "obligation"
+        ],
+        "label": "High",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "The wording changes the presence of one or more high-impact legal-effect cues: obligation."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "obligation",
+          "threshold"
+        ],
+        "label": "High",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a detected duty, right, prohibition, scope, liability, or exception cue: obligation.",
+        "similarity": 0.0
+      },
+      "automated_adjudication": {
+        "dimensions": [
+          "obligation",
+          "threshold"
+        ],
+        "label": "High",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_2a9014bde92d70de1b79a505",
+      "gold_status": "NOT_GOLD",
+      "operation": "INSERT",
+      "pair_id": "mat_fe230e5ee9ce232f41dd593e",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_203c20c1dc80222dfa5989d6",
+        "src_c81daaf704eb5583145bd290"
+      ],
+      "transition_id": "transition_af87b1df64cf9eaf599878cf"
+    },
+    {
+      "after_version_id": "pver_3e3e2d3b94a9f6fe1100a083",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Low",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "Text changed without a detected high-impact or procedural cue transition."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Medium",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "similarity": 0.2
+      },
+      "automated_adjudication": {
+        "dimensions": [],
+        "label": "Medium",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_522361d580fdf63b84885d1c",
+      "gold_status": "NOT_GOLD",
+      "operation": "SUBSTITUTE",
+      "pair_id": "mat_ca8210674f56599734ad7a8e",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_726705f7fc61363b6e330510",
+        "src_79c27e7b13282442fb1462b4"
+      ],
+      "transition_id": "transition_a0b23d12b29f4f100b70b598"
+    },
+    {
+      "after_version_id": "pver_7dda53715c7832cf14b669b6",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Low",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "Text changed without a detected high-impact or procedural cue transition."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Medium",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "similarity": 0.0
+      },
+      "automated_adjudication": {
+        "dimensions": [],
+        "label": "Medium",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_93fb53ed5388591584c8174c",
+      "gold_status": "NOT_GOLD",
+      "operation": "INSERT",
+      "pair_id": "mat_da9a0c78b92e51330bd0b0f1",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_53d4d0a959b38eab14c04abe",
+        "src_fbad489dab1ecb0196aeab56"
+      ],
+      "transition_id": "transition_b52d3f4a44f1742e35855564"
+    },
+    {
+      "after_version_id": "pver_f2bf73b03de07d0cdf78f35e",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Low",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "Text changed without a detected high-impact or procedural cue transition."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "similarity": 0.3636
+      },
+      "automated_adjudication": {
+        "dimensions": [
+          "threshold"
+        ],
+        "label": "Medium",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_802a99b215daacf55b994653",
+      "gold_status": "NOT_GOLD",
+      "operation": "SUBSTITUTE",
+      "pair_id": "mat_b52f18d09b58658c1547c5fa",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_7262d4ebd8eada169c2a8bc3",
+        "src_95267bd1a6e6edd43848c03f"
+      ],
+      "transition_id": "transition_a578c5fb87f36bec919616c4"
+    },
+    {
+      "after_version_id": "pver_147777bcde3cf989746a36a1",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "obligation"
+        ],
+        "label": "High",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "The wording changes the presence of one or more high-impact legal-effect cues: obligation."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [
+          "obligation"
+        ],
+        "label": "High",
+        "method_id": "operation-delta-v1",
+        "rationale": "The operation changes a detected duty, right, prohibition, scope, liability, or exception cue: obligation.",
+        "similarity": 0.0
+      },
+      "automated_adjudication": {
+        "dimensions": [
+          "obligation"
+        ],
+        "label": "High",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_521a67628cb219fe01cc95e4",
+      "gold_status": "NOT_GOLD",
+      "operation": "INSERT",
+      "pair_id": "mat_cd3d33bc93222e0cafae2223",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_5887fd2ae598de655e2223a6",
+        "src_a234a3f5c6ac749e32f6f075"
+      ],
+      "transition_id": "transition_b6df780326a33e5bcccd256a"
+    },
+    {
+      "after_version_id": "pver_b387c543dd80098e02d1f231",
+      "annotator_a": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Low",
+        "method_id": "rule-cue-transition-v1",
+        "rationale": "Text changed without a detected high-impact or procedural cue transition."
+      },
+      "annotator_b": {
+        "confidence": null,
+        "confidence_status": "not_calibrated",
+        "dimensions": [],
+        "label": "Low",
+        "method_id": "operation-delta-v1",
+        "rationale": "A limited lexical delta is detected without an explicit legal-effect or procedural cue change.",
+        "similarity": 0.8333
+      },
+      "automated_adjudication": {
+        "dimensions": [],
+        "label": "Low",
+        "rationale": "Both labelers agreed or differed by one ordered category; the higher-impact label is kept as a conservative triage candidate.",
+        "rule": "choose_higher_adjacent_label; abstain when ordinal disagreement exceeds one",
+        "status": "PROVISIONAL_MACHINE_CONSENSUS"
+      },
+      "before_version_id": "pver_623a09fc1f065d3c1f494fd7",
+      "gold_status": "NOT_GOLD",
+      "operation": "SUBSTITUTE",
+      "pair_id": "mat_ff373a92367a05c862b41846",
+      "silver_status": "PROVISIONAL_SILVER",
+      "source_evidence_ids": [
+        "src_064ee4aeaa87093bfccb78ce",
+        "src_294c0d2fedc5374a906e0e92"
+      ],
+      "transition_id": "transition_aafda4149f7f7ac329991380"
+    }
+  ],
+  "schema_version": "1.0.0",
+  "source_round_id": "materiality-annotation-round-v1",
+  "source_round_sha256": "0d573528b7057adc0d0a4c92ffc6ed64d4f7e0cdebab3e70d097e8ae6a4ad365",
+  "status": "automated_silver_labels_not_gold",
+  "unresolved_disagreement_count": 0
+}

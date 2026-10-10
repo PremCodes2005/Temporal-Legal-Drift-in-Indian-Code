@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://temporal-legal-drift.local/schemas/annotation/materiality_silver.v1.schema.json",
+  "title": "Automated materiality silver labels; explicitly not legal gold",
+  "type": "object",
+  "required": ["schema_version", "dataset_id", "status", "source_round_sha256", "guideline_version", "agreement", "case_count", "rows", "legal_validation_status", "legal_correctness_claimed", "is_gold"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "dataset_id": {"const": "materiality-silver-v1"},
+    "status": {"const": "automated_silver_labels_not_gold"},
+    "source_round_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "guideline_version": {"type": "string"},
+    "case_count": {"const": 50},
+    "provisional_label_count": {"type": "integer", "minimum": 0, "maximum": 50},
+    "unresolved_disagreement_count": {"type": "integer", "minimum": 0, "maximum": 50},
+    "legal_validation_status": {"const": "not_performed"},
+    "legal_correctness_claimed": {"const": false},
+    "is_gold": {"const": false},
+    "agreement": {
+      "type": "object",
+      "required": ["item_count", "raw_agreement", "cohens_kappa_between_automated_methods", "not_human_inter_annotator_agreement"],
+      "properties": {
+        "item_count": {"const": 50},
+        "raw_agreement": {"type": "number", "minimum": 0, "maximum": 1},
+        "cohens_kappa_between_automated_methods": {"type": ["number", "null"], "minimum": -1, "maximum": 1},
+        "not_human_inter_annotator_agreement": {"const": true}
+      }
+    },
+    "rows": {
+      "type": "array",
+      "minItems": 50,
+      "maxItems": 50,
+      "items": {
+        "type": "object",
+        "required": ["pair_id", "transition_id", "operation", "source_evidence_ids", "annotator_a", "annotator_b", "automated_adjudication", "silver_status", "gold_status"],
+        "properties": {
+          "pair_id": {"type": "string"},
+          "source_evidence_ids": {"type": "array", "minItems": 2, "uniqueItems": true},
+          "annotator_a": {"$ref": "#/$defs/machine_label"},
+          "annotator_b": {"$ref": "#/$defs/machine_label"},
+          "automated_adjudication": {
+            "type": "object",
+            "required": ["label", "dimensions", "status", "rule", "rationale"],
+            "properties": {
+              "label": {"enum": ["High", "Medium", "Low", "None", null]},
+              "dimensions": {"type": "array", "items": {"type": "string"}},
+              "status": {"enum": ["PROVISIONAL_MACHINE_CONSENSUS", "ABSTAINED_MATERIAL_DISAGREEMENT"]}
+            }
+          },
+          "gold_status": {"const": "NOT_GOLD"}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "machine_label": {
+      "type": "object",
+      "required": ["method_id", "label", "dimensions", "rationale", "confidence", "confidence_status"],
+      "properties": {
+        "method_id": {"type": "string"},
+        "label": {"enum": ["High", "Medium", "Low", "None"]},
+        "dimensions": {"type": "array", "items": {"type": "string"}},
+        "rationale": {"type": "string", "minLength": 1},
+        "confidence": {"type": "null"},
+        "confidence_status": {"const": "not_calibrated"}
+      }
+    }
+  }
+}

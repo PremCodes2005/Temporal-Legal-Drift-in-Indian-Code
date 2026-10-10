@@ -1,0 +1,1036 @@
+{
+  "audit_id": "materiality-disagreement-audit-v2.1",
+  "case_count": 19,
+  "confirmed_alignment_defect_count": 5,
+  "extractor_version": "generalised-amendment-extractor-v2",
+  "interpretation": "Rule agreement is descriptive only and not legal accuracy. Low edit similarity alone now results in REVIEW_REQUIRED rather than Medium. No labels are gold.",
+  "reextracted_aligned_count": 10,
+  "review_required_count": 4,
+  "rows": [
+    {
+      "act_title": "Companies Act 2013",
+      "extraction_v2": {
+        "defect_codes": [],
+        "matched_reparsed_event": true,
+        "new_text": "issued under the common seal, if any, of the company or signed by two directors or by a director and the Company Secretary, wherever the company has appointed a Company Secretary",
+        "old_text": "issued under the common seal of the company",
+        "operation": "SUBSTITUTE",
+        "source_span_check": true,
+        "status": "REEXTRACTED_ALIGNED",
+        "target_provision": "section:46"
+      },
+      "gold_status": "NOT_GOLD",
+      "legal_correctness": "UNVERIFIED_NO_INDEPENDENT_LEGAL_LABELS",
+      "operation_v1": "SUBSTITUTE",
+      "pair_id": "mat_fdb2b87808bcb525a732632e",
+      "provision_path_v1": "section:46",
+      "source_id": "src_0cbccfdb70e8e9f057dbb00e",
+      "source_instruction": "7. In section 46 of the principal Act, in sub-section (1), for the words “issued under\nthe common seal of the company”, the words “issued under the common seal, if any, of the\ncompany or signed by two directors or by a director and the Company Secretary, wherever\nthe company has appointed a Company Secretary” shall be substituted.",
+      "source_line": 16,
+      "source_page": 2,
+      "source_sha256": "f0f1ff814a6f4fff582e3e542f3de46f0d25a06de39e5cd11aee187fd32e6f24",
+      "v1": {
+        "after_text": "issued under the common seal, if any, of the company or signed by two directors or by a director and the Company Secretary, wherever the company has appointed a Company Secretary",
+        "before_text": "issued under the common seal of the company",
+        "provisional_tiebreak": "Medium",
+        "rule_a": "Low",
+        "rule_b": "Medium",
+        "rule_b_rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "rule_b_similarity": 0.4103
+      },
+      "v2": {
+        "after_text": "issued under the common seal, if any, of the company or signed by two directors or by a director and the Company Secretary, wherever the company has appointed a Company Secretary",
+        "before_text": "issued under the common seal of the company",
+        "labels_are_legal_truth": false,
+        "rule_a": {
+          "confidence": null,
+          "confidence_status": "not_calibrated",
+          "dimensions": [],
+          "label": "Low",
+          "method_id": "rule-cue-transition-v1",
+          "rationale": "Text changed without a detected high-impact or procedural cue transition.",
+          "status": "PROVISIONAL_RULE_OUTPUT"
+        },
+        "rule_b": {
+          "after_text_present": true,
+          "empty_before_is_expected_for_insert": false,
+          "label": null,
+          "rationale": "Token similarity alone is not evidence of materiality; no supported rule cue determines a class.",
+          "similarity": 0.4103,
+          "status": "REVIEW_REQUIRED"
+        }
+      }
+    },
+    {
+      "act_title": "Arbitration And Conciliation Act 1996",
+      "extraction_v2": {
+        "defect_codes": [
+          "wording_changed_on_reextraction",
+          "target_changed_on_reextraction"
+        ],
+        "matched_reparsed_event": true,
+        "new_text": "31A. (1) In relation to any arbitration proceeding or a proceeding under any of the provisions of this Act pertaining to the arbitration, the Court or arbitral tribunal, notwithstanding anything contained in the Code of Civil Procedure,1908, shall have the discretion to determine— (a) whether costs are payable by one party to another; (b) the amount of such costs; and (c) when such costs are to be paid. Explanation.— For the purpose of this sub-section, “costs” means reasonable costs relating to— (i) the fees and expenses of the arbitrators, Courts and witnesses; (ii) legal fees and expenses; (iii ) any administration fees of the institution supervising the arbitration; and (iv) any other expenses incurred in connection with the arbitral or Court proceedings and the arbitral award. (2) If the Court or arbitral tribunal decides to make an order as to payment of costs,— (a) the general rule is that the unsuccessful party shall be ordered to pay the costs of the successful party; or (b) the Court or arbitral tribunal may make a different order for reasons to be recorded in writing. (3) In determining the costs, the Court or arbitral tribunal shall have regard to all the circumstances, including— (a) the conduct of all the parties; (b) whether a party has succeeded partly in the case; (c) whether the party had made a frivolous counter claim leading to delay in the disposal of the arbitral proceedings; and (d) whether any reasonable offer to settle the dispute is made by a party and refused by the other party. (4) The Court or arbitral tribunal may make any order under this section including the order that a party shall pay— (a) a proportion of another party’s costs; (b) a stated amount in respect of another party’s costs; (c) costs from or until a certain date only; (d) costs incurred before proceedings have begun; (e) costs relating to particular steps taken in the proceedings; (f ) costs relating only to a distinct part of the proceedings; and (g) interest on costs from or until a certain date. Insertion of new section 31A. 5 of 1908. Regime for costs. IndiaCode SEC. 1] THE GAZETTE OF INDIA EXTRAORDINARY 9 (5) An agreement which has the effect that a party is to pay the whole or part of the costs of the arbitration in any event shall be only valid if such agreement is made after the dispute in question has arisen.",
+        "old_text": null,
+        "operation": "INSERT",
+        "source_span_check": true,
+        "status": "CONFIRMED_EXTRACTION_DEFECT",
+        "target_provision": "section:31A"
+      },
+      "gold_status": "NOT_GOLD",
+      "legal_correctness": "UNVERIFIED_NO_INDEPENDENT_LEGAL_LABELS",
+      "operation_v1": "INSERT",
+      "pair_id": "mat_390c72d9d6d3e4ca87e8b0d2",
+      "provision_path_v1": "section:31",
+      "source_id": "src_0ad4e9c72da39b6e2ffcbafb",
+      "source_instruction": "17. After section 31 of the principal Act, the following new section shall be inserted,\nnamely:—\n‘31A. (1) In relation to any arbitration proceeding or a proceeding under any of\nthe provisions of this Act pertaining to the arbitration, the Court or arbitral tribunal,\nnotwithstanding anything contained in the Code of Civil Procedure,1908, shall have\nthe discretion to determine—\n(a) whether costs are payable by one party to another;\n(b) the amount of such costs; and\n(c) when such costs are to be paid.\nExplanation.— For the purpose of this sub-section, “costs” means reasonable\ncosts relating to—\n(i) the fees and expenses of the arbitrators, Courts and witnesses;\n(ii) legal fees and expenses;\n(iii ) any administration fees of the institution supervising the\narbitration; and\n(iv) any other expenses incurred in connection with the arbitral or Court\nproceedings and the arbitral award.\n(2) If the Court or arbitral tribunal decides to make an order as to payment of\ncosts,—\n(a) the general rule is that the unsuccessful party shall be ordered to pay\nthe costs of the successful party; or\n(b) the Court or arbitral tribunal may make a different order for reasons to\nbe recorded in writing.\n(3) In determining the costs, the Court or arbitral tribunal shall have regard to all\nthe circumstances, including—\n(a) the conduct of all the parties;\n(b) whether a party has succeeded partly in the case;\n(c) whether the party had made a frivolous counter claim leading to delay\nin the disposal of the arbitral proceedings; and\n(d) whether any reasonable offer to settle the dispute is made by a party\nand refused by the other party.\n(4) The Court or arbitral tribunal may make any order under this section including\nthe order that a party shall pay—\n(a) a proportion of another party’s costs;\n(b) a stated amount in respect of another party’s costs;\n(c) costs from or until a certain date only;\n(d) costs incurred before proceedings have begun;\n(e) costs relating to particular steps taken in the proceedings;\n(f ) costs relating only to a distinct part of the proceedings; and\n(g) interest on costs from or until a certain date.\nInsertion of\nnew section\n31A.\n5 of 1908.\nRegime for\ncosts.\nIndiaCode\nSEC. 1] THE GAZETTE OF INDIA EXTRAORDINARY 9\n(5) An agreement which has the effect that a party is to pay the whole or part of\nthe costs of the arbitration in any event shall be only valid if such agreement is made\nafter the dispute in question has arisen.’.",
+      "source_line": 5,
+      "source_page": 8,
+      "source_sha256": "e6a3f49cadc97f08298b708f63c07f9452a420e43de4a7c08c1186da77e186f6",
+      "v1": {
+        "after_text": "costs",
+        "before_text": "",
+        "provisional_tiebreak": "Medium",
+        "rule_a": "Low",
+        "rule_b": "Medium",
+        "rule_b_rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "rule_b_similarity": 0.0
+      },
+      "v2": {
+        "after_text": "31A. (1) In relation to any arbitration proceeding or a proceeding under any of the provisions of this Act pertaining to the arbitration, the Court or arbitral tribunal, notwithstanding anything contained in the Code of Civil Procedure,1908, shall have the discretion to determine— (a) whether costs are payable by one party to another; (b) the amount of such costs; and (c) when such costs are to be paid. Explanation.— For the purpose of this sub-section, “costs” means reasonable costs relating to— (i) the fees and expenses of the arbitrators, Courts and witnesses; (ii) legal fees and expenses; (iii ) any administration fees of the institution supervising the arbitration; and (iv) any other expenses incurred in connection with the arbitral or Court proceedings and the arbitral award. (2) If the Court or arbitral tribunal decides to make an order as to payment of costs,— (a) the general rule is that the unsuccessful party shall be ordered to pay the costs of the successful party; or (b) the Court or arbitral tribunal may make a different order for reasons to be recorded in writing. (3) In determining the costs, the Court or arbitral tribunal shall have regard to all the circumstances, including— (a) the conduct of all the parties; (b) whether a party has succeeded partly in the case; (c) whether the party had made a frivolous counter claim leading to delay in the disposal of the arbitral proceedings; and (d) whether any reasonable offer to settle the dispute is made by a party and refused by the other party. (4) The Court or arbitral tribunal may make any order under this section including the order that a party shall pay— (a) a proportion of another party’s costs; (b) a stated amount in respect of another party’s costs; (c) costs from or until a certain date only; (d) costs incurred before proceedings have begun; (e) costs relating to particular steps taken in the proceedings; (f ) costs relating only to a distinct part of the proceedings; and (g) interest on costs from or until a certain date. Insertion of new section 31A. 5 of 1908. Regime for costs. IndiaCode SEC. 1] THE GAZETTE OF INDIA EXTRAORDINARY 9 (5) An agreement which has the effect that a party is to pay the whole or part of the costs of the arbitration in any event shall be only valid if such agreement is made after the dispute in question has arisen.",
+        "before_text": "",
+        "labels_are_legal_truth": false,
+        "rule_a": {
+          "confidence": null,
+          "confidence_status": "not_calibrated",
+          "dimensions": [
+            "definition",
+            "exemption",
+            "obligation",
+            "scope",
+            "threshold"
+          ],
+          "label": "High",
+          "method_id": "rule-cue-transition-v1",
+          "rationale": "The wording changes the presence of one or more high-impact legal-effect cues: exemption, obligation, scope.",
+          "status": "PROVISIONAL_RULE_OUTPUT"
+        },
+        "rule_b": {
+          "label": "High",
+          "rationale": "The operation changes a detected duty, right, prohibition, scope, liability, or exception cue: exemption, obligation, scope.",
+          "similarity": 0.0,
+          "status": "PROVISIONAL_RULE_OUTPUT"
+        }
+      }
+    },
+    {
+      "act_title": "Specific Relief Act 1963",
+      "extraction_v2": {
+        "defect_codes": [
+          "compound_operation_requires_event_split_or_adjudication"
+        ],
+        "matched_reparsed_event": true,
+        "new_text": null,
+        "old_text": null,
+        "operation": "UNKNOWN",
+        "source_span_check": true,
+        "status": "REVIEW_REQUIRED",
+        "target_provision": "section:41"
+      },
+      "gold_status": "NOT_GOLD",
+      "legal_correctness": "UNVERIFIED_NO_INDEPENDENT_LEGAL_LABELS",
+      "operation_v1": "INSERT",
+      "pair_id": "mat_99dd581f7b342e821361f4fa",
+      "provision_path_v1": "section:41",
+      "source_id": "src_c402849814141b3fe1696d92",
+      "source_instruction": "13. In section 41 of the principal Act, after clause ( h), the following clause shall be\ninserted, namely:—\n“(ha) if it would impede or delay the progress or completion of any infrastructure\nproject or interfere with the continued provision of relevant facility related thereto or\nservices being the subject matter of such project.”.\n14. After Part III of the principal Act, the following Schedule shall be inserted,\nnamely:—\n‘THE SCHEDULE\n[See sections 20A and 41 (ha)]\nCategory of projects and Infrastructure Sub-Sectors\nSl. No. Category Infrastructure Sub-Sectors\n12 3",
+      "source_line": 19,
+      "source_page": 4,
+      "source_sha256": "c5d552a1a07a54eaf2b6b18f2a03fa3761454de4d9ff0ffd00519a0e903299c1",
+      "v1": {
+        "after_text": "(ha) if it would impede or delay the progress or completion of any infrastructure project or interfere with the continued provision of relevant facility related thereto or services being the subject matter of such project.",
+        "before_text": "",
+        "provisional_tiebreak": "Medium",
+        "rule_a": "Low",
+        "rule_b": "Medium",
+        "rule_b_rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "rule_b_similarity": 0.0
+      },
+      "v2": {
+        "after_text": null,
+        "before_text": null,
+        "labels_are_legal_truth": false,
+        "rule_a": {
+          "label": null,
+          "rationale": "Source event or operation is not represented as one unambiguous aligned fragment.",
+          "status": "REVIEW_REQUIRED"
+        },
+        "rule_b": {
+          "label": null,
+          "rationale": "No materiality label is emitted when the source fragment is unresolved.",
+          "status": "REVIEW_REQUIRED"
+        }
+      }
+    },
+    {
+      "act_title": "Insolvency Bankruptcy Code 2016",
+      "extraction_v2": {
+        "defect_codes": [
+          "compound_operation_requires_event_split_or_adjudication"
+        ],
+        "matched_reparsed_event": true,
+        "new_text": null,
+        "old_text": null,
+        "operation": "UNKNOWN",
+        "source_span_check": true,
+        "status": "REVIEW_REQUIRED",
+        "target_provision": "section:11"
+      },
+      "gold_status": "NOT_GOLD",
+      "legal_correctness": "UNVERIFIED_NO_INDEPENDENT_LEGAL_LABELS",
+      "operation_v1": "INSERT",
+      "pair_id": "mat_9c042001b4e5dc62cae919ba",
+      "provision_path_v1": "section:11",
+      "source_id": "src_53c55ae5c2470ca158488216",
+      "source_instruction": "4. In section 11 of the principal Act,—\n(i) in clause ( a), after the words \"corporate insolvency resolution process\",\nthe words \"or a pre-packaged insolvency resolution process\" shall be inserted;\n(ii) after clause ( a), the following clause shall be inserted, namely:—\n\"(aa) a financial creditor or an operational creditor of a corporate\ndebtor undergoing a pre-packaged insolvency resolution process; or\";\n(iii) after clause ( b), the following clause shall be inserted, namely:—\n\"(ba) a corporate debtor in respect of whom a resolution plan has\nbeen approved under Chapter III-A, twelve months preceding the date of\nmaking of the application; or\".",
+      "source_line": 11,
+      "source_page": 3,
+      "source_sha256": "7f61e73bf67e3bd0b5db8a917c79a55118320a7f1fc90cc42379b6afe86158fc",
+      "v1": {
+        "after_text": "or a pre-packaged insolvency resolution process",
+        "before_text": "",
+        "provisional_tiebreak": "Medium",
+        "rule_a": "Low",
+        "rule_b": "Medium",
+        "rule_b_rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "rule_b_similarity": 0.0
+      },
+      "v2": {
+        "after_text": null,
+        "before_text": null,
+        "labels_are_legal_truth": false,
+        "rule_a": {
+          "label": null,
+          "rationale": "Source event or operation is not represented as one unambiguous aligned fragment.",
+          "status": "REVIEW_REQUIRED"
+        },
+        "rule_b": {
+          "label": null,
+          "rationale": "No materiality label is emitted when the source fragment is unresolved.",
+          "status": "REVIEW_REQUIRED"
+        }
+      }
+    },
+    {
+      "act_title": "Motor Vehicles Act 1988",
+      "extraction_v2": {
+        "defect_codes": [],
+        "matched_reparsed_event": true,
+        "new_text": "any registering authority in the State",
+        "old_text": "a registering authority",
+        "operation": "SUBSTITUTE",
+        "source_span_check": true,
+        "status": "REEXTRACTED_ALIGNED",
+        "target_provision": "section:40"
+      },
+      "gold_status": "NOT_GOLD",
+      "legal_correctness": "UNVERIFIED_NO_INDEPENDENT_LEGAL_LABELS",
+      "operation_v1": "SUBSTITUTE",
+      "pair_id": "mat_0773a4d10672e49537242824",
+      "provision_path_v1": "section:40",
+      "source_id": "src_95267bd1a6e6edd43848c03f",
+      "source_instruction": "16. In section 40 of the principal Act, for the words “a registering authority”, the words\n“any registering authority in the State” shall be substituted.",
+      "source_line": 30,
+      "source_page": 6,
+      "source_sha256": "38624ae08543c7fd41fe470f18273817d2566e1581f0100de033b030f61b74a5",
+      "v1": {
+        "after_text": "any registering authority in the State",
+        "before_text": "a registering authority",
+        "provisional_tiebreak": "Medium",
+        "rule_a": "Low",
+        "rule_b": "Medium",
+        "rule_b_rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "rule_b_similarity": 0.4444
+      },
+      "v2": {
+        "after_text": "any registering authority in the State",
+        "before_text": "a registering authority",
+        "labels_are_legal_truth": false,
+        "rule_a": {
+          "confidence": null,
+          "confidence_status": "not_calibrated",
+          "dimensions": [],
+          "label": "Low",
+          "method_id": "rule-cue-transition-v1",
+          "rationale": "Text changed without a detected high-impact or procedural cue transition.",
+          "status": "PROVISIONAL_RULE_OUTPUT"
+        },
+        "rule_b": {
+          "after_text_present": true,
+          "empty_before_is_expected_for_insert": false,
+          "label": null,
+          "rationale": "Token similarity alone is not evidence of materiality; no supported rule cue determines a class.",
+          "similarity": 0.4444,
+          "status": "REVIEW_REQUIRED"
+        }
+      }
+    },
+    {
+      "act_title": "Motor Vehicles Act 1988",
+      "extraction_v2": {
+        "defect_codes": [
+          "target_path_detail_mismatch",
+          "compound_operation_requires_event_split_or_adjudication"
+        ],
+        "matched_reparsed_event": true,
+        "new_text": null,
+        "old_text": null,
+        "operation": "UNKNOWN",
+        "source_span_check": true,
+        "status": "CONFIRMED_EXTRACTION_DEFECT",
+        "target_provision": "section:74"
+      },
+      "gold_status": "NOT_GOLD",
+      "legal_correctness": "UNVERIFIED_NO_INDEPENDENT_LEGAL_LABELS",
+      "operation_v1": "INSERT",
+      "pair_id": "mat_9563a4579cd8c87fb2ebf8dd",
+      "provision_path_v1": "section:74",
+      "source_id": "src_95267bd1a6e6edd43848c03f",
+      "source_instruction": "33. In section 74 of the principal Act,—\n(i) in sub-section (2), the following proviso shall be inserted, namely:—\n“Provided that the Regional Transport Authority may in the interests of\nlast mile connectivity waive any such condition in respect of any such types of\nvehicles as may be specified by the Central Government.”;\n(ii) in sub-section ( 3), in the proviso to clause ( b), after sub-clause ( vi), the\nfollowing sub-clause shall be inserted, namely:—\n“(vii) self-help groups.”.",
+      "source_line": 16,
+      "source_page": 13,
+      "source_sha256": "38624ae08543c7fd41fe470f18273817d2566e1581f0100de033b030f61b74a5",
+      "v1": {
+        "after_text": "(vii) self-help groups.",
+        "before_text": "",
+        "provisional_tiebreak": "Medium",
+        "rule_a": "Low",
+        "rule_b": "Medium",
+        "rule_b_rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "rule_b_similarity": 0.0
+      },
+      "v2": {
+        "after_text": null,
+        "before_text": null,
+        "labels_are_legal_truth": false,
+        "rule_a": {
+          "label": null,
+          "rationale": "Source event or operation is not represented as one unambiguous aligned fragment.",
+          "status": "REVIEW_REQUIRED"
+        },
+        "rule_b": {
+          "label": null,
+          "rationale": "No materiality label is emitted when the source fragment is unresolved.",
+          "status": "REVIEW_REQUIRED"
+        }
+      }
+    },
+    {
+      "act_title": "Motor Vehicles Act 1988",
+      "extraction_v2": {
+        "defect_codes": [],
+        "matched_reparsed_event": true,
+        "new_text": "or licence issued under any scheme",
+        "old_text": null,
+        "operation": "INSERT",
+        "source_span_check": true,
+        "status": "REEXTRACTED_ALIGNED",
+        "target_provision": "section:94"
+      },
+      "gold_status": "NOT_GOLD",
+      "legal_correctness": "UNVERIFIED_NO_INDEPENDENT_LEGAL_LABELS",
+      "operation_v1": "INSERT",
+      "pair_id": "mat_0e781f2b5e6feb33660fe843",
+      "provision_path_v1": "section:94",
+      "source_id": "src_95267bd1a6e6edd43848c03f",
+      "source_instruction": "37. In section 94 of the principal Act, after the word “permit” occurring at both the\nplaces the words “or licence issued under any scheme” shall be inserted.",
+      "source_line": 27,
+      "source_page": 14,
+      "source_sha256": "38624ae08543c7fd41fe470f18273817d2566e1581f0100de033b030f61b74a5",
+      "v1": {
+        "after_text": "or licence issued under any scheme",
+        "before_text": "",
+        "provisional_tiebreak": "Medium",
+        "rule_a": "Low",
+        "rule_b": "Medium",
+        "rule_b_rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "rule_b_similarity": 0.0
+      },
+      "v2": {
+        "after_text": "or licence issued under any scheme",
+        "before_text": "",
+        "labels_are_legal_truth": false,
+        "rule_a": {
+          "confidence": null,
+          "confidence_status": "not_calibrated",
+          "dimensions": [],
+          "label": "Low",
+          "method_id": "rule-cue-transition-v1",
+          "rationale": "Text changed without a detected high-impact or procedural cue transition.",
+          "status": "PROVISIONAL_RULE_OUTPUT"
+        },
+        "rule_b": {
+          "after_text_present": true,
+          "empty_before_is_expected_for_insert": true,
+          "label": null,
+          "rationale": "Token similarity alone is not evidence of materiality; no supported rule cue determines a class.",
+          "similarity": 0.0,
+          "status": "REVIEW_REQUIRED"
+        }
+      }
+    },
+    {
+      "act_title": "Aadhaar Act 2016",
+      "extraction_v2": {
+        "defect_codes": [],
+        "matched_reparsed_event": true,
+        "new_text": "ten years",
+        "old_text": "three years",
+        "operation": "SUBSTITUTE",
+        "source_span_check": true,
+        "status": "REEXTRACTED_ALIGNED",
+        "target_provision": "section:39"
+      },
+      "gold_status": "NOT_GOLD",
+      "legal_correctness": "UNVERIFIED_NO_INDEPENDENT_LEGAL_LABELS",
+      "operation_v1": "SUBSTITUTE",
+      "pair_id": "mat_d7c70e6e86904b596cdb7209",
+      "provision_path_v1": "section:39",
+      "source_id": "src_c81daaf704eb5583145bd290",
+      "source_instruction": "17. In section 39 of the principal Act, for the words “three years”, the words\n“ten years” shall be substituted.",
+      "source_line": 20,
+      "source_page": 7,
+      "source_sha256": "738fba8fee6addb3cdef31082b0e0f22b8b456abdc41592815b06f20884140f1",
+      "v1": {
+        "after_text": "ten years",
+        "before_text": "three years",
+        "provisional_tiebreak": "Medium",
+        "rule_a": "Low",
+        "rule_b": "Medium",
+        "rule_b_rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "rule_b_similarity": 0.5
+      },
+      "v2": {
+        "after_text": "ten years",
+        "before_text": "three years",
+        "labels_are_legal_truth": false,
+        "rule_a": {
+          "confidence": null,
+          "confidence_status": "not_calibrated",
+          "dimensions": [],
+          "label": "Low",
+          "method_id": "rule-cue-transition-v1",
+          "rationale": "Text changed without a detected high-impact or procedural cue transition.",
+          "status": "PROVISIONAL_RULE_OUTPUT"
+        },
+        "rule_b": {
+          "after_text_present": true,
+          "empty_before_is_expected_for_insert": false,
+          "label": null,
+          "rationale": "Token similarity alone is not evidence of materiality; no supported rule cue determines a class.",
+          "similarity": 0.5,
+          "status": "REVIEW_REQUIRED"
+        }
+      }
+    },
+    {
+      "act_title": "Prevention Of Corruption Act 1988",
+      "extraction_v2": {
+        "defect_codes": [],
+        "matched_reparsed_event": true,
+        "new_text": "clause (a)",
+        "old_text": "clause (c) or clause (d)",
+        "operation": "SUBSTITUTE",
+        "source_span_check": true,
+        "status": "REEXTRACTED_ALIGNED",
+        "target_provision": "section:15"
+      },
+      "gold_status": "NOT_GOLD",
+      "legal_correctness": "UNVERIFIED_NO_INDEPENDENT_LEGAL_LABELS",
+      "operation_v1": "SUBSTITUTE",
+      "pair_id": "mat_590ac03da167238d7d338824",
+      "provision_path_v1": "section:15",
+      "source_id": "src_294c0d2fedc5374a906e0e92",
+      "source_instruction": "9. In section 15 of the principal Act, for the words, brackets and letters “clause (c) or\nclause (d)”, the word, brackets, and letter “clause (a)” shall be substituted.",
+      "source_line": 26,
+      "source_page": 5,
+      "source_sha256": "a4b24b643ade5061282fd1a0cb0a232ee8059de17b81673493c7e2497bf9c1bc",
+      "v1": {
+        "after_text": "clause (a)",
+        "before_text": "clause (c) or clause (d)",
+        "provisional_tiebreak": "Medium",
+        "rule_a": "Low",
+        "rule_b": "Medium",
+        "rule_b_rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "rule_b_similarity": 0.2857
+      },
+      "v2": {
+        "after_text": "clause (a)",
+        "before_text": "clause (c) or clause (d)",
+        "labels_are_legal_truth": false,
+        "rule_a": {
+          "confidence": null,
+          "confidence_status": "not_calibrated",
+          "dimensions": [],
+          "label": "Low",
+          "method_id": "rule-cue-transition-v1",
+          "rationale": "Text changed without a detected high-impact or procedural cue transition.",
+          "status": "PROVISIONAL_RULE_OUTPUT"
+        },
+        "rule_b": {
+          "after_text_present": true,
+          "empty_before_is_expected_for_insert": false,
+          "label": null,
+          "rationale": "Token similarity alone is not evidence of materiality; no supported rule cue determines a class.",
+          "similarity": 0.2857,
+          "status": "REVIEW_REQUIRED"
+        }
+      }
+    },
+    {
+      "act_title": "Motor Vehicles Act 1988",
+      "extraction_v2": {
+        "defect_codes": [],
+        "matched_reparsed_event": true,
+        "new_text": "one lakh",
+        "old_text": "ten thousand",
+        "operation": "SUBSTITUTE",
+        "source_span_check": true,
+        "status": "REEXTRACTED_ALIGNED",
+        "target_provision": "section:173"
+      },
+      "gold_status": "NOT_GOLD",
+      "legal_correctness": "UNVERIFIED_NO_INDEPENDENT_LEGAL_LABELS",
+      "operation_v1": "SUBSTITUTE",
+      "pair_id": "mat_f110320fba1c8f219054c648",
+      "provision_path_v1": "section:173",
+      "source_id": "src_95267bd1a6e6edd43848c03f",
+      "source_instruction": "57. In section 173 of the principal Act, in sub-section (2), for the words “ten thousand”,\nthe words “one lakh” shall be substituted.",
+      "source_line": 26,
+      "source_page": 32,
+      "source_sha256": "38624ae08543c7fd41fe470f18273817d2566e1581f0100de033b030f61b74a5",
+      "v1": {
+        "after_text": "one lakh",
+        "before_text": "ten thousand",
+        "provisional_tiebreak": "Medium",
+        "rule_a": "Low",
+        "rule_b": "Medium",
+        "rule_b_rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "rule_b_similarity": 0.0
+      },
+      "v2": {
+        "after_text": "one lakh",
+        "before_text": "ten thousand",
+        "labels_are_legal_truth": false,
+        "rule_a": {
+          "confidence": null,
+          "confidence_status": "not_calibrated",
+          "dimensions": [],
+          "label": "Low",
+          "method_id": "rule-cue-transition-v1",
+          "rationale": "Text changed without a detected high-impact or procedural cue transition.",
+          "status": "PROVISIONAL_RULE_OUTPUT"
+        },
+        "rule_b": {
+          "after_text_present": true,
+          "empty_before_is_expected_for_insert": false,
+          "label": null,
+          "rationale": "Token similarity alone is not evidence of materiality; no supported rule cue determines a class.",
+          "similarity": 0.0,
+          "status": "REVIEW_REQUIRED"
+        }
+      }
+    },
+    {
+      "act_title": "Wild Life Protection Act 1972",
+      "extraction_v2": {
+        "defect_codes": [
+          "v1_after_text_was_anchor_not_inserted_operand",
+          "compound_operation_requires_event_split_or_adjudication"
+        ],
+        "matched_reparsed_event": true,
+        "new_text": null,
+        "old_text": null,
+        "operation": "UNKNOWN",
+        "source_span_check": true,
+        "status": "CONFIRMED_EXTRACTION_DEFECT",
+        "target_provision": "section:50"
+      },
+      "gold_status": "NOT_GOLD",
+      "legal_correctness": "UNVERIFIED_NO_INDEPENDENT_LEGAL_LABELS",
+      "operation_v1": "INSERT",
+      "pair_id": "mat_95f88055beb515b1226fe96d",
+      "provision_path_v1": "section:50",
+      "source_id": "src_0530e08f12edbc47c3ca7a48",
+      "source_instruction": "31. In section 50 of the principal Act, in sub-section (1),—\n(i) after the words \"the Director or any other officer authorised by him in this\nbehalf \", the words \"or the Management Authority or any officer authorised by the\nManagement Authority\" shall be inserted;\n(ii) after the words \"a sub-inspector\", the words \"or any customs officer not\nbelow the rank of an inspector or any officer of the coast guard not below the rank of\nan Assistant Commandant\" shall be inserted;\n(iii) in clauses (a) and (c), after the words \"derivative thereof \", the words \"or\nscheduled specimen\" shall be inserted.",
+      "source_line": 2,
+      "source_page": 12,
+      "source_sha256": "fc62e6c7da4fde06944184fcb659402bb213c26b505375ce9783f22cdd879b2f",
+      "v1": {
+        "after_text": "derivative thereof",
+        "before_text": "",
+        "provisional_tiebreak": "Medium",
+        "rule_a": "Low",
+        "rule_b": "Medium",
+        "rule_b_rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "rule_b_similarity": 0.0
+      },
+      "v2": {
+        "after_text": null,
+        "before_text": null,
+        "labels_are_legal_truth": false,
+        "rule_a": {
+          "label": null,
+          "rationale": "Source event or operation is not represented as one unambiguous aligned fragment.",
+          "status": "REVIEW_REQUIRED"
+        },
+        "rule_b": {
+          "label": null,
+          "rationale": "No materiality label is emitted when the source fragment is unresolved.",
+          "status": "REVIEW_REQUIRED"
+        }
+      }
+    },
+    {
+      "act_title": "Motor Vehicles Act 1988",
+      "extraction_v2": {
+        "defect_codes": [
+          "compound_operation_requires_event_split_or_adjudication"
+        ],
+        "matched_reparsed_event": true,
+        "new_text": null,
+        "old_text": null,
+        "operation": "UNKNOWN",
+        "source_span_check": true,
+        "status": "REVIEW_REQUIRED",
+        "target_provision": "section:182"
+      },
+      "gold_status": "NOT_GOLD",
+      "legal_correctness": "UNVERIFIED_NO_INDEPENDENT_LEGAL_LABELS",
+      "operation_v1": "SUBSTITUTE",
+      "pair_id": "mat_123a9e691b0291bf0eb5fec8",
+      "provision_path_v1": "section:182",
+      "source_id": "src_95267bd1a6e6edd43848c03f",
+      "source_instruction": "64. In section 182 of the principal Act,—\n(i) in sub-section (1), for the words \"which may extend to five hundred rupees\",\nthe words “of ten thousand rupees” shall be substituted;\n(ii) in sub-section ( 2), for the words \"one hundred rupees\", the words\n“ten thousand rupees” shall be substituted.",
+      "source_line": 6,
+      "source_page": 33,
+      "source_sha256": "38624ae08543c7fd41fe470f18273817d2566e1581f0100de033b030f61b74a5",
+      "v1": {
+        "after_text": "ten thousand rupees",
+        "before_text": "which may extend to five hundred rupees",
+        "provisional_tiebreak": "Medium",
+        "rule_a": "Low",
+        "rule_b": "Medium",
+        "rule_b_rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "rule_b_similarity": 0.2
+      },
+      "v2": {
+        "after_text": null,
+        "before_text": null,
+        "labels_are_legal_truth": false,
+        "rule_a": {
+          "label": null,
+          "rationale": "Source event or operation is not represented as one unambiguous aligned fragment.",
+          "status": "REVIEW_REQUIRED"
+        },
+        "rule_b": {
+          "label": null,
+          "rationale": "No materiality label is emitted when the source fragment is unresolved.",
+          "status": "REVIEW_REQUIRED"
+        }
+      }
+    },
+    {
+      "act_title": "Motor Vehicles Act 1988",
+      "extraction_v2": {
+        "defect_codes": [],
+        "matched_reparsed_event": true,
+        "new_text": "transport vehicle, in respect of which a permit or licence",
+        "old_text": "stage carriage or contract carriage, in respect of which a permit",
+        "operation": "SUBSTITUTE",
+        "source_span_check": true,
+        "status": "REEXTRACTED_ALIGNED",
+        "target_provision": "section:92"
+      },
+      "gold_status": "NOT_GOLD",
+      "legal_correctness": "UNVERIFIED_NO_INDEPENDENT_LEGAL_LABELS",
+      "operation_v1": "SUBSTITUTE",
+      "pair_id": "mat_83cb8f64c8cf9597131f36e5",
+      "provision_path_v1": "section:92",
+      "source_id": "src_95267bd1a6e6edd43848c03f",
+      "source_instruction": "35. In section 92 of the principal Act, for the words “stage carriage or contract carriage,\nin respect of which a permit”, the words “transport vehicle, in respect of which a permit or\nlicence” shall be substituted.",
+      "source_line": 10,
+      "source_page": 14,
+      "source_sha256": "38624ae08543c7fd41fe470f18273817d2566e1581f0100de033b030f61b74a5",
+      "v1": {
+        "after_text": "transport vehicle, in respect of which a permit or licence",
+        "before_text": "stage carriage or contract carriage, in respect of which a permit",
+        "provisional_tiebreak": "Medium",
+        "rule_a": "Low",
+        "rule_b": "Medium",
+        "rule_b_rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "rule_b_similarity": 0.5714
+      },
+      "v2": {
+        "after_text": "transport vehicle, in respect of which a permit or licence",
+        "before_text": "stage carriage or contract carriage, in respect of which a permit",
+        "labels_are_legal_truth": false,
+        "rule_a": {
+          "confidence": null,
+          "confidence_status": "not_calibrated",
+          "dimensions": [],
+          "label": "Low",
+          "method_id": "rule-cue-transition-v1",
+          "rationale": "Text changed without a detected high-impact or procedural cue transition.",
+          "status": "PROVISIONAL_RULE_OUTPUT"
+        },
+        "rule_b": {
+          "after_text_present": true,
+          "empty_before_is_expected_for_insert": false,
+          "label": null,
+          "rationale": "Token similarity alone is not evidence of materiality; no supported rule cue determines a class.",
+          "similarity": 0.5714,
+          "status": "REVIEW_REQUIRED"
+        }
+      }
+    },
+    {
+      "act_title": "Insolvency Bankruptcy Code 2016",
+      "extraction_v2": {
+        "defect_codes": [],
+        "matched_reparsed_event": true,
+        "new_text": "including the Central Government, any State Government or any local authority to whom a debt in respect of the payment of dues arising under any law for the time being in force, such as authorities to whom statutory dues are owed,",
+        "old_text": null,
+        "operation": "INSERT",
+        "source_span_check": true,
+        "status": "REEXTRACTED_ALIGNED",
+        "target_provision": "section:31"
+      },
+      "gold_status": "NOT_GOLD",
+      "legal_correctness": "UNVERIFIED_NO_INDEPENDENT_LEGAL_LABELS",
+      "operation_v1": "INSERT",
+      "pair_id": "mat_688beef91bf9956c6f7b8319",
+      "provision_path_v1": "section:31",
+      "source_id": "src_618aa45bac01b76de19ff611",
+      "source_instruction": "7. In section 31 of the principal Act, in sub-section ( 1), after the words “members,\ncreditors,”, the words “including the Central Government, any State Government or any\nlocal authority to whom a debt in respect of the payment of dues arising under any law for\nthe time being in force, such as authorities to whom statutory dues are owed,” shall be\ninserted.",
+      "source_line": 12,
+      "source_page": 3,
+      "source_sha256": "f9902cdebb447c9af9eb724f4b71d01b335f5035ee19c6ddb6b3aeb20352b126",
+      "v1": {
+        "after_text": "including the Central Government, any State Government or any local authority to whom a debt in respect of the payment of dues arising under any law for the time being in force, such as authorities to whom statutory dues are owed,",
+        "before_text": "",
+        "provisional_tiebreak": "Medium",
+        "rule_a": "Low",
+        "rule_b": "Medium",
+        "rule_b_rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "rule_b_similarity": 0.0
+      },
+      "v2": {
+        "after_text": "including the Central Government, any State Government or any local authority to whom a debt in respect of the payment of dues arising under any law for the time being in force, such as authorities to whom statutory dues are owed,",
+        "before_text": "",
+        "labels_are_legal_truth": false,
+        "rule_a": {
+          "confidence": null,
+          "confidence_status": "not_calibrated",
+          "dimensions": [],
+          "label": "Low",
+          "method_id": "rule-cue-transition-v1",
+          "rationale": "Text changed without a detected high-impact or procedural cue transition.",
+          "status": "PROVISIONAL_RULE_OUTPUT"
+        },
+        "rule_b": {
+          "after_text_present": true,
+          "empty_before_is_expected_for_insert": true,
+          "label": null,
+          "rationale": "Token similarity alone is not evidence of materiality; no supported rule cue determines a class.",
+          "similarity": 0.0,
+          "status": "REVIEW_REQUIRED"
+        }
+      }
+    },
+    {
+      "act_title": "Aadhaar Act 2016",
+      "extraction_v2": {
+        "defect_codes": [],
+        "matched_reparsed_event": true,
+        "new_text": "ten years",
+        "old_text": "three years",
+        "operation": "SUBSTITUTE",
+        "source_span_check": true,
+        "status": "REEXTRACTED_ALIGNED",
+        "target_provision": "section:38"
+      },
+      "gold_status": "NOT_GOLD",
+      "legal_correctness": "UNVERIFIED_NO_INDEPENDENT_LEGAL_LABELS",
+      "operation_v1": "SUBSTITUTE",
+      "pair_id": "mat_db938a0f0eb92bab6fb078cc",
+      "provision_path_v1": "section:38",
+      "source_id": "src_c81daaf704eb5583145bd290",
+      "source_instruction": "16. In section 38 of the principal Act, for the words “three years”, the words\n“ten years” shall be substituted.",
+      "source_line": 18,
+      "source_page": 7,
+      "source_sha256": "738fba8fee6addb3cdef31082b0e0f22b8b456abdc41592815b06f20884140f1",
+      "v1": {
+        "after_text": "ten years",
+        "before_text": "three years",
+        "provisional_tiebreak": "Medium",
+        "rule_a": "Low",
+        "rule_b": "Medium",
+        "rule_b_rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "rule_b_similarity": 0.5
+      },
+      "v2": {
+        "after_text": "ten years",
+        "before_text": "three years",
+        "labels_are_legal_truth": false,
+        "rule_a": {
+          "confidence": null,
+          "confidence_status": "not_calibrated",
+          "dimensions": [],
+          "label": "Low",
+          "method_id": "rule-cue-transition-v1",
+          "rationale": "Text changed without a detected high-impact or procedural cue transition.",
+          "status": "PROVISIONAL_RULE_OUTPUT"
+        },
+        "rule_b": {
+          "after_text_present": true,
+          "empty_before_is_expected_for_insert": false,
+          "label": null,
+          "rationale": "Token similarity alone is not evidence of materiality; no supported rule cue determines a class.",
+          "similarity": 0.5,
+          "status": "REVIEW_REQUIRED"
+        }
+      }
+    },
+    {
+      "act_title": "Insolvency Bankruptcy Code 2016",
+      "extraction_v2": {
+        "defect_codes": [
+          "v1_after_text_was_anchor_not_inserted_operand",
+          "wording_changed_on_reextraction"
+        ],
+        "matched_reparsed_event": true,
+        "new_text": "or completion of such transactions as may be prescribed,",
+        "old_text": null,
+        "operation": "INSERT",
+        "source_span_check": true,
+        "status": "CONFIRMED_EXTRACTION_DEFECT",
+        "target_provision": "section:21"
+      },
+      "gold_status": "NOT_GOLD",
+      "legal_correctness": "UNVERIFIED_NO_INDEPENDENT_LEGAL_LABELS",
+      "operation_v1": "INSERT",
+      "pair_id": "mat_08031e98498c98fa32a2e951",
+      "provision_path_v1": "section:21",
+      "source_id": "src_2f4b081203dd22bf8f6a9f7a",
+      "source_instruction": "7. In section 21 of the principal Act, in sub-section (2), in the second proviso, after the\nwords \"convertible into equity shares\", the words \"or completion of such transactions as\nmay be prescribed,\" shall be inserted.",
+      "source_line": 28,
+      "source_page": 3,
+      "source_sha256": "bd4f44a1437260977604e7ca9d1ec4bf2afa43edaeb5177e50b92676bfaeb0cf",
+      "v1": {
+        "after_text": "convertible into equity shares",
+        "before_text": "",
+        "provisional_tiebreak": "Medium",
+        "rule_a": "Low",
+        "rule_b": "Medium",
+        "rule_b_rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "rule_b_similarity": 0.0
+      },
+      "v2": {
+        "after_text": "or completion of such transactions as may be prescribed,",
+        "before_text": "",
+        "labels_are_legal_truth": false,
+        "rule_a": {
+          "confidence": null,
+          "confidence_status": "not_calibrated",
+          "dimensions": [],
+          "label": "Low",
+          "method_id": "rule-cue-transition-v1",
+          "rationale": "Text changed without a detected high-impact or procedural cue transition.",
+          "status": "PROVISIONAL_RULE_OUTPUT"
+        },
+        "rule_b": {
+          "after_text_present": true,
+          "empty_before_is_expected_for_insert": true,
+          "label": null,
+          "rationale": "Token similarity alone is not evidence of materiality; no supported rule cue determines a class.",
+          "similarity": 0.0,
+          "status": "REVIEW_REQUIRED"
+        }
+      }
+    },
+    {
+      "act_title": "Banking Regulation Act 1949",
+      "extraction_v2": {
+        "defect_codes": [],
+        "matched_reparsed_event": true,
+        "new_text": "one or more persons not exceeding four, successively,",
+        "old_text": "one person",
+        "operation": "SUBSTITUTE",
+        "source_span_check": true,
+        "status": "REEXTRACTED_ALIGNED",
+        "target_provision": "section:45ZC"
+      },
+      "gold_status": "NOT_GOLD",
+      "legal_correctness": "UNVERIFIED_NO_INDEPENDENT_LEGAL_LABELS",
+      "operation_v1": "SUBSTITUTE",
+      "pair_id": "mat_ca8210674f56599734ad7a8e",
+      "provision_path_v1": "section:45ZC",
+      "source_id": "src_726705f7fc61363b6e330510",
+      "source_instruction": "11. In the Banking RegulationAct of 1949, in section 45ZC, in sub-section (1),\nfor the words “one person”, the words “one or more persons not exceeding four,\nsuccessively,” shall be substituted.",
+      "source_line": 38,
+      "source_page": 4,
+      "source_sha256": "e88810e9ddf46ad9103623120dca107dd31b0f21bfd37456d5a57267375fa534",
+      "v1": {
+        "after_text": "one or more persons not exceeding four, successively,",
+        "before_text": "one person",
+        "provisional_tiebreak": "Medium",
+        "rule_a": "Low",
+        "rule_b": "Medium",
+        "rule_b_rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "rule_b_similarity": 0.2
+      },
+      "v2": {
+        "after_text": "one or more persons not exceeding four, successively,",
+        "before_text": "one person",
+        "labels_are_legal_truth": false,
+        "rule_a": {
+          "confidence": null,
+          "confidence_status": "not_calibrated",
+          "dimensions": [],
+          "label": "Low",
+          "method_id": "rule-cue-transition-v1",
+          "rationale": "Text changed without a detected high-impact or procedural cue transition.",
+          "status": "PROVISIONAL_RULE_OUTPUT"
+        },
+        "rule_b": {
+          "after_text_present": true,
+          "empty_before_is_expected_for_insert": false,
+          "label": null,
+          "rationale": "Token similarity alone is not evidence of materiality; no supported rule cue determines a class.",
+          "similarity": 0.2,
+          "status": "REVIEW_REQUIRED"
+        }
+      }
+    },
+    {
+      "act_title": "Competition Act 2002",
+      "extraction_v2": {
+        "defect_codes": [
+          "wording_changed_on_reextraction",
+          "target_changed_on_reextraction"
+        ],
+        "matched_reparsed_event": true,
+        "new_text": "6A. Nothing contained in sub-section (2A) of section 6 and section 43A shall prevent the implementation of an open offer or an acquisition of shares or securities 15 of 1992. 15 of 1992. Insertion of a new section 6A. Open offers, etc. IndiaCode SEC. 1] THE GAZETTE OF INDIA EXTRAORDINARY 7 convertible into other securities from various sellers, through a series of transactions on a regulated stock exchange from coming into effect, if— (a) the notice of the acquisition is filed with the Commission within such time and in such manner as may be specified by regulations; and (b) the acquirer does not exercise any ownership or beneficial rights or interest in such shares or convertible securities including voting rights and receipt of dividends or any other distributions, except as may be specified by regulations, till the Commission approves such acquisition in accordance with the provisions of sub-section (2A) of section 6 of the Act. Explanation.—For the purposes of this section, \"open offer\" means an open offer made in accordance with the Securities and Exchange Board of India (Substantial Acquisition of Shares and Takeovers) Regulation, 2011 made under the Securities and Exchange Board of India Act,1992.",
+        "old_text": null,
+        "operation": "INSERT",
+        "source_span_check": true,
+        "status": "CONFIRMED_EXTRACTION_DEFECT",
+        "target_provision": "section:6A"
+      },
+      "gold_status": "NOT_GOLD",
+      "legal_correctness": "UNVERIFIED_NO_INDEPENDENT_LEGAL_LABELS",
+      "operation_v1": "INSERT",
+      "pair_id": "mat_da9a0c78b92e51330bd0b0f1",
+      "provision_path_v1": "section:6",
+      "source_id": "src_53d4d0a959b38eab14c04abe",
+      "source_instruction": "8. After section 6 of the principal Act, the following section shall be inserted, namely:—\n'6A. Nothing contained in sub-section (2A) of section 6 and section 43A shall\nprevent the implementation of an open offer or an acquisition of shares or securities\n15 of 1992.\n15 of 1992.\nInsertion of a\nnew section\n6A.\nOpen offers,\netc.\nIndiaCode\nSEC. 1] THE GAZETTE OF INDIA EXTRAORDINARY 7\nconvertible into other securities from various sellers, through a series of transactions\non a regulated stock exchange from coming into effect, if—\n(a) the notice of the acquisition is filed with the Commission within such\ntime and in such manner as may be specified by regulations; and\n(b) the acquirer does not exercise any ownership or beneficial rights or\ninterest in such shares or convertible securities including voting rights and\nreceipt of dividends or any other distributions, except as may be specified by\nregulations, till the Commission approves such acquisition in accordance with\nthe provisions of sub-section (2A) of section 6 of the Act.\nExplanation.—For the purposes of this section, \"open offer\" means an open\noffer made in accordance with the Securities and Exchange Board of India (Substantial\nAcquisition of Shares and Takeovers) Regulation, 2011 made under the Securities and\nExchange Board of India Act,1992.'.",
+      "source_line": 46,
+      "source_page": 6,
+      "source_sha256": "0012b8c0a5617e6697e1e6067dea0ec09ad56c177e2276daa28bf62edd3ab069",
+      "v1": {
+        "after_text": "open offer",
+        "before_text": "",
+        "provisional_tiebreak": "Medium",
+        "rule_a": "Low",
+        "rule_b": "Medium",
+        "rule_b_rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "rule_b_similarity": 0.0
+      },
+      "v2": {
+        "after_text": "6A. Nothing contained in sub-section (2A) of section 6 and section 43A shall prevent the implementation of an open offer or an acquisition of shares or securities 15 of 1992. 15 of 1992. Insertion of a new section 6A. Open offers, etc. IndiaCode SEC. 1] THE GAZETTE OF INDIA EXTRAORDINARY 7 convertible into other securities from various sellers, through a series of transactions on a regulated stock exchange from coming into effect, if— (a) the notice of the acquisition is filed with the Commission within such time and in such manner as may be specified by regulations; and (b) the acquirer does not exercise any ownership or beneficial rights or interest in such shares or convertible securities including voting rights and receipt of dividends or any other distributions, except as may be specified by regulations, till the Commission approves such acquisition in accordance with the provisions of sub-section (2A) of section 6 of the Act. Explanation.—For the purposes of this section, \"open offer\" means an open offer made in accordance with the Securities and Exchange Board of India (Substantial Acquisition of Shares and Takeovers) Regulation, 2011 made under the Securities and Exchange Board of India Act,1992.",
+        "before_text": "",
+        "labels_are_legal_truth": false,
+        "rule_a": {
+          "confidence": null,
+          "confidence_status": "not_calibrated",
+          "dimensions": [
+            "definition",
+            "exemption",
+            "obligation",
+            "procedure",
+            "scope",
+            "time"
+          ],
+          "label": "High",
+          "method_id": "rule-cue-transition-v1",
+          "rationale": "The wording changes the presence of one or more high-impact legal-effect cues: exemption, obligation, scope.",
+          "status": "PROVISIONAL_RULE_OUTPUT"
+        },
+        "rule_b": {
+          "label": "High",
+          "rationale": "The operation changes a detected duty, right, prohibition, scope, liability, or exception cue: exemption, obligation, scope.",
+          "similarity": 0.0,
+          "status": "PROVISIONAL_RULE_OUTPUT"
+        }
+      }
+    },
+    {
+      "act_title": "Motor Vehicles Act 1988",
+      "extraction_v2": {
+        "defect_codes": [
+          "compound_operation_requires_event_split_or_adjudication"
+        ],
+        "matched_reparsed_event": true,
+        "new_text": null,
+        "old_text": null,
+        "operation": "UNKNOWN",
+        "source_span_check": true,
+        "status": "REVIEW_REQUIRED",
+        "target_provision": "section:197"
+      },
+      "gold_status": "NOT_GOLD",
+      "legal_correctness": "UNVERIFIED_NO_INDEPENDENT_LEGAL_LABELS",
+      "operation_v1": "SUBSTITUTE",
+      "pair_id": "mat_b52f18d09b58658c1547c5fa",
+      "provision_path_v1": "section:197",
+      "source_id": "src_95267bd1a6e6edd43848c03f",
+      "source_instruction": "82. In section 197 of the principal Act,—\n(i) in sub-section (1), for the words “which may extend to five hundred rupees”,\nthe words “of five thousand rupees” shall be substituted;\n(ii) in sub-section (2), for the words “which may extend to five hundred rupees”,\nthe words “of five thousand rupees” shall be substituted.",
+      "source_line": 17,
+      "source_page": 39,
+      "source_sha256": "38624ae08543c7fd41fe470f18273817d2566e1581f0100de033b030f61b74a5",
+      "v1": {
+        "after_text": "of five thousand rupees",
+        "before_text": "which may extend to five hundred rupees",
+        "provisional_tiebreak": "Medium",
+        "rule_a": "Low",
+        "rule_b": "Medium",
+        "rule_b_rationale": "The operation changes a large fraction of the controlled fragment without a detected severe cue transition.",
+        "rule_b_similarity": 0.3636
+      },
+      "v2": {
+        "after_text": null,
+        "before_text": null,
+        "labels_are_legal_truth": false,
+        "rule_a": {
+          "label": null,
+          "rationale": "Source event or operation is not represented as one unambiguous aligned fragment.",
+          "status": "REVIEW_REQUIRED"
+        },
+        "rule_b": {
+          "label": null,
+          "rationale": "No materiality label is emitted when the source fragment is unresolved.",
+          "status": "REVIEW_REQUIRED"
+        }
+      }
+    }
+  ],
+  "rule_b_version": "operation-delta-v2-abstains-on-size-only-signal",
+  "schema_version": "2.1.0",
+  "source_round_sha256": "0d573528b7057adc0d0a4c92ffc6ed64d4f7e0cdebab3e70d097e8ae6a4ad365",
+  "source_silver_sha256": "d61f877a4a211de91927ea93f5994e0b6bf2c4a0f0818893e5a81ae2b8fce646",
+  "status": "diagnostic_reextraction_and_rule_reassessment_not_gold",
+  "v1_rule_disagreement_count": 19,
+  "v2_comparable_count": 0,
+  "v2_rule_agreement_count": 0,
+  "v2_rule_agreement_rate_on_comparable_only": null
+}

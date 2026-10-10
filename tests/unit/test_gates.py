@@ -21,7 +21,7 @@ class EngineeringGateTests(unittest.TestCase):
         )
         self.assertEqual(
             results[5].review_status,
-            "technical_annotation_workload_passed_research_annotation_not_performed",
+            "technical_annotation_workload_and_automated_silver_labels_ready_human_gold_unavailable",
         )
         self.assertEqual(
             results[6].review_status,

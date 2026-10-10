@@ -14,7 +14,7 @@ from temporal_legal_drift.versioning.models import (
     VersionGraph,
     VersionTransition,
 )
-from temporal_legal_drift.versioning.temporal_graph import TemporalGraphBuilder
+from temporal_legal_drift.versioning.temporal_graph import TemporalGraphBuilder, _target_path_detail
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -45,6 +45,10 @@ class VersioningTests(unittest.TestCase):
         self.assertEqual([item.number for item in provisions], ["1", "2"])
         self.assertIn("longer duplicate", provisions[0].exact_text)
         self.assertEqual(unresolved[0]["reason_code"], "duplicate_section_candidates")
+
+    def test_target_detail_does_not_parse_plural_clauses_as_clause_s(self) -> None:
+        text = "31. In section 50, in sub-section (1), in clauses (a) and (c), after the words x, y shall be inserted."
+        self.assertEqual(_target_path_detail(text), "section:50/sub-section:1")
 
     def test_graph_reconstructs_exact_version_and_rejects_cycles(self) -> None:
         before_text = "1. Duty.—Before."

@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0.0",
+  "experiment_id": "materiality-classification-v1",
+  "status": "framework_and_machine_silver_implemented_legal_gold_pending",
+  "canonical_labels": ["High", "Medium", "Low", "None"],
+  "gold_dataset_required": "materiality_gold_v1",
+  "test_set_tuning_permitted": false,
+  "group_leakage_controls": ["act_id", "amendment_event_id", "provision_id", "source_id"],
+  "report_metrics": ["accuracy", "per_class_precision", "per_class_recall", "per_class_f1", "macro_f1", "confusion_matrix", "high_materiality_false_negative_rate", "class_distribution"],
+  "models": [
+    {
+      "id": "majority-class-prior",
+      "family": "class_prior",
+      "status": "implemented_requires_human_gold"
+    },
+    {
+      "id": "lexical-softmax",
+      "family": "lexical_similarity",
+      "status": "implemented_requires_human_gold"
+    },
+    {
+      "id": "operation-and-cue-prior",
+      "family": "operation_features",
+      "status": "implemented_requires_human_gold"
+    },
+    {
+      "id": "combined-lexical-operation-cues",
+      "family": "proposed_experimental_model",
+      "status": "implemented_requires_human_gold_and_group_holdout"
+    },
+    {
+      "id": "embedding-classifier",
+      "family": "embedding",
+      "status": "not_selected_no_gold_or_approved_embedding_model"
+    },
+    {
+      "id": "llm-zero-and-few-shot",
+      "family": "llm",
+      "status": "not_started_until_human_gold_exists"
+    },
+    {
+      "id": "closest-work-inspired",
+      "family": "prior-work-baseline",
+      "status": "protocol_only_no_reproduction_claim"
+    }
+  ],
+  "claims": {
+    "real_corpus_agreement": null,
+    "real_corpus_precision_recall_f1": null,
+    "machine_rule_agreement": 0.62,
+    "machine_rule_cohens_kappa": 0.4739756367663345,
+    "machine_rule_agreement_is_legal_accuracy": false,
+    "classifier_validated": false,
+    "reason": "The 50 cases have machine-generated silver labels only; independent human annotations, adjudication, and legal validation are absent."
+  }
+}

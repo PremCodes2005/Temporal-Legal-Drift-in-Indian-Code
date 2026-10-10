@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0.0",
+  "rubric_id": "proposed-materiality-rubric-v1",
+  "version": "1.0.0",
+  "status": "proposed_operational_research_rubric_not_legally_validated",
+  "legal_validation_status": "unverified_no_qualified_legal_reviewer",
+  "scope": "Amendment-level significance of an evidenced legal-text change; not a scenario-specific compliance outcome.",
+  "canonical_labels": ["High", "Medium", "Low", "None"],
+  "workflow_statuses_are_not_labels": ["REVIEW_REQUIRED", "INSUFFICIENT_EVIDENCE"],
+  "dimensions": ["obligation", "right", "prohibition", "scope", "definition", "threshold", "time", "liability", "procedure", "exemption"],
+  "dimension_registry_status": "ten_dimension_technical_registry_proposed_phase0_approval_pending",
+  "levels": [
+    {
+      "label": "High",
+      "definition": "The evidenced amendment changes a substantive right, obligation, prohibition, legal scope or eligibility, liability, penalty, controlling exception, or major compliance requirement.",
+      "include_when": ["A duty is created, removed, or substantively changed", "Conduct or persons covered by the law materially changes", "A prohibition, liability, penalty, or controlling exception materially changes", "The amendment substantively changes a major compliance requirement"],
+      "exclude_when": ["Only wording length or edit distance changes", "Only one scenario outcome changes without amendment-level significance evidence", "The source evidence does not establish what changed"],
+      "boundary_rule": "A change to a deadline or amount is not automatically High; use High only where evidence supports a fundamental substantive effect beyond a procedural parameter."
+    },
+    {
+      "label": "Medium",
+      "definition": "The evidenced amendment changes an operative compliance procedure, filing/reporting method, deadline, threshold, evidentiary requirement, or implementation condition while retaining the basic allocation of rights and duties.",
+      "include_when": ["A required procedure or filing process changes", "An operative deadline or threshold changes with practical compliance significance", "Conditions or evidence required to satisfy an existing duty change"],
+      "exclude_when": ["The change fundamentally reallocates rights/duties or changes material liability (High)", "Only presentation changes with no operative effect (None)", "No evidence establishes the parameter or process change"],
+      "boundary_rule": "A numeric change must be interpreted in context; a 10-to-15-day change is ordinarily Medium only when the cited text confirms the period is operative."
+    },
+    {
+      "label": "Low",
+      "definition": "The evidenced amendment makes a narrow clarification, terminology update, cross-reference repair, or limited administrative refinement with no demonstrated material change to the core obligation or compliance outcome.",
+      "include_when": ["A narrow clarification preserves the operative rule", "A cross-reference is repaired while preserving the target", "Administrative wording is refined without substantive effect"],
+      "exclude_when": ["A substantive legal effect or practical procedure changes (High/Medium)", "The evidence is too incomplete to distinguish a limited clarification from a material change"],
+      "boundary_rule": "Do not infer Low merely from short text or small edit distance."
+    },
+    {
+      "label": "None",
+      "definition": "The complete, sufficiently grounded comparison supports only a non-operative editorial/presentation change and supports no legal or compliance effect.",
+      "include_when": ["Punctuation, spelling, layout, or mechanical renumbering changes while legal meaning and references are demonstrably preserved"],
+      "exclude_when": ["Any supported change to legal scope, obligation, procedure, threshold, deadline, liability, or effect", "Only a normalized-text match is available without contextual source support"],
+      "boundary_rule": "A model must not infer None from missing evidence; use INSUFFICIENT_EVIDENCE when legal-effect absence cannot be supported."
+    }
+  ],
+  "decision_protocol": [
+    "Compare amendment operation with the complete supplied before/after excerpts and source anchors.",
+    "Separate amendment materiality from temporal applicability and scenario-specific compliance consequence.",
+    "Cite exact evidence spans from supplied source records for each material claim.",
+    "If the version, operation, source, context, or legal effect is insufficiently evidenced, abstain rather than guessing.",
+    "Even a schema-valid, source-grounded machine assessment has workflow status REVIEW_REQUIRED and is not legal gold."
+  ],
+  "prohibited_inferences": [
+    "Citation existence proves legal correctness",
+    "The machine consensus label is adjudicated ground truth",
+    "Majority voting or LLM agreement replaces legal validation",
+    "Materiality alone determines a scenario's compliance consequence"
+  ]
+}

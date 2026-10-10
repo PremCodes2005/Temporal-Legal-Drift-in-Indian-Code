@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://temporal-legal-drift.local/schemas/annotation/materiality_adjudication.v1.schema.json",
+  "title": "Independent adjudication decision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["pair_id", "adjudicator_id", "adjudicated_at", "label", "dimensions", "rationale", "evidence_span", "guideline_version"],
+  "properties": {
+    "pair_id": {"type": "string", "minLength": 1},
+    "adjudicator_id": {"type": "string", "minLength": 1},
+    "adjudicated_at": {"type": "string", "format": "date-time"},
+    "label": {"enum": ["High", "Medium", "Low", "None"]},
+    "dimensions": {"type": "array", "items": {"type": "string"}},
+    "rationale": {"type": "string", "minLength": 1},
+    "evidence_span": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "text"],
+      "properties": {
+        "source_id": {"type": "string", "minLength": 1},
+        "text": {"type": "string", "minLength": 1}
+      }
+    },
+    "guideline_version": {"type": "string", "minLength": 1}
+  }
+}

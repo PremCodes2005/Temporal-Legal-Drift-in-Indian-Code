@@ -1,12 +1,12 @@
 {
   "all_execution_steps_passed": true,
-  "artifact_count": 189,
+  "artifact_count": 235,
   "engineering_gate_passed": true,
   "execution_step_count": 3,
   "fresh_environment_reproduction_passed": true,
   "independent_expert_validation_status": "not_performed_reviewer_unavailable",
   "legal_correctness_claimed": false,
-  "manifest_sha256": "669df59aad38cec65759d8fc030ffbd5d5db69ae46f075a780adb52c9a3b45c4",
+  "manifest_sha256": "c85bb0c40fbd5c9e5839b69515fe2e8c1a29a91c5829539ea2c6f5f29d1dc2ba",
   "release_id": "phase11-reproducibility-engineering-v0.1.0",
   "research_gate_passed": false,
   "schema_version": "1.0.0"

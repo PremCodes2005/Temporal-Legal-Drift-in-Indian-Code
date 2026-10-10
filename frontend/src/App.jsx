@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import ComplianceRiskPanel from "./ComplianceRiskPanel";
 
 const sections = [
   { id: "assistant", number: "01", label: "Legal drift assistant" },
@@ -7,6 +8,7 @@ const sections = [
   { id: "calculation", number: "04", label: "Score calculation" },
   { id: "method", number: "05", label: "How it works" },
   { id: "faq", number: "06", label: "Recent changes FAQ" },
+  { id: "risk", number: "07", label: "Compliance risk" },
 ];
 
 const suggestions = [
@@ -62,6 +64,7 @@ export default function App() {
         {section === "calculation" && <ScoreCalculation result={lastResult} onAnalyse={() => navigate("assistant")} />}
         {section === "method" && <Method />}
         {section === "faq" && <RecentChangesFaq onAsk={askFromFaq} />}
+        {section === "risk" && <ComplianceRiskPanel request={api} />}
       </main>
     </div>
   </div>;

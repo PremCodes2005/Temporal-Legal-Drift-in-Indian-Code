@@ -1,0 +1,31 @@
+{
+  "graph_id": null,
+  "graph_sha256": "b7d70f01a2efe23409e0e840b7762866f89af94e36626e8ce57b24649cc1fd77",
+  "interpretation": "Textual equality is a search heuristic only. None requires supported absence of legal/compliance effect and remains unassigned without independent validation.",
+  "legal_correctness_claimed": false,
+  "none_gold_labels_created": 0,
+  "normalized_text_match_count": 1,
+  "rejected_candidate_count": 1,
+  "results": [
+    {
+      "after_version_id": "pver_495a20fbde150deb0a7f8b2f",
+      "before_version_id": "pver_ae63748e99384b0dc4512e6d",
+      "candidate_status": "REJECTED_INSUFFICIENT_INDEPENDENT_PROVENANCE",
+      "gold_status": "NOT_GOLD",
+      "label": null,
+      "machine_cross_source_corroborated": false,
+      "normalized_text_equal": true,
+      "operation": "SUBSTITUTE",
+      "pair_id": null,
+      "reason": "Normalized-identical text is not enough: this record lacks independent cross-source corroboration or a successful reconstruction check.",
+      "source_ids": [
+        "src_eebef66b421581dd4598e4d5"
+      ],
+      "transition_id": "transition_402f99e207a15df6ccbd40f0"
+    }
+  ],
+  "reviewable_candidate_count": 0,
+  "schema_version": "1.0.0",
+  "status": "none_category_unevaluated",
+  "transition_count_scanned": 117
+}

@@ -11,6 +11,7 @@ from pathlib import Path
 from .acquisition import AcquisitionService, RawArtifactStore, SourcePolicy, SourceRequest
 from .acquisition.models import SourceArtifact
 from .amendment_extraction.checkpoint import build_phase2_checkpoint
+from .amendment_extraction.pipeline import AmendmentExtractionPipeline
 from .amendment_extraction.silver_checkpoint import build_silver_label_checkpoint
 from .applicability import ApplicabilityQuery, ApplicabilityResolver, TemporalFact
 from .applicability.candidates import extract_temporal_candidates, write_candidates_and_lock
@@ -29,7 +30,27 @@ from .evaluation_agent import ProjectEvaluationAgent
 from .gates import check_engineering_gates
 from .ingestion.checkpoint import build_phase1_checkpoint
 from .jsonio import load_json
-from .materiality import build_annotation_workload, write_annotation_workload_and_lock
+from .materiality import (
+    build_annotation_workload,
+    build_materiality_round,
+    build_materiality_silver,
+    assess_materiality_with_llm,
+    build_disagreement_report,
+    build_disagreement_audit_v2,
+    render_disagreement_audit_v2,
+    build_materiality_ensemble,
+    compute_annotation_agreement,
+    evaluate_materiality_gold,
+    freeze_materiality_gold,
+    freeze_materiality_silver,
+    render_none_coverage_report,
+    search_potential_none_cases,
+    write_annotation_workload_and_lock,
+    write_materiality_round,
+    write_materiality_silver,
+    write_llm_assessments,
+    write_ensemble,
+)
 from .llm_evaluation import (
     build_drift_evaluation_from_executed_plan,
     build_llm_evaluation_plan,
@@ -43,6 +64,8 @@ from .phase0 import validate_contract_file
 from .reproducibility import verify_fresh_environment, write_reproducibility_manifest_and_lock
 from .reproducibility.builder import stage_current_artifact_checksums
 from .scenarios import build_scenario_scaffolds, write_scenarios_and_lock
+from .risk.builder import write_risk_checkpoint
+from .risk.service import RiskService
 from .versioning import TemporalGraph, TemporalGraphBuilder, VersionGraph, VersionGraphBuilder
 from .versioning.builder import write_graph_and_lock
 from .versioning.temporal_graph import write_temporal_graph_and_checkpoint
@@ -71,6 +94,9 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("build-ingestion-checkpoint")
     subparsers.add_parser("build-amendment-extraction-checkpoint")
     subparsers.add_parser("build-amendment-silver-labels")
+    subparsers.add_parser("build-risk-checkpoint")
+    assess_risk = subparsers.add_parser("assess-risk")
+    assess_risk.add_argument("--scenario", type=Path, required=True)
 
     normalize = subparsers.add_parser("normalize")
     normalize.add_argument("--metadata", type=Path, required=True)
@@ -213,6 +239,133 @@ def build_parser() -> argparse.ArgumentParser:
     )
     phase5.add_argument(
         "--lock", type=Path, default=Path("reports/phase5/annotation_workload.lock.json")
+    )
+
+    materiality_round = subparsers.add_parser("build-materiality-annotation-round")
+    materiality_round.add_argument(
+        "--graph", type=Path, default=Path("data/interim/temporal_legal_knowledge_graph.v2.json")
+    )
+    materiality_round.add_argument(
+        "--taxonomy", type=Path, default=Path("configs/annotation/materiality_taxonomy.v1.json")
+    )
+    materiality_round.add_argument("--pilot-size", type=int, default=50)
+    materiality_round.add_argument(
+        "--output", type=Path, default=Path("data/annotations/materiality_annotation_round.v1.json")
+    )
+    materiality_round.add_argument(
+        "--lock", type=Path, default=Path("reports/materiality/annotation_round.lock.json")
+    )
+
+    materiality_silver = subparsers.add_parser("build-materiality-silver")
+    materiality_silver.add_argument(
+        "--round", type=Path, default=Path("data/annotations/materiality_annotation_round.v1.json")
+    )
+    materiality_silver.add_argument(
+        "--output", type=Path, default=Path("data/silver/materiality_silver_labels.v1.json")
+    )
+    materiality_silver.add_argument(
+        "--lock", type=Path, default=Path("reports/materiality/materiality_silver.lock.json")
+    )
+    materiality_silver.add_argument(
+        "--report", type=Path, default=Path("reports/materiality/automated_silver_evaluation.v1.md")
+    )
+    materiality_silver.add_argument(
+        "--disagreements", type=Path, default=Path("reports/materiality/silver_disagreement_review.v1.md")
+    )
+
+    none_search = subparsers.add_parser("search-materiality-none")
+    none_search.add_argument(
+        "--graph", type=Path, default=Path("data/interim/temporal_legal_knowledge_graph.v2.json")
+    )
+    none_search.add_argument(
+        "--output", type=Path, default=Path("reports/materiality/none_coverage_search.v1.json")
+    )
+    none_search.add_argument(
+        "--report", type=Path, default=Path("reports/materiality/none_coverage_search.v1.md")
+    )
+
+    llm_assessment = subparsers.add_parser("assess-materiality-with-llm")
+    llm_assessment.add_argument(
+        "--silver", type=Path, default=Path("data/silver/materiality_silver_labels.v1.json")
+    )
+    llm_assessment.add_argument(
+        "--round", type=Path, default=Path("data/annotations/materiality_annotation_round.v1.json")
+    )
+    llm_assessment.add_argument(
+        "--graph", type=Path, default=Path("data/interim/temporal_legal_knowledge_graph.v2.json")
+    )
+    llm_assessment.add_argument(
+        "--rubric", type=Path, default=Path("configs/annotation/proposed_materiality_rubric.v1.json")
+    )
+    llm_assessment.add_argument(
+        "--output", type=Path, default=Path("data/assessments/materiality_llm_assessments.v1.json")
+    )
+    llm_assessment.add_argument(
+        "--lock", type=Path, default=Path("reports/materiality/materiality_llm_assessments.lock.json")
+    )
+
+    materiality_ensemble = subparsers.add_parser("build-materiality-ensemble")
+    materiality_ensemble.add_argument(
+        "--silver", type=Path, default=Path("data/silver/materiality_silver_labels.v1.json")
+    )
+    materiality_ensemble.add_argument(
+        "--assessments", type=Path, default=Path("data/assessments/materiality_llm_assessments.v1.json")
+    )
+    materiality_ensemble.add_argument(
+        "--output", type=Path, default=Path("data/assessments/materiality_ensemble.v1.json")
+    )
+    materiality_ensemble.add_argument(
+        "--lock", type=Path, default=Path("reports/materiality/materiality_ensemble.lock.json")
+    )
+
+    freeze_silver = subparsers.add_parser("freeze-materiality-silver")
+    freeze_silver.add_argument(
+        "--dataset", type=Path, default=Path("data/silver/materiality_silver_labels.v1.json")
+    )
+    freeze_silver.add_argument(
+        "--lock", type=Path, default=Path("reports/materiality/materiality_silver_frozen.lock.json")
+    )
+
+    disagreement_audit = subparsers.add_parser("audit-materiality-disagreements")
+    disagreement_audit.add_argument("--round", type=Path, default=Path("data/annotations/materiality_annotation_round.v1.json"))
+    disagreement_audit.add_argument("--silver", type=Path, default=Path("data/silver/materiality_silver_labels.v1.json"))
+    disagreement_audit.add_argument("--graph", type=Path, default=Path("data/interim/temporal_legal_knowledge_graph.v2.json"))
+    disagreement_audit.add_argument("--output", type=Path, default=Path("data/silver/materiality_disagreement_audit.v2.3.json"))
+    disagreement_audit.add_argument("--report", type=Path, default=Path("reports/materiality/silver_disagreement_review.v2.3.md"))
+
+    agreement = subparsers.add_parser("calculate-materiality-agreement")
+    agreement.add_argument(
+        "--round", type=Path, default=Path("data/annotations/materiality_annotation_round.v1.json")
+    )
+    agreement.add_argument("--annotations", type=Path, required=True)
+    agreement.add_argument(
+        "--output", type=Path, default=Path("reports/materiality/agreement.v1.json")
+    )
+
+    freeze_gold = subparsers.add_parser("freeze-materiality-gold")
+    freeze_gold.add_argument(
+        "--round", type=Path, default=Path("data/annotations/materiality_annotation_round.v1.json")
+    )
+    freeze_gold.add_argument("--annotations", type=Path, required=True)
+    freeze_gold.add_argument("--adjudications", type=Path, required=True)
+    freeze_gold.add_argument(
+        "--taxonomy", type=Path, default=Path("configs/annotation/materiality_taxonomy.v1.json")
+    )
+    freeze_gold.add_argument(
+        "--output", type=Path, default=Path("data/gold/materiality_gold_v1.json")
+    )
+    freeze_gold.add_argument(
+        "--lock", type=Path, default=Path("reports/materiality/materiality_gold.lock.json")
+    )
+
+    materiality_evaluation = subparsers.add_parser("evaluate-materiality-gold")
+    materiality_evaluation.add_argument(
+        "--gold", type=Path, default=Path("data/gold/materiality_gold_v1.json")
+    )
+    materiality_evaluation.add_argument("--split", type=Path, required=True)
+    materiality_evaluation.add_argument("--epochs", type=int, default=350)
+    materiality_evaluation.add_argument(
+        "--output", type=Path, default=Path("experiments/materiality/materiality_models.v1.json")
     )
 
     phase6 = subparsers.add_parser("build-scenario-scaffolds")
@@ -603,6 +756,145 @@ def run(args: argparse.Namespace) -> int:
             workload, _resolve(root, args.output), _resolve(root, args.lock)
         )
         print(json.dumps(lock, indent=2, ensure_ascii=False))
+        return 0
+
+    if args.command == "build-materiality-annotation-round":
+        document = build_materiality_round(
+            load_json(_resolve(root, args.graph)),
+            load_json(_resolve(root, args.taxonomy)),
+            pilot_size=args.pilot_size,
+        )
+        lock = write_materiality_round(
+            document,
+            _resolve(root, args.output),
+            _resolve(root, args.lock),
+        )
+        print(json.dumps(lock, indent=2, ensure_ascii=False))
+        return 0
+
+    if args.command == "build-materiality-silver":
+        silver = build_materiality_silver(load_json(_resolve(root, args.round)))
+        lock = write_materiality_silver(
+            silver, _resolve(root, args.output), _resolve(root, args.lock), _resolve(root, args.report)
+        )
+        disagreement_report = build_disagreement_report(silver, load_json(_resolve(root, args.round)))
+        from .jsonio import atomic_replace
+
+        atomic_replace(_resolve(root, args.disagreements), disagreement_report.encode("utf-8"))
+        print(json.dumps(lock, indent=2, ensure_ascii=False))
+        return 0
+
+    if args.command == "freeze-materiality-silver":
+        lock = freeze_materiality_silver(_resolve(root, args.dataset), _resolve(root, args.lock), root)
+        print(json.dumps(lock, indent=2, ensure_ascii=False))
+        return 0
+
+    if args.command == "audit-materiality-disagreements":
+        from .jsonio import atomic_write_new, canonical_json_bytes
+
+        extraction_v2 = AmendmentExtractionPipeline(root).run()
+        result = build_disagreement_audit_v2(
+            load_json(_resolve(root, args.silver)),
+            load_json(_resolve(root, args.round)),
+            load_json(_resolve(root, args.graph)),
+            extraction_v2["events"],
+        )
+        atomic_write_new(_resolve(root, args.output), canonical_json_bytes(result))
+        atomic_write_new(_resolve(root, args.report), render_disagreement_audit_v2(result).encode("utf-8"))
+        print(json.dumps({key: value for key, value in result.items() if key != "rows"}, indent=2, ensure_ascii=False))
+        return 0
+
+    if args.command == "search-materiality-none":
+        result = search_potential_none_cases(load_json(_resolve(root, args.graph)))
+        from .jsonio import atomic_replace, canonical_json_bytes
+
+        atomic_replace(_resolve(root, args.output), canonical_json_bytes(result))
+        atomic_replace(_resolve(root, args.report), render_none_coverage_report(result).encode("utf-8"))
+        print(json.dumps({key: value for key, value in result.items() if key != "results"}, indent=2, ensure_ascii=False))
+        return 0
+
+    if args.command == "assess-materiality-with-llm":
+        result = assess_materiality_with_llm(
+            load_json(_resolve(root, args.silver)),
+            load_json(_resolve(root, args.round)),
+            load_json(_resolve(root, args.graph)),
+            load_json(_resolve(root, args.rubric)),
+            progress_callback=lambda current, total, pair_id, status: print(
+                f"LLM materiality assessment {current}/{total}: {pair_id} [{status}]",
+                file=sys.stderr,
+                flush=True,
+            ),
+        )
+        lock = write_llm_assessments(result, _resolve(root, args.output), _resolve(root, args.lock))
+        print(json.dumps(lock, indent=2, ensure_ascii=False))
+        return 0
+
+    if args.command == "build-materiality-ensemble":
+        result = build_materiality_ensemble(
+            load_json(_resolve(root, args.silver)),
+            load_json(_resolve(root, args.assessments)),
+        )
+        lock = write_ensemble(result, _resolve(root, args.output), _resolve(root, args.lock))
+        print(json.dumps(lock, indent=2, ensure_ascii=False))
+        return 0
+
+    if args.command == "calculate-materiality-agreement":
+        agreement_result = compute_annotation_agreement(
+            load_json(_resolve(root, args.round)),
+            load_json(_resolve(root, args.annotations)),
+        )
+        from .jsonio import atomic_replace, canonical_json_bytes
+
+        atomic_replace(_resolve(root, args.output), canonical_json_bytes(agreement_result))
+        print(json.dumps(agreement_result, indent=2, ensure_ascii=False))
+        return 0
+
+    if args.command == "freeze-materiality-gold":
+        gold = freeze_materiality_gold(
+            load_json(_resolve(root, args.round)),
+            load_json(_resolve(root, args.annotations)),
+            load_json(_resolve(root, args.adjudications)),
+            load_json(_resolve(root, args.taxonomy)),
+        )
+        from hashlib import sha256
+
+        from .jsonio import atomic_replace, canonical_json_bytes
+
+        gold_bytes = canonical_json_bytes(gold)
+        lock = {
+            "schema_version": "1.0.0",
+            "status": gold["status"],
+            "pair_count": gold["pair_count"],
+            "unique_pair_count": len({row["pair_id"] for row in gold["rows"]}),
+            "gold_sha256": sha256(gold_bytes).hexdigest(),
+            "gold_labels_created": gold["pair_count"],
+            "agreement": gold["agreement"],
+            "legal_validation_status": gold["legal_validation_status"],
+            "legal_correctness_claimed": False,
+        }
+        atomic_replace(_resolve(root, args.output), gold_bytes)
+        atomic_replace(_resolve(root, args.lock), canonical_json_bytes(lock))
+        print(json.dumps(lock, indent=2, ensure_ascii=False))
+        return 0
+
+    if args.command == "evaluate-materiality-gold":
+        result = evaluate_materiality_gold(
+            load_json(_resolve(root, args.gold)),
+            load_json(_resolve(root, args.split)),
+            epochs=args.epochs,
+        )
+        from .jsonio import atomic_replace, canonical_json_bytes
+
+        atomic_replace(_resolve(root, args.output), canonical_json_bytes(result))
+        print(json.dumps(result, indent=2, ensure_ascii=False))
+        return 0
+
+    if args.command == "build-risk-checkpoint":
+        print(json.dumps(write_risk_checkpoint(root), indent=2))
+        return 0
+
+    if args.command == "assess-risk":
+        print(json.dumps(RiskService(root).assess(load_json(root / args.scenario)), indent=2))
         return 0
 
     if args.command == "build-scenario-scaffolds":

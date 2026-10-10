@@ -1,0 +1,573 @@
+{
+  "all_expected_behavior_checks_passed": true,
+  "benchmark_sha256": "d4fb7af82a63854b18a0efa69cf151633805c714d096d9569858c27701477702",
+  "conditional_demo_count": 2,
+  "expert_validated_scenario_count": 0,
+  "legal_accuracy": null,
+  "legal_false_negative_rate": null,
+  "legal_false_positive_rate": null,
+  "metric_basis": "engineering_expected_behavior_only",
+  "migrated_scenario_count": 13,
+  "registry_sha256": "d4d4fd6d083857178b7e2b4656b5154a2d57f95833c0fdebd000428006a483b8",
+  "research_checkpoint_passed": false,
+  "results": [
+    {
+      "expectation_checks": {
+        "risk_flag": true,
+        "risk_level": true,
+        "status": true,
+        "urgency": true
+      },
+      "group": "scenarios",
+      "result": {
+        "baseline_version": "compliance-risk-baseline-v1",
+        "consequence": null,
+        "escalation_required": true,
+        "evidence": [],
+        "legal_validation": "UNVERIFIED",
+        "materiality": null,
+        "obligation": null,
+        "provision_version": null,
+        "reasoning_trace": [],
+        "risk_flag": null,
+        "risk_id": "risk_d1bf49c786fedd086395cd23",
+        "risk_level": null,
+        "rule_id": null,
+        "scenario_id": "scenario_1f02f95d109087097680f8a5",
+        "severity": null,
+        "status": "INSUFFICIENT_EVIDENCE",
+        "uncertainty": [
+          "no_supported_obligation_model_for_provision"
+        ],
+        "urgency": "UNKNOWN"
+      },
+      "scenario_id": "scenario_1f02f95d109087097680f8a5"
+    },
+    {
+      "expectation_checks": {
+        "risk_flag": true,
+        "risk_level": true,
+        "status": true,
+        "urgency": true
+      },
+      "group": "scenarios",
+      "result": {
+        "baseline_version": "compliance-risk-baseline-v1",
+        "consequence": null,
+        "escalation_required": true,
+        "evidence": [],
+        "legal_validation": "UNVERIFIED",
+        "materiality": null,
+        "obligation": null,
+        "provision_version": null,
+        "reasoning_trace": [],
+        "risk_flag": null,
+        "risk_id": "risk_90ec11557eb411fb0ce8aa75",
+        "risk_level": null,
+        "rule_id": null,
+        "scenario_id": "scenario_241ac2b98552005e4410f9d8",
+        "severity": null,
+        "status": "INSUFFICIENT_EVIDENCE",
+        "uncertainty": [
+          "no_supported_obligation_model_for_provision"
+        ],
+        "urgency": "UNKNOWN"
+      },
+      "scenario_id": "scenario_241ac2b98552005e4410f9d8"
+    },
+    {
+      "expectation_checks": {
+        "risk_flag": true,
+        "risk_level": true,
+        "status": true,
+        "urgency": true
+      },
+      "group": "scenarios",
+      "result": {
+        "baseline_version": "compliance-risk-baseline-v1",
+        "consequence": null,
+        "escalation_required": true,
+        "evidence": [],
+        "legal_validation": "UNVERIFIED",
+        "materiality": null,
+        "obligation": null,
+        "provision_version": null,
+        "reasoning_trace": [],
+        "risk_flag": null,
+        "risk_id": "risk_6e5fbb05b3bf6652373822a9",
+        "risk_level": null,
+        "rule_id": null,
+        "scenario_id": "scenario_28f1ac7204b60f0cb4db1eae",
+        "severity": null,
+        "status": "INSUFFICIENT_EVIDENCE",
+        "uncertainty": [
+          "no_supported_obligation_model_for_provision"
+        ],
+        "urgency": "UNKNOWN"
+      },
+      "scenario_id": "scenario_28f1ac7204b60f0cb4db1eae"
+    },
+    {
+      "expectation_checks": {
+        "risk_flag": true,
+        "risk_level": true,
+        "status": true,
+        "urgency": true
+      },
+      "group": "scenarios",
+      "result": {
+        "baseline_version": "compliance-risk-baseline-v1",
+        "consequence": null,
+        "escalation_required": true,
+        "evidence": [],
+        "legal_validation": "UNVERIFIED",
+        "materiality": null,
+        "obligation": null,
+        "provision_version": null,
+        "reasoning_trace": [],
+        "risk_flag": null,
+        "risk_id": "risk_b9738146e7abb72143fbae94",
+        "risk_level": null,
+        "rule_id": null,
+        "scenario_id": "scenario_30af89ea924ddee701286dd6",
+        "severity": null,
+        "status": "INSUFFICIENT_EVIDENCE",
+        "uncertainty": [
+          "no_supported_obligation_model_for_provision"
+        ],
+        "urgency": "UNKNOWN"
+      },
+      "scenario_id": "scenario_30af89ea924ddee701286dd6"
+    },
+    {
+      "expectation_checks": {
+        "risk_flag": true,
+        "risk_level": true,
+        "status": true,
+        "urgency": true
+      },
+      "group": "scenarios",
+      "result": {
+        "baseline_version": "compliance-risk-baseline-v1",
+        "consequence": null,
+        "escalation_required": true,
+        "evidence": [],
+        "legal_validation": "UNVERIFIED",
+        "materiality": null,
+        "obligation": null,
+        "provision_version": null,
+        "reasoning_trace": [],
+        "risk_flag": null,
+        "risk_id": "risk_74e656594f74a7e53f643ef2",
+        "risk_level": null,
+        "rule_id": null,
+        "scenario_id": "scenario_376cd72a8acc5e49df166552",
+        "severity": null,
+        "status": "INSUFFICIENT_EVIDENCE",
+        "uncertainty": [
+          "no_supported_obligation_model_for_provision"
+        ],
+        "urgency": "UNKNOWN"
+      },
+      "scenario_id": "scenario_376cd72a8acc5e49df166552"
+    },
+    {
+      "expectation_checks": {
+        "risk_flag": true,
+        "risk_level": true,
+        "status": true,
+        "urgency": true
+      },
+      "group": "scenarios",
+      "result": {
+        "baseline_version": "compliance-risk-baseline-v1",
+        "consequence": null,
+        "escalation_required": true,
+        "evidence": [],
+        "legal_validation": "UNVERIFIED",
+        "materiality": null,
+        "obligation": null,
+        "provision_version": null,
+        "reasoning_trace": [],
+        "risk_flag": null,
+        "risk_id": "risk_f227faffee34c14935bd7b6b",
+        "risk_level": null,
+        "rule_id": null,
+        "scenario_id": "scenario_68e783d96abfe2405220edfc",
+        "severity": null,
+        "status": "INSUFFICIENT_EVIDENCE",
+        "uncertainty": [
+          "no_supported_obligation_model_for_provision"
+        ],
+        "urgency": "UNKNOWN"
+      },
+      "scenario_id": "scenario_68e783d96abfe2405220edfc"
+    },
+    {
+      "expectation_checks": {
+        "risk_flag": true,
+        "risk_level": true,
+        "status": true,
+        "urgency": true
+      },
+      "group": "scenarios",
+      "result": {
+        "baseline_version": "compliance-risk-baseline-v1",
+        "consequence": null,
+        "escalation_required": true,
+        "evidence": [],
+        "legal_validation": "UNVERIFIED",
+        "materiality": null,
+        "obligation": null,
+        "provision_version": null,
+        "reasoning_trace": [],
+        "risk_flag": null,
+        "risk_id": "risk_92e8a2ce60c6c29b06b3e29d",
+        "risk_level": null,
+        "rule_id": null,
+        "scenario_id": "scenario_920e38ad9223b1215d92fc07",
+        "severity": null,
+        "status": "INSUFFICIENT_EVIDENCE",
+        "uncertainty": [
+          "no_supported_obligation_model_for_provision"
+        ],
+        "urgency": "UNKNOWN"
+      },
+      "scenario_id": "scenario_920e38ad9223b1215d92fc07"
+    },
+    {
+      "expectation_checks": {
+        "risk_flag": true,
+        "risk_level": true,
+        "status": true,
+        "urgency": true
+      },
+      "group": "scenarios",
+      "result": {
+        "baseline_version": "compliance-risk-baseline-v1",
+        "consequence": null,
+        "escalation_required": true,
+        "evidence": [],
+        "legal_validation": "UNVERIFIED",
+        "materiality": null,
+        "obligation": null,
+        "provision_version": null,
+        "reasoning_trace": [],
+        "risk_flag": null,
+        "risk_id": "risk_be4db868aecde1ab8f155c81",
+        "risk_level": null,
+        "rule_id": null,
+        "scenario_id": "scenario_c46445efc42aa98181247b62",
+        "severity": null,
+        "status": "INSUFFICIENT_EVIDENCE",
+        "uncertainty": [
+          "no_supported_obligation_model_for_provision"
+        ],
+        "urgency": "UNKNOWN"
+      },
+      "scenario_id": "scenario_c46445efc42aa98181247b62"
+    },
+    {
+      "expectation_checks": {
+        "risk_flag": true,
+        "risk_level": true,
+        "status": true,
+        "urgency": true
+      },
+      "group": "scenarios",
+      "result": {
+        "baseline_version": "compliance-risk-baseline-v1",
+        "consequence": null,
+        "escalation_required": true,
+        "evidence": [],
+        "legal_validation": "UNVERIFIED",
+        "materiality": null,
+        "obligation": null,
+        "provision_version": null,
+        "reasoning_trace": [],
+        "risk_flag": null,
+        "risk_id": "risk_fe76749d84fd6d4f326a2e7d",
+        "risk_level": null,
+        "rule_id": null,
+        "scenario_id": "scenario_d9c04a37c28330689aa4e96c",
+        "severity": null,
+        "status": "INSUFFICIENT_EVIDENCE",
+        "uncertainty": [
+          "no_supported_obligation_model_for_provision"
+        ],
+        "urgency": "UNKNOWN"
+      },
+      "scenario_id": "scenario_d9c04a37c28330689aa4e96c"
+    },
+    {
+      "expectation_checks": {
+        "risk_flag": true,
+        "risk_level": true,
+        "status": true,
+        "urgency": true
+      },
+      "group": "scenarios",
+      "result": {
+        "baseline_version": "compliance-risk-baseline-v1",
+        "consequence": null,
+        "escalation_required": true,
+        "evidence": [],
+        "legal_validation": "UNVERIFIED",
+        "materiality": null,
+        "obligation": null,
+        "provision_version": null,
+        "reasoning_trace": [],
+        "risk_flag": null,
+        "risk_id": "risk_133540c66d182a3c88ca19dc",
+        "risk_level": null,
+        "rule_id": null,
+        "scenario_id": "scenario_e45d9137432fd49abf4aea9a",
+        "severity": null,
+        "status": "INSUFFICIENT_EVIDENCE",
+        "uncertainty": [
+          "no_supported_obligation_model_for_provision"
+        ],
+        "urgency": "UNKNOWN"
+      },
+      "scenario_id": "scenario_e45d9137432fd49abf4aea9a"
+    },
+    {
+      "expectation_checks": {
+        "risk_flag": true,
+        "risk_level": true,
+        "status": true,
+        "urgency": true
+      },
+      "group": "scenarios",
+      "result": {
+        "baseline_version": "compliance-risk-baseline-v1",
+        "consequence": null,
+        "escalation_required": true,
+        "evidence": [],
+        "legal_validation": "UNVERIFIED",
+        "materiality": null,
+        "obligation": null,
+        "provision_version": null,
+        "reasoning_trace": [],
+        "risk_flag": null,
+        "risk_id": "risk_3f6f1889c699a44b3586ddb0",
+        "risk_level": null,
+        "rule_id": null,
+        "scenario_id": "scenario_e63b93a56cc0e7c91f2ad04e",
+        "severity": null,
+        "status": "INSUFFICIENT_EVIDENCE",
+        "uncertainty": [
+          "no_supported_obligation_model_for_provision"
+        ],
+        "urgency": "UNKNOWN"
+      },
+      "scenario_id": "scenario_e63b93a56cc0e7c91f2ad04e"
+    },
+    {
+      "expectation_checks": {
+        "risk_flag": true,
+        "risk_level": true,
+        "status": true,
+        "urgency": true
+      },
+      "group": "scenarios",
+      "result": {
+        "baseline_version": "compliance-risk-baseline-v1",
+        "consequence": null,
+        "escalation_required": true,
+        "evidence": [],
+        "legal_validation": "UNVERIFIED",
+        "materiality": null,
+        "obligation": null,
+        "provision_version": null,
+        "reasoning_trace": [],
+        "risk_flag": null,
+        "risk_id": "risk_3a32042863520eb67102f089",
+        "risk_level": null,
+        "rule_id": null,
+        "scenario_id": "scenario_efdf7322958aa4222ffd5e57",
+        "severity": null,
+        "status": "INSUFFICIENT_EVIDENCE",
+        "uncertainty": [
+          "no_supported_obligation_model_for_provision"
+        ],
+        "urgency": "UNKNOWN"
+      },
+      "scenario_id": "scenario_efdf7322958aa4222ffd5e57"
+    },
+    {
+      "expectation_checks": {
+        "risk_flag": true,
+        "risk_level": true,
+        "status": true,
+        "urgency": true
+      },
+      "group": "scenarios",
+      "result": {
+        "baseline_version": "compliance-risk-baseline-v1",
+        "consequence": null,
+        "escalation_required": true,
+        "evidence": [
+          {
+            "evidence_id": "ver_b78dfb5c893a5e5c361b67e3:obligation",
+            "locator": "pdf:page:13:line:37",
+            "quote": "19. Recognition of foreign Certifying Authorities .—(1) Subject to such conditions and restrictions\nas may be specified by regulations, the Controller may with the previous approval of the Central\nGovernment, and by notification in the Official Gazette, recognise any foreign Certifying Authority as a\nCertifying Authority for the purposes of this Act.\n(2) Where any Certifying A uthority is recognised under sub -section ( 1), the 2[electronic signature]\nCertificate issued by such Certifying Authority shall be valid for the purposes of this Act.\n(3) The Controller may, if he is satisfied that any Certifying Authority has contravened any of the\nconditions and restrictions subject to which it was granted recognition under sub -section (1) he may, for\nreasons to be recorded in writing, by notification in the Official Gazette, revoke such recognition.\n1. Subs. by Act 10 of 2009, s. 12, for ―Assistant Controllers‖ (w.e.f. 27-10-2009).\n2. Subs. by s. 2, ibid., for ―Digital Signature‖ (w.e.f. 27-10-2009).\n14\n20. [Controller to act as repository .] Omitted by the Information Technology (Amendment) Act,\n2008 (10 of 2009), s. 13 (w.e.f. 27-10-2009).",
+            "role": "obligation",
+            "source_id": "src_ac34e30e3da4e32b49b5b274",
+            "source_sha256": "e71725fa32e892f887308816046c42275fc855b5cbb4ee1063cdbd518f165140",
+            "text_sha256": "ee8cf5b75f2fc19d09e82bf8f325cddda163b223ce419e5b9f8ab89c0fa89fbc"
+          },
+          {
+            "evidence_id": "ver_b78dfb5c893a5e5c361b67e3:temporal",
+            "locator": "pdf:page:13:line:37",
+            "quote": "19. Recognition of foreign Certifying Authorities .—(1) Subject to such conditions and restrictions\nas may be specified by regulations, the Controller may with the previous approval of the Central\nGovernment, and by notification in the Official Gazette, recognise any foreign Certifying Authority as a\nCertifying Authority for the purposes of this Act.\n(2) Where any Certifying A uthority is recognised under sub -section ( 1), the 2[electronic signature]\nCertificate issued by such Certifying Authority shall be valid for the purposes of this Act.\n(3) The Controller may, if he is satisfied that any Certifying Authority has contravened any of the\nconditions and restrictions subject to which it was granted recognition under sub -section (1) he may, for\nreasons to be recorded in writing, by notification in the Official Gazette, revoke such recognition.\n1. Subs. by Act 10 of 2009, s. 12, for ―Assistant Controllers‖ (w.e.f. 27-10-2009).\n2. Subs. by s. 2, ibid., for ―Digital Signature‖ (w.e.f. 27-10-2009).\n14\n20. [Controller to act as repository .] Omitted by the Information Technology (Amendment) Act,\n2008 (10 of 2009), s. 13 (w.e.f. 27-10-2009).",
+            "role": "temporal",
+            "source_id": "src_ac34e30e3da4e32b49b5b274",
+            "source_sha256": "e71725fa32e892f887308816046c42275fc855b5cbb4ee1063cdbd518f165140",
+            "text_sha256": "ee8cf5b75f2fc19d09e82bf8f325cddda163b223ce419e5b9f8ab89c0fa89fbc"
+          }
+        ],
+        "legal_validation": "UNVERIFIED",
+        "materiality": null,
+        "obligation": "Certificate falls within the signature scope of the supplied section 19(2) wording, with section 19(1) recognition stipulated.",
+        "provision_version": "ver_b78dfb5c893a5e5c361b67e3",
+        "reasoning_trace": [
+          "Selected ver_b78dfb5c893a5e5c361b67e3 for 2009-10-27: ASSUMED_FOR_DEMONSTRATION."
+        ],
+        "risk_flag": null,
+        "risk_id": "risk_f8435ed5bb56f48cdda4cf5c",
+        "risk_level": null,
+        "rule_id": "it19-post-conditional-v1",
+        "scenario_id": "scenario_f4883150aa86b5b2573fa907",
+        "severity": null,
+        "status": "INSUFFICIENT_EVIDENCE",
+        "uncertainty": [
+          "operational_rule_interpretation_not_expert_validated",
+          "historical_applicability_stipulated_for_demonstration",
+          "materiality_unassessed_risk_uses_obligation_and_consequence",
+          "missing_scenario_scope:organization_type",
+          "missing_scenario_scope:industry",
+          "missing_scenario_scope:jurisdiction",
+          "missing_scenario_scope:activity"
+        ],
+        "urgency": "UNKNOWN"
+      },
+      "scenario_id": "scenario_f4883150aa86b5b2573fa907"
+    },
+    {
+      "expectation_checks": {
+        "risk_flag": true,
+        "risk_level": true,
+        "status": true,
+        "urgency": true
+      },
+      "group": "conditional_demonstrations",
+      "result": {
+        "baseline_version": "compliance-risk-baseline-v1",
+        "consequence": "Certificate validity is not established by this selected wording; seek recognition or an alternative supported basis. No penalty is inferred.",
+        "escalation_required": true,
+        "evidence": [
+          {
+            "evidence_id": "ver_b78dfb5c893a5e5c361b67e3:obligation",
+            "locator": "pdf:page:13:line:37",
+            "quote": "19. Recognition of foreign Certifying Authorities .—(1) Subject to such conditions and restrictions\nas may be specified by regulations, the Controller may with the previous approval of the Central\nGovernment, and by notification in the Official Gazette, recognise any foreign Certifying Authority as a\nCertifying Authority for the purposes of this Act.\n(2) Where any Certifying A uthority is recognised under sub -section ( 1), the 2[electronic signature]\nCertificate issued by such Certifying Authority shall be valid for the purposes of this Act.\n(3) The Controller may, if he is satisfied that any Certifying Authority has contravened any of the\nconditions and restrictions subject to which it was granted recognition under sub -section (1) he may, for\nreasons to be recorded in writing, by notification in the Official Gazette, revoke such recognition.\n1. Subs. by Act 10 of 2009, s. 12, for ―Assistant Controllers‖ (w.e.f. 27-10-2009).\n2. Subs. by s. 2, ibid., for ―Digital Signature‖ (w.e.f. 27-10-2009).\n14\n20. [Controller to act as repository .] Omitted by the Information Technology (Amendment) Act,\n2008 (10 of 2009), s. 13 (w.e.f. 27-10-2009).",
+            "role": "obligation",
+            "source_id": "src_ac34e30e3da4e32b49b5b274",
+            "source_sha256": "e71725fa32e892f887308816046c42275fc855b5cbb4ee1063cdbd518f165140",
+            "text_sha256": "ee8cf5b75f2fc19d09e82bf8f325cddda163b223ce419e5b9f8ab89c0fa89fbc"
+          },
+          {
+            "evidence_id": "ver_b78dfb5c893a5e5c361b67e3:temporal",
+            "locator": "pdf:page:13:line:37",
+            "quote": "19. Recognition of foreign Certifying Authorities .—(1) Subject to such conditions and restrictions\nas may be specified by regulations, the Controller may with the previous approval of the Central\nGovernment, and by notification in the Official Gazette, recognise any foreign Certifying Authority as a\nCertifying Authority for the purposes of this Act.\n(2) Where any Certifying A uthority is recognised under sub -section ( 1), the 2[electronic signature]\nCertificate issued by such Certifying Authority shall be valid for the purposes of this Act.\n(3) The Controller may, if he is satisfied that any Certifying Authority has contravened any of the\nconditions and restrictions subject to which it was granted recognition under sub -section (1) he may, for\nreasons to be recorded in writing, by notification in the Official Gazette, revoke such recognition.\n1. Subs. by Act 10 of 2009, s. 12, for ―Assistant Controllers‖ (w.e.f. 27-10-2009).\n2. Subs. by s. 2, ibid., for ―Digital Signature‖ (w.e.f. 27-10-2009).\n14\n20. [Controller to act as repository .] Omitted by the Information Technology (Amendment) Act,\n2008 (10 of 2009), s. 13 (w.e.f. 27-10-2009).",
+            "role": "temporal",
+            "source_id": "src_ac34e30e3da4e32b49b5b274",
+            "source_sha256": "e71725fa32e892f887308816046c42275fc855b5cbb4ee1063cdbd518f165140",
+            "text_sha256": "ee8cf5b75f2fc19d09e82bf8f325cddda163b223ce419e5b9f8ab89c0fa89fbc"
+          }
+        ],
+        "legal_validation": "UNVERIFIED",
+        "materiality": null,
+        "obligation": "Certificate falls within the signature scope of the supplied section 19(2) wording, with section 19(1) recognition stipulated.",
+        "provision_version": "demo_it_act_s19_pre_2009",
+        "reasoning_trace": [
+          "Selected demo_it_act_s19_pre_2009 for 2009-10-26: ASSUMED_FOR_DEMONSTRATION.",
+          "Scenario scope and explicit applicability conditions match.",
+          "Scenario does not satisfy the modelled obligation; consequence severity determines risk."
+        ],
+        "risk_flag": true,
+        "risk_id": "risk_1694c5c7c248875a19ad96fb",
+        "risk_level": "Medium",
+        "rule_id": "it19-pre-conditional-v1",
+        "scenario_id": "demo_it_act_section_19_electronic_signature_pre_risk",
+        "severity": "Medium",
+        "status": "PROVISIONAL_ASSESSMENT",
+        "uncertainty": [
+          "operational_rule_interpretation_not_expert_validated",
+          "historical_applicability_stipulated_for_demonstration",
+          "materiality_unassessed_risk_uses_obligation_and_consequence"
+        ],
+        "urgency": "IMMEDIATE"
+      },
+      "scenario_id": "demo_it_act_section_19_electronic_signature_pre_risk"
+    },
+    {
+      "expectation_checks": {
+        "risk_flag": true,
+        "risk_level": true,
+        "status": true,
+        "urgency": true
+      },
+      "group": "conditional_demonstrations",
+      "result": {
+        "baseline_version": "compliance-risk-baseline-v1",
+        "consequence": "No adverse consequence detected under the selected obligation.",
+        "escalation_required": true,
+        "evidence": [
+          {
+            "evidence_id": "ver_b78dfb5c893a5e5c361b67e3:obligation",
+            "locator": "pdf:page:13:line:37",
+            "quote": "19. Recognition of foreign Certifying Authorities .—(1) Subject to such conditions and restrictions\nas may be specified by regulations, the Controller may with the previous approval of the Central\nGovernment, and by notification in the Official Gazette, recognise any foreign Certifying Authority as a\nCertifying Authority for the purposes of this Act.\n(2) Where any Certifying A uthority is recognised under sub -section ( 1), the 2[electronic signature]\nCertificate issued by such Certifying Authority shall be valid for the purposes of this Act.\n(3) The Controller may, if he is satisfied that any Certifying Authority has contravened any of the\nconditions and restrictions subject to which it was granted recognition under sub -section (1) he may, for\nreasons to be recorded in writing, by notification in the Official Gazette, revoke such recognition.\n1. Subs. by Act 10 of 2009, s. 12, for ―Assistant Controllers‖ (w.e.f. 27-10-2009).\n2. Subs. by s. 2, ibid., for ―Digital Signature‖ (w.e.f. 27-10-2009).\n14\n20. [Controller to act as repository .] Omitted by the Information Technology (Amendment) Act,\n2008 (10 of 2009), s. 13 (w.e.f. 27-10-2009).",
+            "role": "obligation",
+            "source_id": "src_ac34e30e3da4e32b49b5b274",
+            "source_sha256": "e71725fa32e892f887308816046c42275fc855b5cbb4ee1063cdbd518f165140",
+            "text_sha256": "ee8cf5b75f2fc19d09e82bf8f325cddda163b223ce419e5b9f8ab89c0fa89fbc"
+          },
+          {
+            "evidence_id": "ver_b78dfb5c893a5e5c361b67e3:temporal",
+            "locator": "pdf:page:13:line:37",
+            "quote": "19. Recognition of foreign Certifying Authorities .—(1) Subject to such conditions and restrictions\nas may be specified by regulations, the Controller may with the previous approval of the Central\nGovernment, and by notification in the Official Gazette, recognise any foreign Certifying Authority as a\nCertifying Authority for the purposes of this Act.\n(2) Where any Certifying A uthority is recognised under sub -section ( 1), the 2[electronic signature]\nCertificate issued by such Certifying Authority shall be valid for the purposes of this Act.\n(3) The Controller may, if he is satisfied that any Certifying Authority has contravened any of the\nconditions and restrictions subject to which it was granted recognition under sub -section (1) he may, for\nreasons to be recorded in writing, by notification in the Official Gazette, revoke such recognition.\n1. Subs. by Act 10 of 2009, s. 12, for ―Assistant Controllers‖ (w.e.f. 27-10-2009).\n2. Subs. by s. 2, ibid., for ―Digital Signature‖ (w.e.f. 27-10-2009).\n14\n20. [Controller to act as repository .] Omitted by the Information Technology (Amendment) Act,\n2008 (10 of 2009), s. 13 (w.e.f. 27-10-2009).",
+            "role": "temporal",
+            "source_id": "src_ac34e30e3da4e32b49b5b274",
+            "source_sha256": "e71725fa32e892f887308816046c42275fc855b5cbb4ee1063cdbd518f165140",
+            "text_sha256": "ee8cf5b75f2fc19d09e82bf8f325cddda163b223ce419e5b9f8ab89c0fa89fbc"
+          }
+        ],
+        "legal_validation": "UNVERIFIED",
+        "materiality": null,
+        "obligation": "Certificate falls within the signature scope of the supplied section 19(2) wording, with section 19(1) recognition stipulated.",
+        "provision_version": "ver_b78dfb5c893a5e5c361b67e3",
+        "reasoning_trace": [
+          "Selected ver_b78dfb5c893a5e5c361b67e3 for 2009-10-27: ASSUMED_FOR_DEMONSTRATION.",
+          "Scenario scope and explicit applicability conditions match.",
+          "Scenario satisfies the selected obligation under the supplied facts."
+        ],
+        "risk_flag": false,
+        "risk_id": "risk_c6c6303336d586ea567de260",
+        "risk_level": "None",
+        "rule_id": "it19-post-conditional-v1",
+        "scenario_id": "demo_it_act_section_19_electronic_signature_post_risk",
+        "severity": "None",
+        "status": "PROVISIONAL_ASSESSMENT",
+        "uncertainty": [
+          "operational_rule_interpretation_not_expert_validated",
+          "historical_applicability_stipulated_for_demonstration",
+          "materiality_unassessed_risk_uses_obligation_and_consequence"
+        ],
+        "urgency": "NONE"
+      },
+      "scenario_id": "demo_it_act_section_19_electronic_signature_post_risk"
+    }
+  ],
+  "schema_version": "1.0.0"
+}

@@ -14,6 +14,11 @@ class LegalDriftComparisonTests(unittest.TestCase):
             "The company submitted the document on day 12.",
         )
         self.assertEqual(result["classification"]["materiality"], "Medium")
+        self.assertEqual(result["classification"]["materiality_triage"], "Medium")
+        self.assertEqual(
+            result["classification"]["materiality_classifier_status"],
+            "untrained_no_adjudicated_gold",
+        )
         self.assertTrue(result["classification"]["legal_rule_changed"])
         self.assertTrue(result["classification"]["obligation_type_stable"])
         self.assertEqual(result["compliance"]["pre_answer"], "non_compliant")

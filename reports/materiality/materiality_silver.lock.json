@@ -1,0 +1,12 @@
+{
+  "agreement_is_human_annotation": false,
+  "case_count": 50,
+  "dataset_sha256": "d61f877a4a211de91927ea93f5994e0b6bf2c4a0f0818893e5a81ae2b8fce646",
+  "is_gold": false,
+  "legal_correctness_claimed": false,
+  "provisional_label_count": 50,
+  "research_gate_passed": false,
+  "schema_version": "1.0.0",
+  "status": "automated_silver_labels_not_gold",
+  "unresolved_disagreement_count": 0
+}

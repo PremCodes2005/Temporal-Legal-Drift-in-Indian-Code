@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://temporal-legal-drift.local/schemas/annotation/materiality_annotation_round.v1.schema.json",
+  "title": "Evidence-linked materiality annotation round (not gold)",
+  "type": "object",
+  "required": ["schema_version", "round_id", "status", "unit_of_analysis", "guideline_version", "canonical_labels", "required_independent_annotators_per_pair", "required_adjudication_per_pair", "input_sha256", "taxonomy_sha256", "tasks"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "round_id": {"const": "materiality-annotation-round-v1"},
+    "status": {"const": "annotation_round_open_not_gold"},
+    "unit_of_analysis": {"const": "amendment_controlled_fragment_not_full_historical_provision"},
+    "guideline_version": {"type": "string"},
+    "canonical_labels": {"const": ["High", "Medium", "Low", "None"]},
+    "required_independent_annotators_per_pair": {"const": 2},
+    "required_adjudication_per_pair": {"const": true},
+    "input_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "taxonomy_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "tasks": {
+      "type": "array",
+      "minItems": 50,
+      "maxItems": 50,
+      "items": {
+        "type": "object",
+        "required": ["pair_id", "transition_id", "amendment_event_id", "act_id", "provision_path", "operation", "unit_of_analysis", "before_version_id", "after_version_id", "before_text", "after_text", "before_fragment_state", "amendment_instruction_text", "source_evidence", "machine_checks", "annotations", "adjudication", "materiality", "guideline_version", "gold_status"],
+        "properties": {
+          "source_evidence": {
+            "type": "array",
+            "minItems": 2,
+            "items": {"type": "object", "required": ["source_id", "sha256", "source_url", "role", "locator", "evidence_text"]}
+          },
+          "annotations": {"type": "array", "maxItems": 2, "items": {"$ref": "materiality_annotation.schema.json"}},
+          "adjudication": {"type": ["object", "null"]},
+          "materiality": {
+            "type": "object",
+            "required": ["label", "dimensions", "status"],
+            "properties": {
+              "label": {"type": "null"},
+              "dimensions": {"type": "array"},
+              "status": {"const": "awaiting_independent_annotations"}
+            }
+          },
+          "gold_status": {"const": "NOT_GOLD"}
+        }
+      }
+    }
+  }
+}

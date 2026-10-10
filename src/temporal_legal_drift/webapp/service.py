@@ -21,6 +21,7 @@ from temporal_legal_drift.parsing.models import ParseContext
 from temporal_legal_drift.parsing.pdf import PdfParser
 from temporal_legal_drift.rag import RagPipeline
 from temporal_legal_drift.rag.indiacode import INDIA_CODE_HOME
+from temporal_legal_drift.risk.service import RiskService
 
 
 MAX_UPLOAD_BYTES = 20 * 1024 * 1024
@@ -50,6 +51,12 @@ class DashboardService:
     def project_audit(self) -> dict[str, object]:
         """Run the bounded read-only evaluation agent for API consumers."""
         return ProjectEvaluationAgent(self.root).evaluate()
+
+    def risk_catalog(self) -> dict[str, object]:
+        return RiskService(self.root).catalog()
+
+    def assess_risk(self, value: dict[str, object]) -> dict[str, object]:
+        return RiskService(self.root).assess(value)
 
     def query_rag(self, value: dict[str, object]) -> dict[str, object]:
         query = _required_text(value, "query", 4000)

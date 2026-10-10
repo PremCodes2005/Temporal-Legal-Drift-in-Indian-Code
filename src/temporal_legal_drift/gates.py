@@ -438,6 +438,14 @@ def _phase4(root: Path) -> PhaseGateResult:
 
 def _phase5(root: Path) -> PhaseGateResult:
     lock = load_json(root / "reports" / "phase5" / "annotation_workload.lock.json")
+    materiality_round_lock_path = root / "reports" / "materiality" / "annotation_round.lock.json"
+    materiality_round_path = root / "data" / "annotations" / "materiality_annotation_round.v1.json"
+    materiality_round_lock = load_json(materiality_round_lock_path)
+    materiality_round = load_json(materiality_round_path)
+    silver_path = root / "data" / "silver" / "materiality_silver_labels.v1.json"
+    silver_lock_path = root / "reports" / "materiality" / "materiality_silver.lock.json"
+    silver = load_json(silver_path)
+    silver_lock = load_json(silver_lock_path)
     taxonomy = load_json(root / "configs" / "annotation" / "materiality_taxonomy.v1.json")
     graph_lock = load_json(root / "reports" / "phase3" / "version_graph.lock.json")
     cross_lock = load_json(root / "reports" / "phase4" / "cross_version_validation.lock.json")
@@ -450,6 +458,15 @@ def _phase5(root: Path) -> PhaseGateResult:
         "materiality_annotation_schema_present": (
             root / "schemas" / "annotation" / "materiality_annotation.schema.json"
         ).is_file(),
+        "materiality_round_and_adjudication_schemas_present": (
+            (root / "schemas" / "annotation" / "materiality_annotation_round.v1.schema.json").is_file()
+            and (root / "schemas" / "annotation" / "materiality_adjudication.v1.schema.json").is_file()
+            and (root / "schemas" / "annotation" / "materiality_silver.v1.schema.json").is_file()
+        ),
+        "materiality_guideline_present_and_draft_status_explicit": (
+            (root / "protocols" / "materiality_annotation_guideline_v1.md").is_file()
+            and materiality_round.get("taxonomy_status") != "frozen"
+        ),
         "canonical_four_levels_defined": (
             isinstance(labels, list)
             and [item.get("label") for item in labels if isinstance(item, dict)]
@@ -481,6 +498,41 @@ def _phase5(root: Path) -> PhaseGateResult:
         "fifty_unique_annotation_tasks_created": (
             lock.get("task_count") == 50 and lock.get("unique_pair_count") == 50
         ),
+        "fifty_evidence_linked_materiality_review_cases_created": (
+            materiality_round_path.is_file()
+            and sha256(materiality_round_path.read_bytes()).hexdigest()
+            == materiality_round_lock.get("round_sha256")
+            and materiality_round_lock.get("task_count") == 50
+            and materiality_round_lock.get("unique_pair_count") == 50
+            and materiality_round_lock.get("all_tasks_have_two_source_anchors") is True
+            and materiality_round_lock.get("all_tasks_machine_corroborated") is True
+            and materiality_round_lock.get("all_labels_unassigned") is True
+            and materiality_round_lock.get("gold_labels_created") == 0
+            and materiality_round.get("status") == "annotation_round_open_not_gold"
+        ),
+        "automated_silver_labels_are_traceable_and_not_mislabeled_gold": (
+            silver_path.is_file()
+            and sha256(silver_path.read_bytes()).hexdigest() == silver_lock.get("dataset_sha256")
+            and silver.get("status") == "automated_silver_labels_not_gold"
+            and silver.get("case_count") == 50
+            and silver_lock.get("case_count") == 50
+            and len(silver.get("rows", [])) == 50
+            and all(
+                row.get("annotator_a", {}).get("method_id") != row.get("annotator_b", {}).get("method_id")
+                and row.get("gold_status") == "NOT_GOLD"
+                and row.get("automated_adjudication", {}).get("status") in {
+                    "PROVISIONAL_MACHINE_CONSENSUS",
+                    "ABSTAINED_MATERIAL_DISAGREEMENT",
+                }
+                for row in silver.get("rows", [])
+            )
+            and silver.get("legal_correctness_claimed") is False
+            and silver.get("is_gold") is False
+            and silver.get("agreement", {}).get("not_human_inter_annotator_agreement") is True
+            and silver_lock.get("agreement_is_human_annotation") is False
+            and silver_lock.get("research_gate_passed") is False
+            and (root / "reports" / "materiality" / "automated_silver_evaluation.v1.md").is_file()
+        ),
         "all_tasks_evidence_linked": lock.get("all_tasks_evidence_linked") is True,
         "phase5_inputs_reconciled": (
             isinstance(fingerprints, dict)
@@ -499,12 +551,13 @@ def _phase5(root: Path) -> PhaseGateResult:
         5,
         all(checks.values()),
         checks,
-        "technical_annotation_workload_passed_research_annotation_not_performed",
+        "technical_annotation_workload_and_automated_silver_labels_ready_human_gold_unavailable",
         (
-            "no historical before/after pair is complete",
-            "the 50 tasks have not received two independent annotations",
-            "the ten-dimension draft and materiality guideline are not research-frozen",
-            "no agreement or adjudication result exists",
+            "50 machine-corroborated amendment-fragment cases are prepared but do not provide full historical provision context",
+            "automated labels are silver hypotheses from rules, not two independent human annotations or legal ground truth",
+            "automated-method agreement and kappa quantify rule-system agreement only",
+            "the taxonomy remains a draft and no adjudicated legal gold set exists",
+            "classifier scores against silver labels would be circular and cannot establish legal accuracy",
         ),
     )
 

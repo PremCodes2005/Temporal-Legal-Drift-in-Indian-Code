@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://temporal-legal-drift.local/schemas/annotation/materiality_llm_assessment_run.v1.schema.json",
+  "title": "Auditable batch of LLM materiality opinions; never gold",
+  "type": "object",
+  "required": ["schema_version", "assessment_id", "status", "source_silver_sha256", "source_round_sha256", "rubric_id", "rubric_version", "provider", "model", "case_count", "rows", "legal_validation_status", "legal_correctness_claimed", "is_gold"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "assessment_id": {"const": "materiality-llm-assessments-v1"},
+    "status": {"const": "llm_materiality_assessments_complete_with_review_required"},
+    "source_silver_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "source_round_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "rubric_id": {"type": "string"},
+    "rubric_version": {"type": "string"},
+    "case_count": {"const": 50},
+    "legal_validation_status": {"const": "unverified"},
+    "legal_correctness_claimed": {"const": false},
+    "is_gold": {"const": false},
+    "rows": {
+      "type": "array",
+      "minItems": 50,
+      "maxItems": 50,
+      "items": {
+        "type": "object",
+        "required": ["pair_id", "workflow_status", "assessment_status", "materiality_label", "evidence", "rationale", "uncertainty", "insufficient_evidence", "citation_integrity", "legal_correctness"],
+        "properties": {
+          "workflow_status": {"enum": ["REVIEW_REQUIRED", "INSUFFICIENT_EVIDENCE"]},
+          "assessment_status": {"enum": ["SCHEMA_AND_CITATION_VALID", "INVALID_SCHEMA_OR_EVIDENCE", "INVALID_JSON", "MODEL_CALL_FAILED"]},
+          "materiality_label": {"enum": ["High", "Medium", "Low", "None", null]},
+          "evidence": {"type": "array"},
+          "rationale": {"type": "string"},
+          "uncertainty": {"type": ["string", "null"]},
+          "insufficient_evidence": {"type": ["boolean", "null"]},
+          "citation_integrity": {"enum": ["ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT", "NOT_ESTABLISHED"]},
+          "legal_correctness": {"const": "UNVERIFIED"}
+        }
+      }
+    }
+  }
+}

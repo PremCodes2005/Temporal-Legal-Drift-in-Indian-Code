@@ -16,7 +16,7 @@ ACT_REFERENCE = re.compile(
 )
 IN_SECTION = re.compile(r"\b(?:in|of)\s+section\s+(?P<number>\d{1,3}[A-Z]{0,3})\b", re.I)
 SECTION_REFERENCE = re.compile(r"\bsection\s+(?P<number>\d{1,3}[A-Z]{0,3})\b", re.I)
-QUOTED = re.compile(r'"(?P<straight>[^"\n]{1,4000})"|“(?P<curly>[^”]{1,4000})”', re.S)
+QUOTED = re.compile(r'"(?P<straight>[^"]{1,4000})"|“(?P<curly>[^”]{1,4000})”', re.S)
 DATE_TEXT = re.compile(
     r"(?P<day>\d{1,2})(?:st|nd|rd|th)?(?:\s+day\s+of)?\s+"
     r"(?P<month>January|February|March|April|May|June|July|August|September|October|November|December)"
@@ -214,6 +214,16 @@ def _target_provision(text: str) -> tuple[str | None, bool]:
     )
     if renumbered:
         return f"section:{renumbered.group('number').upper()}", False
+    # In "After section 31 ... the following new section shall be inserted,
+    # namely: '31A ...'", the created section is the target, not the anchor.
+    inserted_section = re.search(
+        r"\bfollowing\s+(?:new\s+)?section\b[\s\S]{0,500}?\bnamely\s*[:—-]{1,2}\s*[‘“\"']?\s*"
+        r"(?P<number>\d{1,3}[A-Z]{1,3})\b",
+        text[:2000],
+        re.I,
+    )
+    if inserted_section:
+        return f"section:{inserted_section.group('number').upper()}", False
     direct = IN_SECTION.search(text[:1200])
     if direct:
         return f"section:{direct.group('number').upper()}", False
@@ -224,6 +234,15 @@ def _target_provision(text: str) -> tuple[str | None, bool]:
 
 
 def _operation(text: str) -> tuple[str, bool]:
+    directives = re.findall(
+        r"\bshall\s+be\s+(?:inserted|substituted|replaced|omitted|repealed|re-?numbered)\b",
+        text,
+        re.I,
+    )
+    # One event represents one controlled operation. Do not silently reduce a
+    # compound numbered clause to whichever quoted operand happens to be last.
+    if len(directives) > 1:
+        return "UNKNOWN", True
     matches = [name for name, pattern in OPERATION_PATTERNS if pattern.search(text)]
     unique = list(dict.fromkeys(matches))
     if len(unique) == 1:
@@ -234,15 +253,43 @@ def _operation(text: str) -> tuple[str, bool]:
 
 
 def _wording(text: str, operation: str) -> tuple[str | None, str | None]:
-    quotes = [
-        " ".join((match.group("straight") or match.group("curly") or "").split())
-        for match in QUOTED.finditer(text)
-    ]
+    quote_matches = list(QUOTED.finditer(text))
+    quotes = [" ".join((match.group("straight") or match.group("curly") or "").split()) for match in quote_matches]
     quotes = [value for value in quotes if value]
     if operation in {"SUBSTITUTE", "REPLACE"} and len(quotes) >= 2:
         return quotes[0], quotes[-1]
-    if operation == "INSERT" and quotes:
-        return None, quotes[-1]
+    if operation == "INSERT":
+        insertion = re.search(r"\bshall\s+be\s+inserted\b", text, re.I)
+        if not insertion:
+            return None, None
+        # New statutory units are commonly enclosed in single curly quotes.
+        # Preserve the whole inserted unit instead of extracting an inner
+        # definition term such as "costs" or "open offer".
+        unit_marker = re.search(
+            r"\bfollowing\s+(?:new\s+)?(?:section|sub-section|clause|proviso)\b[\s\S]{0,500}?"
+            r"\bshall\s+be\s+inserted\s*,?\s*namely\s*[:—-]",
+            text,
+            re.I,
+        )
+        if unit_marker:
+            opening = re.search(r"[‘“\"']", text[unit_marker.end():])
+            if opening:
+                start = unit_marker.end() + opening.start()
+                left = text[start]
+                right_char = {"‘": "’", "“": "”", "\"": "\"", "'": "'"}[left]
+                end = text.rfind(right_char)
+                if end > start:
+                    payload = " ".join(text[start + 1:end].split())
+                    return None, payload or None
+            return None, None
+        # For a word/phrase insertion, choose the quoted new operand before the
+        # one insertion cue; the matcher permits line wraps inside the quotes.
+        before_cue = [
+            " ".join((match.group("straight") or match.group("curly") or "").split())
+            for match in quote_matches if match.end() <= insertion.start()
+        ]
+        before_cue = [value for value in before_cue if value]
+        return (None, before_cue[-1]) if before_cue else (None, None)
     if operation == "OMIT" and quotes:
         return quotes[0], ""
     if operation == "RENUMBER":

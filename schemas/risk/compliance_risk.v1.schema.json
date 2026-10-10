@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ComplianceRisk v1 — independent of drift scores",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["risk_id", "scenario_id", "provision_version", "materiality", "obligation", "consequence", "severity", "urgency", "uncertainty", "risk_level", "evidence", "escalation_required", "status", "risk_flag", "reasoning_trace", "rule_id", "baseline_version", "legal_validation"],
+  "properties": {
+    "risk_id": {"type": "string"}, "scenario_id": {"type": "string"},
+    "provision_version": {"type": ["string", "null"]},
+    "materiality": {"enum": ["High", "Medium", "Low", "None", null]},
+    "obligation": {"type": ["string", "null"]}, "consequence": {"type": ["string", "null"]},
+    "severity": {"enum": ["High", "Medium", "Low", "None", null]},
+    "urgency": {"enum": ["IMMEDIATE", "SOON", "ROUTINE", "NONE", "UNKNOWN"]},
+    "uncertainty": {"type": "array", "items": {"type": "string"}},
+    "risk_level": {"enum": ["High", "Medium", "Low", "None", null]},
+    "evidence": {"type": "array", "items": {"type": "object"}},
+    "escalation_required": {"type": "boolean"},
+    "status": {"enum": ["PROVISIONAL_ASSESSMENT", "INSUFFICIENT_EVIDENCE", "REVIEW_REQUIRED", "NOT_APPLICABLE"]},
+    "risk_flag": {"type": ["boolean", "null"]},
+    "reasoning_trace": {"type": "array", "items": {"type": "string"}},
+    "rule_id": {"type": ["string", "null"]},
+    "baseline_version": {"const": "compliance-risk-baseline-v1"},
+    "legal_validation": {"const": "UNVERIFIED"}
+  }
+}

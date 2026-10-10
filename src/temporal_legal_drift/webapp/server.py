@@ -54,6 +54,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             "/api/architecture": self.dashboard_service.architecture,
             "/api/rag/status": self.dashboard_service.rag_status,
             "/api/audit": self.dashboard_service.project_audit,
+            "/api/risk/catalog": self.dashboard_service.risk_catalog,
         }
         try:
             if path in api_routes:
@@ -73,6 +74,8 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             body = self._request_json()
             if path == "/api/scenarios":
                 self._json(HTTPStatus.CREATED, self.dashboard_service.submit_scenario(body))
+            elif path == "/api/risk/assess":
+                self._json(HTTPStatus.OK, self.dashboard_service.assess_risk(body))
             elif path == "/api/rag/query":
                 self._json(HTTPStatus.OK, self.dashboard_service.query_rag(body))
             elif path == "/api/rag/reindex":

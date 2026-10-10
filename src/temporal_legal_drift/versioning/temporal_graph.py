@@ -841,7 +841,9 @@ def _target_path_detail(text: str) -> str | None:
     parts = [f"section:{section.group(1).upper()}"]
     for label, pattern in (
         ("sub-section", r"\bin\s+sub-section\s*\(?([0-9A-Za-z]+)\)?"),
-        ("clause", r"\bin\s+clause\s*\(?([0-9A-Za-z]+)\)?"),
+        # Word boundary after singular "clause" prevents "clauses" from
+        # being misread as clause identifier "s" in multi-clause amendments.
+        ("clause", r"\bin\s+clause\b\s*\(?([0-9A-Za-z]+)\)?"),
         ("sub-clause", r"\bin\s+sub-clause\s*\(?([0-9A-Za-z]+)\)?"),
         ("proviso", r"\bin\s+(?:the\s+)?(?:(\d+)(?:st|nd|rd|th)\s+)?proviso"),
     ):

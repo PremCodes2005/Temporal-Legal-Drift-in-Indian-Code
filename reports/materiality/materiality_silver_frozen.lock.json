@@ -1,0 +1,15 @@
+{
+  "case_count": 50,
+  "dataset_id": "materiality-silver-v1",
+  "dataset_path": "data/silver/materiality_silver_labels.v1.json",
+  "freeze_id": "materiality-silver-v1-frozen",
+  "immutable": true,
+  "is_gold": false,
+  "legal_correctness_claimed": false,
+  "preserves_provisional_tie_breaks": true,
+  "preserves_rule_system_predictions": true,
+  "preserves_source_evidence_links": true,
+  "schema_version": "1.0.0",
+  "source_file_sha256": "d61f877a4a211de91927ea93f5994e0b6bf2c4a0f0818893e5a81ae2b8fce646",
+  "source_round_sha256": "0d573528b7057adc0d0a4c92ffc6ed64d4f7e0cdebab3e70d097e8ae6a4ad365"
+}

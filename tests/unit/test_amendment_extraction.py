@@ -43,6 +43,65 @@ class GeneralisedAmendmentExtractionTests(unittest.TestCase):
         self.assertTrue(all(item.source_page == 1 and item.evidence_text for item in events))
         self.assertFalse(any(item.reason_code == "parsing_failure" for item in unresolved))
 
+    def test_new_section_insert_extracts_outer_single_curly_payload_and_target(self) -> None:
+        instruction = """An Act to amend the Fixture Act, 2020.
+1. After section 31 of the principal Act, the following new section shall be inserted,
+namely:—
+‘31A. The Court shall determine the amount of “costs” payable.’."""
+        events, unresolved = GeneralisedAmendmentExtractor().extract(
+            {"blocks": [{"block_id": "x", "source_anchor": "pdf:page:1", "normalized_text": instruction}]},
+            source_document="new-section-fixture", source_sha256="e" * 64, amending_act="Fixture Amendment Act",
+        )
+        self.assertEqual(len(events), 1)
+        self.assertEqual(events[0].target_provision, "section:31A")
+        self.assertEqual(events[0].operation, "INSERT")
+        self.assertTrue(events[0].new_text.startswith("31A. The Court shall determine"))
+        self.assertIn("“costs”", events[0].new_text)
+        self.assertGreater(len(events[0].new_text), len("costs"))
+        self.assertFalse(unresolved)
+
+    def test_inserted_wording_across_pdf_line_break_selects_new_operand(self) -> None:
+        instruction = """1. In the Fixture Act, 2020, in section 21, after the words "convertible into equity shares", the words
+"or completion of such transactions as may be prescribed," shall be inserted."""
+        events, unresolved = GeneralisedAmendmentExtractor().extract(
+            {"blocks": [{"block_id": "x", "source_anchor": "pdf:page:1", "normalized_text": instruction}]},
+            source_document="line-wrap-fixture", source_sha256="f" * 64, amending_act="Fixture Amendment Act",
+        )
+        self.assertEqual(events[0].new_text, "or completion of such transactions as may be prescribed,")
+        self.assertFalse(unresolved)
+
+    def test_compound_same_operation_clause_abstains_instead_of_selecting_one_operand(self) -> None:
+        instruction = """1. In section 74,—
+(i) the following proviso shall be inserted, namely: “first insertion”;
+(ii) the following clause shall be inserted, namely: “second insertion.”"""
+        events, unresolved = GeneralisedAmendmentExtractor().extract(
+            {"blocks": [{"block_id": "x", "source_anchor": "pdf:page:1", "normalized_text": instruction}]},
+            source_document="compound-fixture", source_sha256="1" * 64, amending_act="Fixture Amendment Act",
+        )
+        self.assertEqual(len(events), 1)
+        self.assertEqual(events[0].operation, "UNKNOWN")
+        self.assertIsNone(events[0].new_text)
+        self.assertTrue(any(item.reason_code == "unclear_operation" for item in unresolved))
+
+    def test_inserted_new_section_with_alphabetic_number_targets_created_section(self) -> None:
+        instruction = "An Act to amend the Fixture Act, 2020.\n1. After section 6, the following section shall be inserted, namely:— ‘6A. No shall apply.’"
+        events, unresolved = GeneralisedAmendmentExtractor().extract(
+            {"blocks": [{"block_id": "x", "source_anchor": "pdf:page:1", "normalized_text": instruction}]},
+            source_document="section-a-fixture", source_sha256="2" * 64, amending_act="Fixture Amendment Act",
+        )
+        self.assertEqual(events[0].target_provision, "section:6A")
+        self.assertEqual(events[0].new_text, "6A. No shall apply.")
+        self.assertFalse(unresolved)
+
+    def test_ascii_single_quote_new_section_does_not_select_inner_definition_quote(self) -> None:
+        instruction = "An Act to amend the Fixture Act, 2020.\n1. After section 6, the following section shall be inserted, namely:— '6A. An open offer shall be filed.'"
+        events, _ = GeneralisedAmendmentExtractor().extract(
+            {"blocks": [{"block_id": "x", "source_anchor": "pdf:page:1", "normalized_text": instruction}]},
+            source_document="ascii-quote-fixture", source_sha256="3" * 64, amending_act="Fixture Amendment Act",
+        )
+        self.assertEqual(events[0].target_provision, "section:6A")
+        self.assertEqual(events[0].new_text, "6A. An open offer shall be filed.")
+
     def test_unresolved_records_use_only_canonical_reason_codes(self) -> None:
         document = {"blocks": [{
             "block_id": "ambiguous",

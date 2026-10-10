@@ -1,0 +1,547 @@
+{
+  "benchmark_kind": "engineering_abstention_benchmark_not_substantive_risk_gold",
+  "conditional_demonstrations": [
+    {
+      "expectation_basis": "existing_non_gold_demo_plus_proposed_operational_priority",
+      "expected": {
+        "risk_flag": true,
+        "risk_level": "Medium",
+        "status": "PROVISIONAL_ASSESSMENT",
+        "urgency": "IMMEDIATE"
+      },
+      "expert_rationale": null,
+      "original_facts": [
+        "The Controller recognised a foreign Certifying Authority under section 19(1), with the previous approval of the Central Government and notification in the Official Gazette.",
+        "That recognition remained in force on both reference dates and all stated regulatory conditions were satisfied.",
+        "The recognised authority issued a certificate using a legally notified electronic-signature technique that was not a digital-signature technique.",
+        "No fact other than the applicable wording of section 19(2) changes between the two evaluations."
+      ],
+      "scenario": {
+        "activity": "certificate_recognition",
+        "applicable_provision": "it-act-2000-consolidated:section:19",
+        "exposure": {
+          "amount": null,
+          "description": "Stipulated reliance on one certificate"
+        },
+        "facts": {
+          "gazette_notification": true,
+          "government_approval": true,
+          "is_digital_signature": false,
+          "is_notified_electronic_signature": true,
+          "recognition_in_force": true,
+          "regulatory_conditions_met": true
+        },
+        "industry": "trust_services",
+        "jurisdiction": "IN",
+        "organization_type": "foreign_certifying_authority",
+        "reference_date": "2009-10-26",
+        "scenario_id": "demo_it_act_section_19_electronic_signature_pre_risk"
+      }
+    },
+    {
+      "expectation_basis": "existing_non_gold_demo_plus_proposed_operational_priority",
+      "expected": {
+        "risk_flag": false,
+        "risk_level": "None",
+        "status": "PROVISIONAL_ASSESSMENT",
+        "urgency": "NONE"
+      },
+      "expert_rationale": null,
+      "original_facts": [
+        "The Controller recognised a foreign Certifying Authority under section 19(1), with the previous approval of the Central Government and notification in the Official Gazette.",
+        "That recognition remained in force on both reference dates and all stated regulatory conditions were satisfied.",
+        "The recognised authority issued a certificate using a legally notified electronic-signature technique that was not a digital-signature technique.",
+        "No fact other than the applicable wording of section 19(2) changes between the two evaluations."
+      ],
+      "scenario": {
+        "activity": "certificate_recognition",
+        "applicable_provision": "it-act-2000-consolidated:section:19",
+        "exposure": {
+          "amount": null,
+          "description": "Stipulated reliance on one certificate"
+        },
+        "facts": {
+          "gazette_notification": true,
+          "government_approval": true,
+          "is_digital_signature": false,
+          "is_notified_electronic_signature": true,
+          "recognition_in_force": true,
+          "regulatory_conditions_met": true
+        },
+        "industry": "trust_services",
+        "jurisdiction": "IN",
+        "organization_type": "foreign_certifying_authority",
+        "reference_date": "2009-10-27",
+        "scenario_id": "demo_it_act_section_19_electronic_signature_post_risk"
+      }
+    }
+  ],
+  "dataset_id": "risk-scenarios-v1",
+  "expert_validated_count": 0,
+  "input_sha256": {
+    "data/interim/version_graph.v1.json": "73b8f9c50738329022b75a5840821e2c9ae89db7835817706628f9e6fe3497c1",
+    "data/raw/sha256/e7/e71725fa32e892f887308816046c42275fc855b5cbb4ee1063cdbd518f165140.pdf": "e71725fa32e892f887308816046c42275fc855b5cbb4ee1063cdbd518f165140",
+    "data/scenarios/phase6_scaffolds.v1.json": "7e4012abbf1c52fd4aa9060af04055df2e29129870f17267ae2eaa418dbfd2dd",
+    "data/scenarios/temporal_drift_demo.v1.json": "ac78b978f75628bd5facdb06feaaf5710720ba9fca8a4eea766c247b3d41bbcc",
+    "data/silver/materiality_disagreement_audit.v2.3.json": "6441c0105eef10b1e8e529ea9690fe1c6454f3cd518997e81b4c884e9022254e",
+    "data/silver/materiality_silver_labels.v1.json": "d61f877a4a211de91927ea93f5994e0b6bf2c4a0f0818893e5a81ae2b8fce646"
+  },
+  "scenarios": [
+    {
+      "candidate_provision_version": "ver_6124d366e24292b9161f3f12",
+      "engineering_rationale": "Source template has no organization, activity, scenario facts or expert outcomes; a legal risk cannot be established.",
+      "evidence_ids": [
+        "ver_6124d366e24292b9161f3f12:obligation"
+      ],
+      "expectation_basis": "engineering_abstention_contract_not_legal_gold",
+      "expected": {
+        "applicable_law": null,
+        "consequence": null,
+        "obligation": null,
+        "risk_flag": null,
+        "risk_level": null,
+        "status": "INSUFFICIENT_EVIDENCE",
+        "urgency": "UNKNOWN"
+      },
+      "expert_rationale": null,
+      "expert_validation": "NOT_PERFORMED",
+      "scenario": {
+        "activity": null,
+        "applicable_provision": "it-act-2000-consolidated:section:84",
+        "exposure": {
+          "amount": null,
+          "description": null
+        },
+        "facts": {},
+        "industry": null,
+        "jurisdiction": null,
+        "organization_type": null,
+        "reference_date": "2009-10-27",
+        "scenario_id": "scenario_1f02f95d109087097680f8a5"
+      },
+      "source_pair_id": "pair_b1258e4f5cd6609d8dfc55d9",
+      "source_scenario_id": "scenario_1f02f95d109087097680f8a5"
+    },
+    {
+      "candidate_provision_version": "ver_ab0f316563bbaad9a88fb469",
+      "engineering_rationale": "Source template has no organization, activity, scenario facts or expert outcomes; a legal risk cannot be established.",
+      "evidence_ids": [
+        "ver_ab0f316563bbaad9a88fb469:obligation"
+      ],
+      "expectation_basis": "engineering_abstention_contract_not_legal_gold",
+      "expected": {
+        "applicable_law": null,
+        "consequence": null,
+        "obligation": null,
+        "risk_flag": null,
+        "risk_level": null,
+        "status": "INSUFFICIENT_EVIDENCE",
+        "urgency": "UNKNOWN"
+      },
+      "expert_rationale": null,
+      "expert_validation": "NOT_PERFORMED",
+      "scenario": {
+        "activity": null,
+        "applicable_provision": "it-act-2000-consolidated:section:3",
+        "exposure": {
+          "amount": null,
+          "description": null
+        },
+        "facts": {},
+        "industry": null,
+        "jurisdiction": null,
+        "organization_type": null,
+        "reference_date": "2009-10-27",
+        "scenario_id": "scenario_241ac2b98552005e4410f9d8"
+      },
+      "source_pair_id": "pair_16ac9c20df18b3437edf24ab",
+      "source_scenario_id": "scenario_241ac2b98552005e4410f9d8"
+    },
+    {
+      "candidate_provision_version": "ver_156a402822602338dd3cd8c1",
+      "engineering_rationale": "Source template has no organization, activity, scenario facts or expert outcomes; a legal risk cannot be established.",
+      "evidence_ids": [
+        "ver_156a402822602338dd3cd8c1:obligation"
+      ],
+      "expectation_basis": "engineering_abstention_contract_not_legal_gold",
+      "expected": {
+        "applicable_law": null,
+        "consequence": null,
+        "obligation": null,
+        "risk_flag": null,
+        "risk_level": null,
+        "status": "INSUFFICIENT_EVIDENCE",
+        "urgency": "UNKNOWN"
+      },
+      "expert_rationale": null,
+      "expert_validation": "NOT_PERFORMED",
+      "scenario": {
+        "activity": null,
+        "applicable_provision": "it-act-2000-consolidated:section:13",
+        "exposure": {
+          "amount": null,
+          "description": null
+        },
+        "facts": {},
+        "industry": null,
+        "jurisdiction": null,
+        "organization_type": null,
+        "reference_date": "2009-10-27",
+        "scenario_id": "scenario_28f1ac7204b60f0cb4db1eae"
+      },
+      "source_pair_id": "pair_bd2139bf814ba07d5156db7f",
+      "source_scenario_id": "scenario_28f1ac7204b60f0cb4db1eae"
+    },
+    {
+      "candidate_provision_version": "ver_ad29bf019d37042b9101fa71",
+      "engineering_rationale": "Source template has no organization, activity, scenario facts or expert outcomes; a legal risk cannot be established.",
+      "evidence_ids": [
+        "ver_ad29bf019d37042b9101fa71:obligation"
+      ],
+      "expectation_basis": "engineering_abstention_contract_not_legal_gold",
+      "expected": {
+        "applicable_law": null,
+        "consequence": null,
+        "obligation": null,
+        "risk_flag": null,
+        "risk_level": null,
+        "status": "INSUFFICIENT_EVIDENCE",
+        "urgency": "UNKNOWN"
+      },
+      "expert_rationale": null,
+      "expert_validation": "NOT_PERFORMED",
+      "scenario": {
+        "activity": null,
+        "applicable_provision": "it-act-2000-consolidated:section:43",
+        "exposure": {
+          "amount": null,
+          "description": null
+        },
+        "facts": {},
+        "industry": null,
+        "jurisdiction": null,
+        "organization_type": null,
+        "reference_date": "2009-10-27",
+        "scenario_id": "scenario_30af89ea924ddee701286dd6"
+      },
+      "source_pair_id": "pair_208717a68116ca2157c46a91",
+      "source_scenario_id": "scenario_30af89ea924ddee701286dd6"
+    },
+    {
+      "candidate_provision_version": "ver_f7f998b7330380274ac7a637",
+      "engineering_rationale": "Source template has no organization, activity, scenario facts or expert outcomes; a legal risk cannot be established.",
+      "evidence_ids": [
+        "ver_f7f998b7330380274ac7a637:obligation"
+      ],
+      "expectation_basis": "engineering_abstention_contract_not_legal_gold",
+      "expected": {
+        "applicable_law": null,
+        "consequence": null,
+        "obligation": null,
+        "risk_flag": null,
+        "risk_level": null,
+        "status": "INSUFFICIENT_EVIDENCE",
+        "urgency": "UNKNOWN"
+      },
+      "expert_rationale": null,
+      "expert_validation": "NOT_PERFORMED",
+      "scenario": {
+        "activity": null,
+        "applicable_provision": "it-act-2000-consolidated:section:70",
+        "exposure": {
+          "amount": null,
+          "description": null
+        },
+        "facts": {},
+        "industry": null,
+        "jurisdiction": null,
+        "organization_type": null,
+        "reference_date": "2009-10-27",
+        "scenario_id": "scenario_376cd72a8acc5e49df166552"
+      },
+      "source_pair_id": "pair_9481c09e4d55eed2f452a4c4",
+      "source_scenario_id": "scenario_376cd72a8acc5e49df166552"
+    },
+    {
+      "candidate_provision_version": "ver_bb98a30dee178656416cc917",
+      "engineering_rationale": "Source template has no organization, activity, scenario facts or expert outcomes; a legal risk cannot be established.",
+      "evidence_ids": [
+        "ver_bb98a30dee178656416cc917:obligation"
+      ],
+      "expectation_basis": "engineering_abstention_contract_not_legal_gold",
+      "expected": {
+        "applicable_law": null,
+        "consequence": null,
+        "obligation": null,
+        "risk_flag": null,
+        "risk_level": null,
+        "status": "INSUFFICIENT_EVIDENCE",
+        "urgency": "UNKNOWN"
+      },
+      "expert_rationale": null,
+      "expert_validation": "NOT_PERFORMED",
+      "scenario": {
+        "activity": null,
+        "applicable_provision": "it-act-2000-consolidated:section:68",
+        "exposure": {
+          "amount": null,
+          "description": null
+        },
+        "facts": {},
+        "industry": null,
+        "jurisdiction": null,
+        "organization_type": null,
+        "reference_date": "2009-10-27",
+        "scenario_id": "scenario_68e783d96abfe2405220edfc"
+      },
+      "source_pair_id": "pair_a176d5c8271272a6a9de30ac",
+      "source_scenario_id": "scenario_68e783d96abfe2405220edfc"
+    },
+    {
+      "candidate_provision_version": "ver_ab0f316563bbaad9a88fb469",
+      "engineering_rationale": "Source template has no organization, activity, scenario facts or expert outcomes; a legal risk cannot be established.",
+      "evidence_ids": [
+        "ver_ab0f316563bbaad9a88fb469:obligation"
+      ],
+      "expectation_basis": "engineering_abstention_contract_not_legal_gold",
+      "expected": {
+        "applicable_law": null,
+        "consequence": null,
+        "obligation": null,
+        "risk_flag": null,
+        "risk_level": null,
+        "status": "INSUFFICIENT_EVIDENCE",
+        "urgency": "UNKNOWN"
+      },
+      "expert_rationale": null,
+      "expert_validation": "NOT_PERFORMED",
+      "scenario": {
+        "activity": null,
+        "applicable_provision": "it-act-2000-consolidated:section:3",
+        "exposure": {
+          "amount": null,
+          "description": null
+        },
+        "facts": {},
+        "industry": null,
+        "jurisdiction": null,
+        "organization_type": null,
+        "reference_date": "2009-10-27",
+        "scenario_id": "scenario_920e38ad9223b1215d92fc07"
+      },
+      "source_pair_id": "pair_96cc0e894a99b16d7e62e26d",
+      "source_scenario_id": "scenario_920e38ad9223b1215d92fc07"
+    },
+    {
+      "candidate_provision_version": "ver_fd24bd0b635e5c04a28b3161",
+      "engineering_rationale": "Source template has no organization, activity, scenario facts or expert outcomes; a legal risk cannot be established.",
+      "evidence_ids": [
+        "ver_fd24bd0b635e5c04a28b3161:obligation"
+      ],
+      "expectation_basis": "engineering_abstention_contract_not_legal_gold",
+      "expected": {
+        "applicable_law": null,
+        "consequence": null,
+        "obligation": null,
+        "risk_flag": null,
+        "risk_level": null,
+        "status": "INSUFFICIENT_EVIDENCE",
+        "urgency": "UNKNOWN"
+      },
+      "expert_rationale": null,
+      "expert_validation": "NOT_PERFORMED",
+      "scenario": {
+        "activity": null,
+        "applicable_provision": "it-act-2000-consolidated:section:25",
+        "exposure": {
+          "amount": null,
+          "description": null
+        },
+        "facts": {},
+        "industry": null,
+        "jurisdiction": null,
+        "organization_type": null,
+        "reference_date": "2009-10-27",
+        "scenario_id": "scenario_c46445efc42aa98181247b62"
+      },
+      "source_pair_id": "pair_54fa7db6aaa811c5473c5662",
+      "source_scenario_id": "scenario_c46445efc42aa98181247b62"
+    },
+    {
+      "candidate_provision_version": "ver_a5579c2a8489ec4dd348b8c4",
+      "engineering_rationale": "Source template has no organization, activity, scenario facts or expert outcomes; a legal risk cannot be established.",
+      "evidence_ids": [
+        "ver_a5579c2a8489ec4dd348b8c4:obligation"
+      ],
+      "expectation_basis": "engineering_abstention_contract_not_legal_gold",
+      "expected": {
+        "applicable_law": null,
+        "consequence": null,
+        "obligation": null,
+        "risk_flag": null,
+        "risk_level": null,
+        "status": "INSUFFICIENT_EVIDENCE",
+        "urgency": "UNKNOWN"
+      },
+      "expert_rationale": null,
+      "expert_validation": "NOT_PERFORMED",
+      "scenario": {
+        "activity": null,
+        "applicable_provision": "it-act-2000-consolidated:section:17",
+        "exposure": {
+          "amount": null,
+          "description": null
+        },
+        "facts": {},
+        "industry": null,
+        "jurisdiction": null,
+        "organization_type": null,
+        "reference_date": "2009-10-27",
+        "scenario_id": "scenario_d9c04a37c28330689aa4e96c"
+      },
+      "source_pair_id": "pair_e0b7ffcbcfacaa904a0e0548",
+      "source_scenario_id": "scenario_d9c04a37c28330689aa4e96c"
+    },
+    {
+      "candidate_provision_version": "ver_fd24bd0b635e5c04a28b3161",
+      "engineering_rationale": "Source template has no organization, activity, scenario facts or expert outcomes; a legal risk cannot be established.",
+      "evidence_ids": [
+        "ver_fd24bd0b635e5c04a28b3161:obligation"
+      ],
+      "expectation_basis": "engineering_abstention_contract_not_legal_gold",
+      "expected": {
+        "applicable_law": null,
+        "consequence": null,
+        "obligation": null,
+        "risk_flag": null,
+        "risk_level": null,
+        "status": "INSUFFICIENT_EVIDENCE",
+        "urgency": "UNKNOWN"
+      },
+      "expert_rationale": null,
+      "expert_validation": "NOT_PERFORMED",
+      "scenario": {
+        "activity": null,
+        "applicable_provision": "it-act-2000-consolidated:section:25",
+        "exposure": {
+          "amount": null,
+          "description": null
+        },
+        "facts": {},
+        "industry": null,
+        "jurisdiction": null,
+        "organization_type": null,
+        "reference_date": "2009-10-27",
+        "scenario_id": "scenario_e45d9137432fd49abf4aea9a"
+      },
+      "source_pair_id": "pair_5e12622b92b694172c6e301e",
+      "source_scenario_id": "scenario_e45d9137432fd49abf4aea9a"
+    },
+    {
+      "candidate_provision_version": "ver_5ab219b2d2eb60d8513c0add",
+      "engineering_rationale": "Source template has no organization, activity, scenario facts or expert outcomes; a legal risk cannot be established.",
+      "evidence_ids": [
+        "ver_5ab219b2d2eb60d8513c0add:obligation"
+      ],
+      "expectation_basis": "engineering_abstention_contract_not_legal_gold",
+      "expected": {
+        "applicable_law": null,
+        "consequence": null,
+        "obligation": null,
+        "risk_flag": null,
+        "risk_level": null,
+        "status": "INSUFFICIENT_EVIDENCE",
+        "urgency": "UNKNOWN"
+      },
+      "expert_rationale": null,
+      "expert_validation": "NOT_PERFORMED",
+      "scenario": {
+        "activity": null,
+        "applicable_provision": "it-act-2000-consolidated:section:2",
+        "exposure": {
+          "amount": null,
+          "description": null
+        },
+        "facts": {},
+        "industry": null,
+        "jurisdiction": null,
+        "organization_type": null,
+        "reference_date": "2009-10-27",
+        "scenario_id": "scenario_e63b93a56cc0e7c91f2ad04e"
+      },
+      "source_pair_id": "pair_2c7ac07d92765ef75f6f5101",
+      "source_scenario_id": "scenario_e63b93a56cc0e7c91f2ad04e"
+    },
+    {
+      "candidate_provision_version": "ver_6124d366e24292b9161f3f12",
+      "engineering_rationale": "Source template has no organization, activity, scenario facts or expert outcomes; a legal risk cannot be established.",
+      "evidence_ids": [
+        "ver_6124d366e24292b9161f3f12:obligation"
+      ],
+      "expectation_basis": "engineering_abstention_contract_not_legal_gold",
+      "expected": {
+        "applicable_law": null,
+        "consequence": null,
+        "obligation": null,
+        "risk_flag": null,
+        "risk_level": null,
+        "status": "INSUFFICIENT_EVIDENCE",
+        "urgency": "UNKNOWN"
+      },
+      "expert_rationale": null,
+      "expert_validation": "NOT_PERFORMED",
+      "scenario": {
+        "activity": null,
+        "applicable_provision": "it-act-2000-consolidated:section:84",
+        "exposure": {
+          "amount": null,
+          "description": null
+        },
+        "facts": {},
+        "industry": null,
+        "jurisdiction": null,
+        "organization_type": null,
+        "reference_date": "2009-10-27",
+        "scenario_id": "scenario_efdf7322958aa4222ffd5e57"
+      },
+      "source_pair_id": "pair_15651fe59b37869adf988286",
+      "source_scenario_id": "scenario_efdf7322958aa4222ffd5e57"
+    },
+    {
+      "candidate_provision_version": "ver_b78dfb5c893a5e5c361b67e3",
+      "engineering_rationale": "Source template has no organization, activity, scenario facts or expert outcomes; a legal risk cannot be established.",
+      "evidence_ids": [
+        "ver_b78dfb5c893a5e5c361b67e3:obligation"
+      ],
+      "expectation_basis": "engineering_abstention_contract_not_legal_gold",
+      "expected": {
+        "applicable_law": null,
+        "consequence": null,
+        "obligation": null,
+        "risk_flag": null,
+        "risk_level": null,
+        "status": "INSUFFICIENT_EVIDENCE",
+        "urgency": "UNKNOWN"
+      },
+      "expert_rationale": null,
+      "expert_validation": "NOT_PERFORMED",
+      "scenario": {
+        "activity": null,
+        "applicable_provision": "it-act-2000-consolidated:section:19",
+        "exposure": {
+          "amount": null,
+          "description": null
+        },
+        "facts": {},
+        "industry": null,
+        "jurisdiction": null,
+        "organization_type": null,
+        "reference_date": "2009-10-27",
+        "scenario_id": "scenario_f4883150aa86b5b2573fa907"
+      },
+      "source_pair_id": "pair_2723036b35a4463039742860",
+      "source_scenario_id": "scenario_f4883150aa86b5b2573fa907"
+    }
+  ],
+  "schema_version": "1.0.0"
+}
