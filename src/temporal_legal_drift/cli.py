@@ -94,6 +94,8 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("build-ingestion-checkpoint")
     subparsers.add_parser("build-amendment-extraction-checkpoint")
     subparsers.add_parser("build-layout-furniture")
+    run_case_parser = subparsers.add_parser("run-case")
+    run_case_parser.add_argument("--case", type=Path, required=True, help="JSON case file, e.g. configs/cases/arbitration-s7-2016.json")
     ocr_candidate = subparsers.add_parser("build-ocr-candidate")
     ocr_candidate.add_argument("--entry", required=True)
     versioned_extraction = subparsers.add_parser("build-amendment-extraction-version")
@@ -582,6 +584,13 @@ def run(args: argparse.Namespace) -> int:
     if args.command == "build-amendment-extraction-checkpoint":
         result = build_phase2_checkpoint(root)
         print(json.dumps(result, indent=2, ensure_ascii=False))
+        return 0
+
+    if args.command == "run-case":
+        from .orchestration import run_case
+
+        record = run_case(root, load_json(_resolve(root, args.case)))
+        print(json.dumps({key: record[key] for key in ("correlation_id", "review_state", "unresolved_stages")}, indent=2))
         return 0
 
     if args.command == "build-layout-furniture":
