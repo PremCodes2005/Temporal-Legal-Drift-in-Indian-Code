@@ -1,4 +1,4 @@
-# Source-monitoring runbook (India Code, daily)
+# Source-monitoring runbook (India Code and e-Gazette, daily)
 
 Commands (from the repository root, Python 3.11+ with `pypdf==6.16.2` installed):
 
@@ -34,7 +34,8 @@ Times are stored in **UTC**; display local time separately. Recommended trigger:
 
 ## Safety
 
-- **Allowlist.** Only `indiacode.gov.in` is fetched, and redirects are validated. Limits: 50 MB per file, 2 s between requests, at most 5 pages × 20 items per run.
-- **No automatic effect on the graph or index.** New or revised documents only enter the review queue; they never change the active graph v4, the RAG index or any release. A publication is not commencement.
-- **e-Gazette is `ACCESS_LIMITED`:** use `MonitoringService.manual_import` with a reviewer and a reason.
+- **Allowlist.** Only `indiacode.gov.in` and `egazette.gov.in` are fetched, and redirects are validated. Limits: 50 MB per file, 2 s between requests, at most 5 pages × 20 items per run.
+- **No automatic effect on the graph, base index or releases.** New or revised documents enter the review queue. Their text is served only through the monitored overlay (`data/runtime/rag_overlay`), labelled `monitored_unreviewed` / `HUMAN_REVIEW_PENDING`, bound to the base index identity and switched by an atomic pointer (ADR 0009). Graph v4, the base RAG index and every release are unchanged. Applicability stays `NOT_DETERMINED`; a publication is not commencement.
+- **e-Gazette** is `SUPPORTED_FRAGILE_HTML_DISCOVERY` (`docs/sprint/s1_source_access_decision.v2.md`): a session listing of “Bills & Acts” plus static PDFs. A layout change fails visibly (`SourceShapeError`) and nothing new is served. `MonitoringService.manual_import` remains the fallback.
+- **Known e-Gazette TLS issue (2026-10-12):** the server omits its intermediate certificate, so Python reports `CERTIFICATE_VERIFY_FAILED`. Do **not** disable verification. Fix by pinning the official Let's Encrypt intermediate for that host (open follow-up).
 - **Pause:** remove the cron entry. There is no hidden daemon.

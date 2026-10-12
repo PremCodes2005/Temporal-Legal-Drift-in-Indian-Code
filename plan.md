@@ -2087,3 +2087,7 @@ Engineering implementation has already begun. The unchecked items below are **no
 - [ ] Assign owners and dependencies for the remaining research gates, including Phase 6R.
 
 Until this checklist and the Phase 0 gate pass, all technical work should be treated as exploratory prototyping rather than valid benchmark construction.
+
+## Implementation status note (2026-10-12)
+
+The live-pipeline sprint (daily e-Gazette/India Code pipeline, drift-metrics-v3, query-specific clause comparison and UI) is recorded in `docs/implementation-plan.md` and `docs/verification.md`. This note changes no research acceptance criterion. Live e-Gazette ingestion has not yet succeeded (TLS chain issue). The legal/research gate remains UNVERIFIED.

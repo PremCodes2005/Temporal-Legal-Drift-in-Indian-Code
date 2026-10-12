@@ -57,8 +57,9 @@ The interface source is a React/Vite application in `frontend/`. Build it into t
 
 ```bash
 cd frontend
-pnpm install
-pnpm run build
+npm ci
+npm test
+npm run build
 cd ..
 python -m pip install -e '.[pdf]'
 PYTHONPATH=src python -m temporal_legal_drift.cli serve-dashboard

@@ -361,7 +361,6 @@ def _portable_command(command: list[str], root: Path, environment: Path) -> list
 def _reproducibility_paths(root: Path) -> tuple[str, ...]:
     values = set(REQUIRED_ARTIFACTS)
     values.add("pyproject.toml")
-    values.add("frontend/pnpm-lock.yaml")
     for directory in ("configs", "schemas", "src", "tests", "protocols", "frontend", "web"):
         for path in (root / directory).rglob("*"):
             if "node_modules" in path.parts:

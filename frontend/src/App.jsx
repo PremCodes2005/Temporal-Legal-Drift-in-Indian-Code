@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import CaseReviewPanel from "./CaseReviewPanel";
 import ComparisonPanel from "./ComparisonPanel";
+import { GenerationNotice, IndicatorStrip, ScoreExplanation, VersionStatus } from "./ResultInsights";
+import SourceHealth from "./SourceHealth";
 import ComplianceRiskPanel from "./ComplianceRiskPanel";
 
 const sections = [
@@ -107,7 +109,7 @@ function AssistantWorkspace({ status, error: statusError, starterQuery, autoRun 
       <h2>Ask what changed in Indian law.</h2>
       <p>The assistant checks the live India Code repository and uses the local evidence cache for reproducible amendment comparisons and traceable source anchors.</p>
       <RepositoryStatus status={status} error={statusError} />
-      <SourceHealth />
+      <SourceHealth request={api} />
       <form className="prompt-panel" onSubmit={submit}>
         <label htmlFor="legal-query" className="sr-only">Legal research question</label>
         <textarea id="legal-query" rows="4" maxLength="4000" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Ask a question, for example: What changed in the IT Act amendment regarding data privacy?" />
@@ -127,21 +129,6 @@ function AssistantWorkspace({ status, error: statusError, starterQuery, autoRun 
   </section>;
 }
 
-function SourceHealth() {
-  const [health, setHealth] = useState(null);
-  const [failed, setFailed] = useState(false);
-  useEffect(() => { api("/api/sources/health").then(setHealth).catch(() => setFailed(true)); }, []);
-  if (failed) return <p className="panel-note" role="status">Scheduled source-monitoring status is unavailable.</p>;
-  if (!health) return null;
-  const india = health.sources.find((item) => item.source_key === "india_code");
-  const limited = health.sources.filter((item) => item.status === "ACCESS_LIMITED");
-  return <p className="source-health" role="status">
-    <strong>Scheduled ingestion:</strong> {india?.last_success_at ? `India Code last checked ${new Date(india.last_success_at).toLocaleString()} (stored in UTC)${india.scheduled_ingestion_healthy ? "" : " — overdue"}` : "India Code not yet checked by the daily job"}
-    {` · ${health.review_queue_pending} new document(s) awaiting review`}
-    {limited.length > 0 && ` · ${limited.map((item) => item.source_key).join(", ")}: access-limited (manual import only)`}
-  </p>;
-}
-
 function RepositoryStatus({ status, error }) {
   return <div className={`repository-status ${error ? "error" : ""}`}>
     <span className="status-dot" />
@@ -150,7 +137,7 @@ function RepositoryStatus({ status, error }) {
   </div>;
 }
 
-function RagResult({ result, onExplain }) {
+export function RagResult({ result, onExplain }) {
   const answer = result.answer;
   const metrics = result.metrics;
   const isSummary = answer.answer_type === "single_document_summary";
@@ -161,13 +148,15 @@ function RagResult({ result, onExplain }) {
   }[result.retrieval?.pair_status] || ["Amendment instruction (source excerpt)", "Consolidated text (source excerpt)"];
   return <section id="rag-result" className="results">
     <div className="result-heading"><div><span className="section-kicker">Grounded response</span><h2>{titleCase(result.intent)}</h2></div><div className="mode-badge">{titleCase(result.mode)} mode</div></div>
-    <p className="generation-method" role="status">{String(answer.generation_method || "").startsWith("extractive") ? "Extractive evidence summary: quoted from retrieved sources, not a language-model conclusion." : answer.generation_method === "llm_grounded" ? "Language-model answer constrained to the retrieved evidence; verify it against the cited source." : "No answer could be generated from the available evidence."}</p>
+    <GenerationNotice method={answer.generation_method} />
+    <VersionStatus comparison={result.comparison} metrics={metrics} />
+    <IndicatorStrip metrics={metrics} comparison={result.comparison} />
     <article className="answer-card">
       {isSummary ? <AnswerSection label="Short answer" text={answer.short_answer || answer.post_amendment_revision} tone="summary" /> : <><AnswerSection label={pairLabels[0]} text={answer.pre_amendment_baseline} tone="before" /><div className="answer-divider" /><AnswerSection label={pairLabels[1]} text={answer.post_amendment_revision} tone="after" /></>}
       <div className="difference-summary"><span className="section-kicker">{isSummary ? "Key points" : "Key differences summary"}</span><ul>{answer.key_differences.map((item, index) => <li key={index}>{item}</li>)}</ul></div>
     </article>
     <ComparisonPanel comparison={result.comparison} />
-    {metrics ? <><DriftPanel metrics={metrics} /><button className="explain-drift-button" type="button" onClick={onExplain}>Explain these scores with PDF evidence <span>→</span></button></> : <article className="empty-analysis"><strong>{isSummary ? "Document summary" : "Drift metrics unavailable"}</strong><p>{isSummary ? "Drift scores are shown only when the question asks for a comparison and a supported pre/post evidence pair is available." : "A supported pre/post evidence pair was not found for this query."}</p></article>}
+    {metrics ? <><DriftPanel metrics={metrics} /><ScoreExplanation metrics={metrics} /><button className="explain-drift-button" type="button" onClick={onExplain}>Explain these scores with PDF evidence <span>→</span></button></> : <article className="empty-analysis"><strong>{isSummary ? "Document summary" : "Drift metrics unavailable"}</strong><p>{isSummary ? "Drift scores are shown only when the question asks for a comparison and a supported pre/post evidence pair is available." : "A supported pre/post evidence pair was not found for this query."}</p></article>}
     <div className="result-columns">
       <VerificationPanel verification={result.verification} />
       <EvidencePanel citations={result.citations} retrieval={result.retrieval} />

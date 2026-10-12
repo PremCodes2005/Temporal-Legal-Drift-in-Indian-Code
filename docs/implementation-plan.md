@@ -78,3 +78,14 @@ Not achieved in the sprint:
 ## Change log
 
 - **rev 2 (2026-10-12).** Re-based on the Phase 0–10 architecture target supplied by the project lead. Its historical counts were replaced by verified current figures. The full original proposal document was not attached to the request, so it is not stored. This revision supersedes rev 1 (audit-based next-work list, base `6803087`), which remains in Git history.
+
+## Live-pipeline sprint (Phases 1–6) — status 2026-10-12
+
+| Phase | Result | Evidence |
+| --- | --- | --- |
+| 1 Access + 24 h contract | **PASS (scoped)** — e-Gazette `SUPPORTED_FRAGILE_HTML_DISCOVERY` | `docs/sprint/s1_source_access_decision.v2.md` |
+| 2 State machine + dedup | **PASS** — 16 monitoring tests | `monitoring/service.py`, ADR 0009 |
+| 3 Drift methodology | **PASS** — drift-metrics-v3, fixtures v2, config parity test | `docs/methodology/drift_score.v3.md` |
+| 4 Clause evidence | **PASS** — operation, provision, event ID, hashes, offsets, `AMBIGUOUS_CANDIDATES` | `rag/rag_pipeline.py`, `tests/unit/test_rag.py` |
+| 5 UI | **PASS (headless + jsdom)** — version status, four separate indicators, clause metadata, PDF-at-page, legend, score explanation | `frontend/src/{ResultInsights,SourceHealth,ComparisonPanel}.jsx`, `frontend/src/__tests__/` |
+| 6 E2E + ops | **PASS (mocked)**. Live e-Gazette: **FAILED (TLS chain)**, recorded and not bypassed | `tests/integration/test_monitoring_e2e.py`, `docs/verification.md` |

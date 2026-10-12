@@ -67,3 +67,17 @@ The plan.md rev 3 sprint is implemented; see the sprint table in [implementation
 - comparison-record-v1 and the comparison UI.
 
 The legal/research gate is unchanged: UNVERIFIED.
+
+## Live-pipeline sprint status (2026-10-12)
+
+The sprint covers three deliverables:
+- **Daily e-Gazette + India Code pipeline:** source-monitoring-v2, per-document state machine, content dedup, monitored overlay index (ADR 0009).
+- **Drift methodology:** drift-metrics-v3, `docs/methodology/drift_score.v3.md`, `configs/metrics/drift_score.v3.json`.
+- **Query-specific clause evidence:** citations, operation, provision, PDF-page links and the UI.
+
+Frontend tests: `cd frontend && npm test`; CI runs them. npm's `package-lock.json` is now the only lockfile (`pnpm-lock.yaml` retired).
+
+Top follow-up: e-Gazette TLS chain. e-Gazette live run on 2026-10-12T16:26Z: `SOURCE_UNAVAILABLE`. Python's TLS verification failed because egazette.gov.in serves its leaf certificate without the Let's Encrypt YR2 intermediate. Browsers and curl fetch that intermediate themselves; OpenSSL does not. Verification was **not** disabled. The 24 h rule set the next attempt to 2026-10-13T16:26Z. India Code was not due (next eligible 2026-10-13T14:21Z), so it was not contacted.
+
+The legal/research gate is unchanged: UNVERIFIED.
+- HTTP field contracts: [api_contracts.md](api_contracts.md).

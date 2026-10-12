@@ -1,4 +1,4 @@
-"""Static checks of the dashboard source and built assets (no JS test runner is installed)."""
+"""Static checks of the dashboard source and built assets; behaviour is tested by `npm test` (vitest) in frontend/."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-APP = (ROOT / "frontend/src/App.jsx").read_text(encoding="utf-8")
+APP = "".join((ROOT / "frontend/src" / name).read_text(encoding="utf-8") for name in ("App.jsx", "ResultInsights.jsx", "SourceHealth.jsx"))
 
 
 class FrontendContractTests(unittest.TestCase):
@@ -39,7 +39,7 @@ class FrontendContractTests(unittest.TestCase):
         self.assertIn('return value == null ? "Unavailable"', APP)
         self.assertNotIn("legacyCalculationTrace", APP)
         self.assertIn("evidence_alignment_quality_percent", APP)
-        self.assertIn("Scheduled ingestion:", APP)
+        self.assertIn("Scheduled ingestion (stored in UTC):", APP)
 
     def test_built_index_references_existing_assets(self) -> None:
         index = (ROOT / "web/index.html").read_text(encoding="utf-8")

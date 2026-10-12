@@ -8,6 +8,7 @@ export default defineConfig({
     outDir: fileURLToPath(new URL("../web", import.meta.url)),
     emptyOutDir: true,
   },
+  test: { environment: "jsdom" },
   server: {
     proxy: {
       "/api": "http://127.0.0.1:8765",

@@ -65,3 +65,20 @@ Remote GitHub Actions has still not been observed. See [../reports/phase3/tempor
   - an always-on scheduler host;
   - keyboard and screen-reader testing in a real browser;
   - an LLM provider in the RAG flow (tests force the extractive fallback).
+
+## Live-pipeline sprint addendum (Phases 1–6, 2026-10-12)
+
+- **Executed locally:**
+  - Full Python suite and `validate-contract` (exit 0). `check-gates` fails only Phase 11 `artifact_checksums_reconcile` until release v0.8.0 is cut; this is expected after code changes, and the gate was not weakened.
+  - `npm test` (vitest, 8 component tests): query-specific evidence, score explanation, no-pair, source failure, timeout/fallback, keyboard reachability, mobile CSS rules.
+  - `npm run build`; backend `serve-dashboard` served the new bundle.
+  - Real query "Compare Section 19 before and after the IT Amendment Act, 2008." returned `CONSOLIDATED_FOOTNOTE_RECONSTRUCTION`, `SUBSTITUTE`, `section:19`, overall 54.8 and PDF page links that resolve (HTTP 200, `application/pdf`).
+  - Headless Chrome screenshots at 1440px and 500px.
+  - Mocked end-to-end test `tests/integration/test_monitoring_e2e.py`: listing → download → processing → overlay → retrieval → 24 h rule → unchanged-not-refetched; plus the layout-change failure path.
+- **Live smoke:** e-Gazette live run on 2026-10-12T16:26Z: `SOURCE_UNAVAILABLE`. Python's TLS verification failed because egazette.gov.in serves its leaf certificate without the Let's Encrypt YR2 intermediate. Browsers and curl fetch that intermediate themselves; OpenSSL does not. Verification was **not** disabled. The 24 h rule set the next attempt to 2026-10-13T16:26Z. India Code was not due (next eligible 2026-10-13T14:21Z), so it was not contacted.
+- **Not executed:**
+  - a successful live e-Gazette ingestion;
+  - Enter-to-toggle on `<summary>` in jsdom (it is not implemented there; native in browsers, not separately driven);
+  - screen-reader testing;
+  - viewports below 500px;
+  - remote CI for this commit (until observed).

@@ -2,6 +2,7 @@ const SUPPORT_TEXT = {
   GRAPH_TRANSITION_FRAGMENTS: "Before/after wording of one amendment, taken from a machine-checked transition in the temporal graph. These are fragments, not complete sections.",
   CONSOLIDATED_FOOTNOTE_RECONSTRUCTION: "Earlier wording reconstructed from India Code's own substitution footnote in the same section. Check it against the official text.",
   UNALIGNED_EXCERPTS: "The amendment instruction and the Act text are not shown to be the same provision, so they are not presented as before/after versions and no drift score is calculated.",
+  AMBIGUOUS_CANDIDATES: "More than one recorded amendment could match these texts, so none is chosen and no score is calculated.",
 };
 const ROLE_TEXT = {
   before_fragment: "Before (amendment fragment)",
@@ -16,6 +17,7 @@ const REASON_TEXT = {
   SCORING_UNAVAILABLE: "No drift score: there is no aligned pair to measure.",
   SOURCE_TEXT_UNRELIABLE: "A cited source has an unreliable text layer; treat its wording as unverified.",
   MODEL_UNAVAILABLE: "The language model was unavailable; the answer is an extractive summary.",
+  PAIR_AMBIGUOUS: "Several amendment candidates fit; none was chosen.",
 };
 const TOKEN = /([A-Za-z]+|\d+(?:\.\d+)?)/;
 
@@ -42,14 +44,19 @@ function markedTokens(text, spans, side) {
   });
 }
 
-function Pane({ side, data, spans }) {
+function Pane({ side, data, spans, comparison }) {
   if (!data) return null;
-  return <section className="compare-pane" aria-label={ROLE_TEXT[data.role] || data.role}>
-    <header><strong>{ROLE_TEXT[data.role] || data.role}</strong><span>{data.act_name || data.entry_id}{data.page ? ` · page ${data.page}` : ""}</span>
-      {data.source_url && <a href={data.source_url} target="_blank" rel="noreferrer">Open source ↗</a>}</header>
+  const derived = data.span_basis === "derived_text_not_a_verbatim_source_span";
+  return <section className={`compare-pane ${derived ? "derived" : ""}`} aria-label={ROLE_TEXT[data.role] || data.role}>
+    <header><strong>{ROLE_TEXT[data.role] || data.role}</strong>
+      <span>{data.act_name || data.entry_id}{comparison.provision_path ? ` · ${comparison.provision_path.replace("section:", "section ")}` : ""}{data.page ? ` · page ${data.page}` : ""}</span>
+      <span>{comparison.operation ? `Operation: ${comparison.operation.toLowerCase()}` : "Operation not established"}{data.document_version ? ` · version ${data.document_version}` : ""}</span>
+      {derived && <span className="derived-badge">Derived text — not a verbatim quote</span>}
+      <span className="source-links">{data.local_pdf_url && <a href={data.local_pdf_url} target="_blank" rel="noreferrer">Open source PDF at page {data.page} ↗</a>}
+        {data.source_url && <a href={data.source_url} target="_blank" rel="noreferrer">Official record ↗</a>}</span></header>
     {data.compared_text ? <p className="compare-text">{markedTokens(data.compared_text, spans, side)}</p>
       : <p className="panel-note">No aligned text was compared for this side.</p>}
-    <small className="panel-note">Page-region highlight unavailable: no verified PDF text coordinates for this excerpt.</small>
+    <small className="panel-note">Page-region highlight unavailable: no verified PDF text coordinates. The PDF link opens the cited page only.</small>
   </section>;
 }
 
@@ -60,8 +67,8 @@ export default function ComparisonPanel({ comparison }) {
     <span className="section-kicker">What was compared</span>
     <h3 id="comparison-heading">{comparison.support_class === "UNALIGNED_EXCERPTS" ? "Excerpts only — no aligned versions" : "Clause comparison"}</h3>
     <p>{SUPPORT_TEXT[comparison.support_class]}</p>
-    {spans.length > 0 && <p className="compare-legend"><del>struck through</del> = removed wording · <ins>underlined</ins> = added wording</p>}
-    <div className="compare-grid"><Pane side="before" data={comparison.before} spans={spans} /><Pane side="after" data={comparison.after} spans={spans} /></div>
+    {spans.length > 0 && <p className="compare-legend"><del>struck through</del> = removed · <ins>underlined</ins> = inserted · a struck word paired with an underlined word = changed · <span className="derived-badge">dashed border</span> = derived or uncertain text</p>}
+    <div className="compare-grid"><Pane side="before" data={comparison.before} spans={spans} comparison={comparison} /><Pane side="after" data={comparison.after} spans={spans} comparison={comparison} /></div>
     {comparison.abstention_reasons?.length > 0 && <ul className="reason-list">{comparison.abstention_reasons.map((code) => <li key={code}>{REASON_TEXT[code] || code}</li>)}</ul>}
     <p className="panel-note">Applicability to a specific date or situation and its legal consequence are not determined here. Legal validation: unverified.</p>
   </article>;

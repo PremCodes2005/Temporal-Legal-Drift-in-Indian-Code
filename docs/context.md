@@ -33,3 +33,13 @@ RAG retrieval combines feature-hash cosine, lexical overlap, metadata and sectio
 - The saved Phase 11 lock reports a prior fresh-environment engineering reproduction. This audit did not rerun that workflow; see [verification.md](verification.md).
 
 The intended research scope and acceptance criteria remain in [plan.md](../plan.md). Current gate interpretation is in [handoff.md](handoff.md).
+
+## Update (2026-10-12, live-pipeline sprint)
+
+- `monitoring/` now covers India Code (DSpace REST) and e-Gazette (session HTML listing + static PDFs).
+  - Discovery runs at most once per source per 24 h.
+  - A per-document state machine and content-based deduplication process only new or revised bytes.
+  - Processed text is served through a separate, unreviewed overlay index; the base index and graph are untouched.
+- Drift scoring is drift-metrics-v3; see `docs/methodology/drift_score.v3.md`.
+- Query responses carry clause-level evidence: Act, provision, operation, amendment event, source hash, page and offset. The UI shows it with a separate indicator for each of textual drift, materiality, answer change and risk.
+- The last live e-Gazette attempt failed on the server's incomplete TLS chain (see `verification.md`).
