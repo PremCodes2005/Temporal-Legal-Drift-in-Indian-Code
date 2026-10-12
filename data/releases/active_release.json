@@ -1,6 +1,6 @@
 {
-  "lock_path": "reports/phase11/reproducibility-v0.5.0.lock.json",
-  "manifest_path": "data/releases/reproducibility-v0.5.0/manifest.json",
-  "manifest_sha256": "595e583a31921312992f67b869dd1c9da59c5c834be88cc0960f95c1ff565677",
-  "release_id": "phase11-reproducibility-engineering-v0.5.0"
+  "lock_path": "reports/phase11/reproducibility-v0.6.0.lock.json",
+  "manifest_path": "data/releases/reproducibility-v0.6.0/manifest.json",
+  "manifest_sha256": "202602d9a685123e1270c64aa883175ab253b6a6f73d77f312fe6baa35131203",
+  "release_id": "phase11-reproducibility-engineering-v0.6.0"
 }
