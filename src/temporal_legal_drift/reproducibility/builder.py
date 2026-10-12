@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 import gzip
+import io
 import os
 import platform
-import shutil
 import subprocess
 import sys
+import tarfile
 from datetime import datetime, timezone
 from hashlib import sha256
 from pathlib import Path
@@ -147,11 +148,17 @@ def restore_release_inputs(root: Path) -> dict[str, object]:
 
 
 def verify_release(root: Path, release_id: str, *, timeout_seconds: int = 900) -> dict[str, object]:
-    """Reproduce a new release in a fresh copy and write it once; v0.1.0 is never touched."""
+    """Reproduce a new release from a clean commit and write it once; prior releases are never touched.
+
+    The release binds to HEAD by commit SHA and is committed separately afterwards,
+    so no manifest has to hash the commit that contains it.
+    """
     root = root.resolve()
     manifest_relative, lock_relative = release_paths(release_id)
     if (root / manifest_relative).exists() or (root / lock_relative).exists():
         raise FileExistsError(f"Release {release_id} already exists; choose a new release ID")
+    if _git_state(root)["working_tree_dirty"]:
+        raise ValueError("Release verification requires a clean working tree; commit source changes first")
     if (root / ACTIVE_RELEASE).is_file():
         previous = load_json(root / ACTIVE_RELEASE)
     else:  # before any registry existed, v0.1.0 was the implicit active release
@@ -178,11 +185,9 @@ def verify_release(root: Path, release_id: str, *, timeout_seconds: int = 900) -
     with TemporaryDirectory(prefix="tldrift-release-") as temporary_directory:
         temporary = Path(temporary_directory)
         clean = temporary / "checkout"
-        # Only files a clean checkout would contain: tracked plus untracked-not-ignored.
-        for relative in git["checkout_files"]:
-            if (root / relative).is_file():
-                (clean / relative).parent.mkdir(parents=True, exist_ok=True)
-                shutil.copy2(root / relative, clean / relative)
+        archive = subprocess.run(["git", "archive", "--format=tar", git["head"]], cwd=root, capture_output=True, check=True)
+        with tarfile.open(fileobj=io.BytesIO(archive.stdout)) as handle:
+            handle.extractall(clean, filter="data")
         release_dir = clean / manifest_relative
         for relative in inputs:
             target = release_dir.parent / "inputs" / f"{relative}.gz"
@@ -246,11 +251,12 @@ def _release_document(
             "platform": platform.platform(),
             "fresh_virtual_environment": True,
             "system_site_packages": False,
-            "clean_checkout_copy": "git ls-files --cached --others --exclude-standard",
+            "clean_checkout_copy": "git archive of the source commit",
+            "pdf_extraction_dependency": "pypdf==6.16.2 declared; not installed during verification because normalized text is a frozen release input",
             "package_execution": "isolated_interpreter_with_explicit_project_src_path",
             "network_required": False,
         },
-        "git": {key: value for key, value in git.items() if key != "checkout_files"},
+        "git": git,
         "artifact_checksums": checksums,
         "release_inputs": inputs,
         "release_input_policy": (
@@ -325,11 +331,9 @@ def _git_state(root: Path) -> dict[str, object]:
     status = git("status", "--porcelain")
     return {
         "head": git("rev-parse", "HEAD").strip(),
+        "source_commit_binding": "release artifacts are committed after, and separately from, this commit",
         "working_tree_dirty": bool(status.strip()),
         "status_porcelain_sha256": sha256(status.encode()).hexdigest(),
-        "checkout_files": tuple(
-            line for line in git("ls-files", "--cached", "--others", "--exclude-standard").splitlines() if line
-        ),
     }
 
 

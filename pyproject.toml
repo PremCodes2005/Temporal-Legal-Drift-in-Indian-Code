@@ -13,7 +13,8 @@ dependencies = []
 
 [project.optional-dependencies]
 dev = []
-pdf = ["pypdf>=5.0"]
+# Exact pin: pypdf text output changes between releases; 6.16.2 regenerates 99/100 frozen normalized docs.
+pdf = ["pypdf==6.16.2"]
 rag = ["chromadb>=0.5"]
 
 [project.scripts]

@@ -28,3 +28,19 @@ jobs:
         run: tldrift check-gates
       - name: Run Phase 0-11 tests
         run: python -m unittest discover -s tests -v
+
+  frontend-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install pinned frontend dependencies
+        run: npm ci --no-audit --no-fund
+        working-directory: frontend
+      - name: Build production assets
+        run: npm run build
+        working-directory: frontend
+      - name: Built assets must match committed web/
+        run: git diff --exit-code -- web && test -z "$(git status --porcelain -- web)"
