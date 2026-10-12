@@ -21,6 +21,8 @@ from temporal_legal_drift.parsing.models import ParseContext
 from temporal_legal_drift.parsing.pdf import PdfParser
 from temporal_legal_drift.rag import RagPipeline
 from temporal_legal_drift.rag.indiacode import INDIA_CODE_HOME
+from temporal_legal_drift.orchestration import run_case
+from temporal_legal_drift.review import ReviewLedger
 from temporal_legal_drift.risk.service import RiskService
 
 
@@ -51,6 +53,55 @@ class DashboardService:
     def project_audit(self) -> dict[str, object]:
         """Run the bounded read-only evaluation agent for API consumers."""
         return ProjectEvaluationAgent(self.root).evaluate()
+
+    def list_runs(self) -> dict[str, object]:
+        ledger = ReviewLedger(self.root)
+        runs = []
+        for path in sorted((self.root / "data/runs").glob("run_*.json")):
+            record = load_json(path)
+            runs.append({
+                "correlation_id": record["correlation_id"], "case": record["case"],
+                "unresolved_stages": record["unresolved_stages"],
+                "review_state": ledger.current_state(record["correlation_id"], record["review_state"]),
+            })
+        return {"runs": runs, "legal_validation": "UNVERIFIED"}
+
+    def get_run(self, correlation_id: str) -> dict[str, object]:
+        if not re.fullmatch(r"run_[0-9a-f]{24}", correlation_id):
+            raise ValueError("invalid run identifier")
+        path = self.root / "data/runs" / f"{correlation_id}.json"
+        if not path.is_file():
+            raise KeyError("run not found")
+        record = load_json(path)
+        ledger = ReviewLedger(self.root)
+        return {
+            "record": record,
+            "review_state": ledger.current_state(correlation_id, record["review_state"]),
+            "review_history": ledger.history(correlation_id),
+            "ledger_integrity_errors": ledger.verify(),
+        }
+
+    def create_run(self, value: dict[str, object]) -> dict[str, object]:
+        record = run_case(self.root, dict(value))
+        return self.get_run(str(record["correlation_id"]))
+
+    def reviewers(self) -> dict[str, object]:
+        registry = load_json(self.root / "configs/review/reviewers.v1.json")
+        return {"reviewers": [{"reviewer_id": key, **value} for key, value in sorted(registry["reviewers"].items())],
+                "note": registry["note"]}
+
+    def submit_review(self, value: dict[str, object]) -> dict[str, object]:
+        correlation_id = str(value.get("subject_id", ""))
+        try:
+            run = self.get_run(correlation_id)
+        except KeyError as error:
+            raise ValueError("run not found") from error
+        entry = ReviewLedger(self.root).record(
+            subject_id=correlation_id, initial_state=str(run["record"]["review_state"]),
+            action=str(value.get("action", "")), reviewer_id=str(value.get("reviewer_id", "")),
+            reason=str(value.get("reason", "")), expected_prior_state=str(value.get("expected_prior_state", "")),
+        )
+        return {"entry": entry, "run": self.get_run(correlation_id)}
 
     def risk_catalog(self) -> dict[str, object]:
         return RiskService(self.root).catalog()

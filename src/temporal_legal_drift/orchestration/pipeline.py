@@ -36,6 +36,12 @@ def run_case(root: Path, case: dict[str, Any], *, write: bool = True) -> dict[st
             "configs/corpus/pilot_v1.json", "data/risk/obligation_registry.v1.json",
         )
     }
+    # Code is an input too: a changed stage or explanation rule yields a new run ID
+    # instead of a conflicting record under an old one.
+    inputs.update({
+        f"code:{path.name}": sha256(path.read_bytes()).hexdigest()
+        for path in (Path(__file__), Path(__file__).parents[1] / "explanations/contract.py")
+    })
     correlation_id = "run_" + sha256(canonical_json_bytes(
         {"pipeline": PIPELINE_VERSION, "case": case, "inputs": inputs})).hexdigest()[:24]
     trace: dict[str, Any] = {"correlation_id": correlation_id, "case": case, "stages": {}}
@@ -136,7 +142,11 @@ def _materiality(root: Path, case: dict[str, Any], context: dict[str, Any]) -> d
         return {"status": "UNRESOLVED", "output": {"status": "NOT_ASSESSED", "reason": f"{len(rows)} matching silver cases"}}
     row = rows[0]
     labels = {"rule_a": row["v2"]["rule_a"], "rule_b": row["v2"]["rule_b"]}
-    summary = ", ".join(f"{name} {value.get('label') or 'abstain'} ({value['status']})" for name, value in labels.items())
+    summary = "; ".join(
+        f"{name.replace('_', ' ').capitalize()} suggests {value['label']}" if value.get("label") and value["status"] == "PROVISIONAL_RULE_OUTPUT"
+        else f"{name.replace('_', ' ').capitalize()} abstains pending review"
+        for name, value in labels.items()
+    )
     return {"status": "OK", "output": {"status": "SILVER_ASSESSED", "pair_id": row["pair_id"], "labels": labels,
                                        "summary": summary, "is_gold": False}}
 

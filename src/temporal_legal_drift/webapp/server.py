@@ -55,10 +55,20 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             "/api/rag/status": self.dashboard_service.rag_status,
             "/api/audit": self.dashboard_service.project_audit,
             "/api/risk/catalog": self.dashboard_service.risk_catalog,
+            "/api/runs": self.dashboard_service.list_runs,
+            "/api/reviewers": self.dashboard_service.reviewers,
         }
         try:
             if path in api_routes:
                 self._json(HTTPStatus.OK, api_routes[path]())
+                return
+            if path.startswith("/api/runs/"):
+                try:
+                    self._json(HTTPStatus.OK, self.dashboard_service.get_run(path.removeprefix("/api/runs/")))
+                except ValueError as error:
+                    self._json(HTTPStatus.BAD_REQUEST, {"error": str(error)})
+                except KeyError:
+                    self._json(HTTPStatus.NOT_FOUND, {"error": "Run not found"})
                 return
             if path.startswith("/corpus/"):
                 self._serve_file(self.project_root / "data/corpus/pdfs", path.removeprefix("/corpus/"))
@@ -74,6 +84,10 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             body = self._request_json()
             if path == "/api/scenarios":
                 self._json(HTTPStatus.CREATED, self.dashboard_service.submit_scenario(body))
+            elif path == "/api/runs":
+                self._json(HTTPStatus.CREATED, self.dashboard_service.create_run(body))
+            elif path == "/api/reviews":
+                self._json(HTTPStatus.CREATED, self.dashboard_service.submit_review(body))
             elif path == "/api/risk/assess":
                 self._json(HTTPStatus.OK, self.dashboard_service.assess_risk(body))
             elif path == "/api/rag/query":

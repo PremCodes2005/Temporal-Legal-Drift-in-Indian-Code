@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import CaseReviewPanel from "./CaseReviewPanel";
 import ComplianceRiskPanel from "./ComplianceRiskPanel";
 
 const sections = [
@@ -9,6 +10,7 @@ const sections = [
   { id: "method", number: "05", label: "How it works" },
   { id: "faq", number: "06", label: "Recent changes FAQ" },
   { id: "risk", number: "07", label: "Compliance risk" },
+  { id: "review", number: "08", label: "Case trace & review" },
 ];
 
 const suggestions = [
@@ -18,7 +20,10 @@ const suggestions = [
 ];
 
 export default function App() {
-  const [section, setSection] = useState("assistant");
+  // Deep links: #review or #review/run_<id> (validated) so a case can be shared with a reviewer.
+  const initialHash = window.location.hash.slice(1).split("/");
+  const [section, setSection] = useState(() => sections.some((item) => item.id === initialHash[0]) ? initialHash[0] : "assistant");
+  const initialRunId = /^run_[0-9a-f]{24}$/.test(initialHash[1] || "") ? initialHash[1] : null;
   const [menuOpen, setMenuOpen] = useState(false);
   const [corpus, setCorpus] = useState(null);
   const [status, setStatus] = useState(null);
@@ -40,7 +45,7 @@ export default function App() {
   }, [lastResult]);
 
   const navigate = (next) => {
-    setSection(next); setMenuOpen(false); window.scrollTo({ top: 0, behavior: "smooth" });
+    setSection(next); setMenuOpen(false); window.history.replaceState(null, "", `#${next}`); window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const askFromFaq = (question) => {
@@ -52,7 +57,7 @@ export default function App() {
     <a className="skip-link" href="#main-content">Skip to main content</a>
     <aside className={`sidebar ${menuOpen ? "open" : ""}`} aria-label="Primary navigation">
       <div className="brand"><div className="brand-mark">TL</div><div><strong>Temporal Legal Drift</strong><span>Indian Code RAG assistant</span></div></div>
-      <nav className="nav-list">{sections.map((item) => <button key={item.id} className={`nav-item ${section === item.id ? "active" : ""}`} onClick={() => navigate(item.id)}><span>{item.number}</span>{item.label}</button>)}</nav>
+      <nav className="nav-list">{sections.map((item) => <button key={item.id} type="button" aria-current={section === item.id ? "page" : undefined} className={`nav-item ${section === item.id ? "active" : ""}`} onClick={() => navigate(item.id)}><span>{item.number}</span>{item.label}</button>)}</nav>
       <a className="official-link side-link" href="https://indiacode.gov.in/" target="_blank" rel="noreferrer">India Code official website ↗</a>
     </aside>
     <div className="workspace">
@@ -65,6 +70,7 @@ export default function App() {
         {section === "method" && <Method />}
         {section === "faq" && <RecentChangesFaq onAsk={askFromFaq} />}
         {section === "risk" && <ComplianceRiskPanel request={api} />}
+        {section === "review" && <CaseReviewPanel request={api} initialRunId={initialRunId} />}
       </main>
     </div>
   </div>;

@@ -1,0 +1,11 @@
+{
+  "note": "No qualified legal reviewer is registered. Engineering review entries never constitute legal approval.",
+  "reviewers": {
+    "project-engineer": {
+      "display_name": "Project engineer",
+      "qualified_legal_reviewer": false,
+      "role": "unqualified_engineering_review"
+    }
+  },
+  "schema_version": "1.0.0"
+}

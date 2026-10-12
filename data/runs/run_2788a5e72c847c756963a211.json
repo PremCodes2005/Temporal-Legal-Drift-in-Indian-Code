@@ -1,0 +1,208 @@
+{
+  "case": {
+    "act": "arbitration-and-conciliation-act-1996",
+    "case_id": "arbitration-s7-2016",
+    "question": "Which supported wording of section 7 governs on 1 January 2016?",
+    "reference_date": "2016-01-01",
+    "section": "7"
+  },
+  "correlation_id": "run_2788a5e72c847c756963a211",
+  "input_sha256": {
+    "code:contract.py": "8c8afa145cf2cd16fdbe22da8b5bc44211425bd66c49d8a48bb3bc5682272b6b",
+    "code:pipeline.py": "e17d8165670778fee730fb14cd34415f214f5958858eac88956bba8405550dc4",
+    "configs/corpus/pilot_v1.json": "95019201c1dedeae5e32ffe0c722bb39776c884813d2136774dd1263aec08076",
+    "data/risk/obligation_registry.v1.json": "d4d4fd6d083857178b7e2b4656b5154a2d57f95833c0fdebd000428006a483b8",
+    "data/silver/materiality_reassessment.v2.5.json": "c2e6e790eb8c12f9621415097b816e91282e68a23ef53cbaae4d8fa1f20b43d1",
+    "reports/phase3/temporal_graph_checkpoint.v4.json": "a926fd15f3b7ea7bd6ab9fbfadbba6944913df91a396e361a2cc86b48f521e2e"
+  },
+  "interfaces": {
+    "explanation": "structured-explanation-v1",
+    "graph": "graph-consumer-v1/v4",
+    "risk": "compliance-risk-baseline-v1"
+  },
+  "legal_validation": "UNVERIFIED",
+  "pipeline_version": "case-orchestration-v1",
+  "review_state": "ESCALATED_UNRESOLVED",
+  "schema_version": "1.0.0",
+  "stages": {
+    "applicability": {
+      "output": {
+        "graph_effective_date_basis": "ACT_WIDE_COMMENCEMENT_NOT_SCENARIO_APPLICABILITY",
+        "status": "NOT_DETERMINED_NO_APPROVED_TEMPORAL_FACTS"
+      },
+      "status": "UNRESOLVED"
+    },
+    "explanation": {
+      "errors": [],
+      "output": {
+        "amendment": {
+          "fragment_text": "including communication through electronic means",
+          "validation_status": "MACHINE_CROSS_SOURCE_CORROBORATED"
+        },
+        "citations": [
+          {
+            "anchor_id": "anc_6427a51a62373b3e",
+            "line": 22,
+            "locator": null,
+            "page": 2,
+            "quote": "3. In section 7 of the principal Act, in sub-section (4), in clause (b), after the words “or\nother means of telecommunication”, the words “including communication through electronic\nmeans” shall be inserted.",
+            "role": "amendment_instruction",
+            "source_id": "src_0ad4e9c72da39b6e2ffcbafb",
+            "source_sha256": "e6a3f49cadc97f08298b708f63c07f9452a420e43de4a7c08c1186da77e186f6",
+            "source_url": "https://indiacode.gov.in/items/02fd57a5-8028-40e5-969b-3c43ffcde5d1"
+          }
+        ],
+        "claims": [
+          {
+            "anchors": [
+              "anc_6427a51a62373b3e"
+            ],
+            "text": "For section 7 of the Arbitration And Conciliation Act 1996 on 2016-01-01, the supported evidence is only the text that the amendment inserted or substituted, not the complete text of the section."
+          },
+          {
+            "anchors": [
+              "anc_6427a51a62373b3e"
+            ],
+            "text": "The fragment is dated from 2015-10-23 on an Act-wide commencement basis."
+          },
+          {
+            "anchors": [
+              "anc_6427a51a62373b3e"
+            ],
+            "text": "Automated materiality triage (provisional, not a legal assessment): Rule a suggests High; Rule b suggests High."
+          }
+        ],
+        "correlation_id": "run_2788a5e72c847c756963a211",
+        "escalation": {
+          "reasons": [
+            "stage_applicability_unresolved"
+          ],
+          "required": true
+        },
+        "explanation_id": "exp_2b56a1e1687a97b0da67a88d",
+        "generation": {
+          "fallback_reason": null,
+          "method": "deterministic_template",
+          "model": null,
+          "raw_output": null
+        },
+        "legal_validation": "UNVERIFIED",
+        "materiality": {
+          "is_gold": false,
+          "status": "SILVER_ASSESSED"
+        },
+        "obligation": null,
+        "provision": {
+          "act": "arbitration-and-conciliation-act-1996",
+          "is_complete_consolidated_text": false,
+          "section": "7",
+          "transition_id": "transition_0c533c5c336dc42fc2af4971",
+          "version_scope": "AMENDMENT_CONTROLLED_FRAGMENT"
+        },
+        "question": "Which supported wording of section 7 governs on 1 January 2016?",
+        "risk": null,
+        "schema_version": "structured-explanation-v1",
+        "temporal": {
+          "applicability_status": "NOT_DETERMINED_NO_APPROVED_TEMPORAL_FACTS",
+          "reference_date": "2016-01-01",
+          "valid_from": "2015-10-23",
+          "valid_to": null
+        },
+        "uncertainty": [
+          "applicability_not_determined_requires_scenario_facts_and_review"
+        ]
+      },
+      "status": "OK"
+    },
+    "graph": {
+      "output": {
+        "abstention_reasons": [],
+        "applicability_status": "NOT_DETERMINED_REQUIRES_SCENARIO_FACTS_AND_REVIEW",
+        "corroborating_consolidated_version_ids": [
+          "pver_b8b7de29cfc3aa389c394276"
+        ],
+        "effective_date_basis": "ACT_WIDE_COMMENCEMENT_NOT_SCENARIO_APPLICABILITY",
+        "fragment_state": "AMENDMENT_CONTROLLED_TEXT",
+        "graph_sha256": "fcff6fbc2bc2510d7b914677264e26b4e81555c73aa6aa835a5f30df1216d1c8",
+        "graph_version": "v4",
+        "interface_version": "graph-consumer-v1",
+        "is_complete_consolidated_text": false,
+        "legal_validation": "UNVERIFIED",
+        "query": {
+          "act": "arbitration-and-conciliation-act-1996",
+          "reference_date": "2016-01-01",
+          "section": "7"
+        },
+        "scope_warning": "The returned text is the amendment-controlled fragment, not a complete historical consolidation of the provision.",
+        "source_evidence": [
+          {
+            "exact_text": "3. In section 7 of the principal Act, in sub-section (4), in clause (b), after the words “or\nother means of telecommunication”, the words “including communication through electronic\nmeans” shall be inserted.",
+            "exact_text_sha256": "fd46fb06765fc45993946071dd7837a6980e572ba85b41b41f7ec058e0644954",
+            "line": 22,
+            "page": 2,
+            "retrieval_url": "https://indiacode.gov.in/server/api/core/bitstreams/0b5fe3f8-bd8a-4fe5-9a8b-78b1229bf29a/content",
+            "source_id": "src_0ad4e9c72da39b6e2ffcbafb",
+            "source_sha256": "e6a3f49cadc97f08298b708f63c07f9452a420e43de4a7c08c1186da77e186f6",
+            "source_url": "https://indiacode.gov.in/items/02fd57a5-8028-40e5-969b-3c43ffcde5d1"
+          }
+        ],
+        "source_text_unreliable": [],
+        "status": "FRAGMENT_SUPPORTED",
+        "text": "including communication through electronic means",
+        "transition_id": "transition_0c533c5c336dc42fc2af4971",
+        "valid_from": "2015-10-23",
+        "valid_to": null,
+        "validation_status": "MACHINE_CROSS_SOURCE_CORROBORATED",
+        "version_scope": "AMENDMENT_CONTROLLED_FRAGMENT"
+      },
+      "status": "OK"
+    },
+    "materiality": {
+      "output": {
+        "is_gold": false,
+        "labels": {
+          "rule_a": {
+            "confidence": null,
+            "confidence_status": "not_calibrated",
+            "dimensions": [
+              "definition",
+              "scope"
+            ],
+            "label": "High",
+            "method_id": "rule-cue-transition-v1",
+            "rationale": "The wording changes the presence of one or more high-impact legal-effect cues: scope.",
+            "status": "PROVISIONAL_RULE_OUTPUT"
+          },
+          "rule_b": {
+            "label": "High",
+            "rationale": "The operation changes a detected duty, right, prohibition, scope, liability, or exception cue: scope.",
+            "similarity": 0.0,
+            "status": "PROVISIONAL_RULE_OUTPUT"
+          }
+        },
+        "pair_id": "mat_1037bf61be63655a13f6f7af",
+        "status": "SILVER_ASSESSED",
+        "summary": "Rule a suggests High; Rule b suggests High"
+      },
+      "status": "OK"
+    },
+    "risk": {
+      "output": null,
+      "status": "NOT_REQUESTED"
+    },
+    "source": {
+      "output": {
+        "corpus_entry_id": "arbitration-and-conciliation-act-1996",
+        "integrity_verified": true,
+        "known_extraction_risk": null,
+        "sha256": "6fb32e5ffe2581740345d948c1e362bfbb5018ca7958932cde8ca92436485b6c",
+        "source_id": "src_d25cf228044dc23c84892ea7",
+        "source_url": "https://indiacode.gov.in/items/51601006-0e76-4a81-83ce-739f3a021112"
+      },
+      "status": "OK"
+    }
+  },
+  "unresolved_stages": [
+    "applicability"
+  ]
+}

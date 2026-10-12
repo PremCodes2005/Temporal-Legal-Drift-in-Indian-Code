@@ -34,11 +34,13 @@ def build_explanation(trace: dict[str, Any]) -> dict[str, Any]:
     uncertainty: list[str] = []
 
     if graph.get("status") == "FRAGMENT_SUPPORTED":
+        fragment = ("text that the amendment inserted or substituted" if graph["fragment_state"] == "AMENDMENT_CONTROLLED_TEXT"
+                    else "the provision as it stood before the amendment's insertion")
         claims.append({
             "text": (
-                f"For {trace['case']['act']} section {trace['case']['section']} on {trace['case']['reference_date']}, "
-                f"the graph returns an amendment-controlled fragment ({graph['fragment_state']}), "
-                "not the complete consolidated provision."
+                f"For section {trace['case']['section']} of the {_act_title(trace['case']['act'])} on "
+                f"{trace['case']['reference_date']}, the supported evidence is only the {fragment}, "
+                "not the complete text of the section."
             ),
             "anchors": anchors[:1],
         })
@@ -50,7 +52,7 @@ def build_explanation(trace: dict[str, Any]) -> dict[str, Any]:
     uncertainty.append("applicability_not_determined_requires_scenario_facts_and_review")
 
     if materiality.get("status") == "SILVER_ASSESSED":
-        claims.append({"text": f"Machine materiality triage (silver, not gold): {materiality['summary']}.", "anchors": anchors[:1]})
+        claims.append({"text": f"Automated materiality triage (provisional, not a legal assessment): {materiality['summary']}.", "anchors": anchors[:1]})
     else:
         uncertainty.append("materiality_not_assessed_for_this_transition")
     if risk:
@@ -181,6 +183,11 @@ def validate_explanation(explanation: dict[str, Any], trace: dict[str, Any]) -> 
     if explanation["explanation_id"] != _explanation_id(explanation):
         errors.append("explanation id does not match its content")
     return errors
+
+
+def _act_title(entry_id: str) -> str:
+    words = [word.upper() if word in {"it", "gst", "rti"} else word.capitalize() for word in entry_id.split("-")]
+    return " ".join(word for word in words if word not in {"Consolidated"})
 
 
 def _citations(trace: dict[str, Any]) -> list[dict[str, Any]]:
