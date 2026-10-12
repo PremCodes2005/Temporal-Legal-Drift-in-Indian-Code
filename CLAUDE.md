@@ -1,65 +1,27 @@
-# CLAUDE.md
+# Claude Code handoff: Temporal Legal Drift in the Indian Code
 
-Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
+Read [docs/handoff.md](docs/handoff.md) first, then [docs/context.md](docs/context.md), [docs/verification.md](docs/verification.md), and the existing [plan.md](plan.md). The `docs/` files describe the audited checkout at commit `68030875a719aa626fb05f294880de2953084781` (2026-10-12); recheck Git state before relying on them. `plan.md` is a research specification, not a record of completed work. The older root `context.md` is dated 2026-08-24 and inaccurately says no application exists; do not use it as current implementation evidence.
 
-**Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
+## Project boundaries
 
-## 1. Think Before Coding
+- Research question: whether LLM-assisted compliance reasoning propagates legally applicable changes in Indian law over time. Materiality, temporal applicability, compliance consequence, and operational risk are distinct.
+- Python package in `src/temporal_legal_drift/`; React/Vite source in `frontend/`; generated browser assets in `web/`; versioned artifacts in `data/`, `experiments/`, and `reports/`; contracts in `schemas/`; procedures in `protocols/`.
+- Local corpus and live India Code lookup are evidence aids. Neither local coverage nor current-law retrieval proves a complete historical legal version. The temporal graph explicitly stores amendment fragments and unresolved transitions.
+- Engineering gates passing does **not** mean legal gold, approved applicability, expert validation, benchmark performance, or legal advice. Do not convert silver labels, generated scenarios, or machine-corroborated transitions into those claims.
+- Preserve immutable/versioned artifacts and existing user work. Inspect `git status` before edits; make minimal, scoped changes and add new versions instead of silently replacing frozen records.
 
-**Don't assume. Don't hide confusion. Surface tradeoffs.**
+## Safe verification
 
-Before implementing:
-- State your assumptions explicitly. If uncertain, ask.
-- If multiple interpretations exist, present them - don't pick silently.
-- If a simpler approach exists, say so. Push back when warranted.
-- If something is unclear, stop. Name what's confusing. Ask.
+From the repository root, in a Python 3.11+ environment with the package installed (or with `PYTHONPATH=src`):
 
-## 2. Simplicity First
-
-**Minimum code that solves the problem. Nothing speculative.**
-
-- No features beyond what was asked.
-- No abstractions for single-use code.
-- No "flexibility" or "configurability" that wasn't requested.
-- No error handling for impossible scenarios.
-- If you write 200 lines and it could be 50, rewrite it.
-
-Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
-
-## 3. Surgical Changes
-
-**Touch only what you must. Clean up only your own mess.**
-
-When editing existing code:
-- Don't "improve" adjacent code, comments, or formatting.
-- Don't refactor things that aren't broken.
-- Match existing style, even if you'd do it differently.
-- If you notice unrelated dead code, mention it - don't delete it.
-
-When your changes create orphans:
-- Remove imports/variables/functions that YOUR changes made unused.
-- Don't remove pre-existing dead code unless asked.
-
-The test: Every changed line should trace directly to the user's request.
-
-## 4. Goal-Driven Execution
-
-**Define success criteria. Loop until verified.**
-
-Transform tasks into verifiable goals:
-- "Add validation" → "Write tests for invalid inputs, then make them pass"
-- "Fix the bug" → "Write a test that reproduces it, then make it pass"
-- "Refactor X" → "Ensure tests pass before and after"
-
-For multi-step tasks, state a brief plan:
-```
-1. [Step] → verify: [check]
-2. [Step] → verify: [check]
-3. [Step] → verify: [check]
+```sh
+python -m unittest discover -s tests -v
+python -m temporal_legal_drift.cli validate-contract
+python -m temporal_legal_drift.cli check-gates
 ```
 
-Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
+The GitHub Actions workflow runs those checks on Python 3.11–3.13. It does not build the frontend. `verify-reproducibility`, ingestion, indexing, and several build commands write artifacts; inspect their targets before running them. Do not claim an unobserved CI, live India Code, Ollama, or legal-review result.
 
----
+## Working practice
 
-**These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
+State assumptions and uncertainty. Prefer the smallest change that meets the task; do not refactor adjacent code. For a code change, define a concrete failure case, test it, and report what actually ran. Keep evidence identifiers and SHA-256 provenance intact. On unresolved legal applicability, insufficient evidence, or model failure, retain abstention and escalation rather than manufacturing a conclusion.
