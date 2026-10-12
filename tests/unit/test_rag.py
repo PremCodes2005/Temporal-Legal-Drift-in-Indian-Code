@@ -114,7 +114,11 @@ class RagPipelineTests(unittest.TestCase):
         self.assertEqual(result["retrieval"]["pair_status"], "consolidated_footnote_reconstruction")
         self.assertIn("Digital Signature Certificate", result["answer"]["pre_amendment_baseline"])
         self.assertIn("electronic signature", result["answer"]["post_amendment_revision"])
-        self.assertEqual(result["metrics"]["conceptual_drift_percent"], 65)
+        # v2 removed the hard-coded signature-term score (formerly 65); the proxy now reports
+        # only general cue, number and polarity changes, and the changed span is returned.
+        self.assertEqual(result["metrics"]["conceptual_drift_percent"], 0.0)
+        self.assertTrue(any(span["before"] == "digital" and "electronic" in span["after"]
+                            for span in result["metrics"]["changed_spans"]))
 
     def test_single_document_lookup_does_not_report_fake_pair_drift(self) -> None:
         result = self.pipeline.answer(
@@ -178,7 +182,12 @@ class RagPipelineTests(unittest.TestCase):
             metadata_coverage=1.0,
         )
         self.assertGreater(metrics["lexical_drift_percent"], 0)
-        self.assertEqual(metrics["alignment_accuracy_percent"], 90.0)
+        self.assertEqual(metrics["evidence_alignment_quality_percent"], 90.0)
+        self.assertIn("alignment_accuracy_percent", metrics["deprecated_fields"])
+        # Without feature vectors the vector component and the overall score are unavailable, not substituted.
+        self.assertIsNone(metrics["semantic_drift_percent"])
+        self.assertIsNone(metrics["overall_drift_percent"])
+        self.assertIn("semantic", metrics["unavailable_reasons"])
         self.assertIn(metrics["levels"]["lexical"], {"Low", "Medium", "High"})
         self.assertEqual(
             metrics["level_thresholds"],

@@ -5,6 +5,7 @@ from __future__ import annotations
 import math
 import re
 from difflib import SequenceMatcher
+from hashlib import sha256
 
 
 TOKEN_RE = re.compile(r"[A-Za-z]+|\d+(?:\.\d+)?")
@@ -22,6 +23,7 @@ DRIFT_LEVEL_THRESHOLDS = {
 }
 DRIFT_WEIGHTS = {"semantic": 0.40, "lexical": 0.30, "conceptual": 0.30}
 DRIFT_DISAGREEMENT_THRESHOLD = 60.0
+METRICS_CONTRACT_VERSION = "drift-metrics-v2"
 
 
 def calculate_drift_metrics(
@@ -43,11 +45,16 @@ def calculate_drift_metrics(
     sequence_similarity = SequenceMatcher(None, pre_tokens, post_tokens, autojunk=False).ratio()
     lexical_drift = (1 - (jaccard_similarity * 0.55 + sequence_similarity * 0.45)) * 100
 
+    unavailable: dict[str, str] = {}
     if pre_vector is not None and post_vector is not None and len(pre_vector) == len(post_vector):
-        cosine_similarity = max(0.0, min(1.0, sum(a * b for a, b in zip(pre_vector, post_vector))))
+        cosine_similarity: float | None = max(0.0, min(1.0, sum(a * b for a, b in zip(pre_vector, post_vector))))
+        semantic_drift: float | None = (1 - cosine_similarity) * 100
     else:
-        cosine_similarity = jaccard_similarity
-    semantic_drift = (1 - cosine_similarity) * 100
+        # v2: no hidden substitute (v1 silently reused Jaccard similarity here).
+        cosine_similarity = semantic_drift = None
+        unavailable["semantic"] = "feature vectors were not supplied for both texts"
+    if not pre_chunk.strip() or not post_chunk.strip():
+        unavailable["pair"] = "before or after text is missing; no drift is computed"
 
     conceptual = conceptual_override if conceptual_override is not None else _conceptual_proxy(pre_chunk, post_chunk)
     conceptual = max(0.0, min(100.0, conceptual))
@@ -56,29 +63,41 @@ def calculate_drift_metrics(
         "lexical": lexical_drift,
         "conceptual": conceptual,
     }
-    overall_drift = _aggregate_drift(component_scores, DRIFT_WEIGHTS)
-    component_spread = max(component_scores.values()) - min(component_scores.values())
+    if "pair" in unavailable:
+        component_scores = {name: None for name in component_scores}
+    available = {name: value for name, value in component_scores.items() if value is not None}
+    # The overall score exists only when every weighted component does; otherwise it is unavailable.
+    overall_drift = _aggregate_drift(available, DRIFT_WEIGHTS) if len(available) == len(component_scores) else None
+    component_spread = (max(available.values()) - min(available.values())) if available else 0.0
 
     retrieval = max(0.0, min(1.0, sum(retrieval_scores) / 2))
     evidence_completeness = 1.0 if pre_chunk.strip() and post_chunk.strip() else 0.5 if pre_chunk.strip() or post_chunk.strip() else 0.0
     alignment = (retrieval * 0.50 + evidence_completeness * 0.30 + max(0.0, min(1.0, metadata_coverage)) * 0.20) * 100
-    metric_values = {
-        "semantic": semantic_drift,
-        "lexical": lexical_drift,
-        "conceptual": conceptual,
-        "overall": overall_drift,
-    }
+    metric_values = {**component_scores, "overall": overall_drift}
     weight_total = sum(DRIFT_WEIGHTS.values())
     weighted_square_contributions = {
-        name: round(DRIFT_WEIGHTS[name] * score * score / weight_total, 2)
+        name: round(DRIFT_WEIGHTS[name] * score * score / weight_total, 2) if score is not None else None
         for name, score in component_scores.items()
     }
+    rounded = lambda value: round(value, 1) if value is not None else None  # noqa: E731
     return {
-        "semantic_drift_percent": round(semantic_drift, 1),
-        "lexical_drift_percent": round(lexical_drift, 1),
-        "conceptual_drift_percent": round(conceptual, 1),
-        "overall_drift_percent": round(overall_drift, 1),
+        "metrics_contract_version": METRICS_CONTRACT_VERSION,
+        "semantic_drift_percent": rounded(component_scores["semantic"]),
+        "lexical_drift_percent": rounded(component_scores["lexical"]),
+        "conceptual_drift_percent": rounded(component_scores["conceptual"]),
+        "overall_drift_percent": rounded(overall_drift),
+        "availability": {name: ("unavailable" if value is None else "available") for name, value in metric_values.items()},
+        "unavailable_reasons": unavailable,
+        "evidence_alignment_quality_percent": round(alignment, 1),
         "alignment_accuracy_percent": round(alignment, 1),
+        "deprecated_fields": {
+            "alignment_accuracy_percent": "renamed evidence_alignment_quality_percent in drift-metrics-v2; it never measured accuracy",
+        },
+        "compared_text_sha256": {
+            "pre": sha256(pre_chunk.encode("utf-8")).hexdigest(),
+            "post": sha256(post_chunk.encode("utf-8")).hexdigest(),
+        },
+        "changed_spans": _changed_spans(pre_tokens, post_tokens),
         "weights": DRIFT_WEIGHTS,
         "aggregation_method": "weighted_root_mean_square",
         "component_spread_percent": round(component_spread, 1),
@@ -87,14 +106,14 @@ def calculate_drift_metrics(
             "Weighted RMS preserves strong drift signals instead of allowing a low component "
             "to cancel a high component. Component scores remain visible and must be interpreted separately."
         ),
-        "levels": {name: _drift_level(value) for name, value in metric_values.items()},
+        "levels": {name: _drift_level(value) for name, value in metric_values.items() if value is not None},
         "level_thresholds": DRIFT_LEVEL_THRESHOLDS,
         "conceptual_method": conceptual_method,
-        "accuracy_definition": "retrieval confidence, paired-evidence completeness and metadata coverage; not legal correctness",
+        "accuracy_definition": "evidence-alignment quality: retrieval confidence, paired-evidence completeness and metadata coverage; not answer accuracy, legal correctness or a probability",
         "calculation_trace": {
             "semantic": {
                 "method": "cosine of deterministic 256-dimension feature-hash token vectors; not a pretrained semantic encoder",
-                "cosine_similarity_percent": round(cosine_similarity * 100, 1),
+                "cosine_similarity_percent": round(cosine_similarity * 100, 1) if cosine_similarity is not None else None,
                 "formula": "100 × (1 - cosine similarity)",
             },
             "lexical": {
@@ -115,7 +134,8 @@ def calculate_drift_metrics(
             "overall": {
                 "formula": "sqrt(0.40 × semantic² + 0.30 × lexical² + 0.30 × conceptual²)",
                 "weighted_square_contributions": weighted_square_contributions,
-                "sum_of_weighted_squares": round(sum(weighted_square_contributions.values()), 2),
+                "sum_of_weighted_squares": round(sum(weighted_square_contributions.values()), 2)
+                if overall_drift is not None else None,
             },
             "alignment": {
                 "average_retrieval_confidence_percent": round(retrieval * 100, 1),
@@ -161,9 +181,14 @@ def _tokens(value: str) -> list[str]:
     return [item.lower() for item in TOKEN_RE.findall(value)]
 
 
+def _spelling_normalised(text: str) -> str:
+    """Treat -ize/-ise spellings alike so a spelling-only edit is not a legal-cue change."""
+    return re.sub(r"\b(\w+?)iz(e|ed|es|ing|ation|ations)\b", r"\1is\2", text.lower())
+
+
 def _conceptual_proxy(pre: str, post: str) -> float:
-    before = pre.lower()
-    after = post.lower()
+    before = _spelling_normalised(pre)
+    after = _spelling_normalised(post)
     changed_groups = 0
     for values in CUES.values():
         left = {cue for cue in values if cue in before}
@@ -174,16 +199,22 @@ def _conceptual_proxy(pre: str, post: str) -> float:
     after_numbers = set(re.findall(r"\b\d+(?:\.\d+)?\b", after))
     numeric_score = 20 if before_numbers != after_numbers else 0
     polarity_score = 10 if (" shall not " in f" {before} ") != (" shall not " in f" {after} ") else 0
-    category_shift = 0
-    if ("digital signature" in before and "electronic signature" in after) or (
-        "electronic signature" in before and "digital signature" in after
-    ):
-        category_shift = 65
-    return min(100.0, max(category_shift, cue_score + numeric_score + polarity_score))
+    # v2 removed a hard-coded "digital/electronic signature" score of 65: it was a
+    # corpus-specific term pair, not a general legal-cue method.
+    return min(100.0, cue_score + numeric_score + polarity_score)
+
+
+def _changed_spans(before: list[str], after: list[str], limit: int = 40) -> list[dict[str, object]]:
+    """Token-level edits between the exact compared texts, for display and audit."""
+    spans = []
+    for operation, a0, a1, b0, b1 in SequenceMatcher(None, before, after, autojunk=False).get_opcodes():
+        if operation != "equal":
+            spans.append({"operation": operation, "before": " ".join(before[a0:a1]), "after": " ".join(after[b0:b1])})
+    return spans[:limit]
 
 
 def _present_cues(text: str) -> list[str]:
-    lowered = text.lower()
+    lowered = _spelling_normalised(text)
     return sorted(
         f"{group}:{cue}"
         for group, values in CUES.items()
