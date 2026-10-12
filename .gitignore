@@ -23,3 +23,5 @@ data/submissions/**
 !data/submissions/.gitkeep
 data/runtime/**
 !data/runtime/.gitkeep
+data/monitoring/**
+!data/monitoring/.gitkeep

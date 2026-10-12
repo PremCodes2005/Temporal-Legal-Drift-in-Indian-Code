@@ -94,6 +94,16 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("build-ingestion-checkpoint")
     subparsers.add_parser("build-amendment-extraction-checkpoint")
     subparsers.add_parser("build-layout-furniture")
+    monitor_run = subparsers.add_parser("monitor-run", help="daily-gated official-source discovery (at most once per 24 h per source)")
+    monitor_run.add_argument("--owner", required=True, help="worker identity recorded in the lease")
+    monitor_run.add_argument("--page-size", type=int, default=20)
+    monitor_run.add_argument("--manual-reason", help="audited manual retry outside the 24 h window")
+    monitor_backfill = subparsers.add_parser("monitor-backfill")
+    monitor_backfill.add_argument("--owner", required=True)
+    monitor_backfill.add_argument("--pages", type=int, required=True)
+    monitor_backfill.add_argument("--page-size", type=int, default=20)
+    monitor_backfill.add_argument("--reason", required=True)
+    subparsers.add_parser("monitor-health")
     run_case_parser = subparsers.add_parser("run-case")
     run_case_parser.add_argument("--case", type=Path, required=True, help="JSON case file, e.g. configs/cases/arbitration-s7-2016.json")
     ocr_candidate = subparsers.add_parser("build-ocr-candidate")
@@ -591,6 +601,23 @@ def run(args: argparse.Namespace) -> int:
 
         record = run_case(root, load_json(_resolve(root, args.case)))
         print(json.dumps({key: record[key] for key in ("correlation_id", "review_state", "unresolved_stages")}, indent=2))
+        return 0
+
+    if args.command in {"monitor-run", "monitor-backfill", "monitor-health"}:
+        from .monitoring import IndiaCodeConnector, MonitoringService
+        from .parsing.pdf import PdfParser
+
+        page_size = getattr(args, "page_size", 20)
+        if not 1 <= page_size <= 50:
+            raise ValueError("--page-size must be between 1 and 50")
+        service = MonitoringService(root, {"india_code": IndiaCodeConnector(page_size=page_size)}, parser=PdfParser())
+        if args.command == "monitor-run":
+            result = service.run_due(args.owner, manual_reason=args.manual_reason)
+        elif args.command == "monitor-backfill":
+            result = service.backfill("india_code", args.owner, pages=args.pages, reason=args.reason)
+        else:
+            result = service.health()
+        print(json.dumps(result, indent=2, ensure_ascii=False))
         return 0
 
     if args.command == "build-layout-furniture":

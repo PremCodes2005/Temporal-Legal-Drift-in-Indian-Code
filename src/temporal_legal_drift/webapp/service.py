@@ -85,6 +85,20 @@ class DashboardService:
         record = run_case(self.root, dict(value))
         return self.get_run(str(record["correlation_id"]))
 
+    def source_health(self) -> dict[str, object]:
+        from temporal_legal_drift.monitoring import IndiaCodeConnector, MonitoringService
+        from temporal_legal_drift.versioning.consumer import GraphConsumer, IncompatibleGraphError
+
+        health = MonitoringService(self.root, {"india_code": IndiaCodeConnector()}).health()
+        try:
+            consumer = GraphConsumer(self.root, "v4")
+            graph = {"graph_version": "v4", "graph_sha256": consumer.graph_sha256, "verified": True}
+        except (IncompatibleGraphError, OSError, ValueError) as error:
+            graph = {"graph_version": "v4", "verified": False, "error": str(error)}
+        return {**health, "active_binding": {"graph": graph, "auto_activation_of_new_documents": False,
+                "note": "New documents enter review; they never change the active graph or index automatically."},
+                "live_query_lookup": "available at query time when enabled; distinct from scheduled ingestion health"}
+
     def reviewers(self) -> dict[str, object]:
         registry = load_json(self.root / "configs/review/reviewers.v1.json")
         return {"reviewers": [{"reviewer_id": key, **value} for key, value in sorted(registry["reviewers"].items())],
