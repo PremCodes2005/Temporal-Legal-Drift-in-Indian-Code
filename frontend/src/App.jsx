@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import CaseReviewPanel from "./CaseReviewPanel";
+import ComparisonPanel from "./ComparisonPanel";
 import ComplianceRiskPanel from "./ComplianceRiskPanel";
 
 const sections = [
@@ -21,14 +22,16 @@ const suggestions = [
 
 export default function App() {
   // Deep links: #review or #review/run_<id> (validated) so a case can be shared with a reviewer.
-  const initialHash = window.location.hash.slice(1).split("/");
+  const initialHash = window.location.hash.slice(1).split("?")[0].split("/");
+  // Shareable question link: #assistant?q=<question> asks once on load.
+  const linkedQuestion = new URLSearchParams(window.location.hash.split("?")[1] || "").get("q")?.slice(0, 4000) || "";
   const [section, setSection] = useState(() => sections.some((item) => item.id === initialHash[0]) ? initialHash[0] : "assistant");
   const initialRunId = /^run_[0-9a-f]{24}$/.test(initialHash[1] || "") ? initialHash[1] : null;
   const [menuOpen, setMenuOpen] = useState(false);
   const [corpus, setCorpus] = useState(null);
   const [status, setStatus] = useState(null);
   const [loadError, setLoadError] = useState("");
-  const [starterQuery, setStarterQuery] = useState("");
+  const [starterQuery, setStarterQuery] = useState(linkedQuestion);
   const [lastResult, setLastResult] = useState(() => {
     try { return JSON.parse(window.sessionStorage.getItem("tldrift:last-result")) || null; }
     catch { return null; }
@@ -63,7 +66,7 @@ export default function App() {
     <div className="workspace">
       <header className="topbar"><button className="menu-toggle" onClick={() => setMenuOpen((open) => !open)} aria-label="Open navigation">☰</button><div><p className="eyebrow">Versioned Indian law</p><h1>{sections.find((item) => item.id === section)?.label}</h1></div></header>
       <main id="main-content">
-        {section === "assistant" && <AssistantWorkspace status={status} error={loadError} starterQuery={starterQuery} result={lastResult} onResult={setLastResult} onExplain={() => navigate("drift")} />}
+        {section === "assistant" && <AssistantWorkspace status={status} error={loadError} starterQuery={starterQuery} autoRun={Boolean(linkedQuestion)} result={lastResult} onResult={setLastResult} onExplain={() => navigate("drift")} />}
         {section === "corpus" && <CorpusBrowser corpus={corpus} error={loadError} status={status} />}
         {section === "drift" && <DriftExplanation result={lastResult} onAnalyse={() => navigate("assistant")} />}
         {section === "calculation" && <ScoreCalculation result={lastResult} onAnalyse={() => navigate("assistant")} />}
@@ -76,20 +79,22 @@ export default function App() {
   </div>;
 }
 
-function AssistantWorkspace({ status, error: statusError, starterQuery, result, onResult, onExplain }) {
+function AssistantWorkspace({ status, error: statusError, starterQuery, autoRun = false, result, onResult, onExplain }) {
   const [query, setQuery] = useState(starterQuery || "");
   const [mode, setMode] = useState("specific");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => { if (starterQuery) setQuery(starterQuery); }, [starterQuery]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { if (autoRun && starterQuery) submit(null, starterQuery); }, []);
 
-  const submit = async (event) => {
-    event.preventDefault(); setError(""); onResult(null);
-    if (!query.trim()) return setError("Enter a question about the indexed Indian legal documents.");
+  const submit = async (event, text = query) => {
+    event?.preventDefault(); setError(""); onResult(null);
+    if (!text.trim()) return setError("Enter a question about the indexed Indian legal documents.");
     setBusy(true);
     try {
-      const value = await api("/api/rag/query", { method: "POST", body: { query: query.trim(), mode } });
+      const value = await api("/api/rag/query", { method: "POST", body: { query: text.trim(), mode } });
       onResult(value);
       window.setTimeout(() => document.getElementById("rag-result")?.scrollIntoView({ behavior: "smooth", block: "start" }), 0);
     } catch (requestError) { setError(requestError.message); }
@@ -102,6 +107,7 @@ function AssistantWorkspace({ status, error: statusError, starterQuery, result, 
       <h2>Ask what changed in Indian law.</h2>
       <p>The assistant checks the live India Code repository and uses the local evidence cache for reproducible amendment comparisons and traceable source anchors.</p>
       <RepositoryStatus status={status} error={statusError} />
+      <SourceHealth />
       <form className="prompt-panel" onSubmit={submit}>
         <label htmlFor="legal-query" className="sr-only">Legal research question</label>
         <textarea id="legal-query" rows="4" maxLength="4000" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Ask a question, for example: What changed in the IT Act amendment regarding data privacy?" />
@@ -119,6 +125,21 @@ function AssistantWorkspace({ status, error: statusError, starterQuery, result, 
     {busy && <div className="loading-panel"><span className="spinner"/><div><strong>Retrieving versioned legal evidence…</strong><p>Classifying the question, matching documents and validating the response context.</p></div></div>}
     {result && <RagResult result={result} onExplain={onExplain} />}
   </section>;
+}
+
+function SourceHealth() {
+  const [health, setHealth] = useState(null);
+  const [failed, setFailed] = useState(false);
+  useEffect(() => { api("/api/sources/health").then(setHealth).catch(() => setFailed(true)); }, []);
+  if (failed) return <p className="panel-note" role="status">Scheduled source-monitoring status is unavailable.</p>;
+  if (!health) return null;
+  const india = health.sources.find((item) => item.source_key === "india_code");
+  const limited = health.sources.filter((item) => item.status === "ACCESS_LIMITED");
+  return <p className="source-health" role="status">
+    <strong>Scheduled ingestion:</strong> {india?.last_success_at ? `India Code last checked ${new Date(india.last_success_at).toLocaleString()} (stored in UTC)${india.scheduled_ingestion_healthy ? "" : " — overdue"}` : "India Code not yet checked by the daily job"}
+    {` · ${health.review_queue_pending} new document(s) awaiting review`}
+    {limited.length > 0 && ` · ${limited.map((item) => item.source_key).join(", ")}: access-limited (manual import only)`}
+  </p>;
 }
 
 function RepositoryStatus({ status, error }) {
@@ -145,6 +166,7 @@ function RagResult({ result, onExplain }) {
       {isSummary ? <AnswerSection label="Short answer" text={answer.short_answer || answer.post_amendment_revision} tone="summary" /> : <><AnswerSection label={pairLabels[0]} text={answer.pre_amendment_baseline} tone="before" /><div className="answer-divider" /><AnswerSection label={pairLabels[1]} text={answer.post_amendment_revision} tone="after" /></>}
       <div className="difference-summary"><span className="section-kicker">{isSummary ? "Key points" : "Key differences summary"}</span><ul>{answer.key_differences.map((item, index) => <li key={index}>{item}</li>)}</ul></div>
     </article>
+    <ComparisonPanel comparison={result.comparison} />
     {metrics ? <><DriftPanel metrics={metrics} /><button className="explain-drift-button" type="button" onClick={onExplain}>Explain these scores with PDF evidence <span>→</span></button></> : <article className="empty-analysis"><strong>{isSummary ? "Document summary" : "Drift metrics unavailable"}</strong><p>{isSummary ? "Drift scores are shown only when the question asks for a comparison and a supported pre/post evidence pair is available." : "A supported pre/post evidence pair was not found for this query."}</p></article>}
     <div className="result-columns">
       <VerificationPanel verification={result.verification} />
@@ -157,6 +179,9 @@ function RagResult({ result, onExplain }) {
   </section>;
 }
 
+// Unavailable values are shown as such, never as zero.
+function percent(value) { return value == null ? "Unavailable" : `${value}%`; }
+
 function AnswerSection({ label, text, tone }) { return <section className={`answer-section ${tone}`}><div className="answer-label"><span>{tone === "before" ? "B" : tone === "after" ? "A" : "S"}</span><strong>{label}</strong></div><p>{text}</p></section>; }
 
 function DriftPanel({ metrics }) {
@@ -164,9 +189,9 @@ function DriftPanel({ metrics }) {
     { label: "Vector drift (feature-hash)", value: metrics.semantic_drift_percent, tone: "blue", help: "Cosine distance between deterministic 256-dimension token-hash vectors; not a trained meaning model." },
     { label: "Lexical / textual shift", value: metrics.lexical_drift_percent, tone: "green", help: "Token and sequence changes in the paired excerpts." },
     { label: "Conceptual / legal intent shift", value: metrics.conceptual_drift_percent, tone: "purple", help: metrics.conceptual_method === "llm_judge" ? "Evidence-bound LLM judgment of operative legal change." : "Deterministic legal-cue proxy; no LLM judgment was available." },
-    { label: "Retrieval & extraction alignment", value: metrics.alignment_accuracy_percent, tone: "gold", help: "Retrieval confidence, metadata coverage and paired evidence completeness." },
+    { label: "Evidence-alignment quality", value: metrics.evidence_alignment_quality_percent ?? metrics.alignment_accuracy_percent, tone: "gold", help: "Retrieval confidence, metadata coverage and paired-evidence completeness. Not answer accuracy or a probability." },
   ];
-  return <article className="analytics-panel"><div className="analytics-heading"><div><span className="section-kicker">Drift score breakdown</span><h3>How far the retrieved versions moved</h3></div><div className="overall-score"><strong>{metrics.overall_drift_percent}%</strong><span>weighted RMS drift</span></div></div><div className="metric-bars">{rows.map((row) => <div className="metric-row" key={row.label}><div><strong>{row.label}</strong><span>{row.help}</span></div><div className="bar-line"><div className={`bar-fill ${row.tone}`} style={{ width: `${Math.max(0, Math.min(100, row.value))}%` }} /></div><b>{row.value}%</b></div>)}</div>{metrics.component_disagreement && <p className="panel-note">The component scores strongly disagree. Review each score and its cited evidence separately; the overall score must not be interpreted as ordinary averaging.</p>}</article>;
+  return <article className="analytics-panel"><div className="analytics-heading"><div><span className="section-kicker">Drift score breakdown</span><h3>How far the retrieved versions moved</h3></div><div className="overall-score"><strong>{percent(metrics.overall_drift_percent)}</strong><span>weighted RMS drift</span></div></div><div className="metric-bars">{rows.map((row) => <div className="metric-row" key={row.label}><div><strong>{row.label}</strong><span>{row.help}</span></div><div className="bar-line"><div className={`bar-fill ${row.tone}`} style={{ width: `${row.value == null ? 0 : Math.max(0, Math.min(100, row.value))}%` }} /></div><b>{percent(row.value)}</b></div>)}</div>{Object.values(metrics.unavailable_reasons || {}).map((reason) => <p className="panel-note" key={reason}>Unavailable: {reason}.</p>)}{metrics.component_disagreement && <p className="panel-note">The component scores strongly disagree. Review each score and its cited evidence separately; the overall score must not be interpreted as ordinary averaging.</p>}</article>;
 }
 
 function DriftExplanation({ result, onAnalyse }) {
@@ -189,7 +214,7 @@ function DriftExplanation({ result, onAnalyse }) {
       <article className="medium"><strong>Medium</strong><b>33.4–66.6%</b><p>A noticeable change exists and the cited clauses should be reviewed carefully.</p></article>
       <article className="high"><strong>High</strong><b>66.7–100%</b><p>Substantial movement was detected; this still requires legal and applicability review.</p></article>
     </div>
-    <article className="drift-breakdown"><span className="section-kicker">Calculated classification</span><h3>{levels.overall || driftLevel(metrics.overall_drift_percent)} overall drift</h3><div className="drift-score-grid">{scoreRows.map(([label, value, level, detail]) => <div key={label}><span>{label}</span><strong>{value}%</strong><b className={`level-pill ${(level || driftLevel(value)).toLowerCase()}`}>{level || driftLevel(value)}</b><p>{detail}</p></div>)}</div></article>
+    <article className="drift-breakdown"><span className="section-kicker">Calculated classification</span><h3>{metrics.overall_drift_percent == null ? "Overall drift unavailable" : `${levels.overall || driftLevel(metrics.overall_drift_percent)} overall drift`}</h3><div className="drift-score-grid">{scoreRows.map(([label, value, level, detail]) => <div key={label}><span>{label}</span><strong>{percent(value)}</strong>{value != null && <b className={`level-pill ${(level || driftLevel(value)).toLowerCase()}`}>{level || driftLevel(value)}</b>}<p>{detail}</p></div>)}</div></article>
     <div className="evidence-comparison">
       <EvidenceExcerpt title="Before-side PDF evidence" citation={preCitation} chunk={retrieval.pre} />
       <div className="comparison-arrow" aria-hidden="true">→</div>
@@ -208,7 +233,9 @@ function ScoreCalculation({ result, onAnalyse }) {
 
   const { metrics, retrieval, citations, answer, query } = result;
   const hasServerTrace = Boolean(metrics.calculation_trace);
-  const trace = metrics.calculation_trace || legacyCalculationTrace(metrics);
+  // Never recompute scores in the browser: a saved result without the server trace is re-run instead.
+  if (!hasServerTrace || metrics.overall_drift_percent == null) return <section className="page-section"><div className="section-header"><span className="section-kicker">Reproducible calculation</span><h2>{hasServerTrace ? "The overall score is unavailable for this result." : "This saved result has no calculation trace."}</h2><p>{hasServerTrace ? Object.values(metrics.unavailable_reasons || {}).join("; ") : "Ask the question again to get a trace computed by the server."}</p></div><button className="send-button" type="button" onClick={onAnalyse}>Open legal drift assistant <span>→</span></button></section>;
+  const trace = metrics.calculation_trace;
   const basis = metrics.score_basis || {};
   const preCitation = citations?.find((item) => item.label === "pre");
   const postCitation = citations?.find((item) => item.label === "post");
@@ -217,7 +244,7 @@ function ScoreCalculation({ result, onAnalyse }) {
     ["Vector drift (feature-hash)", `${trace.semantic.cosine_similarity_percent}% similarity`, trace.semantic.formula, metrics.semantic_drift_percent],
     ["Lexical drift", `${trace.lexical.jaccard_similarity_percent}% Jaccard · ${trace.lexical.sequence_similarity_percent}% sequence`, trace.lexical.formula, metrics.lexical_drift_percent],
     ["Conceptual drift", titleCase(trace.conceptual.method), trace.conceptual.formula, metrics.conceptual_drift_percent],
-    ["Evidence alignment", `${trace.alignment.average_retrieval_confidence_percent}% retrieval · ${trace.alignment.paired_evidence_completeness_percent}% evidence · ${trace.alignment.metadata_coverage_percent}% metadata`, trace.alignment.formula, metrics.alignment_accuracy_percent],
+    ["Evidence alignment", `${trace.alignment.average_retrieval_confidence_percent}% retrieval · ${trace.alignment.paired_evidence_completeness_percent}% evidence · ${trace.alignment.metadata_coverage_percent}% metadata`, trace.alignment.formula, metrics.evidence_alignment_quality_percent ?? metrics.alignment_accuracy_percent],
   ];
   return <section className="page-section calculation-page">
     <div className="section-header"><span className="section-kicker">Latest response audit</span><h2>How these percentages were calculated</h2><p>You supplied only this prompt: “{query}”. The backend automatically found the relevant versions and selected comparable evidence. No before/after passage was entered by the user.</p></div>
@@ -238,24 +265,6 @@ function CalculationSource({ label, citation, chunk, scoringExcerpt }) {
   const anchor = citation?.source_anchor || chunk?.metadata?.source_anchor || "No page anchor";
   const sourceUrl = citation?.source_url || citation?.official_portal_url;
   return <article><span className="section-kicker">{label}</span><h3>{citation?.act_name || chunk?.metadata?.act_name || "Evidence unavailable"}</h3><strong>{anchor}</strong><p>{excerpt(scoringExcerpt || chunk?.text, 520)}</p>{sourceUrl && <a href={sourceUrl} target="_blank" rel="noreferrer">Open cited PDF page source ↗</a>}</article>;
-}
-
-function legacyCalculationTrace(metrics) {
-  const semantic = Number(metrics.semantic_drift_percent || 0);
-  const lexical = Number(metrics.lexical_drift_percent || 0);
-  const conceptual = Number(metrics.conceptual_drift_percent || 0);
-  const contributions = {
-    semantic: Number((0.4 * semantic * semantic).toFixed(2)),
-    lexical: Number((0.3 * lexical * lexical).toFixed(2)),
-    conceptual: Number((0.3 * conceptual * conceptual).toFixed(2)),
-  };
-  return {
-    semantic: { cosine_similarity_percent: Number((100 - semantic).toFixed(1)), formula: "100 × (1 - cosine similarity)" },
-    lexical: { jaccard_similarity_percent: "Unavailable", sequence_similarity_percent: "Unavailable", formula: "100 × (1 - (0.55 × Jaccard similarity + 0.45 × sequence similarity))" },
-    conceptual: { method: metrics.conceptual_method || "Unavailable", formula: "Evidence-bound LLM score when available; otherwise deterministic legal-cue, numeric and polarity changes", pre_legal_cues: [], post_legal_cues: [], pre_numbers: [], post_numbers: [] },
-    overall: { formula: "sqrt(0.40 × semantic² + 0.30 × lexical² + 0.30 × conceptual²)", weighted_square_contributions: contributions, sum_of_weighted_squares: Number(Object.values(contributions).reduce((sum, value) => sum + value, 0).toFixed(2)) },
-    alignment: { average_retrieval_confidence_percent: "Unavailable", paired_evidence_completeness_percent: "Unavailable", metadata_coverage_percent: "Unavailable", formula: "0.50 × retrieval confidence + 0.30 × evidence completeness + 0.20 × metadata coverage" },
-  };
 }
 
 function VerificationPanel({ verification }) { return <article className="panel compact"><span className="section-kicker">Objective verification</span><h3>{verification.passed ? "Alignment checks passed" : "Review required"}</h3><div className="check-list">{verification.checks.map((check) => <div key={check.id} className={check.passed ? "pass" : "fail"}><span>{check.passed ? "✓" : "!"}</span>{check.label}</div>)}</div><p className="panel-note">{verification.note}</p></article>; }

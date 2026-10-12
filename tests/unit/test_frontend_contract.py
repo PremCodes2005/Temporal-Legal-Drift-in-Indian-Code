@@ -25,6 +25,22 @@ class FrontendContractTests(unittest.TestCase):
         self.assertIn("Amendment instruction (source excerpt)", APP)
         self.assertIn("source_fidelity_warnings", APP)
 
+    def test_comparison_view_is_safe_honest_and_not_colour_only(self) -> None:
+        panel = (ROOT / "frontend/src/ComparisonPanel.jsx").read_text(encoding="utf-8")
+        sources = APP + panel + (ROOT / "frontend/src/CaseReviewPanel.jsx").read_text(encoding="utf-8")
+        self.assertNotIn("dangerouslySetInnerHTML", sources)
+        self.assertIn("<del", panel)
+        self.assertIn("<ins", panel)
+        self.assertIn("struck through", panel)  # text legend, not colour alone
+        self.assertIn("Page-region highlight unavailable", panel)
+        self.assertIn("Excerpts only", panel)
+
+    def test_unavailable_scores_are_never_shown_as_zero_or_recomputed_in_the_browser(self) -> None:
+        self.assertIn('return value == null ? "Unavailable"', APP)
+        self.assertNotIn("legacyCalculationTrace", APP)
+        self.assertIn("evidence_alignment_quality_percent", APP)
+        self.assertIn("Scheduled ingestion:", APP)
+
     def test_built_index_references_existing_assets(self) -> None:
         index = (ROOT / "web/index.html").read_text(encoding="utf-8")
         assets = re.findall(r'(?:src|href)="/?(assets/[^"]+)"', index)

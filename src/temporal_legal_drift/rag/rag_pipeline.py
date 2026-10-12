@@ -768,12 +768,12 @@ def _difference_summary(pre: str, post: str, mode: str) -> list[str]:
         return rows
     rows = []
     if legal_removed:
-        rows.append(f"Terms present only in the baseline evidence: {', '.join(legal_removed[:12])}.")
+        rows.append(f"Terms present only in the first excerpt: {', '.join(legal_removed[:12])}.")
     if legal_added:
-        rows.append(f"Terms present only in the revision evidence: {', '.join(legal_added[:12])}.")
+        rows.append(f"Terms present only in the second excerpt: {', '.join(legal_added[:12])}.")
     common = before & after
     if pre and post:
-        rows.append(f"The retrieved excerpts share {len(common)} distinct tokens; the score panel separates vector (feature-hash), lexical and legal-intent movement.")
+        rows.append(f"The retrieved excerpts share {len(common)} distinct tokens. Term differences between excerpts are not a statement of what the amendment changed.")
     if mode == "specific" and pre and post:
         rows.append("Review the cited page anchors for the exact clause wording and amendment operation.")
     return rows
