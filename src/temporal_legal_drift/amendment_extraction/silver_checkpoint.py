@@ -10,9 +10,9 @@ from temporal_legal_drift.jsonio import atomic_write_new, canonical_json_bytes, 
 from .silver import build_silver_label, silver_metrics
 
 
-def build_silver_label_checkpoint(root: Path) -> dict[str, object]:
+def build_silver_label_checkpoint(root: Path, version: str = "v1") -> dict[str, object]:
     root = root.resolve()
-    extraction_path = root / "data/processed/amendments/v1/extraction.json"
+    extraction_path = root / f"data/processed/amendments/{version}/extraction.json"
     extraction = load_json(extraction_path)
     report = load_json(root / "reports/corpus/india-code-temporal-pilot-v1.lock.json")
     text_by_source = _document_text_by_source(root, report)
@@ -40,7 +40,7 @@ def build_silver_label_checkpoint(root: Path) -> dict[str, object]:
         "metrics": metrics,
         "labels": labels,
     }
-    output = root / "data/processed/amendments/v1/silver_labels.v1.json"
+    output = root / f"data/processed/amendments/{version}/silver_labels.{version}.json"
     payload = canonical_json_bytes(artifact)
     atomic_write_new(output, payload)
 
@@ -80,7 +80,7 @@ def build_silver_label_checkpoint(root: Path) -> dict[str, object]:
     checkpoint = {
         "schema_version": "1.0.0",
         "phase": 2,
-        "deliverable": "evidence-constrained amendment silver labels v1",
+        "deliverable": f"evidence-constrained amendment silver labels {version}",
         "status": "passed" if all(checks.values()) else "failed",
         "checks": checks,
         "artifact_path": str(output.relative_to(root)),
@@ -90,7 +90,7 @@ def build_silver_label_checkpoint(root: Path) -> dict[str, object]:
         "human_validation_still_required_for_accuracy": True,
     }
     atomic_write_new(
-        root / "reports/phase2/silver_label_checkpoint.v1.json",
+        root / f"reports/phase2/silver_label_checkpoint.{version}.json",
         canonical_json_bytes(checkpoint),
     )
     if checkpoint["status"] != "passed":

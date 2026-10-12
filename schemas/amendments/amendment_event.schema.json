@@ -28,6 +28,6 @@
     "evidence_text": {"type": "string", "minLength": 1},
     "confidence": {"type": "number", "minimum": 0, "maximum": 1},
     "review_status": {"const": "HUMAN_REVIEW_PENDING"},
-    "extraction_version": {"const": "generalised-amendment-extractor-v1"}
+    "extraction_version": {"enum": ["generalised-amendment-extractor-v1", "generalised-amendment-extractor-v2.1"]}
   }
 }

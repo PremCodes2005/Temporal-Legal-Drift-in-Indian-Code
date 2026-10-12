@@ -1,0 +1,27 @@
+{
+  "description": "A 100-document authoritative India Code technical corpus spanning major Indian legal domains, including consolidated/base Central Acts and separate amending instruments. Inclusion does not establish legal sufficiency, historical snapshot equivalence, or benchmark-gold status.",
+  "entries": [
+    {
+      "entry_id": "it-amendment-act-2008",
+      "expected_media_type": "application/pdf",
+      "instrument_type": "amending_act",
+      "known_extraction_risk": "The source PDF contains legacy or garbled glyph encoding in extracted text and requires OCR or manual fidelity review before legal use.",
+      "official_identifier": "IndiaCode:123456789/15386",
+      "parent_reference_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/15386?view_type=browse",
+      "research_role": "explicit amending instrument for provision-difference and lineage experiments",
+      "url": "https://www.indiacode.nic.in/indiacode/bitstream/123456789/15386/1/it_amendment_act2008.pdf"
+    },
+    {
+      "entry_id": "insolvency-and-bankruptcy-code-amendment-act-2020",
+      "expected_media_type": "application/pdf",
+      "instrument_type": "amending_act",
+      "official_identifier": "IndiaCode:123456789/617364",
+      "parent_reference_url": "https://indiacode.gov.in/items/74755769-654c-43e8-b90f-6ad34197bda3",
+      "research_role": "amending instrument targeting Insolvency and Bankruptcy Code",
+      "url": "https://indiacode.gov.in/server/api/core/bitstreams/21e849b3-85d2-4532-879e-f53ad4698b73/content"
+    }
+  ],
+  "manifest_id": "india-code-temporal-pilot-v1",
+  "schema_version": "1.0.0",
+  "status": "bounded_technical_pilot_not_legal_gold"
+}

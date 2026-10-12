@@ -10,7 +10,7 @@ from pathlib import Path
 
 from .acquisition import AcquisitionService, RawArtifactStore, SourcePolicy, SourceRequest
 from .acquisition.models import SourceArtifact
-from .amendment_extraction.checkpoint import build_phase2_checkpoint
+from .amendment_extraction.checkpoint import build_extraction_v2_1, build_phase2_checkpoint
 from .amendment_extraction.pipeline import AmendmentExtractionPipeline
 from .amendment_extraction.silver_checkpoint import build_silver_label_checkpoint
 from .applicability import ApplicabilityQuery, ApplicabilityResolver, TemporalFact
@@ -61,8 +61,7 @@ from .llm_evaluation import (
 from .parsing.service import NormalizationService
 from .parsing.store import NormalizedDocumentStore, QuarantineStore
 from .phase0 import validate_contract_file
-from .reproducibility import verify_fresh_environment, write_reproducibility_manifest_and_lock
-from .reproducibility.builder import stage_current_artifact_checksums
+from .reproducibility.builder import restore_release_inputs, verify_release
 from .scenarios import build_scenario_scaffolds, write_scenarios_and_lock
 from .risk.builder import write_risk_checkpoint
 from .risk.service import RiskService
@@ -93,7 +92,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     subparsers.add_parser("build-ingestion-checkpoint")
     subparsers.add_parser("build-amendment-extraction-checkpoint")
-    subparsers.add_parser("build-amendment-silver-labels")
+    subparsers.add_parser("build-amendment-extraction-v2.1")
+    silver_labels = subparsers.add_parser("build-amendment-silver-labels")
+    silver_labels.add_argument("--extraction-version", choices=("v1", "v2.1"), default="v1")
     subparsers.add_parser("build-risk-checkpoint")
     assess_risk = subparsers.add_parser("assess-risk")
     assess_risk.add_argument("--scenario", type=Path, required=True)
@@ -164,7 +165,8 @@ def build_parser() -> argparse.ArgumentParser:
         "--lock", type=Path, default=Path("reports/phase3/version_graph.lock.json")
     )
 
-    subparsers.add_parser("build-temporal-knowledge-graph")
+    temporal_graph = subparsers.add_parser("build-temporal-knowledge-graph")
+    temporal_graph.add_argument("--graph-version", choices=("v2", "v3"), default="v2")
     point_query = subparsers.add_parser("get-provision-version")
     point_query.add_argument(
         "--graph", type=Path, default=Path("data/interim/temporal_legal_knowledge_graph.v2.json")
@@ -330,8 +332,9 @@ def build_parser() -> argparse.ArgumentParser:
     disagreement_audit.add_argument("--round", type=Path, default=Path("data/annotations/materiality_annotation_round.v1.json"))
     disagreement_audit.add_argument("--silver", type=Path, default=Path("data/silver/materiality_silver_labels.v1.json"))
     disagreement_audit.add_argument("--graph", type=Path, default=Path("data/interim/temporal_legal_knowledge_graph.v2.json"))
-    disagreement_audit.add_argument("--output", type=Path, default=Path("data/silver/materiality_disagreement_audit.v2.3.json"))
-    disagreement_audit.add_argument("--report", type=Path, default=Path("reports/materiality/silver_disagreement_review.v2.3.md"))
+    disagreement_audit.add_argument("--extraction", type=Path, default=Path("data/processed/amendments/v2.1/extraction.json"))
+    disagreement_audit.add_argument("--output", type=Path, default=Path("data/silver/materiality_disagreement_audit.v2.4.json"))
+    disagreement_audit.add_argument("--report", type=Path, default=Path("reports/materiality/silver_disagreement_review.v2.4.md"))
 
     agreement = subparsers.add_parser("calculate-materiality-agreement")
     agreement.add_argument(
@@ -519,14 +522,8 @@ def build_parser() -> argparse.ArgumentParser:
 
     phase11 = subparsers.add_parser("verify-reproducibility")
     phase11.add_argument("--timeout-seconds", type=int, default=900)
-    phase11.add_argument(
-        "--output",
-        type=Path,
-        default=Path("data/releases/reproducibility-v0.1.0/manifest.json"),
-    )
-    phase11.add_argument(
-        "--lock", type=Path, default=Path("reports/phase11/reproducibility.lock.json")
-    )
+    phase11.add_argument("--release-id", required=True, help="New release ID, e.g. v0.2.0; existing releases are refused")
+    subparsers.add_parser("restore-release-inputs")
 
     dashboard = subparsers.add_parser("serve-dashboard")
     dashboard.add_argument("--host", default="127.0.0.1")
@@ -575,8 +572,12 @@ def run(args: argparse.Namespace) -> int:
         print(json.dumps(result, indent=2, ensure_ascii=False))
         return 0
 
+    if args.command == "build-amendment-extraction-v2.1":
+        print(json.dumps(build_extraction_v2_1(root), indent=2, ensure_ascii=False))
+        return 0
+
     if args.command == "build-amendment-silver-labels":
-        result = build_silver_label_checkpoint(root)
+        result = build_silver_label_checkpoint(root, args.extraction_version)
         print(json.dumps(result, indent=2, ensure_ascii=False))
         return 0
 
@@ -679,8 +680,8 @@ def run(args: argparse.Namespace) -> int:
         return 0
 
     if args.command == "build-temporal-knowledge-graph":
-        graph = TemporalGraphBuilder().build(root)
-        checkpoint = write_temporal_graph_and_checkpoint(graph, root)
+        graph = TemporalGraphBuilder().build(root, args.graph_version)
+        checkpoint = write_temporal_graph_and_checkpoint(graph, root, args.graph_version)
         print(json.dumps(checkpoint, indent=2, ensure_ascii=False))
         return 0
 
@@ -792,7 +793,7 @@ def run(args: argparse.Namespace) -> int:
     if args.command == "audit-materiality-disagreements":
         from .jsonio import atomic_write_new, canonical_json_bytes
 
-        extraction_v2 = AmendmentExtractionPipeline(root).run()
+        extraction_v2 = load_json(_resolve(root, args.extraction))
         result = build_disagreement_audit_v2(
             load_json(_resolve(root, args.silver)),
             load_json(_resolve(root, args.round)),
@@ -1003,21 +1004,12 @@ def run(args: argparse.Namespace) -> int:
         return 0
 
     if args.command == "verify-reproducibility":
-        manifest_path = _resolve(root, args.output)
-        lock_path = _resolve(root, args.lock)
-        original_manifest, original_lock = stage_current_artifact_checksums(
-            root, manifest_path, lock_path
-        )
-        try:
-            document = verify_fresh_environment(root, timeout_seconds=args.timeout_seconds)
-            lock = write_reproducibility_manifest_and_lock(document, manifest_path, lock_path)
-        except Exception:
-            from .jsonio import atomic_replace
-
-            atomic_replace(manifest_path, original_manifest)
-            atomic_replace(lock_path, original_lock)
-            raise
+        lock = verify_release(root, args.release_id, timeout_seconds=args.timeout_seconds)
         print(json.dumps(lock, indent=2, ensure_ascii=False))
+        return 0
+
+    if args.command == "restore-release-inputs":
+        print(json.dumps(restore_release_inputs(root), indent=2, ensure_ascii=False))
         return 0
 
     if args.command == "serve-dashboard":

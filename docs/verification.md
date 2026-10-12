@@ -24,3 +24,31 @@ No frontend `pnpm install`, `pnpm run build`, browser end-to-end test, API serve
 ## Recheck without overwriting artifacts
 
 Run `git status` first, use the three executed commands above, and inspect any output paths before running builder or `verify-reproducibility` commands. Rebuilding the frontend writes `web/`; RAG reindex and ingestion write runtime/data artifacts. Record environment, full output/exit codes and Git diff in any future verification report. A pass in unit tests or `check-gates` must remain labelled an engineering result.
+
+## Stage 3A addendum (2026-10-12, base `bd43b4d`, uncommitted working tree)
+
+Executed with `.venv/bin/python` (Python 3.14.7, outside the CI 3.11–3.13 matrix) and `PYTHONPATH=src`:
+
+| Command | Result |
+| --- | --- |
+| Baseline before edits: `unittest discover -s tests`, `validate-contract`, `check-gates` | 115 tests OK; both CLI checks exit 0 (matches the table above). |
+| `vite build --outDir <scratchpad>` (not `web/`) | Built; asset hashes identical to committed `web/assets`. |
+| `tldrift build-amendment-extraction-v2.1` (twice) | Exit 0; second run accepted as byte-identical. |
+| `tldrift audit-materiality-disagreements` | Exit 0; wrote v2.4 audit. |
+| After edits: `unittest discover -s tests` | 118 ran, **1 failure**: `test_gates` because the Phase 11 check `artifact_checksums_reconcile` is false. |
+| After edits: `validate-contract` / `check-gates` | Exit 0 / **exit 2** (Phases 0–10 true, Phase 11 false). |
+
+Phase 11 compares the working tree byte-for-byte with `data/releases/reproducibility-v0.1.0/manifest.json`, so any source edit fails it until a new release is cut. `verify-reproducibility` currently rewrites the v0.1.0 manifest and lock in place (`atomic_replace`), so it was **not** run. Details: [../reports/phase2/source_fidelity_audit.v1.md](../reports/phase2/source_fidelity_audit.v1.md).
+
+## Stage 3B addendum (2026-10-12)
+
+A clean `git worktree` of HEAD failed: 94 tests ran with 14 errors and 1 failure, and `check-gates` exited 2, because tests and gates read gitignored data. Reproducibility now uses release **v0.2.0**, registered in `data/releases/active_release.json`. Its inputs are hash-verified and restored with `tldrift restore-release-inputs`; CI runs that step first.
+
+The following were executed after Stage 3B:
+- **Working tree:** 119 tests OK; `validate-contract` and `check-gates` both exit 0.
+- **`verify-reproducibility --release-id v0.2.0`:** 7 steps, all exit 0, in a clean copy with a venv that had no site-packages.
+- **Independent clean copy** (rsync of `git ls-files --cached --others --exclude-standard`, new venv, no pypdf): the extraction tests passed *before* restore. After restore, `validate-contract` and `check-gates` both exited 0, 119 tests passed, and a second restore succeeded.
+- **Refusal paths:** a tampered input was refused by restore and failed the Phase 3 and Phase 11 gates; re-cutting v0.2.0 or v0.1.0 was refused.
+- **v0.1.0:** its manifest and lock hashes are unchanged.
+
+Remote GitHub Actions has still not been observed. See [../reports/phase3/temporal_graph_v3_checkpoint.md](../reports/phase3/temporal_graph_v3_checkpoint.md).

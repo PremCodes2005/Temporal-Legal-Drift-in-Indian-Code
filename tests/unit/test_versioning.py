@@ -49,6 +49,8 @@ class VersioningTests(unittest.TestCase):
     def test_target_detail_does_not_parse_plural_clauses_as_clause_s(self) -> None:
         text = "31. In section 50, in sub-section (1), in clauses (a) and (c), after the words x, y shall be inserted."
         self.assertEqual(_target_path_detail(text), "section:50/sub-section:1")
+        plural = "26. In section 4, after sub-section (2), the following sub-sections shall be inserted, in sub-sections (3) and (4)."
+        self.assertEqual(_target_path_detail(plural), "section:4")
 
     def test_graph_reconstructs_exact_version_and_rejects_cycles(self) -> None:
         before_text = "1. Duty.—Before."
@@ -124,6 +126,26 @@ class TemporalKnowledgeGraphTests(unittest.TestCase):
         self.assertGreaterEqual(len(after["sources"]), 2)
         self.assertTrue(after["corroborating_consolidated_versions"])
         self.assertIn("not a complete historical consolidation", after["scope_warning"])
+
+    def test_v3_never_reconstructs_unreliable_or_page_furniture_wording(self) -> None:
+        graph = TemporalGraphBuilder().build(ROOT, "v3")
+        self.assertEqual(graph.validate(), ())
+        flagged = {
+            item["amendment_event_id"]: item["source_fidelity_flags"]
+            for item in graph.amendment_events if item["source_fidelity_flags"]
+        }
+        self.assertEqual(len(flagged), 49)  # 35 IT 2008 + 14 page-furniture operands
+        self.assertFalse({item["amendment_event_id"] for item in graph.transitions} & set(flagged))
+        for item in graph.unresolved_transitions:
+            if item["amendment_event_id"] in flagged:
+                self.assertTrue(set(flagged[item["amendment_event_id"]]) <= set(item["reason_codes"]))
+        # Graph v2 answered this with the defective "costs" fragment (v1 extraction defect).
+        result = graph.get_provision_version("arbitration-and-conciliation-act-1996", "31", "2016-01-01")
+        self.assertEqual(result["status"], "UNRESOLVED")
+        self.assertTrue(all(item["source_evidence"]["exact_text"] for item in result["unresolved_transitions"]))
+        kept = graph.get_provision_version("arbitration-and-conciliation-act-1996", "7", "2016-01-01")
+        self.assertEqual(kept["status"], "RESOLVED_FRAGMENT")
+        self.assertEqual(kept["version"]["text_scope"], "AMENDMENT_CONTROLLED_FRAGMENT")
 
     def test_point_in_time_query_abstains_without_effective_date(self) -> None:
         result = self.graph.get_provision_version(

@@ -20,6 +20,8 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install package
         run: python -m pip install --no-deps -e .
+      - name: Restore hash-verified release inputs
+        run: tldrift restore-release-inputs
       - name: Validate research contract
         run: tldrift validate-contract
       - name: Check Phase 0-11 engineering gates

@@ -6,7 +6,8 @@ import re
 from hashlib import sha256
 from typing import Any
 
-from temporal_legal_drift.amendment_extraction.extractor import QUOTED
+from temporal_legal_drift.amendment_extraction.extractor import PAGE_FURNITURE, QUOTED
+from temporal_legal_drift.amendment_extraction.models import EXTRACTOR_VERSION
 from temporal_legal_drift.jsonio import canonical_json_bytes
 
 from .silver import _cue_transition_annotator, _operation_delta_annotator
@@ -129,13 +130,13 @@ def build_disagreement_audit_v2(
     ]
     matching = sum(item["v2"]["rule_a"]["label"] == item["v2"]["rule_b"]["label"] for item in comparable)
     return {
-        "schema_version": "2.3.0",
-        "audit_id": "materiality-disagreement-audit-v2.3",
+        "schema_version": "2.4.0",
+        "audit_id": "materiality-disagreement-audit-v2.4",
         "status": "diagnostic_reextraction_and_rule_reassessment_not_gold",
         "source_silver_sha256": sha256(canonical_json_bytes(silver)).hexdigest(),
         "source_round_sha256": sha256(canonical_json_bytes(round_document)).hexdigest(),
         "reextracted_events_sha256": sha256(canonical_json_bytes(reextracted_events)).hexdigest(),
-        "extractor_version": "generalised-amendment-extractor-v2",
+        "extractor_version": EXTRACTOR_VERSION,
         "rule_b_version": "operation-delta-v2-abstains-on-size-only-signal",
         "case_count": len(audit_rows),
         "confirmed_alignment_defect_count": sum(item["extraction_v2"]["status"] == "CONFIRMED_EXTRACTION_DEFECT" for item in audit_rows),
@@ -175,7 +176,7 @@ def build_disagreement_audit_v2(
 def render_disagreement_audit_v2(document: dict[str, Any]) -> str:
     rows = document["rows"]
     parts = [
-        "# Materiality Disagreement Review — Version 2.3",
+        "# Materiality Disagreement Review — Version 2.4",
         "",
         "This report re-extracts source clauses with extractor v2 and reassesses the original 19 cases. The v1 report and silver dataset remain unchanged. Machine outputs are not legal findings or gold labels.",
         "",
@@ -248,6 +249,8 @@ def _assess_extraction(task: dict[str, Any], old_event: dict[str, Any], new_even
     if expected_detail and source_detail and _path_conflicts(str(expected_detail), source_detail):
         if "target_path_detail_mismatch" not in defects:
             defects.append("target_path_detail_mismatch")
+    if any(PAGE_FURNITURE.search(str(new_event.get(key) or "")) for key in ("old_text", "new_text")):
+        defects.append("operand_contains_page_furniture")
     source_check = _source_span_check(new_event, str(new_event.get("evidence_text", "")))
     if not source_check:
         defects.append("reextracted_wording_not_source_supported")

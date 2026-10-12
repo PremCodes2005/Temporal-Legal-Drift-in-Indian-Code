@@ -26,3 +26,17 @@ With `.venv/bin/python` and `PYTHONPATH=src`, 115 unittest tests ran and passed 
 Start with the source-fidelity/extraction audit in [implementation-plan.md](implementation-plan.md): trace the IT 2008 PDF and the five Phase 4 v2.3 defects to source spans, determine whether OCR/alignment repair is justified, and preserve the frozen v1 silver artifact. Only then propose targeted code and new versioned data changes with regression tests. If the needed original legal text cannot be read reliably, record an unresolved evidence issue rather than manufacture an old/new clause or claim expert validation.
 
 Unknown at handoff: status of remote GitHub Actions, runtime availability of Ollama/India Code, whether the current React source builds cleanly, completeness of all India Code amendments, and legal correctness of the generated outputs. These need separate verification.
+
+## Stage 3A status (2026-10-12)
+
+Started the recommended source-fidelity audit; see [../reports/phase2/source_fidelity_audit.v1.md](../reports/phase2/source_fidelity_audit.v1.md). The extractor in Git did not reproduce the frozen v1 artifact; it is now labelled v2.1 and written to `data/processed/amendments/v2.1/` beside an untouched v1. IT 2008 events and page-furniture-contaminated operands are routed to review. New v2.4 materiality audit added. The Phase 11 engineering gate is red until a new reproducibility release is cut without overwriting v0.1.0. Legal/research gate unchanged: UNVERIFIED.
+
+## Stage 3B status (2026-10-12)
+
+- Graph **v3** (`data/interim/temporal_legal_knowledge_graph.v3.json`) is built from extraction v2.1. Source-fidelity-flagged events (IT 2008 OCR, page furniture) never become transitions.
+- Graph v2 is preserved but is not reproducible from current code.
+- The Phase 11 gate validates the registered active release, v0.2.0. Any change to checksummed code, schemas, tests, protocols, frontend or web needs a new release ID (`tldrift verify-reproducibility --release-id <new>`).
+- A clean checkout must run `tldrift restore-release-inputs` before the tests.
+- RAG still indexes `version_graph.v1`, and risk still uses its obligation registry. Neither consumes v3.
+- Legal/research gate: UNVERIFIED.
+- Details: [../reports/phase3/temporal_graph_v3_checkpoint.md](../reports/phase3/temporal_graph_v3_checkpoint.md).

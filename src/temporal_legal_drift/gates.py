@@ -293,6 +293,9 @@ def _phase3(root: Path) -> PhaseGateResult:
     )
     temporal_graph_path = root / str(temporal_checkpoint["graph_path"])
     validation_dataset_path = root / str(temporal_checkpoint["validation_dataset_path"])
+    v3_checkpoint = load_json(root / "reports" / "phase3" / "temporal_graph_checkpoint.v3.json")
+    v3_graph_path = root / str(v3_checkpoint["graph_path"])
+    v3_queue_path = root / str(v3_checkpoint["validation_dataset_path"])
     manifest = CorpusManifest.from_file(root / "configs" / "corpus" / "pilot_v1.json")
     checks = {
         "version_graph_schema_present": (
@@ -351,6 +354,24 @@ def _phase3(root: Path) -> PhaseGateResult:
             temporal_checkpoint.get("counts", {}).get("human_validated_transitions") == 0
             and temporal_checkpoint.get("scientific_gate_status")
             == "pending_human_legal_validation"
+        ),
+        "temporal_graph_v3_checkpoint_passed": (
+            v3_checkpoint.get("engineering_status") == "passed"
+            and all(v3_checkpoint.get("checks", {}).values())
+            and v3_checkpoint.get("counts", {}).get("human_validated_transitions") == 0
+        ),
+        "temporal_graph_v3_and_review_queue_hashes_reconcile": (
+            v3_graph_path.is_file()
+            and sha256(v3_graph_path.read_bytes()).hexdigest() == v3_checkpoint.get("graph_sha256")
+            and v3_queue_path.is_file()
+            and sha256(v3_queue_path.read_bytes()).hexdigest() == v3_checkpoint.get("validation_dataset_sha256")
+        ),
+        "temporal_graph_v3_inputs_reconcile": all(
+            (root / relative).is_file() and sha256((root / relative).read_bytes()).hexdigest() == digest
+            for relative, digest in v3_checkpoint.get("inputs", {}).items()
+        ) and bool(v3_checkpoint.get("inputs")),
+        "source_fidelity_flagged_events_never_transitions": (
+            v3_checkpoint.get("checks", {}).get("no_source_fidelity_flagged_event_became_transition") is True
         ),
     }
     return PhaseGateResult(
@@ -848,9 +869,12 @@ def _phase10(root: Path) -> PhaseGateResult:
 
 
 def _phase11(root: Path) -> PhaseGateResult:
-    manifest_path = root / "data" / "releases" / "reproducibility-v0.1.0" / "manifest.json"
-    lock = load_json(root / "reports" / "phase11" / "reproducibility.lock.json")
+    # The gate checks the explicitly registered release, not the newest directory.
+    active = load_json(root / "data" / "releases" / "active_release.json")
+    manifest_path = root / str(active["manifest_path"])
+    lock = load_json(root / str(active["lock_path"]))
     manifest = load_json(manifest_path)
+    release_inputs = manifest.get("release_inputs", {})
     artifact_checksums = manifest.get("artifact_checksums")
     checksums_reconcile = isinstance(artifact_checksums, dict) and all(
         isinstance(relative, str)
@@ -864,12 +888,20 @@ def _phase11(root: Path) -> PhaseGateResult:
             root / "schemas" / "evaluation" / "reproducibility_manifest.schema.json"
         ).is_file(),
         "manifest_and_lock_reconcile": (
-            sha256(canonical_json_bytes(manifest)).hexdigest() == lock.get("manifest_sha256")
+            sha256(canonical_json_bytes(manifest)).hexdigest()
+            == lock.get("manifest_sha256")
+            == active.get("manifest_sha256")
             and lock.get("artifact_count") == len(artifact_checksums or {})
         ),
         "artifact_checksums_reconcile": checksums_reconcile,
+        "release_inputs_restored_and_reconcile": isinstance(release_inputs, dict) and all(
+            (manifest_path.parent / "inputs" / f"{relative}.gz").is_file()
+            and (root / relative).is_file()
+            and sha256((root / relative).read_bytes()).hexdigest() == expected
+            for relative, expected in release_inputs.items()
+        ),
         "fresh_environment_commands_passed": (
-            lock.get("execution_step_count") == 3
+            lock.get("execution_step_count") == len(manifest.get("executions", [])) > 0
             and lock.get("all_execution_steps_passed") is True
             and lock.get("fresh_environment_reproduction_passed") is True
         ),

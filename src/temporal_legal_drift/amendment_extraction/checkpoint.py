@@ -109,3 +109,48 @@ def build_phase2_checkpoint(root: Path) -> dict[str, object]:
     if checkpoint["status"] != "passed":
         raise ValueError("Phase 2 checkpoint failed")
     return checkpoint
+
+
+def build_extraction_v2_1(root: Path) -> dict[str, object]:
+    """Write the v2.1 extraction beside the frozen v1 artifact, never over it."""
+    root = root.resolve()
+    extraction = AmendmentExtractionPipeline(root).run()
+    v1_path = root / "data/processed/amendments/v1/extraction.json"
+    v1_provenance = load_json(root / "data/manifests/amendment_extraction_v1.provenance.json")
+    if sha256(v1_path.read_bytes()).hexdigest() != v1_provenance["artifact_sha256"]:
+        raise ValueError("frozen v1 extraction no longer matches its provenance hash")
+    v1 = load_json(v1_path)
+    output_path = root / "data/processed/amendments/v2.1/extraction.json"
+    payload = canonical_json_bytes(extraction)
+    atomic_write_new(output_path, payload)
+    v1_ids = {str(item["amendment_id"]) for item in v1["events"]}
+    v2_ids = {str(item["amendment_id"]) for item in extraction["events"]}
+    provenance = {
+        "schema_version": "1.0.0",
+        "extractor_version": extraction["extractor_version"],
+        "artifact_path": str(output_path.relative_to(root)),
+        "artifact_sha256": sha256(payload).hexdigest(),
+        "supersedes_nothing": "v1 artifact and its checkpoint remain the frozen Phase 2 record",
+        "v1_artifact_path": str(v1_path.relative_to(root)),
+        "v1_artifact_sha256": v1_provenance["artifact_sha256"],
+        "comparison_to_v1": {
+            "event_count": [v1["amendment_event_count"], extraction["amendment_event_count"]],
+            "unresolved_record_count": [v1["unresolved_count"], extraction["unresolved_count"]],
+            "event_ids_only_in_v1": len(v1_ids - v2_ids),
+            "event_ids_only_in_v2_1": len(v2_ids - v1_ids),
+            "unresolved_reason_counts_v1": v1["metrics"]["unresolved_reason_counts"],
+        },
+        "configured_amending_act_count": extraction["configured_amending_act_count"],
+        "amendment_event_count": extraction["amendment_event_count"],
+        "unresolved_count": extraction["unresolved_count"],
+        "metrics": extraction["metrics"],
+        "all_events_traceable": extraction["all_events_traceable"],
+        "every_document_accounted_for": extraction["every_document_accounted_for"],
+        "human_review_required": True,
+        "legal_correctness_claimed": False,
+    }
+    atomic_write_new(
+        root / "data/manifests/amendment_extraction_v2.1.provenance.json",
+        canonical_json_bytes(provenance),
+    )
+    return {key: value for key, value in provenance.items() if key != "metrics"}

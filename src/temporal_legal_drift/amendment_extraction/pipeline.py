@@ -9,7 +9,7 @@ from temporal_legal_drift.corpus import CorpusManifest
 from temporal_legal_drift.jsonio import atomic_write_new, canonical_json_bytes, load_json
 
 from .extractor import GeneralisedAmendmentExtractor
-from .models import UNRESOLVED_REASONS
+from .models import EXTRACTOR_VERSION, UNRESOLVED_REASONS
 
 
 class AmendmentExtractionPipeline:
@@ -47,6 +47,7 @@ class AmendmentExtractionPipeline:
                 source_document=entry.entry_id,
                 source_sha256=str(source["sha256"]),
                 amending_act=entry.entry_id.replace("-", " ").title(),
+                source_risk=entry.known_extraction_risk,
             )
             events.extend(item.to_dict() for item in extracted)
             unresolved.extend(item.to_dict() for item in failures)
@@ -90,7 +91,7 @@ class AmendmentExtractionPipeline:
         }
         document = {
             "schema_version": "1.0.0",
-            "extractor_version": "generalised-amendment-extractor-v1",
+            "extractor_version": EXTRACTOR_VERSION,
             "status": "machine_extracted_human_review_required_not_legal_gold",
             "configured_amending_act_count": len(configured),
             "processed_amending_act_count": len(processed),

@@ -16,7 +16,11 @@ UNRESOLVED_REASONS = frozenset({
     "missing_new_text",
     "commencement_unclear",
     "parsing_failure",
+    # v2.1: source-fidelity reasons; the event is kept but its wording is not trusted.
+    "source_text_unreliable",
+    "operand_contains_page_furniture",
 })
+EXTRACTOR_VERSION = "generalised-amendment-extractor-v2.1"
 
 
 @dataclass(frozen=True)
@@ -38,7 +42,7 @@ class AmendmentEvent:
     evidence_text: str
     confidence: float
     review_status: str = "HUMAN_REVIEW_PENDING"
-    extraction_version: str = "generalised-amendment-extractor-v1"
+    extraction_version: str = EXTRACTOR_VERSION
 
     def __post_init__(self) -> None:
         if self.operation not in AMENDMENT_OPERATIONS:

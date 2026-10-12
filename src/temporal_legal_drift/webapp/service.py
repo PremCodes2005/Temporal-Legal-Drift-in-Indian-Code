@@ -73,7 +73,7 @@ class DashboardService:
         graph = self._load("reports/phase3/version_graph.lock.json")
         llm = self._load("reports/phase9/evaluation_plan.lock.json")
         explanation = self._load("reports/phase10/explanation_plan.lock.json")
-        reproduction = self._load("reports/phase11/reproducibility.lock.json")
+        reproduction = self._load(str(self._load("data/releases/active_release.json").get("lock_path", "")))
         demo = self._load("experiments/phase9/temporal_drift_demo.results.v1.json")
         gates = check_engineering_gates(self.root)
         return {

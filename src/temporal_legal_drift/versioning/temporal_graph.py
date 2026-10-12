@@ -15,12 +15,18 @@ from hashlib import sha256
 from pathlib import Path
 
 from temporal_legal_drift.corpus import CorpusManifest
-from temporal_legal_drift.jsonio import atomic_replace, canonical_json_bytes, load_json
+from temporal_legal_drift.jsonio import atomic_write_new, canonical_json_bytes, load_json
 
 from .models import VersionGraph
 
 
 RECONSTRUCTABLE_OPERATIONS = frozenset({"INSERT", "SUBSTITUTE", "OMIT", "REPLACE", "REPEAL"})
+# Phase 2 v2.1 reasons meaning the extracted wording itself is not trustworthy.
+SOURCE_FIDELITY_REASONS = frozenset({"source_text_unreliable", "operand_contains_page_furniture"})
+GRAPH_INPUTS = {
+    "v2": ("data/processed/amendments/v1/extraction.json", "data/processed/amendments/v1/silver_labels.v1.json"),
+    "v3": ("data/processed/amendments/v2.1/extraction.json", "data/processed/amendments/v2.1/silver_labels.v2.1.json"),
+}
 _GENERAL_COMMENCEMENT = re.compile(
     r"\b(?:this\s+act|it)\s+(?:shall\s+be\s+deemed\s+to\s+have\s+come|"
     r"shall\s+come)\s+into\s+force\s+on\s+the\s+"
@@ -215,12 +221,22 @@ class TemporalGraph:
         ]
         transitions.sort(key=lambda item: (str(item["effective_date"]), str(item["transition_id"])))
         if not transitions:
+            events = {
+                str(item["amendment_event_id"]): item for item in self.amendment_events
+                if item.get("target_provision_id") == provision["provision_id"]
+            }
             return {
                 "status": "UNRESOLVED",
                 "reason": "no evidence-supported effective date for this provision transition",
                 "act": matching_acts[0],
                 "provision": provision,
                 "reference_date": on_date,
+                # Why candidate amendments for this provision did not become transitions.
+                "unresolved_transitions": [
+                    {**item, "source_evidence": events[str(item["amendment_event_id"])]["evidence"]}
+                    for item in self.unresolved_transitions
+                    if str(item.get("amendment_event_id")) in events
+                ],
             }
         applicable = [item for item in transitions if date.fromisoformat(str(item["effective_date"])) <= query_date]
         if len(applicable) > 1:
@@ -283,13 +299,18 @@ class TemporalGraph:
 
 
 class TemporalGraphBuilder:
-    def build(self, root: Path) -> TemporalGraph:
+    def build(self, root: Path, graph_version: str = "v2") -> TemporalGraph:
         root = root.resolve()
+        extraction_path, silver_path = GRAPH_INPUTS[graph_version]
         manifest = CorpusManifest.from_file(root / "configs/corpus/pilot_v1.json")
         report = load_json(root / "reports/corpus/india-code-temporal-pilot-v1.lock.json")
         base_graph = VersionGraph.from_dict(load_json(root / "data/interim/version_graph.v1.json"))
-        extraction = load_json(root / "data/processed/amendments/v1/extraction.json")
-        silver = load_json(root / "data/processed/amendments/v1/silver_labels.v1.json")
+        extraction = load_json(root / extraction_path)
+        silver = load_json(root / silver_path)
+        fidelity_flags: dict[str, set[str]] = {}
+        for item in extraction.get("unresolved", []):
+            if item.get("reason_code") in SOURCE_FIDELITY_REASONS and item.get("amendment_id"):
+                fidelity_flags.setdefault(str(item["amendment_id"]), set()).add(str(item["reason_code"]))
         report_by_entry = {
             str(item["entry_id"]): item for item in report.get("entries", []) if isinstance(item, dict)
         }
@@ -408,7 +429,9 @@ class TemporalGraphBuilder:
             section = str(raw_event.get("target_provision") or "").split(":")[-1].upper()
             target_provision = provision_by_entry_section.get((target_entry, section)) if target_entry else None
             graph_event_id = _id("aevent", amendment_id)
-            label_status = str(label.get("label_status", "ABSTAIN"))
+            flags = sorted(fidelity_flags.get(amendment_id, ()))
+            # Unreadable or contaminated wording never becomes reconstructed statutory text.
+            label_status = "ABSTAIN" if flags else str(label.get("label_status", "ABSTAIN"))
             act_commencement = commencement_by_entry.get(source_entry)
             event_record = {
                 "amendment_event_id": graph_event_id,
@@ -423,6 +446,7 @@ class TemporalGraphBuilder:
                 # Re-derive only an unambiguous Act-wide commencement statement.
                 "effective_date": act_commencement["effective_date"] if act_commencement and act_commencement["status"] == "ACT_WIDE_UNAMBIGUOUS" else None,
                 "target_path_detail": _target_path_detail(str(raw_event["evidence_text"])),
+                "source_fidelity_flags": flags,
                 "resolution_status": (
                     "SILVER_EVIDENCE_RESOLVED" if label_status == "AUTO_ACCEPTED" and target_provision
                     else "UNRESOLVED"
@@ -468,6 +492,7 @@ class TemporalGraphBuilder:
             operation = str(event_record.get("operation"))
             old_text = event_record.get("old_text")
             new_text = event_record.get("new_text")
+            reasons.extend(event_record["source_fidelity_flags"])
             if event_record.get("resolution_status") != "SILVER_EVIDENCE_RESOLVED":
                 reasons.append("event_or_target_not_silver_resolved")
             if operation not in RECONSTRUCTABLE_OPERATIONS:
@@ -593,11 +618,14 @@ class TemporalGraphBuilder:
         return graph
 
 
-def write_temporal_graph_and_checkpoint(graph: TemporalGraph, root: Path) -> dict[str, object]:
+def write_temporal_graph_and_checkpoint(
+    graph: TemporalGraph, root: Path, graph_version: str = "v2"
+) -> dict[str, object]:
+    """Write a graph version once; an existing version is never overwritten with different bytes."""
     root = root.resolve()
-    graph_path = root / "data/interim/temporal_legal_knowledge_graph.v2.json"
+    graph_path = root / f"data/interim/temporal_legal_knowledge_graph.{graph_version}.json"
     payload = canonical_json_bytes(graph.to_dict())
-    atomic_replace(graph_path, payload)
+    atomic_write_new(graph_path, payload)
     fully_checked = [
         item for item in graph.transitions
         if all(
@@ -654,9 +682,12 @@ def write_temporal_graph_and_checkpoint(graph: TemporalGraph, root: Path) -> dic
         "manual_review_completed_count": 0,
         "cases": validation_cases,
     }
-    validation_path = root / "data/interim/phase3_transition_validation_candidates.v1.json"
+    validation_path = root / (
+        "data/interim/phase3_transition_validation_candidates.v1.json" if graph_version == "v2"
+        else f"data/interim/phase3_transition_validation_candidates.{graph_version}.json"
+    )
     validation_payload = canonical_json_bytes(validation_document)
-    atomic_replace(validation_path, validation_payload)
+    atomic_write_new(validation_path, validation_payload)
     checks = {
         "all_seven_entity_types_present": all((
             graph.acts, graph.provisions, graph.provision_versions, graph.amendment_acts,
@@ -714,6 +745,10 @@ def write_temporal_graph_and_checkpoint(graph: TemporalGraph, root: Path) -> dic
             for item in validation_cases
         ),
         "no_false_human_validation_claim": validation_document["manual_human_validation_count"] == 0,
+        "no_source_fidelity_flagged_event_became_transition": not any(
+            events_by_id[str(item["amendment_event_id"])].get("source_fidelity_flags")
+            for item in graph.transitions
+        ),
     }
     checkpoint = {
         "schema_version": "1.0.0",
@@ -721,6 +756,11 @@ def write_temporal_graph_and_checkpoint(graph: TemporalGraph, root: Path) -> dic
         "engineering_status": "passed" if all(checks.values()) else "failed",
         "scientific_gate_status": "pending_human_legal_validation",
         "checks": checks,
+        "graph_version": graph_version,
+        "inputs": {
+            relative: sha256((root / relative).read_bytes()).hexdigest()
+            for relative in (*GRAPH_INPUTS[graph_version], "data/interim/version_graph.v1.json")
+        },
         "graph_path": str(graph_path.relative_to(root)),
         "graph_sha256": sha256(payload).hexdigest(),
         "validation_dataset_path": str(validation_path.relative_to(root)),
@@ -740,6 +780,7 @@ def write_temporal_graph_and_checkpoint(graph: TemporalGraph, root: Path) -> dic
             "dated_transitions": len(dated),
             "unresolved_transitions": len(graph.unresolved_transitions),
             "human_validated_transitions": 0,
+            "source_fidelity_flagged_events": sum(bool(item.get("source_fidelity_flags")) for item in graph.amendment_events),
             "cross_source_corroborated_transitions": sum(
                 item["validation_checks"].get("after_fragment_matches_consolidated_principal_act") is True
                 and item["validation_checks"].get("forward_operation_round_trip") is True
@@ -751,8 +792,8 @@ def write_temporal_graph_and_checkpoint(graph: TemporalGraph, root: Path) -> dic
             "It does not claim complete historical consolidations or human legal validation."
         ),
     }
-    checkpoint_path = root / "reports/phase3/temporal_graph_checkpoint.v2.json"
-    atomic_replace(checkpoint_path, canonical_json_bytes(checkpoint))
+    checkpoint_path = root / f"reports/phase3/temporal_graph_checkpoint.{graph_version}.json"
+    atomic_write_new(checkpoint_path, canonical_json_bytes(checkpoint))
     if checkpoint["engineering_status"] != "passed":
         raise ValueError("Phase 3 temporal graph engineering checkpoint failed")
     return checkpoint
@@ -840,11 +881,11 @@ def _target_path_detail(text: str) -> str | None:
         return None
     parts = [f"section:{section.group(1).upper()}"]
     for label, pattern in (
-        ("sub-section", r"\bin\s+sub-section\s*\(?([0-9A-Za-z]+)\)?"),
+        ("sub-section", r"\bin\s+sub-section\b\s*\(?([0-9A-Za-z]+)\)?"),
         # Word boundary after singular "clause" prevents "clauses" from
         # being misread as clause identifier "s" in multi-clause amendments.
         ("clause", r"\bin\s+clause\b\s*\(?([0-9A-Za-z]+)\)?"),
-        ("sub-clause", r"\bin\s+sub-clause\s*\(?([0-9A-Za-z]+)\)?"),
+        ("sub-clause", r"\bin\s+sub-clause\b\s*\(?([0-9A-Za-z]+)\)?"),
         ("proviso", r"\bin\s+(?:the\s+)?(?:(\d+)(?:st|nd|rd|th)\s+)?proviso"),
     ):
         match = re.search(pattern, text, re.I)

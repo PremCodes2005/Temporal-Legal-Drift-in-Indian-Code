@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import gzip
 import os
 import platform
+import shutil
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -11,7 +13,32 @@ from hashlib import sha256
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from temporal_legal_drift.jsonio import atomic_replace, canonical_json_bytes, load_json
+from temporal_legal_drift.jsonio import atomic_replace, atomic_write_new, canonical_json_bytes, load_json
+
+
+ACTIVE_RELEASE = "data/releases/active_release.json"
+# Gitignored local artifacts the tests, gates and graph builds read. A release
+# ships them as hash-verified gzip inputs; raw PDF blobs are rebuilt from the
+# tracked data/corpus/pdfs copies by content hash instead of being duplicated.
+RELEASE_INPUT_GLOBS = (
+    "data/normalized/doc_*.json",
+    "data/raw/metadata/*.json",
+    "data/raw/checkpoints/*.json",
+    "data/interim/version_graph.v1.json",
+    "data/interim/temporal_legal_knowledge_graph.v2.json",
+    "data/interim/phase3_transition_validation_candidates.v1.json",
+    "data/interim/temporal_legal_knowledge_graph.v3.json",
+    "data/interim/phase3_transition_validation_candidates.v3.json",
+    "data/interim/temporal_fact_candidates.v1.json",
+    "data/interim/cross_version_validation.v1.json",
+)
+# Write-once builders re-run in the fresh copy; each exits non-zero unless it
+# regenerates byte-identical output.
+REBUILD_COMMANDS = (
+    ("build-amendment-extraction-v2.1",),
+    ("build-amendment-silver-labels", "--extraction-version", "v2.1"),
+    ("build-temporal-knowledge-graph", "--graph-version", "v3"),
+)
 
 
 REQUIRED_ARTIFACTS = (
@@ -61,115 +88,189 @@ REQUIRED_ARTIFACTS = (
     "reports/phase9/evaluation_plan.lock.json",
     "reports/phase10/explanation_plan.lock.json",
     "data/scenarios/temporal_drift_demo.v1.json",
+    "data/processed/amendments/v2.1/extraction.json",
+    "data/processed/amendments/v2.1/silver_labels.v2.1.json",
+    "data/manifests/amendment_extraction_v2.1.provenance.json",
+    "reports/phase2/silver_label_checkpoint.v2.1.json",
+    "data/silver/materiality_disagreement_audit.v2.4.json",
+    "reports/materiality/silver_disagreement_review.v2.4.md",
+    "data/interim/temporal_legal_knowledge_graph.v3.json",
+    "data/interim/phase3_transition_validation_candidates.v3.json",
+    "reports/phase3/temporal_graph_checkpoint.v3.json",
     "experiments/phase9/temporal_drift_demo.v1.json",
     "experiments/phase9/temporal_drift_demo.results.v1.json",
     "reports/phase9/temporal_drift_demo.lock.json",
 )
 
 
-def stage_current_artifact_checksums(
-    root: Path, manifest_path: Path, lock_path: Path
-) -> tuple[bytes, bytes]:
-    """Stage the checksum snapshot so the Phase 11 gate can run inside its own test suite.
+def release_paths(release_id: str) -> tuple[str, str]:
+    """Manifest and lock paths for one release; v0.1.0 keeps its historical lock name."""
+    lock = (
+        "reports/phase11/reproducibility.lock.json" if release_id == "v0.1.0"
+        else f"reports/phase11/reproducibility-{release_id}.lock.json"
+    )
+    return f"data/releases/reproducibility-{release_id}/manifest.json", lock
 
-    The manifest and lock are excluded from the hashed artifact set, avoiding
-    recursive self-hashing. The caller must restore the returned bytes if fresh
-    verification fails; successful verification replaces the staged record.
-    """
-    original_manifest = manifest_path.read_bytes()
-    original_lock = lock_path.read_bytes()
-    document = load_json(manifest_path)
+
+def release_input_paths(root: Path) -> tuple[str, ...]:
+    return tuple(sorted({
+        str(path.relative_to(root))
+        for pattern in RELEASE_INPUT_GLOBS for path in root.glob(pattern) if path.is_file()
+    }))
+
+
+def restore_release_inputs(root: Path) -> dict[str, object]:
+    """Materialize the active release's declared inputs; never overwrite differing files."""
+    root = root.resolve()
+    active = load_json(root / ACTIVE_RELEASE)
+    manifest = load_json(root / str(active["manifest_path"]))
+    release_dir = (root / str(active["manifest_path"])).parent
+    inputs = manifest["release_inputs"]
+    for relative, expected in inputs.items():
+        payload = gzip.decompress((release_dir / "inputs" / f"{relative}.gz").read_bytes())
+        if sha256(payload).hexdigest() != expected:
+            raise ValueError(f"Release input does not match its declared hash: {relative}")
+        atomic_write_new(root / relative, payload)
+    pdf_by_hash = {
+        sha256(path.read_bytes()).hexdigest(): path
+        for path in (root / "data/corpus/pdfs").glob("*.pdf")
+    }
+    blobs = 0
+    for metadata_path in sorted((root / "data/raw/metadata").glob("*.json")):
+        metadata = load_json(metadata_path)
+        source = pdf_by_hash.get(str(metadata["sha256"]))
+        if source is None:
+            raise ValueError(f"No tracked PDF matches raw artifact {metadata_path.name}")
+        atomic_write_new(root / "data/raw" / str(metadata["blob_path"]), source.read_bytes())
+        blobs += 1
+    return {"release_id": active["release_id"], "restored_inputs": len(inputs), "rebuilt_raw_blobs": blobs}
+
+
+def verify_release(root: Path, release_id: str, *, timeout_seconds: int = 900) -> dict[str, object]:
+    """Reproduce a new release in a fresh copy and write it once; v0.1.0 is never touched."""
+    root = root.resolve()
+    manifest_relative, lock_relative = release_paths(release_id)
+    if (root / manifest_relative).exists() or (root / lock_relative).exists():
+        raise FileExistsError(f"Release {release_id} already exists; choose a new release ID")
+    if (root / ACTIVE_RELEASE).is_file():
+        previous = load_json(root / ACTIVE_RELEASE)
+    else:  # before any registry existed, v0.1.0 was the implicit active release
+        manifest_v010, lock_v010 = release_paths("v0.1.0")
+        previous = {
+            "release_id": "phase11-reproducibility-engineering-v0.1.0",
+            "manifest_path": manifest_v010,
+            "lock_path": lock_v010,
+            "manifest_sha256": load_json(root / lock_v010)["manifest_sha256"],
+        }
     paths = _reproducibility_paths(root)
     missing = [relative for relative in paths if not (root / relative).is_file()]
     if missing:
         raise ValueError(f"Required reproducibility artifacts are missing: {missing}")
-    document["artifact_checksums"] = {
-        relative: sha256((root / relative).read_bytes()).hexdigest()
-        for relative in paths
-    }
-    write_reproducibility_manifest_and_lock(document, manifest_path, lock_path)
-    return original_manifest, original_lock
-
-
-def verify_fresh_environment(root: Path, *, timeout_seconds: int = 900) -> dict[str, object]:
-    reproducibility_paths = _reproducibility_paths(root)
-    missing = [relative for relative in reproducibility_paths if not (root / relative).is_file()]
-    if missing:
-        raise ValueError(f"Required reproducibility artifacts are missing: {missing}")
-    checksums = {
-        relative: sha256((root / relative).read_bytes()).hexdigest()
-        for relative in reproducibility_paths
-    }
-    with TemporaryDirectory(prefix="tldrift-phase11-") as temporary_directory:
-        environment = Path(temporary_directory) / "venv"
-        commands = [
-            [sys.executable, "-m", "venv", "--system-site-packages", str(environment)],
-            [
-                str(environment / "bin" / "python"),
-                "-m",
-                "temporal_legal_drift.cli",
-                "--project-root",
-                str(root),
-                "check-gates",
-                "--through-phase",
-                "10",
-            ],
-            [
-                str(environment / "bin" / "python"),
-                "-m",
-                "unittest",
-                "discover",
-                "-s",
-                "tests",
-                "-v",
-            ],
-        ]
+    inputs = {relative: sha256((root / relative).read_bytes()).hexdigest() for relative in release_input_paths(root)}
+    git = _git_state(root)
+    commands = [
+        ["<python>", "-m", "venv", "<fresh-venv>"],
+        ["<fresh-python>", "-m", "temporal_legal_drift.cli", "restore-release-inputs"],
+        *(["<fresh-python>", "-m", "temporal_legal_drift.cli", *command] for command in REBUILD_COMMANDS),
+        ["<fresh-python>", "-m", "temporal_legal_drift.cli", "check-gates"],
+        ["<fresh-python>", "-m", "unittest", "discover", "-s", "tests", "-v"],
+    ]
+    with TemporaryDirectory(prefix="tldrift-release-") as temporary_directory:
+        temporary = Path(temporary_directory)
+        clean = temporary / "checkout"
+        # Only files a clean checkout would contain: tracked plus untracked-not-ignored.
+        for relative in git["checkout_files"]:
+            if (root / relative).is_file():
+                (clean / relative).parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(root / relative, clean / relative)
+        release_dir = clean / manifest_relative
+        for relative in inputs:
+            target = release_dir.parent / "inputs" / f"{relative}.gz"
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(gzip.compress((root / relative).read_bytes(), mtime=0))
+        document = _release_document(release_id, root, paths, inputs, git, previous)
+        # Provisional record exists only inside the throwaway copy so its own
+        # Phase 11 gate can run; the real record is written only after success.
+        document["executions"] = [{"step": index + 1, "command": command, "exit_code": 0, "provisional": True}
+                                  for index, command in enumerate(commands)]
+        _write_release(clean, release_id, document, overwrite=True)
+        environment = temporary / "venv"
         executions: list[dict[str, object]] = []
         for index, command in enumerate(commands):
-            command_environment = {
-                **os.environ,
-                "PYTHONDONTWRITEBYTECODE": "1",
-                "PYTHONPATH": str(root / "src"),
-            }
+            concrete = [
+                {"<python>": sys.executable, "<fresh-venv>": str(environment),
+                 "<fresh-python>": str(environment / "bin" / "python")}.get(value, value)
+                for value in command
+            ]
             completed = subprocess.run(
-                command,
-                cwd=root,
-                env=command_environment,
-                capture_output=True,
-                text=True,
-                timeout=timeout_seconds,
-                check=False,
+                concrete, cwd=clean, capture_output=True, text=True, timeout=timeout_seconds, check=False,
+                env={"PATH": os.environ.get("PATH", ""), "HOME": str(temporary), "PYTHONDONTWRITEBYTECODE": "1",
+                     "PYTHONPATH": str(clean / "src")},
             )
-            executions.append(
-                {
-                    "step": index + 1,
-                    "command": _portable_command(command, root, environment),
-                    "exit_code": completed.returncode,
-                    "stdout_sha256": sha256(completed.stdout.encode("utf-8")).hexdigest(),
-                    "stderr_sha256": sha256(completed.stderr.encode("utf-8")).hexdigest(),
-                    "output_tail": (completed.stdout + completed.stderr)[-2000:],
-                }
-            )
+            output = completed.stdout + completed.stderr
+            executions.append({
+                "step": index + 1,
+                "command": command,
+                "exit_code": completed.returncode,
+                "stdout_sha256": sha256(completed.stdout.encode("utf-8")).hexdigest(),
+                "stderr_sha256": sha256(completed.stderr.encode("utf-8")).hexdigest(),
+                "output_tail": output[-2000:].replace(str(clean), "<clean-checkout>").replace(str(temporary), "<tmp>"),
+            })
             if completed.returncode != 0:
-                raise ValueError(
-                    f"Fresh-environment verification failed at step {index + 1}: "
-                    f"{(completed.stdout + completed.stderr)[-2000:]}"
-                )
+                raise ValueError(f"Fresh-environment verification failed at step {index + 1}: {output[-3000:]}")
+        document["executions"] = executions
+        document["verified_at"] = datetime.now(timezone.utc).isoformat()
+        for relative in inputs:
+            source = release_dir.parent / "inputs" / f"{relative}.gz"
+            target = root / Path(manifest_relative).parent / "inputs" / f"{relative}.gz"
+            atomic_write_new(target, source.read_bytes())
+    return _write_release(root, release_id, document, overwrite=False)
+
+
+def _release_document(
+    release_id: str, root: Path, paths: tuple[str, ...], inputs: dict[str, str],
+    git: dict[str, object], previous: dict[str, object] | None,
+) -> dict[str, object]:
+    previous_manifest = load_json(root / str(previous["manifest_path"])) if previous else {}
+    old_inputs = previous_manifest.get("release_inputs", {})
+    old_checksums = previous_manifest.get("artifact_checksums", {})
+    checksums = {relative: sha256((root / relative).read_bytes()).hexdigest() for relative in paths}
     return {
-        "schema_version": "1.0.0",
-        "release_id": "phase11-reproducibility-engineering-v0.1.0",
-        "status": "fresh_environment_engineering_reproduction_passed_expert_review_unavailable",
-        "verified_at": datetime.now(timezone.utc).isoformat(),
+        "schema_version": "2.0.0",
+        "release_id": f"phase11-reproducibility-engineering-{release_id}",
+        "status": "fresh_clean_checkout_engineering_reproduction_passed_expert_review_unavailable",
+        "verified_at": "provisional",
         "environment": {
             "python": platform.python_version(),
             "implementation": platform.python_implementation(),
             "platform": platform.platform(),
             "fresh_virtual_environment": True,
+            "system_site_packages": False,
+            "clean_checkout_copy": "git ls-files --cached --others --exclude-standard",
             "package_execution": "isolated_interpreter_with_explicit_project_src_path",
             "network_required": False,
         },
+        "git": {key: value for key, value in git.items() if key != "checkout_files"},
         "artifact_checksums": checksums,
-        "executions": executions,
+        "release_inputs": inputs,
+        "release_input_policy": (
+            "Gitignored local artifacts are shipped as gzip files under inputs/ and restored by "
+            "restore-release-inputs only when their SHA-256 matches; raw PDF blobs are rebuilt "
+            "from tracked data/corpus/pdfs by content hash."
+        ),
+        "supersedes": {
+            "release_id": previous.get("release_id") if previous else None,
+            "manifest_path": previous.get("manifest_path") if previous else None,
+            "manifest_sha256": previous.get("manifest_sha256") if previous else None,
+            "changed_artifacts": sorted(
+                relative for relative in set(old_checksums) & set(checksums)
+                if old_checksums[relative] != checksums[relative]
+            ),
+            "added_artifacts": sorted(set(checksums) - set(old_checksums)),
+            "removed_artifacts": sorted(set(old_checksums) - set(checksums)),
+            "previous_release_declared_inputs": len(old_inputs),
+            "newly_declared_inputs": sorted(set(inputs) - set(old_inputs)),
+        },
         "fresh_environment_reproduction_passed": True,
         "independent_expert_validation": {
             "status": "not_performed_reviewer_unavailable",
@@ -178,43 +279,58 @@ def verify_fresh_environment(root: Path, *, timeout_seconds: int = 900) -> dict[
         "research_gate_passed": False,
         "limitations": [
             "Engineering reproduction does not replace independent legal-expert validation.",
-            "Phase 9 is an executed non-gold smoke run and has no performance metrics.",
+            "Normalized text is a frozen input: regenerating it from the PDFs with pypdf 6.16.2 matches 99/100 documents; it-amendment-act-2008 differs by one whitespace character.",
+            "Graph v2 and extraction v1 are frozen historical artifacts that current code no longer regenerates byte-for-byte.",
             "The benchmark remains unfrozen because materiality and scenario gold are unavailable.",
         ],
     }
 
 
-def write_reproducibility_manifest_and_lock(
-    document: dict[str, object], output_path: Path, lock_path: Path
-) -> dict[str, object]:
+def _write_release(root: Path, release_id: str, document: dict[str, object], *, overwrite: bool) -> dict[str, object]:
+    manifest_relative, lock_relative = release_paths(release_id)
     payload = canonical_json_bytes(document)
-    executions = document.get("executions")
-    if not isinstance(executions, list):
-        raise ValueError("Reproducibility manifest requires executions")
+    executions = document["executions"]
     lock = {
-        "schema_version": "1.0.0",
+        "schema_version": "2.0.0",
         "release_id": document.get("release_id"),
+        "manifest_path": manifest_relative,
         "manifest_sha256": sha256(payload).hexdigest(),
         "artifact_count": len(document.get("artifact_checksums", {})),
+        "release_input_count": len(document.get("release_inputs", {})),
         "execution_step_count": len(executions),
-        "all_execution_steps_passed": bool(executions)
-        and all(isinstance(item, dict) and item.get("exit_code") == 0 for item in executions),
-        "fresh_environment_reproduction_passed": document.get(
-            "fresh_environment_reproduction_passed"
-        )
-        is True,
-        "independent_expert_validation_status": document.get(
-            "independent_expert_validation", {}
-        ).get("status"),
-        "legal_correctness_claimed": document.get("independent_expert_validation", {}).get(
-            "legal_correctness_claimed"
-        ),
+        "all_execution_steps_passed": bool(executions) and all(item.get("exit_code") == 0 for item in executions),
+        "fresh_environment_reproduction_passed": document.get("fresh_environment_reproduction_passed") is True,
+        "independent_expert_validation_status": document["independent_expert_validation"]["status"],
+        "legal_correctness_claimed": document["independent_expert_validation"]["legal_correctness_claimed"],
         "engineering_gate_passed": True,
         "research_gate_passed": False,
     }
-    atomic_replace(output_path, payload)
-    atomic_replace(lock_path, canonical_json_bytes(lock))
+    active = {
+        "release_id": document.get("release_id"),
+        "manifest_path": manifest_relative,
+        "lock_path": lock_relative,
+        "manifest_sha256": lock["manifest_sha256"],
+    }
+    write = atomic_replace if overwrite else atomic_write_new
+    write(root / manifest_relative, payload)
+    write(root / lock_relative, canonical_json_bytes(lock))
+    # The registry is a pointer: activating a release replaces it, never a release.
+    atomic_replace(root / ACTIVE_RELEASE, canonical_json_bytes(active))
     return lock
+
+
+def _git_state(root: Path) -> dict[str, object]:
+    def git(*arguments: str) -> str:
+        return subprocess.run(["git", *arguments], cwd=root, capture_output=True, text=True, check=True).stdout
+    status = git("status", "--porcelain")
+    return {
+        "head": git("rev-parse", "HEAD").strip(),
+        "working_tree_dirty": bool(status.strip()),
+        "status_porcelain_sha256": sha256(status.encode()).hexdigest(),
+        "checkout_files": tuple(
+            line for line in git("ls-files", "--cached", "--others", "--exclude-standard").splitlines() if line
+        ),
+    }
 
 
 def _portable_command(command: list[str], root: Path, environment: Path) -> list[str]:

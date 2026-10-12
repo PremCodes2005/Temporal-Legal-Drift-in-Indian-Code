@@ -15,7 +15,11 @@
     "fresh_environment_reproduction_passed": {"const": true},
     "independent_expert_validation": {"type": "object"},
     "research_gate_passed": {"const": false},
-    "limitations": {"type": "array", "items": {"type": "string"}}
+    "limitations": {"type": "array", "items": {"type": "string"}},
+    "git": {"type": "object"},
+    "release_inputs": {"type": "object", "additionalProperties": {"type": "string", "pattern": "^[0-9a-f]{64}$"}},
+    "release_input_policy": {"type": "string"},
+    "supersedes": {"type": "object"}
   },
   "additionalProperties": false
 }

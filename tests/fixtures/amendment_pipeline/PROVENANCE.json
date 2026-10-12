@@ -1,0 +1,33 @@
+{
+  "documents": [
+    {
+      "entry_id": "it-amendment-act-2008",
+      "full_normalized_sha256": "7bfe18e3f3d9acc039c2531b121c5d85a0fef371aa7934cb846a7d0c17e90557",
+      "normalized_document_id": "doc_41556448fa565871ae34cdb5",
+      "retained_block_anchors": [
+        "pdf:page:1",
+        "pdf:page:5"
+      ],
+      "retained_block_ids": [
+        "blk_e16a35b4c54a77e180a08135",
+        "blk_3356c9641ad7ead9bd763c6b"
+      ],
+      "source_sha256": "f623743ebe88795caa83e8506319e53963005512f43c451fb61698e65fb4293d"
+    },
+    {
+      "entry_id": "insolvency-and-bankruptcy-code-amendment-act-2020",
+      "full_normalized_sha256": "5f9f7916868e5357c70d52174711ef0c9c175039154bc6f517311d04238c9de8",
+      "normalized_document_id": "doc_718cacf84c9c93db55c16873",
+      "retained_block_anchors": [
+        "pdf:page:1",
+        "pdf:page:3"
+      ],
+      "retained_block_ids": [
+        "blk_a2aa2f0c201324c10faec8b3",
+        "blk_f677fd6dd59d7358e1a2d2e7"
+      ],
+      "source_sha256": "bd4f44a1437260977604e7ca9d1ec4bf2afa43edaeb5177e50b92676bfaeb0cf"
+    }
+  ],
+  "purpose": "Verbatim block subset of two frozen normalized documents for clean-checkout pipeline tests; blocks are unmodified, other blocks omitted."
+}

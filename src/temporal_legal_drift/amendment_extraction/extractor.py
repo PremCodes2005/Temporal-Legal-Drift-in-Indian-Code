@@ -37,6 +37,10 @@ AMENDMENT_CUE = re.compile(
     r"renumber(?:ed)?|replac(?:e|ed)|amendment\s+of)\b",
     re.I,
 )
+# Gazette running headers and the India Code watermark are page furniture, not
+# statutory text. Margin notes cannot be separated reliably from normalized text,
+# so an operand containing furniture is flagged rather than silently cleaned.
+PAGE_FURNITURE = re.compile(r"GAZETTE\s+OF\s+INDIA|\bIndiaCode\b", re.I)
 OPERATION_PATTERNS = (
     ("RENUMBER", re.compile(r"\brenumber(?:ed|ing)?\b", re.I)),
     ("REPLACE", re.compile(r"\breplac(?:e|ed|ing|ement)\b", re.I)),
@@ -64,6 +68,7 @@ class GeneralisedAmendmentExtractor:
         source_document: str,
         source_sha256: str,
         amending_act: str,
+        source_risk: str | None = None,
     ) -> tuple[tuple[AmendmentEvent, ...], tuple[UnresolvedAmendment, ...]]:
         clauses = _segment_clauses(document)
         all_text = "\n".join(
@@ -129,6 +134,10 @@ class GeneralisedAmendmentExtractor:
                 reasons.append(("missing_new_text", "new wording was not explicit in the amendment clause"))
             if commencement_unclear:
                 reasons.append(("commencement_unclear", "commencement depends on notification or could not be dated"))
+            if source_risk:
+                reasons.append(("source_text_unreliable", f"source text layer has a known fidelity risk: {source_risk}"))
+            if any(PAGE_FURNITURE.search(value or "") for value in (old_text, new_text)):
+                reasons.append(("operand_contains_page_furniture", "extracted wording contains page headers or watermark text; margin notes may also be interleaved"))
             unresolved.extend(
                 _unresolved(source_document, event, clause, code, detail)
                 for code, detail in dict.fromkeys(reasons)

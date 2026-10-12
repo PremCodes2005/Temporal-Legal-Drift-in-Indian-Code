@@ -5,7 +5,6 @@ import json
 from pathlib import Path
 
 from temporal_legal_drift.jsonio import load_json
-from temporal_legal_drift.amendment_extraction.pipeline import AmendmentExtractionPipeline
 from temporal_legal_drift.materiality import (
     ExperimentalMaterialityModel,
     AssessmentValidationError,
@@ -224,7 +223,7 @@ class MaterialityWorkflowTests(unittest.TestCase):
             self.assertIn(pair_id, report)
 
     def test_reextraction_audit_preserves_v1_and_abstains_on_size_only(self) -> None:
-        events = AmendmentExtractionPipeline(ROOT).run()["events"]
+        events = load_json(ROOT / "data/processed/amendments/v2.1/extraction.json")["events"]
         audit = build_disagreement_audit_v2(self.silver, self.round, self.graph, events)
         by_id = {row["pair_id"]: row for row in audit["rows"]}
         self.assertEqual(audit["case_count"], 19)

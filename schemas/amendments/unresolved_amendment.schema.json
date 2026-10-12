@@ -11,7 +11,7 @@
   "properties": {
     "unresolved_id": {"type": "string", "minLength": 1},
     "source_document": {"type": "string", "minLength": 1},
-    "reason_code": {"enum": ["target_not_found", "ambiguous_section", "unclear_operation", "missing_old_text", "missing_new_text", "commencement_unclear", "parsing_failure"]},
+    "reason_code": {"enum": ["target_not_found", "ambiguous_section", "unclear_operation", "missing_old_text", "missing_new_text", "commencement_unclear", "parsing_failure", "source_text_unreliable", "operand_contains_page_furniture"]},
     "evidence_text": {"type": "string", "minLength": 1},
     "source_page": {"type": ["integer", "null"]},
     "source_line": {"type": ["integer", "null"]},
