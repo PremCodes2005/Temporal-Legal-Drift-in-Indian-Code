@@ -74,27 +74,29 @@ class RagPipelineTests(unittest.TestCase):
             restored = HybridRetriever(clean_root).status()
             self.assertEqual(restored["index_identity"], status["index_identity"])
 
-    def test_it_act_query_retrieves_an_amendment_pair_and_metrics(self) -> None:
+    def test_unaligned_instruction_and_consolidated_text_get_no_drift_scores(self) -> None:
+        # Regression: an IT 2008 instruction excerpt and an unrelated consolidated passage
+        # were labelled pre/post and scored. They are not versions of one provision.
         result = self.pipeline.answer(
             "What changed in the IT Act amendment regarding data privacy?",
             "specific",
         )
-        self.assertEqual(result["intent"], "diff_analysis")
-        self.assertEqual(
-            result["retrieval"]["pair_status"],
-            "paired_amendment_instruction_and_consolidated_version",
-        )
+        self.assertEqual(result["retrieval"]["pair_status"], "instruction_and_consolidated_text_not_aligned")
+        self.assertIsNone(result["metrics"])
         self.assertEqual(len(result["citations"]), 2)
-        for name, value in result["metrics"].items():
-            if name.endswith("_percent"):
-                self.assertGreaterEqual(value, 0, name)
-                self.assertLessEqual(value, 100, name)
+        self.assertIn("no earlier version was reconstructed", result["answer"]["pre_amendment_baseline"])
+        paired = next(item for item in result["verification"]["checks"] if item["id"] == "paired_context")
+        self.assertFalse(paired["passed"])
+        self.assertEqual([item["entry_id"] for item in result["source_fidelity_warnings"]], ["it-amendment-act-2008"])
         self.assertEqual(result["source_guidance"]["url"].split("?")[0], INDIA_CODE_HOME)
-        self.assertEqual(
-            result["metrics"]["score_basis"]["selection"],
-            "automatic_backend_retrieval_from_user_prompt",
+
+    def test_unrelated_amendment_is_not_paired_when_its_act_was_not_retrieved(self) -> None:
+        result = self.pipeline.answer(
+            "What changed in the Arbitration and Conciliation Act section 7 regarding electronic communication?",
+            "specific",
         )
-        self.assertFalse(result["metrics"]["score_basis"]["user_supplied_before_after_text"])
+        self.assertEqual({item.get("act_name") for item in result["citations"]}, {"Arbitration And Conciliation Act 1996"})
+        self.assertIsNone(result["metrics"])
 
     def test_display_mode_does_not_change_prompt_selected_score_basis(self) -> None:
         query = "Compare Section 19 before and after the IT Amendment Act, 2008."
@@ -109,6 +111,7 @@ class RagPipelineTests(unittest.TestCase):
             "Compare Section 19 before and after the IT Amendment Act, 2008.",
             "specific",
         )
+        self.assertEqual(result["retrieval"]["pair_status"], "consolidated_footnote_reconstruction")
         self.assertIn("Digital Signature Certificate", result["answer"]["pre_amendment_baseline"])
         self.assertIn("electronic signature", result["answer"]["post_amendment_revision"])
         self.assertEqual(result["metrics"]["conceptual_drift_percent"], 65)
@@ -129,6 +132,17 @@ class RagPipelineTests(unittest.TestCase):
         self.assertTrue(any("ten per cent" in item.lower() for item in result["answer"]["key_differences"]))
         self.assertEqual(result["citations"][0]["source_anchor"], "pdf:page:1")
         self.assertIsNone(result["metrics"])
+
+    def test_model_timeout_or_provider_error_yields_labelled_extractive_fallback(self) -> None:
+        query = "Compare Section 19 before and after the IT Amendment Act, 2008."
+        for error in (TimeoutError("timed out"), ValueError("bad provider payload")):
+            with self.subTest(error=type(error).__name__), \
+                    patch.object(rag_pipeline, "_llm_configured", return_value=True), \
+                    patch.object(rag_pipeline, "_llm_generate", side_effect=error):
+                result = self.pipeline.answer(query, "specific")
+            self.assertEqual(result["answer"]["generation_method"], "extractive_fallback")
+            self.assertIn("Configured LLM was unavailable", result["answer"]["generation_warning"])
+            self.assertEqual(result["metrics"]["conceptual_method"], "legal_cue_proxy")  # no model judgment claimed
 
     def test_invalid_mode_is_rejected(self) -> None:
         with self.assertRaisesRegex(ValueError, "specific or generic"):

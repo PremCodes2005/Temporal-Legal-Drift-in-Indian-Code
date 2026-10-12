@@ -62,6 +62,26 @@ class RagPipeline:
         self.retriever = HybridRetriever(self.root)
         self.live_repository = IndiaCodeLiveRepository()
 
+    def _graph_alignment(self, pre: RetrievedChunk, post: RetrievedChunk) -> dict[str, object] | None:
+        from temporal_legal_drift.versioning.consumer import GraphConsumer, IncompatibleGraphError
+
+        try:
+            consumer = GraphConsumer(self.root, "v4")
+        except (IncompatibleGraphError, OSError, ValueError):
+            return None  # no verified graph: abstain from version comparison
+        return consumer.aligned_fragments(str(pre.metadata.get("entry_id")), str(post.metadata.get("entry_id")), pre.text)
+
+    def _source_fidelity_warnings(self, *items: RetrievedChunk | None) -> list[dict[str, str]]:
+        from temporal_legal_drift.corpus import CorpusManifest
+
+        risks = {entry.entry_id: entry.known_extraction_risk for entry in CorpusManifest.from_file(
+            self.root / "configs/corpus/pilot_v1.json").entries if entry.known_extraction_risk}
+        entry_ids = dict.fromkeys(str(item.metadata.get("entry_id")) for item in items if item)
+        return [
+            {"entry_id": entry_id, "warning": "source text unreadable or unreliable", "detail": str(risks[entry_id])}
+            for entry_id in entry_ids if entry_id in risks
+        ]
+
     def status(self) -> dict[str, object]:
         retrieval = self.retriever.status()
         return {
@@ -154,10 +174,20 @@ class RagPipeline:
             known_titles.add(title.lower())
         metadata_coverage = _metadata_coverage(pre, post)
         metric_document = None
-        if pre is not None and post is not None:
-            metric_pre_text, metric_post_text, selection_method = _select_scoring_evidence(
-                pre, post, query
-            )
+        scoring = _select_scoring_evidence(pre, post, query) if pre is not None and post is not None else None
+        graph_alignment = None
+        if pre is not None and post is not None and scoring is None:
+            graph_alignment = self._graph_alignment(pre, post)
+            if graph_alignment is not None:
+                scoring = (str(graph_alignment["before_text"]), str(graph_alignment["after_text"]), "graph_v4_transition_fragments")
+                pair_status = "graph_aligned_amendment_fragments"
+            else:
+                # Two excerpts that are not shown to be the same provision are not versions.
+                pair_status = "instruction_and_consolidated_text_not_aligned"
+        if scoring is not None and scoring[2] == "query_section_reconstruction":
+            pair_status = "consolidated_footnote_reconstruction"
+        if pre is not None and post is not None and scoring is not None:
+            metric_pre_text, metric_post_text, selection_method = scoring
             metric_document = calculate_drift_metrics(
                 metric_pre_text,
                 metric_post_text,
@@ -178,9 +208,10 @@ class RagPipeline:
                 "pre_excerpt": _bounded_text(metric_pre_text, 1200),
                 "post_excerpt": _bounded_text(metric_post_text, 1200),
                 "user_supplied_before_after_text": False,
+                "graph_alignment": graph_alignment,
             }
         citations = _citations(pre, post)
-        verification = _verification(query, pre, post, pair_status, generation, citations)
+        verification = _verification(query, pre, post, pair_status, generation, citations, metric_document is not None)
         answer_markdown = _answer_markdown(generation, citations, guidance, answer_type)
         return {
             "schema_version": "1.0.0",
@@ -198,6 +229,7 @@ class RagPipeline:
                 "generation_warning": generation.warning,
             },
             "metrics": metric_document,
+            "source_fidelity_warnings": self._source_fidelity_warnings(pre, post),
             "retrieval": {
                 "pair_status": pair_status,
                 "candidate_count": len(retrieved),
@@ -442,7 +474,7 @@ def _extractive_generate(
     pre_summary = _best_excerpt(pre, query, mode) if pre else "No relevant pre-amendment baseline was found in the indexed corpus."
     post_summary = _best_excerpt(post, query, mode) if post else "No relevant post-amendment revision was found in the indexed corpus."
     if pre and pre.metadata.get("document_type") == "amending_act":
-        pre_summary = "Amendment instruction used for baseline reconstruction: " + pre_summary
+        pre_summary = "Amendment instruction (source excerpt; no earlier version was reconstructed): " + pre_summary
     if post and post.metadata.get("version") == "consolidated":
         post_summary = "Consolidated-version evidence: " + post_summary
     differences = _difference_summary(pre.text if pre else "", post.text if post else "", mode)
@@ -671,7 +703,7 @@ def _reconstructed_comparison(
 
 def _select_scoring_evidence(
     pre: RetrievedChunk, post: RetrievedChunk, query: str
-) -> tuple[str, str, str]:
+) -> tuple[str, str, str] | None:
     """Select comparable evidence from the prompt without user-supplied clauses.
 
     Scoring deliberately uses a fixed clause-focused extraction policy so the
@@ -681,11 +713,8 @@ def _select_scoring_evidence(
     reconstructed_pre, comparable_post, _ = _reconstructed_comparison(pre, post, query)
     if reconstructed_pre and comparable_post:
         return reconstructed_pre, comparable_post, "query_section_reconstruction"
-    return (
-        _best_excerpt(pre, query, "specific"),
-        _best_excerpt(post, query, "specific"),
-        "query_relevant_excerpt_selection",
-    )
+    # Best-matching excerpts from two documents are not an aligned before/after pair.
+    return None
 
 
 def _best_excerpt(item: RetrievedChunk, query: str, mode: str) -> str:
@@ -739,7 +768,7 @@ def _difference_summary(pre: str, post: str, mode: str) -> list[str]:
         rows.append(f"Terms present only in the revision evidence: {', '.join(legal_added[:12])}.")
     common = before & after
     if pre and post:
-        rows.append(f"The retrieved excerpts share {len(common)} distinct tokens; the score panel separates semantic, lexical and legal-intent movement.")
+        rows.append(f"The retrieved excerpts share {len(common)} distinct tokens; the score panel separates vector (feature-hash), lexical and legal-intent movement.")
     if mode == "specific" and pre and post:
         rows.append("Review the cited page anchors for the exact clause wording and amendment operation.")
     return rows
@@ -779,13 +808,14 @@ def _verification(
     pair_status: str,
     generation: GenerationResult,
     citations: list[dict[str, object]],
+    aligned_versions: bool = False,
 ) -> dict[str, object]:
     query_terms = set(re.findall(r"[a-z]{4,}", query.lower()))
     evidence_terms = set(re.findall(r"[a-z]{4,}", " ".join(item.text for item in (pre, post) if item).lower()))
     checks = [
         {"id": "intent_classified", "label": "Query intent classified", "passed": True},
         {"id": "clause_coverage", "label": "Relevant clause coverage", "passed": bool(query_terms & evidence_terms)},
-        {"id": "paired_context", "label": "Pre/post version pair found", "passed": pre is not None and post is not None},
+        {"id": "paired_context", "label": "Aligned pre/post versions of the same provision", "passed": aligned_versions},
         {"id": "citation_anchors", "label": "Evidence anchors attached", "passed": bool(citations) and all(item.get("source_anchor") for item in citations)},
         {"id": "alignment", "label": "Post-generation alignment check", "passed": generation.method in {"llm_grounded", "extractive_fallback", "extractive_fallback_generic"} and bool(citations)},
     ]

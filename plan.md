@@ -2,7 +2,8 @@
 
 ## Temporal Legal Drift in the Indian Code
 
-**Status:** Research specification with an engineering prototype; legal/research validation pending
+**Status:** Research specification with an engineering prototype; legal/research validation pending  
+**Implementation update (2026-10-12):** extraction v2.2, temporal graph v4 with an evidence-strength policy, a versioned graph-consumer interface, a 50-case materiality re-extraction audit and a commit-bound reproducibility release now exist; see `docs/claims_evidence_matrix.md`. The research/legal gate is unchanged: no legal gold, frozen benchmark or independent validation.
 **Target:** Lab-validated research prototype; TRL 4  
 **Core orientation:** Temporal legal reasoning and compliance-drift evaluation over versioned Indian law  
 **Audit basis:** Repository commit `68030875a719aa626fb05f294880de2953084781`, inspected 2026-10-12; recheck the checkout before relying on these counts. See `docs/verification.md` for checks actually executed. The Phase 0-12 sequence below is the **research plan**; later implementation reports use overlapping but non-identical phase numbers.

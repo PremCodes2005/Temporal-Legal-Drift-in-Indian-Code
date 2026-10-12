@@ -14,7 +14,7 @@ from pathlib import Path
 
 from temporal_legal_drift.jsonio import load_json
 
-from .temporal_graph import TemporalGraph
+from .temporal_graph import TemporalGraph, _normalise_for_match
 
 INTERFACE_VERSION = "graph-consumer-v1"
 SUPPORTED_GRAPH_SCHEMAS = frozenset({"2.0.0"})
@@ -41,6 +41,44 @@ class GraphConsumer:
             raise IncompatibleGraphError(f"unsupported graph schema {self.graph.schema_version}")
         self.graph_version = graph_version
         self.graph_sha256 = digest
+
+    def aligned_fragments(self, amending_entry_id: str, target_entry_id: str, instruction_text: str) -> dict[str, object] | None:
+        """Before/after fragments of the one strongly corroborated transition whose clause appears in the text."""
+        entry_by_source = {str(item["source_id"]): str(item["corpus_entry_id"]) for item in self.graph.legal_sources}
+        act_entry = {str(item["act_id"]): str(item["corpus_entry_id"]) for item in self.graph.acts}
+        provisions = {str(item["provision_id"]): item for item in self.graph.provisions}
+        versions = {str(item["version_id"]): item for item in self.graph.provision_versions}
+        events = {str(item["amendment_event_id"]): item for item in self.graph.amendment_events}
+        haystack = _normalise_for_match(instruction_text)
+        matches = []
+        for transition in self.graph.transitions:
+            if transition["validation_status"] != STRONG_STATUS:
+                continue
+            event = events[str(transition["amendment_event_id"])]
+            provision = provisions[str(transition["target_provision_id"])]
+            clause = _normalise_for_match(str(event["evidence"]["exact_text"]))[:120]
+            if (entry_by_source.get(str(event["evidence"]["source_id"])) == amending_entry_id
+                    and act_entry.get(str(provision["act_id"])) == target_entry_id
+                    and len(clause) >= 40 and clause in haystack):
+                matches.append((transition, event, provision))
+        if len(matches) != 1:
+            return None  # none or ambiguous: the caller abstains from version comparison
+        transition, event, provision = matches[0]
+        return {
+            "interface_version": INTERFACE_VERSION,
+            "graph_version": self.graph_version,
+            "graph_sha256": self.graph_sha256,
+            "transition_id": transition["transition_id"],
+            "validation_status": transition["validation_status"],
+            "section": provision["section"],
+            "version_scope": "AMENDMENT_CONTROLLED_FRAGMENT",
+            "is_complete_consolidated_text": False,
+            "legal_validation": "UNVERIFIED",
+            "before_text": versions[str(transition["before_version_id"])]["text"],
+            "after_text": versions[str(transition["after_version_id"])]["text"],
+            "effective_date": transition.get("effective_date"),
+            "source_evidence": event["evidence"],
+        }
 
     def provision_at(self, act: str, section: str, on_date: str) -> dict[str, object]:
         base = {

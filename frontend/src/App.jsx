@@ -127,10 +127,16 @@ function RagResult({ result, onExplain }) {
   const answer = result.answer;
   const metrics = result.metrics;
   const isSummary = answer.answer_type === "single_document_summary";
+  // Only aligned evidence is called a before/after version; other pairs are labelled as source excerpts.
+  const pairLabels = {
+    graph_aligned_amendment_fragments: ["Before (amendment-controlled fragment)", "After (amendment-controlled fragment)"],
+    consolidated_footnote_reconstruction: ["Reconstructed earlier wording (from consolidated-text footnote)", "Current consolidated text"],
+  }[result.retrieval?.pair_status] || ["Amendment instruction (source excerpt)", "Consolidated text (source excerpt)"];
   return <section id="rag-result" className="results">
     <div className="result-heading"><div><span className="section-kicker">Grounded response</span><h2>{titleCase(result.intent)}</h2></div><div className="mode-badge">{titleCase(result.mode)} mode</div></div>
+    <p className="generation-method" role="status">{String(answer.generation_method || "").startsWith("extractive") ? "Extractive evidence summary: quoted from retrieved sources, not a language-model conclusion." : answer.generation_method === "llm_grounded" ? "Language-model answer constrained to the retrieved evidence; verify it against the cited source." : "No answer could be generated from the available evidence."}</p>
     <article className="answer-card">
-      {isSummary ? <AnswerSection label="Short answer" text={answer.short_answer || answer.post_amendment_revision} tone="summary" /> : <><AnswerSection label="Pre-amendment baseline" text={answer.pre_amendment_baseline} tone="before" /><div className="answer-divider" /><AnswerSection label="Post-amendment revision" text={answer.post_amendment_revision} tone="after" /></>}
+      {isSummary ? <AnswerSection label="Short answer" text={answer.short_answer || answer.post_amendment_revision} tone="summary" /> : <><AnswerSection label={pairLabels[0]} text={answer.pre_amendment_baseline} tone="before" /><div className="answer-divider" /><AnswerSection label={pairLabels[1]} text={answer.post_amendment_revision} tone="after" /></>}
       <div className="difference-summary"><span className="section-kicker">{isSummary ? "Key points" : "Key differences summary"}</span><ul>{answer.key_differences.map((item, index) => <li key={index}>{item}</li>)}</ul></div>
     </article>
     {metrics ? <><DriftPanel metrics={metrics} /><button className="explain-drift-button" type="button" onClick={onExplain}>Explain these scores with PDF evidence <span>→</span></button></> : <article className="empty-analysis"><strong>{isSummary ? "Document summary" : "Drift metrics unavailable"}</strong><p>{isSummary ? "Drift scores are shown only when the question asks for a comparison and a supported pre/post evidence pair is available." : "A supported pre/post evidence pair was not found for this query."}</p></article>}
@@ -138,6 +144,7 @@ function RagResult({ result, onExplain }) {
       <VerificationPanel verification={result.verification} />
       <EvidencePanel citations={result.citations} retrieval={result.retrieval} />
     </div>
+    {(result.source_fidelity_warnings || []).map((item) => <div className="warning-note" role="alert" key={item.entry_id}><strong>Source text unreadable: {item.entry_id}</strong><span>{item.detail} Treat quoted wording from this source as unverified.</span></div>)}
     {answer.generation_warning && <div className="warning-note">{answer.generation_warning}. The displayed response uses the evidence-only fallback.</div>}
     <article className="source-guidance"><div><span className="section-kicker">Authoritative source</span><h3>Verify the complete legal text</h3><p>{result.source_guidance.message}</p></div><a href={result.source_guidance.url} target="_blank" rel="noreferrer">{result.source_guidance.label} ↗</a></article>
     <p className="research-note">Scores describe retrieved-text movement and evidence alignment; they are not probabilities or legal advice.</p>
@@ -148,7 +155,7 @@ function AnswerSection({ label, text, tone }) { return <section className={`answ
 
 function DriftPanel({ metrics }) {
   const rows = [
-    { label: "Semantic drift", value: metrics.semantic_drift_percent, tone: "blue", help: "Meaning-level distance between retrieved version embeddings." },
+    { label: "Vector drift (feature-hash)", value: metrics.semantic_drift_percent, tone: "blue", help: "Cosine distance between deterministic 256-dimension token-hash vectors; not a trained meaning model." },
     { label: "Lexical / textual shift", value: metrics.lexical_drift_percent, tone: "green", help: "Token and sequence changes in the paired excerpts." },
     { label: "Conceptual / legal intent shift", value: metrics.conceptual_drift_percent, tone: "purple", help: metrics.conceptual_method === "llm_judge" ? "Evidence-bound LLM judgment of operative legal change." : "Deterministic legal-cue proxy; no LLM judgment was available." },
     { label: "Retrieval & extraction alignment", value: metrics.alignment_accuracy_percent, tone: "gold", help: "Retrieval confidence, metadata coverage and paired evidence completeness." },
@@ -162,10 +169,10 @@ function DriftExplanation({ result, onAnalyse }) {
   const { metrics, retrieval, citations } = result;
   const levels = metrics.levels || {};
   const scoreRows = [
-    ["Semantic drift", metrics.semantic_drift_percent, levels.semantic, "How far the deterministic vector representations moved."],
+    ["Vector drift (feature-hash)", metrics.semantic_drift_percent, levels.semantic, "How far the deterministic token-hash vectors moved; this is not a trained semantic encoder."],
     ["Lexical shift", metrics.lexical_drift_percent, levels.lexical, "How much the words and token sequence changed."],
     ["Conceptual drift", metrics.conceptual_drift_percent, levels.conceptual, "How much the detected legal cues, numbers or model-assessed intent changed."],
-    ["Overall drift", metrics.overall_drift_percent, levels.overall, "Weighted root-mean-square result: 40% semantic, 30% lexical and 30% conceptual. A strong signal is not cancelled by a weak one."],
+    ["Overall drift", metrics.overall_drift_percent, levels.overall, "Weighted root-mean-square result: 40% vector, 30% lexical and 30% conceptual. A strong signal is not cancelled by a weak one."],
   ];
   const preCitation = citations?.find((item) => item.label === "pre");
   const postCitation = citations?.find((item) => item.label === "post");
@@ -201,7 +208,7 @@ function ScoreCalculation({ result, onAnalyse }) {
   const postCitation = citations?.find((item) => item.label === "post");
   const contribution = trace.overall.weighted_square_contributions;
   const rows = [
-    ["Semantic drift", `${trace.semantic.cosine_similarity_percent}% similarity`, trace.semantic.formula, metrics.semantic_drift_percent],
+    ["Vector drift (feature-hash)", `${trace.semantic.cosine_similarity_percent}% similarity`, trace.semantic.formula, metrics.semantic_drift_percent],
     ["Lexical drift", `${trace.lexical.jaccard_similarity_percent}% Jaccard · ${trace.lexical.sequence_similarity_percent}% sequence`, trace.lexical.formula, metrics.lexical_drift_percent],
     ["Conceptual drift", titleCase(trace.conceptual.method), trace.conceptual.formula, metrics.conceptual_drift_percent],
     ["Evidence alignment", `${trace.alignment.average_retrieval_confidence_percent}% retrieval · ${trace.alignment.paired_evidence_completeness_percent}% evidence · ${trace.alignment.metadata_coverage_percent}% metadata`, trace.alignment.formula, metrics.alignment_accuracy_percent],
@@ -215,7 +222,7 @@ function ScoreCalculation({ result, onAnalyse }) {
     </div>
     <article className="calculation-card"><span className="section-kicker">Automatic score basis</span><h3>Prompt → retrieval → {titleCase(basis.selection_method || "query relevant evidence")}</h3><p className="panel-note">The scoring basis is fixed across Generic and Specific display modes. Those modes change answer detail, not the selected evidence or percentages.</p></article>
     <article className="calculation-card"><span className="section-kicker">Backend values and formulas</span><div className="calculation-rows">{rows.map(([name, inputs, formula, score]) => <div className="calculation-row" key={name}><div><strong>{name}</strong><span>{inputs}</span><code>{formula}</code></div><b>{score}%</b></div>)}</div></article>
-    <article className="calculation-card"><span className="section-kicker">Overall weighted-RMS calculation</span><h3>Why the final score is {metrics.overall_drift_percent}%</h3><p className="formula-display">{trace.overall.formula}</p><div className="contribution-grid"><div><span>Semantic contribution</span><strong>{contribution.semantic}</strong></div><div><span>Lexical contribution</span><strong>{contribution.lexical}</strong></div><div><span>Conceptual contribution</span><strong>{contribution.conceptual}</strong></div><div><span>Sum before square root</span><strong>{trace.overall.sum_of_weighted_squares}</strong></div></div>{metrics.component_disagreement && <p className="calculation-warning">The component scores differ substantially. Weighted RMS prevents a strong change signal from being cancelled by a weak one.</p>}</article>
+    <article className="calculation-card"><span className="section-kicker">Overall weighted-RMS calculation</span><h3>Why the final score is {metrics.overall_drift_percent}%</h3><p className="formula-display">{trace.overall.formula}</p><div className="contribution-grid"><div><span>Vector contribution</span><strong>{contribution.semantic}</strong></div><div><span>Lexical contribution</span><strong>{contribution.lexical}</strong></div><div><span>Conceptual contribution</span><strong>{contribution.conceptual}</strong></div><div><span>Sum before square root</span><strong>{trace.overall.sum_of_weighted_squares}</strong></div></div>{metrics.component_disagreement && <p className="calculation-warning">The component scores differ substantially. Weighted RMS prevents a strong change signal from being cancelled by a weak one.</p>}</article>
     <article className="calculation-card"><span className="section-kicker">Connection to the response</span><h3>Detected changes supported by those pages</h3><ul>{answer.key_differences.map((item, index) => <li key={index}>{item}</li>)}</ul><div className="cue-grid"><div><strong>Before legal cues</strong><span>{trace.conceptual.pre_legal_cues.join(", ") || "None detected"}</span><small>Numbers: {trace.conceptual.pre_numbers.join(", ") || "none"}</small></div><div><strong>After legal cues</strong><span>{trace.conceptual.post_legal_cues.join(", ") || "None detected"}</span><small>Numbers: {trace.conceptual.post_numbers.join(", ") || "none"}</small></div></div></article>
     <p className="research-note">These calculations measure retrieved-text movement and evidence alignment. They are not probabilities, legal correctness scores or legal advice.</p>
   </section>;
@@ -249,7 +256,7 @@ function VerificationPanel({ verification }) { return <article className="panel 
 
 function EvidencePanel({ citations, retrieval }) {
   const amendments = retrieval.live_indiacode?.amendments || [];
-  return <article className="panel compact"><span className="section-kicker">Retrieved evidence</span><h3>{citations.length} source anchor{citations.length === 1 ? "" : "s"}</h3>{citations.length ? <div className="citation-list">{citations.map((item) => <a key={item.chunk_id} href={item.source_url || item.official_portal_url} target="_blank" rel="noreferrer"><span>{item.label === "pre" ? "Baseline" : "Revision"} · {item.source_anchor || "Document"}</span><strong>{item.act_name}</strong><small>{item.version} · {item.official_identifier}</small></a>)}</div> : <p className="panel-note">No local citation was available.</p>}{amendments.length > 0 && <div className="live-amendments"><h4>Related India Code amendment records</h4><p>These records show amendment history. They are not treated as reconstructed pre/post text automatically.</p><div className="amendment-links">{amendments.map((item) => <a key={`${item.official_identifier}-${item.target_act}`} href={item.source_url} target="_blank" rel="noreferrer"><strong>{item.title}</strong><small>{item.target_act || "Target Act not stated"}{item.year ? ` · ${item.year}` : ""}</small></a>)}</div></div>}<p className="panel-note">Pair status: {titleCase(retrieval.pair_status)}</p></article>;
+  return <article className="panel compact"><span className="section-kicker">Retrieved evidence</span><h3>{citations.length} source anchor{citations.length === 1 ? "" : "s"}</h3>{citations.length ? <div className="citation-list">{citations.map((item) => <a key={item.chunk_id} href={item.source_url || item.official_portal_url} target="_blank" rel="noreferrer"><span>{item.label === "pre" ? "Amending instruction" : "Act text"} · {item.source_anchor || "Document"}</span><strong>{item.act_name}</strong><small>{item.version} · {item.official_identifier}</small></a>)}</div> : <p className="panel-note">No local citation was available.</p>}{amendments.length > 0 && <div className="live-amendments"><h4>Related India Code amendment records</h4><p>These records show amendment history. They are not treated as reconstructed pre/post text automatically.</p><div className="amendment-links">{amendments.map((item) => <a key={`${item.official_identifier}-${item.target_act}`} href={item.source_url} target="_blank" rel="noreferrer"><strong>{item.title}</strong><small>{item.target_act || "Target Act not stated"}{item.year ? ` · ${item.year}` : ""}</small></a>)}</div></div>}<p className="panel-note">Pair status: {titleCase(retrieval.pair_status)}</p></article>;
 }
 
 function CorpusBrowser({ corpus, status, error }) {
@@ -262,7 +269,7 @@ function Method() { return <section className="page-section"><div className="sec
   ["1", "Classify", "Identify diff analysis, general legal QA or statutory lookup intent."],
   ["2", "Retrieve", "Search deterministic embeddings and lexical signals across indexed legal chunks."],
   ["3", "Pair", "Connect an amending instrument with its target consolidated Act when repository evidence supports it."],
-  ["4", "Compare", "Calculate semantic, lexical and conceptual movement on the retrieved excerpts."],
+  ["4", "Compare", "Calculate vector (feature-hash), lexical and conceptual movement on the retrieved excerpts."],
   ["5", "Generate", "Produce a specific clause view or generic overview using only supplied evidence."],
   ["6", "Verify", "Check coverage, version pairing, citation anchors and response alignment."],
 ].map(([number, title, body]) => <article className="method-card" key={number}><span>{number}</span><h3>{title}</h3><p>{body}</p></article>)}</div><article className="source-guidance"><div><span className="section-kicker">Always verify</span><h3>Local retrieval is not the final legal authority</h3><p>If evidence is missing or incomplete, the assistant still directs the user to India Code for the complete text and further information.</p></div><a href="https://indiacode.gov.in/" target="_blank" rel="noreferrer">Visit India Code ↗</a></article></section>; }

@@ -101,6 +101,45 @@ class ComplianceRiskTests(unittest.TestCase):
         self.assertEqual(self.assess().status, "NOT_APPLICABLE")
         self.assertFalse(self.assess().risk_flag)
 
+    def test_provision_without_an_obligation_model_is_unknown_not_none(self):
+        self.scenario["applicable_provision"] = "synthetic:section:99"
+        result = self.assess()
+        self.assertEqual(result.status, "INSUFFICIENT_EVIDENCE")
+        self.assertIsNone(result.risk_level)
+        self.assertIsNone(result.risk_flag)
+        self.assertTrue(result.escalation_required)
+        self.assertIn("no_supported_obligation_model_for_provision", result.uncertainty)
+
+    def test_out_of_scope_organization_type_is_not_applicable(self):
+        self.scenario["organization_type"] = "individual"
+        result = self.assess()
+        self.assertEqual(result.status, "NOT_APPLICABLE")
+        self.assertFalse(result.risk_flag)
+        self.assertIn("outside this rule's stated scope", " ".join(result.reasoning_trace))
+
+    def test_supported_output_names_version_obligation_evidence_and_trace(self):
+        result = self.assess()
+        self.assertEqual((result.provision_version, result.rule_id), ("synthetic-version-1", "synthetic-deadline-v1"))
+        self.assertEqual(result.obligation, "File by the modelled deadline")
+        self.assertEqual({item["role"] for item in result.evidence}, {"obligation", "temporal"})
+        self.assertTrue(all("source_text" not in item and item["source_sha256"] for item in result.evidence))
+        self.assertTrue(result.reasoning_trace and result.urgency == "IMMEDIATE")
+        self.assertIn("operational_rule_interpretation_not_expert_validated", result.uncertainty)
+        self.assertTrue(result.escalation_required)
+        self.assertEqual(result.legal_validation, "UNVERIFIED")
+
+    def test_section_19_demonstrations_rest_on_stipulated_applicability_not_the_graph(self):
+        from temporal_legal_drift.versioning.consumer import GraphConsumer
+
+        registry = json.loads((ROOT / "data/risk/obligation_registry.v1.json").read_text())
+        consumer = GraphConsumer(ROOT, "v4")
+        for rule in registry["rules"]:
+            self.assertEqual(rule["applicability_status"], "ASSUMED_FOR_DEMONSTRATION")
+            act, _, section = rule["provision"].rpartition(":section:")
+            for reference_date in rule["reference_dates"]:
+                graph = consumer.provision_at(act, section, reference_date)
+                self.assertEqual(graph["status"], "UNRESOLVED")  # not graph-supported law
+
     def test_materiality_does_not_set_risk(self):
         values = []
         for label in (None, "None", "Low", "Medium", "High"):

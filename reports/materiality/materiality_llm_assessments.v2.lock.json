@@ -1,0 +1,12 @@
+{
+  "artifact_sha256": "9091fafc2d4114f0cb9cb1917f7b83c04d0a871c7362236607c03ccbb87ac26d",
+  "assessment_id": "materiality-llm-assessments-v2",
+  "case_count": 50,
+  "failed_count": 13,
+  "insufficient_evidence_count": 0,
+  "is_gold": false,
+  "legal_correctness_claimed": false,
+  "schema_valid_count": 37,
+  "schema_version": "1.0.0",
+  "status": "llm_materiality_assessments_complete_with_review_required"
+}

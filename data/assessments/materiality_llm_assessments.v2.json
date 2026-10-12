@@ -1,0 +1,1271 @@
+{
+  "assessment_id": "materiality-llm-assessments-v2",
+  "case_count": 50,
+  "failed_count": 13,
+  "fragment_source": {
+    "policy": "corrected v2.2 fragments; unresolved cases not assessed",
+    "reassessment_sha256": "c2e6e790eb8c12f9621415097b816e91282e68a23ef53cbaae4d8fa1f20b43d1"
+  },
+  "insufficient_evidence_count": 0,
+  "is_gold": false,
+  "legal_correctness_claimed": false,
+  "legal_validation_status": "unverified",
+  "model": "qwen3:4b",
+  "provider": "ollama_local",
+  "review_required_count": 50,
+  "rows": [
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "and shall have the discretion to treat the right of the respondent to file such statement of defence as having been forfeited",
+          "source_id": "src_0ad4e9c72da39b6e2ffcbafb"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "High",
+      "pair_id": "mat_7cb4c31122dad86e30aa4021",
+      "rationale": "The amendment inserts a substantive right forfeiture discretion, changing a core obligation without procedural parameters.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"and shall have the discretion to treat the right of the respondent to file such statement of defence as having been forfeited\",\n      \"source_id\": \"src_0ad4e9c72da39b6e2ffcbafb\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_7cb4c31122dad86e30aa4021\",\n  \"rationale\": \"The amendment inserts a substantive right forfeiture discretion, changing a core obligation without procedural parameters.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"and shall have the discretion to treat the right of the respondent to file such statement of defence as having been forfeited\",\n      \"source_id\": \"src_0ad4e9c72da39b6e2ffcbafb\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_7cb4c31122dad86e30aa4021\",\n  \"rationale\": \"The amendment inserts a substantive right forfeiture discretion, changing a core obligation without procedural parameters.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "7ab9b05d4f243910c6390f0953761842ecc897cfc0716b0903f8f8378385644a",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "NOT_ASSESSED_FRAGMENT_UNRESOLVED",
+      "citation_integrity": "NOT_ESTABLISHED",
+      "evidence": [],
+      "insufficient_evidence": null,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": null,
+      "pair_id": "mat_e27898c6847505312aa05fec",
+      "rationale": "No schema-valid, source-verified LLM assessment was produced.",
+      "raw_response": null,
+      "raw_response_attempts": [],
+      "raw_response_sha256": null,
+      "uncertainty": "Re-extraction did not yield one source-supported before/after fragment.",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "including communication through electronic means",
+          "source_id": "src_0ad4e9c72da39b6e2ffcbafb"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "High",
+      "pair_id": "mat_1037bf61be63655a13f6f7af",
+      "rationale": "The amendment inserts a phrase clarifying electronic communication as a means of telecommunication, which materially expands the scope of covered communication methods under the law.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"including communication through electronic means\",\n      \"source_id\": \"src_0ad4e9c72da39b6e2ffcbafb\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_1037bf61be63655a13f6f7af\",\n  \"rationale\": \"The amendment inserts a phrase clarifying electronic communication as a means of telecommunication, which materially expands the scope of covered communication methods under the law.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"including communication through electronic means\",\n      \"source_id\": \"src_0ad4e9c72da39b6e2ffcbafb\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_1037bf61be63655a13f6f7af\",\n  \"rationale\": \"The amendment inserts a phrase clarifying electronic communication as a means of telecommunication, which materially expands the scope of covered communication methods under the law.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "36caba39670984fdddf20e10da98a2c47bf8911b876ae85c1c73d1bccea73a50",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "NOT_ASSESSED_FRAGMENT_UNRESOLVED",
+      "citation_integrity": "NOT_ESTABLISHED",
+      "evidence": [],
+      "insufficient_evidence": null,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": null,
+      "pair_id": "mat_5058fcf9b63e3c8345f6d7c8",
+      "rationale": "No schema-valid, source-verified LLM assessment was produced.",
+      "raw_response": null,
+      "raw_response_attempts": [],
+      "raw_response_sha256": null,
+      "uncertainty": "Re-extraction did not yield one source-supported before/after fragment.",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "(2A) The respondent, in support of his case, may also submit a counterclaim or plead a set-off, which shall be adjudicated upon by the arbitral tribunal, if such counterclaim or set-off falls within the scope of the arbitration agreement.",
+          "source_id": "src_0ad4e9c72da39b6e2ffcbafb"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "High",
+      "pair_id": "mat_06d03c5ce4d0d00dc77ebdaa",
+      "rationale": "The amendment adds a new sub-section (2A) that creates a substantive right for respondents to submit counterclaims/set-offs, which must be adjudicated by the arbitral tribunal if within arbitration scope. This materially changes the respondent's obligation to address counterclaims and the tribunal's authority over such matters.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"(2A) The respondent, in support of his case, may also submit a counterclaim or plead a set-off, which shall be adjudicated upon by the arbitral tribunal, if such counterclaim or set-off falls within the scope of the arbitration agreement.\",\n      \"source_id\": \"src_0ad4e9c72da39b6e2ffcbafb\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_06d03c5ce4d0d00dc77ebdaa\",\n  \"rationale\": \"The amendment adds a new sub-section (2A) that creates a substantive right for respondents to submit counterclaims/set-offs, which must be adjudicated by the arbitral tribunal if within arbitration scope. This materially changes the respondent's obligation to address counterclaims and the tribunal's authority over such matters.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"(2A) The respondent, in support of his case, may also submit a counterclaim or plead a set-off, which shall be adjudicated upon by the arbitral tribunal, if such counterclaim or set-off falls within the scope of the arbitration agreement.\",\n      \"source_id\": \"src_0ad4e9c72da39b6e2ffcbafb\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_06d03c5ce4d0d00dc77ebdaa\",\n  \"rationale\": \"The amendment adds a new sub-section (2A) that creates a substantive right for respondents to submit counterclaims/set-offs, which must be adjudicated by the arbitral tribunal if within arbitration scope. This materially changes the respondent's obligation to address counterclaims and the tribunal's authority over such matters.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "e940cc0ee771e971cab099cf04903a4443918197896ff0842a456e804bce1106",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "issued under the common seal of the company",
+          "source_id": "src_0cbccfdb70e8e9f057dbb00e"
+        },
+        {
+          "quote": "issued under the common seal, if any, of the company or signed by two directors or by a director and the Company Secretary, wherever the company has appointed a Company Secretary",
+          "source_id": "src_0cbccfdb70e8e9f057dbb00e"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "High",
+      "pair_id": "mat_fdb2b87808bcb525a732632e",
+      "rationale": "The amendment adds conditional language and alternative signing methods, materially altering the requirement for document authentication.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"issued under the common seal of the company\",\n      \"source_id\": \"src_0cbccfdb70e8e9f057dbb00e\"\n    },\n    {\n      \"quote\": \"issued under the common seal, if any, of the company or signed by two directors or by a director and the Company Secretary, wherever the company has appointed a Company Secretary\",\n      \"source_id\": \"src_0cbccfdb70e8e9f057dbb00e\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_fdb2b87808bcb525a732632e\",\n  \"rationale\": \"The amendment adds conditional language and alternative signing methods, materially altering the requirement for document authentication.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"issued under the common seal of the company\",\n      \"source_id\": \"src_0cbccfdb70e8e9f057dbb00e\"\n    },\n    {\n      \"quote\": \"issued under the common seal, if any, of the company or signed by two directors or by a director and the Company Secretary, wherever the company has appointed a Company Secretary\",\n      \"source_id\": \"src_0cbccfdb70e8e9f057dbb00e\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_fdb2b87808bcb525a732632e\",\n  \"rationale\": \"The amendment adds conditional language and alternative signing methods, materially altering the requirement for document authentication.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "e37192783f71513111e149e1a153d0bfe1e2156aa06b190bfeec307521596547",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "NOT_ASSESSED_FRAGMENT_UNRESOLVED",
+      "citation_integrity": "NOT_ESTABLISHED",
+      "evidence": [],
+      "insufficient_evidence": null,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": null,
+      "pair_id": "mat_390c72d9d6d3e4ca87e8b0d2",
+      "rationale": "No schema-valid, source-verified LLM assessment was produced.",
+      "raw_response": null,
+      "raw_response_attempts": [],
+      "raw_response_sha256": null,
+      "uncertainty": "Re-extraction did not yield one source-supported before/after fragment.",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "INVALID_SCHEMA_OR_EVIDENCE",
+      "citation_integrity": "NOT_ESTABLISHED",
+      "evidence": [],
+      "insufficient_evidence": null,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": null,
+      "pair_id": "mat_9e349bb1642e64225e9503a1",
+      "rationale": "No schema-valid, source-verified LLM assessment was produced.",
+      "raw_response": "{\n  \"allowed_labels\": [\"High\", \"Medium\", \"Low\", \"None\"],\n  \"invalid_output\": \"{\\n  \\\"after_text\\\": \\\"Provided also that\\\",\\n  \\\"amendment_instruction_text\\\": \\\"2. In section 2 of the Companies Act, 2013 (hereinafter referred to as the principal Act),\\\\nin clause (41),––\\\\n(a) for the first proviso, the following provisos shall be substituted, namely:—\\\\n“Provided that where a company or body corporate, which is a holding\\\\ncompany or a subsidiary or associate company of a company incorporated\\\\noutside India and is required to follow a different financial year for consolidation\\\\nof its accounts outside India, the Central Government may, on an application\\\\nmade by that company or body corporate in such form and manner as may be\\\\nprescribed, allow any period as its financial year, whether or not that period is a\\\\nyear:\\\\nProvided further that any application pending before the Tribunal as on\\\\nthe date of commencement of the Companies (Amendment) Act, 2019, shall be\\\\ndisposed of by the Tribunal in accordance with the provisions applicable to it\\\\nbefore such commencement.”;\\\\n(b) in the second proviso, for the words “Provided further that”, the words\\\\n“Provided also that” shall be substituted.\\\",\\n  \\\"amendment_operation\\\": \\\"SUBSTITUTE\\\",\\n  \\\"before_text\\\": \\\"Provided further that\\\",\\n  \\\"output_schema\\\": {\\n    \\\"evidence\\\": [\\n      {\\n        \\\"quote\\\": \\\"verbatim substring of that source text\\\",\\n        \\\"source_id\\\": \\\"exact supplied source id\\\"\\n      }\\n    ],\\n    \\\"insufficient_evidence\\\": \\\"boolean\\\",\\n    \\\"label\\\": \\\"High | Medium | Low | None; null only when insufficient_evidence=true\\\",\\n    \\\"pair_id\\\": \\\"same pair_id\\\",\\n    \\\"rationale\\\": \\\"string explaining how the rubric applies\\\",\\n    \\\"rubric_version\\\": \\\"same rubric version\\\",\\n    \\\"schema_version\\\": \\\"1.0.0\\\",\\n    \\\"uncertainty\\\": \\\"string, empty only if no uncertainty\\\"\\n  },\\n  \\\"pair_id\\\": \\\"mat_9e349bb1642e64225e9503a1\\\",\\n  \\\"proposed_rubric_not_legally_validated\\\": {\\n    \\\"canonical_labels\\\": [\\n      \\\"High\\\",\\n      \\\"Medium\\\",\\n      \\\"Low\\\",\\n      \\\"None\\\"\\n    ],\\n    \\\"decision_protocol\\\": [\\n      \\\"Compare amendment operation with the complete supplied before/after excerpts and source anchors.\\\",\\n      \\\"Separate amendment materiality from temporal applicability and scenario-specific compliance consequence.\\\",\\n      \\\"Cite exact evidence spans from supplied source records for each material claim.\\\",\\n      \\\"If the version, operation, source, context, or legal effect is insufficiently evidenced, abstain rather than guessing.\\\",\\n      \\\"Even a schema-valid, source-grounded machine assessment has workflow status REVIEW_REQUIRED and is not legal gold.\\\"\\n    ],\\n    \\\"dimension_registry_status\\\": \\\"ten_dimension_technical_registry_proposed_phase0_approval_pending\\\",\\n    \\\"dimensions\\\": [\\n      \\\"obligation\\\",\\n      \\\"right\\\",\\n      \\\"prohibition\\\",\\n      \\\"scope\\\",\\n      \\\"definition\\\",\\n      \\\"threshold\\\",\\n      \\\"time\\\",\\n      \\\"liability\\\",\\n      \\\"procedure\\\",\\n      \\\"exemption\\\"\\n    ],\\n    \\\"legal_validation_status\\\": \\\"unverified_no_qualified_legal_reviewer\\\",\\n    \\\"levels\\\": [\\n      {\\n        \\\"boundary_rule\\\": \\\"A change to a deadline or amount is not automatically High; use High only where evidence supports a fundamental substantive effect beyond a procedural parameter.\\\",\\n        \\\"definition\\\": \\\"The evidenced amendment changes a substantive right, obligation, prohibition, legal scope or eligibility, liability, penalty, controlling exception, or major compliance requirement.\\\",\\n        \\\"exclude_when\\\": [\\n          \\\"Only wording length or edit distance changes\\\",\\n          \\\"Only one scenario outcome changes without amendment-level significance evidence\\\",\\n          \\\"The source evidence does not establish what changed\\\"\\n        ],\\n        \\\"include_when\\\": [\\n          \\\"A duty is created, removed, or substantively changed\\\",\\n          \\\"Conduct or persons covered by the law materially changes\\\",\\n          \\\"A prohibition, liability, penalty, or controlling exception materially changes\\\",\\n          \\\"The amendment substantively changes a major compliance requirement\\\"\\n        ],\\n        \\\"label\\\": \\\"High\\\"\\n      },\\n      {\\n        \\\"boundary_rule\\\": \\\"A numeric change must be interpreted in context; a 10-to-15-day change is ordinarily Medium only when the cited text confirms the period is operative.\\\",\\n        \\\"definition\\\": \\\"The evidenced amendment changes an operative compliance procedure, filing/reporting method, deadline, threshold, evidentiary requirement, or implementation condition while retaining the basic allocation of rights and duties.\\\",\\n        \\\"exclude_when\\\": [\\n          \\\"The change fundamentally reallocates rights/duties or changes material liability (High)\\\",\\n          \\\"Only presentation changes with no operative effect (None)\\\",\\n          \\\"No evidence establishes the parameter or process change\\\"\\n        ],\\n        \\\"include_when\\\": [\\n          \\\"A required procedure or filing process changes\\\",\\n          \\\"An operative deadline or threshold changes with practical compliance significance\\\",\\n          \\\"Conditions or evidence required to satisfy an existing duty change\\\"\\n        ],\\n        \\\"label\\\": \\\"Medium\\\"\\n      },\\n      {\\n        \\\"boundary_rule\\\": \\\"Do not infer Low merely from short text or small edit distance.\\\",\\n        \\\"definition\\\": \\\"The evidenced amendment makes a narrow clarification, terminology update, cross-reference repair, or limited administrative refinement with no demonstrated material change to the core obligation or compliance outcome.\\\",\\n        \\\"exclude_when\\\": [\\n          \\\"A substantive legal effect or practical procedure changes (High/Medium)\\\",\\n          \\\"The evidence is too incomplete to distinguish a limited clarification from a material change\\\"\\n        ],\\n        \\\"include_when\\\": [\\n          \\\"A narrow clarification preserves the operative rule\\\",\\n          \\\"A cross-reference is repaired while preserving the target\\\",\\n          \\\"Administrative wording is refined without substantive effect\\\"\\n        ],\\n        \\\"label\\\": \\\"Low\\\"\\n      },\\n      {\\n        \\\"boundary_rule\\\": \\\"A model must not infer None from missing evidence; use INSUFFICIENT_EVIDENCE when legal-effect absence cannot be supported.\\\",\\n        \\\"definition\\\": \\\"The complete, sufficiently grounded comparison supports only a non-operative editorial/presentation change and supports no legal or compliance effect.\\\",\\n        \\\"exclude_when\\\": [\\n          \\\"Any supported change to legal scope, obligation, procedure, threshold, deadline, liability, or effect\\\"\\n        ],\\n        \\\"include_when\\\": [\\n          \\\"Punctuation, spelling, layout, or mechanical renumbering changes while legal meaning and references are demonstrably preserved\\\"\\n        ],\\n        \\\"label\\\": \\\"None\\\"\\n      }\\n    ],\\n    \\\"prohibited_inferences\\\": [\\n      \\\"Citation existence proves legal correctness\\\",\\n      \\\"The machine consensus label is adjudicated ground truth\\\",\\n      \\\"Majority voting or LLM agreement replaces legal validation\\\",\\n      \\\"Materiality alone determines a scenario's compliance consequence\\\"\\n    ],\\n    \\\"rubric_id\\\": \\\"proposed-materiality-rubric-v1\\\",\\n    \\\"schema_version\\\": \\\"1.0.0\\\",\\n    \"  }",
+      "raw_response_attempts": [
+        "{\n  \"after_text\": \"Provided also that\",\n  \"amendment_instruction_text\": \"2. In section 2 of the Companies Act, 2013 (hereinafter referred to as the principal Act),\\nin clause (41),––\\n(a) for the first proviso, the following provisos shall be substituted, namely:—\\n“Provided that where a company or body corporate, which is a holding\\ncompany or a subsidiary or associate company of a company incorporated\\noutside India and is required to follow a different financial year for consolidation\\nof its accounts outside India, the Central Government may, on an application\\nmade by that company or body corporate in such form and manner as may be\\nprescribed, allow any period as its financial year, whether or not that period is a\\nyear:\\nProvided further that any application pending before the Tribunal as on\\nthe date of commencement of the Companies (Amendment) Act, 2019, shall be\\ndisposed of by the Tribunal in accordance with the provisions applicable to it\\nbefore such commencement.”;\\n(b) in the second proviso, for the words “Provided further that”, the words\\n“Provided also that” shall be substituted.\",\n  \"amendment_operation\": \"SUBSTITUTE\",\n  \"before_text\": \"Provided further that\",\n  \"output_schema\": {\n    \"evidence\": [\n      {\n        \"quote\": \"verbatim substring of that source text\",\n        \"source_id\": \"exact supplied source id\"\n      }\n    ],\n    \"insufficient_evidence\": \"boolean\",\n    \"label\": \"High | Medium | Low | None; null only when insufficient_evidence=true\",\n    \"pair_id\": \"same pair_id\",\n    \"rationale\": \"string explaining how the rubric applies\",\n    \"rubric_version\": \"same rubric version\",\n    \"schema_version\": \"1.0.0\",\n    \"uncertainty\": \"string, empty only if no uncertainty\"\n  },\n  \"pair_id\": \"mat_9e349bb1642e64225e9503a1\",\n  \"proposed_rubric_not_legally_validated\": {\n    \"canonical_labels\": [\n      \"High\",\n      \"Medium\",\n      \"Low\",\n      \"None\"\n    ],\n    \"decision_protocol\": [\n      \"Compare amendment operation with the complete supplied before/after excerpts and source anchors.\",\n      \"Separate amendment materiality from temporal applicability and scenario-specific compliance consequence.\",\n      \"Cite exact evidence spans from supplied source records for each material claim.\",\n      \"If the version, operation, source, context, or legal effect is insufficiently evidenced, abstain rather than guessing.\",\n      \"Even a schema-valid, source-grounded machine assessment has workflow status REVIEW_REQUIRED and is not legal gold.\"\n    ],\n    \"dimension_registry_status\": \"ten_dimension_technical_registry_proposed_phase0_approval_pending\",\n    \"dimensions\": [\n      \"obligation\",\n      \"right\",\n      \"prohibition\",\n      \"scope\",\n      \"definition\",\n      \"threshold\",\n      \"time\",\n      \"liability\",\n      \"procedure\",\n      \"exemption\"\n    ],\n    \"legal_validation_status\": \"unverified_no_qualified_legal_reviewer\",\n    \"levels\": [\n      {\n        \"boundary_rule\": \"A change to a deadline or amount is not automatically High; use High only where evidence supports a fundamental substantive effect beyond a procedural parameter.\",\n        \"definition\": \"The evidenced amendment changes a substantive right, obligation, prohibition, legal scope or eligibility, liability, penalty, controlling exception, or major compliance requirement.\",\n        \"exclude_when\": [\n          \"Only wording length or edit distance changes\",\n          \"Only one scenario outcome changes without amendment-level significance evidence\",\n          \"The source evidence does not establish what changed\"\n        ],\n        \"include_when\": [\n          \"A duty is created, removed, or substantively changed\",\n          \"Conduct or persons covered by the law materially changes\",\n          \"A prohibition, liability, penalty, or controlling exception materially changes\",\n          \"The amendment substantively changes a major compliance requirement\"\n        ],\n        \"label\": \"High\"\n      },\n      {\n        \"boundary_rule\": \"A numeric change must be interpreted in context; a 10-to-15-day change is ordinarily Medium only when the cited text confirms the period is operative.\",\n        \"definition\": \"The evidenced amendment changes an operative compliance procedure, filing/reporting method, deadline, threshold, evidentiary requirement, or implementation condition while retaining the basic allocation of rights and duties.\",\n        \"exclude_when\": [\n          \"The change fundamentally reallocates rights/duties or changes material liability (High)\",\n          \"Only presentation changes with no operative effect (None)\",\n          \"No evidence establishes the parameter or process change\"\n        ],\n        \"include_when\": [\n          \"A required procedure or filing process changes\",\n          \"An operative deadline or threshold changes with practical compliance significance\",\n          \"Conditions or evidence required to satisfy an existing duty change\"\n        ],\n        \"label\": \"Medium\"\n      },\n      {\n        \"boundary_rule\": \"Do not infer Low merely from short text or small edit distance.\",\n        \"definition\": \"The evidenced amendment makes a narrow clarification, terminology update, cross-reference repair, or limited administrative refinement with no demonstrated material change to the core obligation or compliance outcome.\",\n        \"exclude_when\": [\n          \"A substantive legal effect or practical procedure changes (High/Medium)\",\n          \"The evidence is too incomplete to distinguish a limited clarification from a material change\"\n        ],\n        \"include_when\": [\n          \"A narrow clarification preserves the operative rule\",\n          \"A cross-reference is repaired while preserving the target\",\n          \"Administrative wording is refined without substantive effect\"\n        ],\n        \"label\": \"Low\"\n      },\n      {\n        \"boundary_rule\": \"A model must not infer None from missing evidence; use INSUFFICIENT_EVIDENCE when legal-effect absence cannot be supported.\",\n        \"definition\": \"The complete, sufficiently grounded comparison supports only a non-operative editorial/presentation change and supports no legal or compliance effect.\",\n        \"exclude_when\": [\n          \"Any supported change to legal scope, obligation, procedure, threshold, deadline, liability, or effect\"\n        ],\n        \"include_when\": [\n          \"Punctuation, spelling, layout, or mechanical renumbering changes while legal meaning and references are demonstrably preserved\"\n        ],\n        \"label\": \"None\"\n      }\n    ],\n    \"prohibited_inferences\": [\n      \"Citation existence proves legal correctness\",\n      \"The machine consensus label is adjudicated ground truth\",\n      \"Majority voting or LLM agreement replaces legal validation\",\n      \"Materiality alone determines a scenario's compliance consequence\"\n    ],\n    \"rubric_id\": \"proposed-materiality-rubric-v1\",\n    \"schema_version\": \"1.0.0\",\n    \"scope\": \"Amendment-level significance of an evidenced legal-text change; not a scenario-specific compliance outcome.\",\n    \"status\": \"proposed_operational_research_rubric_not_legally_validated\",\n    \"version\": \"1.0.0\"\n  },\n  \"sources\": [\n    {\n      \"locator\": {\n        \"line\": 5,\n        \"page\": 2\n      },\n      \"role\": \"amendment_instruction\",\n      \"source_id\": \"src_73ff6b08cbbe209ab709e642\",\n      \"source_sha256\": \"6c7e9d557747412f22e15e8dbd4242d8bf8a0d869771bfeccdf50163e94f670e\",\n      \"source_url\": \"https://indiacode.gov.in/items/a9595d79-e43a-4a18-943d-8ddf9fc9ac5f\",\n      \"text\": \"2. In section 2 of the Companies Act, 2013 (hereinafter referred to as the principal Act),\\nin clause (41),––\\n(a) for the first proviso, the following provisos shall be substituted, namely:—\\n“Provided that where a company or body corporate, which is a holding\\ncompany or a subsidiary or associate company of a company incorporated\\noutside India and is required to follow a different financial year for consolidation\\nof its accounts outside India, the Central Government may, on an application\\nmade by that company or body corporate in such form and manner as may be\\nprescribed, allow any period as its financial year, whether or not that period is a\\nyear:\\nProvided further that any application pending before the Tribunal as on\\nthe date of commencement of the Companies (Amendment) Act, 2019, shall be\\ndisposed of by the Tribunal in accordance with the provisions applicable to it\\nbefore such commencement.”;\\n(b) in the second proviso, for the words “Provided further that”, the words\\n“Provided also that” shall be substituted.\"\n    },\n    {\n      \"locator\": {\n        \"version_id\": \"pver_b66cd33b3f2077d11971946b\"\n      },\n      \"role\": \"before_version_text\",\n      \"source_id\": \"src_73ff6b08cbbe209ab709e642\",\n      \"source_sha256\": \"6c7e9d557747412f22e15e8dbd4242d8bf8a0d869771bfeccdf50163e94f670e\",\n      \"source_url\": \"https://indiacode.gov.in/items/a9595d79-e43a-4a18-943d-8ddf9fc9ac5f\",\n      \"text\": \"Provided further that\"\n    },\n    {\n      \"locator\": {\n        \"version_id\": \"pver_42e0765c87e1a94620953196\"\n      },\n      \"role\": \"after_version_text\",\n      \"source_id\": \"src_73ff6b08cbbe209ab709e642\",\n      \"source_sha256\": \"6c7e9d557747412f22e15e8dbd4242d8bf8a0d869771bfeccdf50163e94f670e\",\n      \"source_url\": \"https://indiacode.gov.in/items/a9595d79-e43a-4a18-943d-8ddf9fc9ac5f\",\n      \"text\": \"Provided also that\"\n    }\n  ]\n}",
+        "{\n  \"allowed_labels\": [\"High\", \"Medium\", \"Low\", \"None\"],\n  \"invalid_output\": \"{\\n  \\\"after_text\\\": \\\"Provided also that\\\",\\n  \\\"amendment_instruction_text\\\": \\\"2. In section 2 of the Companies Act, 2013 (hereinafter referred to as the principal Act),\\\\nin clause (41),––\\\\n(a) for the first proviso, the following provisos shall be substituted, namely:—\\\\n“Provided that where a company or body corporate, which is a holding\\\\ncompany or a subsidiary or associate company of a company incorporated\\\\noutside India and is required to follow a different financial year for consolidation\\\\nof its accounts outside India, the Central Government may, on an application\\\\nmade by that company or body corporate in such form and manner as may be\\\\nprescribed, allow any period as its financial year, whether or not that period is a\\\\nyear:\\\\nProvided further that any application pending before the Tribunal as on\\\\nthe date of commencement of the Companies (Amendment) Act, 2019, shall be\\\\ndisposed of by the Tribunal in accordance with the provisions applicable to it\\\\nbefore such commencement.”;\\\\n(b) in the second proviso, for the words “Provided further that”, the words\\\\n“Provided also that” shall be substituted.\\\",\\n  \\\"amendment_operation\\\": \\\"SUBSTITUTE\\\",\\n  \\\"before_text\\\": \\\"Provided further that\\\",\\n  \\\"output_schema\\\": {\\n    \\\"evidence\\\": [\\n      {\\n        \\\"quote\\\": \\\"verbatim substring of that source text\\\",\\n        \\\"source_id\\\": \\\"exact supplied source id\\\"\\n      }\\n    ],\\n    \\\"insufficient_evidence\\\": \\\"boolean\\\",\\n    \\\"label\\\": \\\"High | Medium | Low | None; null only when insufficient_evidence=true\\\",\\n    \\\"pair_id\\\": \\\"same pair_id\\\",\\n    \\\"rationale\\\": \\\"string explaining how the rubric applies\\\",\\n    \\\"rubric_version\\\": \\\"same rubric version\\\",\\n    \\\"schema_version\\\": \\\"1.0.0\\\",\\n    \\\"uncertainty\\\": \\\"string, empty only if no uncertainty\\\"\\n  },\\n  \\\"pair_id\\\": \\\"mat_9e349bb1642e64225e9503a1\\\",\\n  \\\"proposed_rubric_not_legally_validated\\\": {\\n    \\\"canonical_labels\\\": [\\n      \\\"High\\\",\\n      \\\"Medium\\\",\\n      \\\"Low\\\",\\n      \\\"None\\\"\\n    ],\\n    \\\"decision_protocol\\\": [\\n      \\\"Compare amendment operation with the complete supplied before/after excerpts and source anchors.\\\",\\n      \\\"Separate amendment materiality from temporal applicability and scenario-specific compliance consequence.\\\",\\n      \\\"Cite exact evidence spans from supplied source records for each material claim.\\\",\\n      \\\"If the version, operation, source, context, or legal effect is insufficiently evidenced, abstain rather than guessing.\\\",\\n      \\\"Even a schema-valid, source-grounded machine assessment has workflow status REVIEW_REQUIRED and is not legal gold.\\\"\\n    ],\\n    \\\"dimension_registry_status\\\": \\\"ten_dimension_technical_registry_proposed_phase0_approval_pending\\\",\\n    \\\"dimensions\\\": [\\n      \\\"obligation\\\",\\n      \\\"right\\\",\\n      \\\"prohibition\\\",\\n      \\\"scope\\\",\\n      \\\"definition\\\",\\n      \\\"threshold\\\",\\n      \\\"time\\\",\\n      \\\"liability\\\",\\n      \\\"procedure\\\",\\n      \\\"exemption\\\"\\n    ],\\n    \\\"legal_validation_status\\\": \\\"unverified_no_qualified_legal_reviewer\\\",\\n    \\\"levels\\\": [\\n      {\\n        \\\"boundary_rule\\\": \\\"A change to a deadline or amount is not automatically High; use High only where evidence supports a fundamental substantive effect beyond a procedural parameter.\\\",\\n        \\\"definition\\\": \\\"The evidenced amendment changes a substantive right, obligation, prohibition, legal scope or eligibility, liability, penalty, controlling exception, or major compliance requirement.\\\",\\n        \\\"exclude_when\\\": [\\n          \\\"Only wording length or edit distance changes\\\",\\n          \\\"Only one scenario outcome changes without amendment-level significance evidence\\\",\\n          \\\"The source evidence does not establish what changed\\\"\\n        ],\\n        \\\"include_when\\\": [\\n          \\\"A duty is created, removed, or substantively changed\\\",\\n          \\\"Conduct or persons covered by the law materially changes\\\",\\n          \\\"A prohibition, liability, penalty, or controlling exception materially changes\\\",\\n          \\\"The amendment substantively changes a major compliance requirement\\\"\\n        ],\\n        \\\"label\\\": \\\"High\\\"\\n      },\\n      {\\n        \\\"boundary_rule\\\": \\\"A numeric change must be interpreted in context; a 10-to-15-day change is ordinarily Medium only when the cited text confirms the period is operative.\\\",\\n        \\\"definition\\\": \\\"The evidenced amendment changes an operative compliance procedure, filing/reporting method, deadline, threshold, evidentiary requirement, or implementation condition while retaining the basic allocation of rights and duties.\\\",\\n        \\\"exclude_when\\\": [\\n          \\\"The change fundamentally reallocates rights/duties or changes material liability (High)\\\",\\n          \\\"Only presentation changes with no operative effect (None)\\\",\\n          \\\"No evidence establishes the parameter or process change\\\"\\n        ],\\n        \\\"include_when\\\": [\\n          \\\"A required procedure or filing process changes\\\",\\n          \\\"An operative deadline or threshold changes with practical compliance significance\\\",\\n          \\\"Conditions or evidence required to satisfy an existing duty change\\\"\\n        ],\\n        \\\"label\\\": \\\"Medium\\\"\\n      },\\n      {\\n        \\\"boundary_rule\\\": \\\"Do not infer Low merely from short text or small edit distance.\\\",\\n        \\\"definition\\\": \\\"The evidenced amendment makes a narrow clarification, terminology update, cross-reference repair, or limited administrative refinement with no demonstrated material change to the core obligation or compliance outcome.\\\",\\n        \\\"exclude_when\\\": [\\n          \\\"A substantive legal effect or practical procedure changes (High/Medium)\\\",\\n          \\\"The evidence is too incomplete to distinguish a limited clarification from a material change\\\"\\n        ],\\n        \\\"include_when\\\": [\\n          \\\"A narrow clarification preserves the operative rule\\\",\\n          \\\"A cross-reference is repaired while preserving the target\\\",\\n          \\\"Administrative wording is refined without substantive effect\\\"\\n        ],\\n        \\\"label\\\": \\\"Low\\\"\\n      },\\n      {\\n        \\\"boundary_rule\\\": \\\"A model must not infer None from missing evidence; use INSUFFICIENT_EVIDENCE when legal-effect absence cannot be supported.\\\",\\n        \\\"definition\\\": \\\"The complete, sufficiently grounded comparison supports only a non-operative editorial/presentation change and supports no legal or compliance effect.\\\",\\n        \\\"exclude_when\\\": [\\n          \\\"Any supported change to legal scope, obligation, procedure, threshold, deadline, liability, or effect\\\"\\n        ],\\n        \\\"include_when\\\": [\\n          \\\"Punctuation, spelling, layout, or mechanical renumbering changes while legal meaning and references are demonstrably preserved\\\"\\n        ],\\n        \\\"label\\\": \\\"None\\\"\\n      }\\n    ],\\n    \\\"prohibited_inferences\\\": [\\n      \\\"Citation existence proves legal correctness\\\",\\n      \\\"The machine consensus label is adjudicated ground truth\\\",\\n      \\\"Majority voting or LLM agreement replaces legal validation\\\",\\n      \\\"Materiality alone determines a scenario's compliance consequence\\\"\\n    ],\\n    \\\"rubric_id\\\": \\\"proposed-materiality-rubric-v1\\\",\\n    \\\"schema_version\\\": \\\"1.0.0\\\",\\n    \"  }"
+      ],
+      "raw_response_sha256": "e29be65e3e8db190b3ce0489c62770e01bb28a066f89211099c5ba05414146d3",
+      "uncertainty": "Output fields do not exactly match the assessment schema",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "Provided further that the arbitral tribunal shall, as far as possible, hold oral hearings for the presentation of evidence or for oral argument on day-to-day basis, and not grant any adjournments unless sufficient cause is made out, and may impose costs including exemplary costs on the party seeking adjournment without any sufficient cause.",
+          "source_id": "src_0ad4e9c72da39b6e2ffcbafb"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "High",
+      "pair_id": "mat_a1406890a695e5217ea3311d",
+      "rationale": "The amendment adds a proviso restricting adjournments to cases with sufficient cause and imposing exemplary costs on the party seeking adjournment, which materially changes the tribunal's procedural obligations and liability.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"Provided further that the arbitral tribunal shall, as far as possible, hold oral hearings for the presentation of evidence or for oral argument on day-to-day basis, and not grant any adjournments unless sufficient cause is made out, and may impose costs including exemplary costs on the party seeking adjournment without any sufficient cause.\",\n      \"source_id\": \"src_0ad4e9c72da39b6e2ffcbafb\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_a1406890a695e5217ea3311d\",\n  \"rationale\": \"The amendment adds a proviso restricting adjournments to cases with sufficient cause and imposing exemplary costs on the party seeking adjournment, which materially changes the tribunal's procedural obligations and liability.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"Provided further that the arbitral tribunal shall, as far as possible, hold oral hearings for the presentation of evidence or for oral argument on day-to-day basis, and not grant any adjournments unless sufficient cause is made out, and may impose costs including exemplary costs on the party seeking adjournment without any sufficient cause.\",\n      \"source_id\": \"src_0ad4e9c72da39b6e2ffcbafb\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_a1406890a695e5217ea3311d\",\n  \"rationale\": \"The amendment adds a proviso restricting adjournments to cases with sufficient cause and imposing exemplary costs on the party seeking adjournment, which materially changes the tribunal's procedural obligations and liability.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "e51c02102bc82d861a1d0af512d1b5dfc1141f9aad82c64f3d8380420075c3b3",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "clause (c)",
+          "source_id": "src_294c0d2fedc5374a906e0e92"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "Low",
+      "pair_id": "mat_f6b73bb3602ae415caa163a1",
+      "rationale": "The amendment substitutes 'clause (c)' with 'clause (a)' in marginal heading, a narrow terminology update without substantive legal effect.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"clause (c)\",\n      \"source_id\": \"src_294c0d2fedc5374a906e0e92\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"Low\",\n  \"pair_id\": \"mat_f6b73bb3602ae415caa163a1\",\n  \"rationale\": \"The amendment substitutes 'clause (c)' with 'clause (a)' in marginal heading, a narrow terminology update without substantive legal effect.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"clause (c)\",\n      \"source_id\": \"src_294c0d2fedc5374a906e0e92\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"Low\",\n  \"pair_id\": \"mat_f6b73bb3602ae415caa163a1\",\n  \"rationale\": \"The amendment substitutes 'clause (c)' with 'clause (a)' in marginal heading, a narrow terminology update without substantive legal effect.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "47aad29eee223ec4ec99ed46bc02df6c7e9e2a26f084209c909d5bca105b12e0",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "NOT_ASSESSED_FRAGMENT_UNRESOLVED",
+      "citation_integrity": "NOT_ESTABLISHED",
+      "evidence": [],
+      "insufficient_evidence": null,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": null,
+      "pair_id": "mat_99dd581f7b342e821361f4fa",
+      "rationale": "No schema-valid, source-verified LLM assessment was produced.",
+      "raw_response": null,
+      "raw_response_attempts": [],
+      "raw_response_sha256": null,
+      "uncertainty": "Re-extraction did not yield one source-supported before/after fragment.",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "section 140 and section 163A",
+          "source_id": "src_95267bd1a6e6edd43848c03f"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "High",
+      "pair_id": "mat_1d047b61abe3fdec714bf1fc",
+      "rationale": "The amendment substitutes a specific section reference (section 164) for an older reference (section 140 and section 163A), changing the legal scope of applicability without altering procedural parameters.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"section 140 and section 163A\",\n      \"source_id\": \"src_95267bd1a6e6edd43848c03f\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_1d047b61abe3fdec714bf1fc\",\n  \"rationale\": \"The amendment substitutes a specific section reference (section 164) for an older reference (section 140 and section 163A), changing the legal scope of applicability without altering procedural parameters.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"section 140 and section 163A\",\n      \"source_id\": \"src_95267bd1a6e6edd43848c03f\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_1d047b61abe3fdec714bf1fc\",\n  \"rationale\": \"The amendment substitutes a specific section reference (section 164) for an older reference (section 140 and section 163A), changing the legal scope of applicability without altering procedural parameters.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "0eda060616f22ff294046ab026f92dfde231cc3321424de3690e3aa86b845295",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "(1A) Notwithstanding anything contained in sub-section (1), if any difficulty arises in giving effect to the provisions of this Act as amended by the Disaster Management (Amendment) Act, 2025, the Central Government may, by order published in the Official Gazette, make such provisions not inconsistent with the provisions of this Act, as may appear to it to be necessary or expedient for removing the difficulty: Provided that no such order shall be made under this sub-section after the expiry of a period of three years from the date of commencement of the Disaster Management (Amendment) Act, 2025.",
+          "source_id": "src_a234a3f5c6ac749e32f6f075"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "High",
+      "pair_id": "mat_8712bef392cb1761c552d536",
+      "rationale": "The amendment inserts a new sub-section (1A) that creates a three-year time limit for Central Government orders to resolve implementation difficulties under the Disaster Management (Amendment) Act, 2025. This materially changes the temporal scope and obligation to act within a defined period, meeting the High label criteria for substantive effect on compliance.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"(1A) Notwithstanding anything contained in sub-section (1), if any difficulty arises in giving effect to the provisions of this Act as amended by the Disaster Management (Amendment) Act, 2025, the Central Government may, by order published in the Official Gazette, make such provisions not inconsistent with the provisions of this Act, as may appear to it to be necessary or expedient for removing the difficulty: Provided that no such order shall be made under this sub-section after the expiry of a period of three years from the date of commencement of the Disaster Management (Amendment) Act, 2025.\",\n      \"source_id\": \"src_a234a3f5c6ac749e32f6f075\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_8712bef392cb1761c552d536\",\n  \"rationale\": \"The amendment inserts a new sub-section (1A) that creates a three-year time limit for Central Government orders to resolve implementation difficulties under the Disaster Management (Amendment) Act, 2025. This materially changes the temporal scope and obligation to act within a defined period, meeting the High label criteria for substantive effect on compliance.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"(1A) Notwithstanding anything contained in sub-section (1), if any difficulty arises in giving effect to the provisions of this Act as amended by the Disaster Management (Amendment) Act, 2025, the Central Government may, by order published in the Official Gazette, make such provisions not inconsistent with the provisions of this Act, as may appear to it to be necessary or expedient for removing the difficulty: Provided that no such order shall be made under this sub-section after the expiry of a period of three years from the date of commencement of the Disaster Management (Amendment) Act, 2025.\",\n      \"source_id\": \"src_a234a3f5c6ac749e32f6f075\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_8712bef392cb1761c552d536\",\n  \"rationale\": \"The amendment inserts a new sub-section (1A) that creates a three-year time limit for Central Government orders to resolve implementation difficulties under the Disaster Management (Amendment) Act, 2025. This materially changes the temporal scope and obligation to act within a defined period, meeting the High label criteria for substantive effect on compliance.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "0549064bdebc9e45e5a6d8204e9206c217b681acc5f2ac382e51255f03c15a6e",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "NOT_ASSESSED_FRAGMENT_UNRESOLVED",
+      "citation_integrity": "NOT_ESTABLISHED",
+      "evidence": [],
+      "insufficient_evidence": null,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": null,
+      "pair_id": "mat_5bb9130dc72b18a8dd0463a5",
+      "rationale": "No schema-valid, source-verified LLM assessment was produced.",
+      "raw_response": null,
+      "raw_response_attempts": [],
+      "raw_response_sha256": null,
+      "uncertainty": "Re-extraction did not yield one source-supported before/after fragment.",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "or a pre-packaged insolvency resolution process",
+          "source_id": "src_53c55ae5c2470ca158488216"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "High",
+      "pair_id": "mat_9c042001b4e5dc62cae919ba",
+      "rationale": "The amendment inserts a new category of corporate debtor eligible for insolvency resolution, expanding the scope of creditors covered under section 11(a) by adding pre-packaged resolution processes. This materially changes the legal scope and eligibility criteria for creditors.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"or a pre-packaged insolvency resolution process\",\n      \"source_id\": \"src_53c55ae5c2470ca158488216\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_9c042001b4e5dc62cae919ba\",\n  \"rationale\": \"The amendment inserts a new category of corporate debtor eligible for insolvency resolution, expanding the scope of creditors covered under section 11(a) by adding pre-packaged resolution processes. This materially changes the legal scope and eligibility criteria for creditors.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"or a pre-packaged insolvency resolution process\",\n      \"source_id\": \"src_53c55ae5c2470ca158488216\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_9c042001b4e5dc62cae919ba\",\n  \"rationale\": \"The amendment inserts a new category of corporate debtor eligible for insolvency resolution, expanding the scope of creditors covered under section 11(a) by adding pre-packaged resolution processes. This materially changes the legal scope and eligibility criteria for creditors.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "e915d0de0891f1f4e40af5aa38b52aa6e53a5406b828de8ff7aeed4460a6cefa",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "a registering authority",
+          "source_id": "src_95267bd1a6e6edd43848c03f"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "High",
+      "pair_id": "mat_0773a4d10672e49537242824",
+      "rationale": "The amendment changes from 'a registering authority' to 'any registering authority in the State', which materially expands the scope of who qualifies as a registering authority by adding geographic limitation and changing from singular to plural.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"a registering authority\",\n      \"source_id\": \"src_95267bd1a6e6edd43848c03f\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_0773a4d10672e49537242824\",\n  \"rationale\": \"The amendment changes from 'a registering authority' to 'any registering authority in the State', which materially expands the scope of who qualifies as a registering authority by adding geographic limitation and changing from singular to plural.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"a registering authority\",\n      \"source_id\": \"src_95267bd1a6e6edd43848c03f\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_0773a4d10672e49537242824\",\n  \"rationale\": \"The amendment changes from 'a registering authority' to 'any registering authority in the State', which materially expands the scope of who qualifies as a registering authority by adding geographic limitation and changing from singular to plural.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "9c9515b7b349e8303550b41d92a0c8aaab9b9adb7698e1a3ea3f273e325e4c6d",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "(4) A police officer or other person authorised in this behalf by the State Government shall, if he has reason to believe that the driver of a motor vehicle has committed an offence under any of sections 183, 184, 185, 189, 190, 194C, 194D, or 194E, seize the driving licence held by such driver and forward it to the licensing authority for disqualification or revocation proceedings under section 19: Provided that the person seizing the licence shall give to the person surrendering the licence a temporary acknowledgement therefor, but such acknowledgement shall not authorise the holder to drive until the licence has been returned to him.",
+          "source_id": "src_95267bd1a6e6edd43848c03f"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "High",
+      "pair_id": "mat_d1acc86ed566f3a993e1c036",
+      "rationale": "The amendment inserts a new sub-section (4) into section 206, creating a duty for police officers to seize licenses and provide temporary acknowledgements under specific offenses, which materially changes the procedure for license revocation without altering the scope of offenses covered.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"(4) A police officer or other person authorised in this behalf by the State Government shall, if he has reason to believe that the driver of a motor vehicle has committed an offence under any of sections 183, 184, 185, 189, 190, 194C, 194D, or 194E, seize the driving licence held by such driver and forward it to the licensing authority for disqualification or revocation proceedings under section 19: Provided that the person seizing the licence shall give to the person surrendering the licence a temporary acknowledgement therefor, but such acknowledgement shall not authorise the holder to drive until the licence has been returned to him.\",\n      \"source_id\": \"src_95267bd1a6e6edd43848c03f\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_d1acc86ed566f3a993e1c036\",\n  \"rationale\": \"The amendment inserts a new sub-section (4) into section 206, creating a duty for police officers to seize licenses and provide temporary acknowledgements under specific offenses, which materially changes the procedure for license revocation without altering the scope of offenses covered.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"(4) A police officer or other person authorised in this behalf by the State Government shall, if he has reason to believe that the driver of a motor vehicle has committed an offence under any of sections 183, 184, 185, 189, 190, 194C, 194D, or 194E, seize the driving licence held by such driver and forward it to the licensing authority for disqualification or revocation proceedings under section 19: Provided that the person seizing the licence shall give to the person surrendering the licence a temporary acknowledgement therefor, but such acknowledgement shall not authorise the holder to drive until the licence has been returned to him.\",\n      \"source_id\": \"src_95267bd1a6e6edd43848c03f\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_d1acc86ed566f3a993e1c036\",\n  \"rationale\": \"The amendment inserts a new sub-section (4) into section 206, creating a duty for police officers to seize licenses and provide temporary acknowledgements under specific offenses, which materially changes the procedure for license revocation without altering the scope of offenses covered.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "2fa1e0313056ba99eed037092ac7e7c9b2a0adb95c606fe8733b121c6a58c6b4",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "NOT_ASSESSED_FRAGMENT_UNRESOLVED",
+      "citation_integrity": "NOT_ESTABLISHED",
+      "evidence": [],
+      "insufficient_evidence": null,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": null,
+      "pair_id": "mat_859f1a5bc4b6b3208d6a6994",
+      "rationale": "No schema-valid, source-verified LLM assessment was produced.",
+      "raw_response": null,
+      "raw_response_attempts": [],
+      "raw_response_sha256": null,
+      "uncertainty": "Re-extraction did not yield one source-supported before/after fragment.",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "(vii) self-help groups.",
+          "source_id": "src_95267bd1a6e6edd43848c03f"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "Low",
+      "pair_id": "mat_9563a4579cd8c87fb2ebf8dd",
+      "rationale": "The amendment inserts a new sub-clause (vii) without altering existing obligations or procedures, matching the Low definition of narrow clarification.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"(vii) self-help groups.\",\n      \"source_id\": \"src_95267bd1a6e6edd43848c03f\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"Low\",\n  \"pair_id\": \"mat_9563a4579cd8c87fb2ebf8dd\",\n  \"rationale\": \"The amendment inserts a new sub-clause (vii) without altering existing obligations or procedures, matching the Low definition of narrow clarification.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"(vii) self-help groups.\",\n      \"source_id\": \"src_95267bd1a6e6edd43848c03f\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"Low\",\n  \"pair_id\": \"mat_9563a4579cd8c87fb2ebf8dd\",\n  \"rationale\": \"The amendment inserts a new sub-clause (vii) without altering existing obligations or procedures, matching the Low definition of narrow clarification.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "c8fd6c7f483c1fb6989b85719130956aa900b4f5b00a4a8dc9cca8cd5a7e8deb",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "deemed to have been included in Schedule V",
+          "source_id": "src_0530e08f12edbc47c3ca7a48"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "High",
+      "pair_id": "mat_61bdc9abc22419bc811f4af8",
+      "rationale": "The amendment substitutes a phrase indicating exclusion from Schedule II with a phrase specifying conditions for exclusion, altering the legal scope of applicability.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"deemed to have been included in Schedule V\",\n      \"source_id\": \"src_0530e08f12edbc47c3ca7a48\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_61bdc9abc22419bc811f4af8\",\n  \"rationale\": \"The amendment substitutes a phrase indicating exclusion from Schedule II with a phrase specifying conditions for exclusion, altering the legal scope of applicability.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"deemed to have been included in Schedule V\",\n      \"source_id\": \"src_0530e08f12edbc47c3ca7a48\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_61bdc9abc22419bc811f4af8\",\n  \"rationale\": \"The amendment substitutes a phrase indicating exclusion from Schedule II with a phrase specifying conditions for exclusion, altering the legal scope of applicability.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "ae7ba8cccb311625e384847f8607b10c183a97a462bb92dc55397a5f0a9cea03",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "or licence issued under any scheme",
+          "source_id": "src_95267bd1a6e6edd43848c03f"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "High",
+      "pair_id": "mat_0e781f2b5e6feb33660fe843",
+      "rationale": "The amendment inserts a substantive right expansion by adding a new category of license types under section 94, which materially changes compliance scope without altering procedural mechanics.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"or licence issued under any scheme\",\n      \"source_id\": \"src_95267bd1a6e6edd43848c03f\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_0e781f2b5e6feb33660fe843\",\n  \"rationale\": \"The amendment inserts a substantive right expansion by adding a new category of license types under section 94, which materially changes compliance scope without altering procedural mechanics.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"or licence issued under any scheme\",\n      \"source_id\": \"src_95267bd1a6e6edd43848c03f\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_0e781f2b5e6feb33660fe843\",\n  \"rationale\": \"The amendment inserts a substantive right expansion by adding a new category of license types under section 94, which materially changes compliance scope without altering procedural mechanics.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "d3494e8b199cbda02d9df0b0780fa71a2f607e42a9e309c4a7d5060246a47786",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "In section 39 of the principal Act, for the words “three years”, the words\n“ten years” shall be substituted.",
+          "source_id": "src_c81daaf704eb5583145bd290"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "High",
+      "pair_id": "mat_d7c70e6e86904b596cdb7209",
+      "rationale": "The amendment changes the deadline from three years to ten years in section 39, which is a substantive change to the obligation's time frame per the rubric's High definition requiring fundamental effect beyond procedural parameters.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"In section 39 of the principal Act, for the words “three years”, the words\\n“ten years” shall be substituted.\",\n      \"source_id\": \"src_c81daaf704eb5583145bd290\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_d7c70e6e86904b596cdb7209\",\n  \"rationale\": \"The amendment changes the deadline from three years to ten years in section 39, which is a substantive change to the obligation's time frame per the rubric's High definition requiring fundamental effect beyond procedural parameters.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"In section 39 of the principal Act, for the words “three years”, the words\\n“ten years” shall be substituted.\",\n      \"source_id\": \"src_c81daaf704eb5583145bd290\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_d7c70e6e86904b596cdb7209\",\n  \"rationale\": \"The amendment changes the deadline from three years to ten years in section 39, which is a substantive change to the obligation's time frame per the rubric's High definition requiring fundamental effect beyond procedural parameters.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "433361a0d1b34b62b8a956d1ae23327c5215209431f79b4c027f25d6c79febc3",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "(4) The Central Government may, having regard to the public safety, convenience, protection of the environment and the objects of this Act, make rules prescribing the manner of recycling of motor vehicles and parts thereof which have exceeded their life.",
+          "source_id": "src_95267bd1a6e6edd43848c03f"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "High",
+      "pair_id": "mat_3a027c7f4cc70391e6c0a97c",
+      "rationale": "The amendment inserts a new sub-section (4) creating a duty for the Central Government to make recycling rules for end-of-life motor vehicles, which materially changes the scope of regulatory obligation and compliance requirements under the Act.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"(4) The Central Government may, having regard to the public safety, convenience, protection of the environment and the objects of this Act, make rules prescribing the manner of recycling of motor vehicles and parts thereof which have exceeded their life.\",\n      \"source_id\": \"src_95267bd1a6e6edd43848c03f\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_3a027c7f4cc70391e6c0a97c\",\n  \"rationale\": \"The amendment inserts a new sub-section (4) creating a duty for the Central Government to make recycling rules for end-of-life motor vehicles, which materially changes the scope of regulatory obligation and compliance requirements under the Act.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"(4) The Central Government may, having regard to the public safety, convenience, protection of the environment and the objects of this Act, make rules prescribing the manner of recycling of motor vehicles and parts thereof which have exceeded their life.\",\n      \"source_id\": \"src_95267bd1a6e6edd43848c03f\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_3a027c7f4cc70391e6c0a97c\",\n  \"rationale\": \"The amendment inserts a new sub-section (4) creating a duty for the Central Government to make recycling rules for end-of-life motor vehicles, which materially changes the scope of regulatory obligation and compliance requirements under the Act.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "dfa27d2e03f5899ff24e0fa58d9ca3202deff844cf4611effa3f863f765466b0",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "clause (c) or clause (d)",
+          "source_id": "src_294c0d2fedc5374a906e0e92"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "High",
+      "pair_id": "mat_590ac03da167238d7d338824",
+      "rationale": "The amendment substitutes a specific clause reference (a) for a broader reference (c or d), changing the legal scope of applicability from two clauses to one, which materially alters compliance requirements.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"clause (c) or clause (d)\",\n      \"source_id\": \"src_294c0d2fedc5374a906e0e92\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_590ac03da167238d7d338824\",\n  \"rationale\": \"The amendment substitutes a specific clause reference (a) for a broader reference (c or d), changing the legal scope of applicability from two clauses to one, which materially alters compliance requirements.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"clause (c) or clause (d)\",\n      \"source_id\": \"src_294c0d2fedc5374a906e0e92\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_590ac03da167238d7d338824\",\n  \"rationale\": \"The amendment substitutes a specific clause reference (a) for a broader reference (c or d), changing the legal scope of applicability from two clauses to one, which materially alters compliance requirements.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "b9ec937f59408e3fa3298868720c37248459f27322409dbc358aa3ceb1a29e5c",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "(xxxiia) framing of schemes under sub-section (3) of section 67;",
+          "source_id": "src_95267bd1a6e6edd43848c03f"
+        },
+        {
+          "quote": "(xxxiib) the promotion of effective competition, passenger convenience and safety, competitive fares and prevention of overcrowding;",
+          "source_id": "src_95267bd1a6e6edd43848c03f"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "High",
+      "pair_id": "mat_fcb1a39752da9c08f09a3504",
+      "rationale": "The amendment inserts two new clauses that define substantive obligations (framing schemes, promoting competition/safety) under section 96(2), creating new duties without procedural or temporal scope changes.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"(xxxiia) framing of schemes under sub-section (3) of section 67;\",\n      \"source_id\": \"src_95267bd1a6e6edd43848c03f\"\n    },\n    {\n      \"quote\": \"(xxxiib) the promotion of effective competition, passenger convenience and safety, competitive fares and prevention of overcrowding;\",\n      \"source_id\": \"src_95267bd1a6e6edd43848c03f\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_fcb1a39752da9c08f09a3504\",\n  \"rationale\": \"The amendment inserts two new clauses that define substantive obligations (framing schemes, promoting competition/safety) under section 96(2), creating new duties without procedural or temporal scope changes.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"(xxxiia) framing of schemes under sub-section (3) of section 67;\",\n      \"source_id\": \"src_95267bd1a6e6edd43848c03f\"\n    },\n    {\n      \"quote\": \"(xxxiib) the promotion of effective competition, passenger convenience and safety, competitive fares and prevention of overcrowding;\",\n      \"source_id\": \"src_95267bd1a6e6edd43848c03f\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_fcb1a39752da9c08f09a3504\",\n  \"rationale\": \"The amendment inserts two new clauses that define substantive obligations (framing schemes, promoting competition/safety) under section 96(2), creating new duties without procedural or temporal scope changes.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "4cb734679cf2207a9814eb081a5239a777134953d74859159fd284a952de0e65",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "ten thousand",
+          "source_id": "src_95267bd1a6e6edd43848c03f"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "High",
+      "pair_id": "mat_f110320fba1c8f219054c648",
+      "rationale": "The amendment substitutes 'one lakh' for 'ten thousand' in a legal text, changing a numeric threshold from 10,000 to 100,000 (1 lakh). The rubric's High label applies as this materially alters the obligation's scope and threshold without being a minor clarification.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"ten thousand\",\n      \"source_id\": \"src_95267bd1a6e6edd43848c03f\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_f110320fba1c8f219054c648\",\n  \"rationale\": \"The amendment substitutes 'one lakh' for 'ten thousand' in a legal text, changing a numeric threshold from 10,000 to 100,000 (1 lakh). The rubric's High label applies as this materially alters the obligation's scope and threshold without being a minor clarification.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"ten thousand\",\n      \"source_id\": \"src_95267bd1a6e6edd43848c03f\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_f110320fba1c8f219054c648\",\n  \"rationale\": \"The amendment substitutes 'one lakh' for 'ten thousand' in a legal text, changing a numeric threshold from 10,000 to 100,000 (1 lakh). The rubric's High label applies as this materially alters the obligation's scope and threshold without being a minor clarification.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "05c3cf5a1c96ce1fc588a3fd07953e59f96cf7274616f38f100eeb8359e03a80",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "Provided further that the corporate insolvency resolution process shall mandatorily be completed within a period of three hundred and thirty days from the insolvency commencement date, including any extension of the period of corporate insolvency resolution process granted under this section and the time taken in legal proceedings in relation to such resolution process of the corporate debtor: Provided also that where the insolvency resolution process of a corporate debtor is pending and has not been completed within the period referred to in the second proviso, such resolution process shall be completed within a period of ninety days from the date of commencement of the Insolvency and Bankruptcy Code (Amendment) Act, 2019.",
+          "source_id": "src_618aa45bac01b76de19ff611"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "High",
+      "pair_id": "mat_0e12529c90eed9079b2ebc59",
+      "rationale": "The amendment inserts two new provisos that establish mandatory 330-day and 90-day deadlines for corporate insolvency resolution process completion, materially altering the timeline and compliance obligations under the Insolvency and Bankruptcy Code.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"Provided further that the corporate insolvency resolution process shall mandatorily be completed within a period of three hundred and thirty days from the insolvency commencement date, including any extension of the period of corporate insolvency resolution process granted under this section and the time taken in legal proceedings in relation to such resolution process of the corporate debtor: Provided also that where the insolvency resolution process of a corporate debtor is pending and has not been completed within the period referred to in the second proviso, such resolution process shall be completed within a period of ninety days from the date of commencement of the Insolvency and Bankruptcy Code (Amendment) Act, 2019.\",\n      \"source_id\": \"src_618aa45bac01b76de19ff611\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_0e12529c90eed9079b2ebc59\",\n  \"rationale\": \"The amendment inserts two new provisos that establish mandatory 330-day and 90-day deadlines for corporate insolvency resolution process completion, materially altering the timeline and compliance obligations under the Insolvency and Bankruptcy Code.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"Provided further that the corporate insolvency resolution process shall mandatorily be completed within a period of three hundred and thirty days from the insolvency commencement date, including any extension of the period of corporate insolvency resolution process granted under this section and the time taken in legal proceedings in relation to such resolution process of the corporate debtor: Provided also that where the insolvency resolution process of a corporate debtor is pending and has not been completed within the period referred to in the second proviso, such resolution process shall be completed within a period of ninety days from the date of commencement of the Insolvency and Bankruptcy Code (Amendment) Act, 2019.\",\n      \"source_id\": \"src_618aa45bac01b76de19ff611\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_0e12529c90eed9079b2ebc59\",\n  \"rationale\": \"The amendment inserts two new provisos that establish mandatory 330-day and 90-day deadlines for corporate insolvency resolution process completion, materially altering the timeline and compliance obligations under the Insolvency and Bankruptcy Code.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "9fb457f65e407ea53a29528ec57fb9fb2d14ae693f57a743192d406e97302d0b",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "clause (e)",
+          "source_id": "src_294c0d2fedc5374a906e0e92"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "High",
+      "pair_id": "mat_3729e9c6bbccb8fa4bb132b1",
+      "rationale": "The amendment substitutes 'clause (e)' with 'clause (b)', changing the substantive obligation reference from a later clause to an earlier one, which materially alters compliance scope and liability.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"clause (e)\",\n      \"source_id\": \"src_294c0d2fedc5374a906e0e92\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_3729e9c6bbccb8fa4bb132b1\",\n  \"rationale\": \"The amendment substitutes 'clause (e)' with 'clause (b)', changing the substantive obligation reference from a later clause to an earlier one, which materially alters compliance scope and liability.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"clause (e)\",\n      \"source_id\": \"src_294c0d2fedc5374a906e0e92\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_3729e9c6bbccb8fa4bb132b1\",\n  \"rationale\": \"The amendment substitutes 'clause (e)' with 'clause (b)', changing the substantive obligation reference from a later clause to an earlier one, which materially alters compliance scope and liability.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "9fc485fd007b5f0103b975ff4f35ab940297552e8dabe346c82e18a3de9b6e63",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "or scheduled specimen",
+          "source_id": "src_0530e08f12edbc47c3ca7a48"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "High",
+      "pair_id": "mat_95f88055beb515b1226fe96d",
+      "rationale": "The amendment inserts 'or scheduled specimen' into clause (a) and (c) of section 50(1), expanding the scope of covered specimens from derivative products to include scheduled specimens, which materially alters the legal scope of the duty.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"or scheduled specimen\",\n      \"source_id\": \"src_0530e08f12edbc47c3ca7a48\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_95f88055beb515b1226fe96d\",\n  \"rationale\": \"The amendment inserts 'or scheduled specimen' into clause (a) and (c) of section 50(1), expanding the scope of covered specimens from derivative products to include scheduled specimens, which materially alters the legal scope of the duty.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"or scheduled specimen\",\n      \"source_id\": \"src_0530e08f12edbc47c3ca7a48\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_95f88055beb515b1226fe96d\",\n  \"rationale\": \"The amendment inserts 'or scheduled specimen' into clause (a) and (c) of section 50(1), expanding the scope of covered specimens from derivative products to include scheduled specimens, which materially alters the legal scope of the duty.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "32cae1de359be8b059a038be9d37440ec9a03503397bb769579f1fca2dd08839",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "NOT_ASSESSED_FRAGMENT_UNRESOLVED",
+      "citation_integrity": "NOT_ESTABLISHED",
+      "evidence": [],
+      "insufficient_evidence": null,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": null,
+      "pair_id": "mat_123a9e691b0291bf0eb5fec8",
+      "rationale": "No schema-valid, source-verified LLM assessment was produced.",
+      "raw_response": null,
+      "raw_response_attempts": [],
+      "raw_response_sha256": null,
+      "uncertainty": "Re-extraction did not yield one source-supported before/after fragment.",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "INVALID_SCHEMA_OR_EVIDENCE",
+      "citation_integrity": "NOT_ESTABLISHED",
+      "evidence": [],
+      "insufficient_evidence": null,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": null,
+      "pair_id": "mat_e20dcc1843f5295412f0547a",
+      "rationale": "No schema-valid, source-verified LLM assessment was produced.",
+      "raw_response": "{\n  \"allowed_labels\": [\"High\", \"Medium\", \"Low\", \"None\"],\n  \"invalid_output\": \"{\\n  \\\"after_text\\\": \\\"or sub-section (1A)\\\",\\n  \\\"amendment_instruction_text\\\": \\\"35. In section 243 of the principal Act,––\\\\n(a) after sub-section (1), the following sub-sections shall be inserted, namely:—\\\\n“(1A) The person who is not a fit and proper person pursuant to\\\\nsub-section (4A) of section 242 shall not hold the office of a director or any\\\\nother office connected with the conduct and management of the affairs of any\\\\ncompany for a period of five years from the date of the said decision:\\\\nProvided that the Central Government may, with the leave of the Tribunal,\\\\npermit such person to hold any such office before the expiry of the said period\\\\nof five years.\\\\n(1B) Notwithstanding anything contained in any other provision of this\\\\nAct, or any other law for the time being in force, or any contract, memorandum\\\\nor articles, on the removal of a person from the office of a director or any other\\\\noffice connected with the conduct and management of the affairs of the company,\\\\nthat person shall not be entitled to, or be paid, any compensation for the loss or\\\\ntermination of office.”;\\\\n(b) in sub-section (2), after the word, brackets and figure “sub-section (1)”, the\\\\nwords, brackets, figure and letter “or sub-section (1A)” shall be inserted.\\\",\\n  \\\"amendment_operation\\\": \\\"INSERT\\\",\\n  \\\"before_text\\\": \\\"\\\",\\n  \\\"output_schema\\\": {\\n    \\\"evidence\\\": [\\n      {\\n        \\\"quote\\\": \\\"verbatim substring of that source text\\\",\\n        \\\"source_id\\\": \\\"exact supplied source id\\\"\\n      }\\n    ],\\n    \\\"insufficient_evidence\\\": \\\"boolean\\\",\\n    \\\"label\\\": \\\"High | Medium | Low | None; null only when insufficient_evidence=true\\\",\\n    \\\"pair_id\\\": \\\"same pair_id\\\",\\n    \\\"rationale\\\": \\\"string explaining how the rubric applies\\\",\\n    \\\"rubric_version\\\": \\\"same rubric version\\\",\\n    \\\"schema_version\\\": \\\"1.0.0\\\",\\n    \\\"uncertainty\\\": \\\"string, empty only if no uncertainty\\\"\\n  },\\n  \\\"pair_id\\\": \\\"mat_e20dcc1843f5295412f0547a\\\",\\n  \\\"proposed_rubric_not_legally_validated\\\": {\\n    \\\"canonical_labels\\\": [\\n      \\\"High\\\",\\n      \\\"Medium\\\",\\n      \\\"Low\\\",\\n      \\\"None\\\"\\n    ],\\n    \\\"decision_protocol\\\": [\\n      \\\"Compare amendment operation with the complete supplied before/after excerpts and source anchors.\\\",\\n      \\\"Separate amendment materiality from temporal applicability and scenario-specific compliance consequence.\\\",\\n      \\\"Cite exact evidence spans from supplied source records for each material claim.\\\",\\n      \\\"If the version, operation, source, context, or legal effect is insufficiently evidenced, abstain rather than guessing.\\\",\\n      \\\"Even a schema-valid, source-grounded machine assessment has workflow status REVIEW_REQUIRED and is not legal gold.\\\"\\n    ],\\n    \\\"dimension_registry_status\\\": \\\"ten_dimension_technical_registry_proposed_phase0_approval_pending\\\",\\n    \\\"dimensions\\\": [\\n      \\\"obligation\\\",\\n      \\\"right\\\",\\n      \\\"prohibition\\\",\\n      \\\"scope\\\",\\n      \\\"definition\\\",\\n      \\\"threshold\\\",\\n      \\\"time\\\",\\n      \\\"liability\\\",\\n      \\\"procedure\\\",\\n      \\\"exemption\\\"\\n    ],\\n    \\\"legal_validation_status\\\": \\\"unverified_no_qualified_legal_reviewer\\\",\\n    \\\"levels\\\": [\\n      {\\n        \\\"boundary_rule\\\": \\\"A change to a deadline or amount is not automatically High; use High only where evidence supports a fundamental substantive effect beyond a procedural parameter.\\\",\\n        \\\"definition\\\": \\\"The evidenced amendment changes a substantive right, obligation, prohibition, legal scope or eligibility, liability, penalty, controlling exception, or major compliance requirement.\\\",\\n        \\\"exclude_when\\\": [\\n          \\\"Only wording length or edit distance changes\\\",\\n          \\\"Only one scenario outcome changes without amendment-level significance evidence\\\",\\n          \\\"The source evidence does not establish what changed\\\"\\n        ],\\n        \\\"include_when\\\": [\\n          \\\"A duty is created, removed, or substantively changed\\\",\\n          \\\"Conduct or persons covered by the law materially changes\\\",\\n          \\\"A prohibition, liability, penalty, or controlling exception materially changes\\\",\\n          \\\"The amendment substantively changes a major compliance requirement\\\"\\n        ],\\n        \\\"label\\\": \\\"High\\\"\\n      },\\n      {\\n        \\\"boundary_rule\\\": \\\"A numeric change must be interpreted in context; a 10-to-15-day change is ordinarily Medium only when the cited text confirms the period is operative.\\\",\\n        \\\"definition\\\": \\\"The evidenced amendment changes an operative compliance procedure, filing/reporting method, deadline, threshold, evidentiary requirement, or implementation condition while retaining the basic allocation of rights and duties.\\\",\\n        \\\"exclude_when\\\": [\\n          \\\"The change fundamentally reallocates rights/duties or changes material liability (High)\\\",\\n          \\\"Only presentation changes with no operative effect (None)\\\",\\n          \\\"No evidence establishes the parameter or process change\\\"\\n        ],\\n        \\\"include_when\\\": [\\n          \\\"A required procedure or filing process changes\\\",\\n          \\\"An operative deadline or threshold changes with practical compliance significance\\\",\\n          \\\"Conditions or evidence required to satisfy an existing duty change\\\"\\n        ],\\n        \\\"label\\\": \\\"Medium\\\"\\n      },\\n      {\\n        \\\"boundary_rule\\\": \\\"Do not infer Low merely from short text or small edit distance.\\\",\\n        \\\"definition\\\": \\\"The evidenced amendment makes a narrow clarification, terminology update, cross-reference repair, or limited administrative refinement with no demonstrated material change to the core obligation or compliance outcome.\\\",\\n        \\\"exclude_when\\\": [\\n          \\\"A substantive legal effect or practical procedure changes (High/Medium)\\\",\\n          \\\"The evidence is too incomplete to distinguish a limited clarification from a material change\\\"\\n        ],\\n        \\\"include_when\\\": [\\n          \\\"A narrow clarification preserves the operative rule\\\",\\n          \\\"A cross-reference is repaired while preserving the target\\\",\\n          \\\"Administrative wording is refined without substantive effect\\\"\\n        ],\\n        \\\"label\\\": \\\"Low\\\"\\n      },\\n      {\\n        \\\"boundary_rule\\\": \\\"A model must not infer None from missing evidence; use INSUFFICIENT_EVIDENCE when legal-effect absence cannot be supported.\\\",\\n        \\\"definition\\\": \\\"The complete, sufficiently grounded comparison supports only a non-operative editorial/presentation change and supports no legal or compliance effect.\\\",\\n        \\\"exclude_when\\\": [\\n          \\\"Any supported change to legal scope, obligation, procedure, threshold, deadline, liability, or effect\\\",\\n          \\\"Only a normalized-text match is available without contextual source support\\\"\\n        ],\\n        \\\"include_when\\\": [\\n          \\\"Punctuation, spelling, layout, or mechanical renumbering changes while legal meaning and references are demonstrably preserved\\\"\\n        ],\\n        \\\"label\\\": \\\"None\\\"\\n      }\\n    ],\\n    \\\"prohibited_inferences\\\": [\\n      \\\"Citation existence proves legal correctness\\\",\\n      \\\"The machine consensus label is adjudicated ground truth\\\",\\n      \\\"Majority voting or LLM agreement replaces legal validation\\\",\\n      \\\"Materiality alone determines a scenario's compliance consequence\\\"\\n    ],\\n    \\\"rubric_id\\\": \\\"proposed-materiality-rubric-v1\\\",\\n    \"  }",
+      "raw_response_attempts": [
+        "{\n  \"after_text\": \"or sub-section (1A)\",\n  \"amendment_instruction_text\": \"35. In section 243 of the principal Act,––\\n(a) after sub-section (1), the following sub-sections shall be inserted, namely:—\\n“(1A) The person who is not a fit and proper person pursuant to\\nsub-section (4A) of section 242 shall not hold the office of a director or any\\nother office connected with the conduct and management of the affairs of any\\ncompany for a period of five years from the date of the said decision:\\nProvided that the Central Government may, with the leave of the Tribunal,\\npermit such person to hold any such office before the expiry of the said period\\nof five years.\\n(1B) Notwithstanding anything contained in any other provision of this\\nAct, or any other law for the time being in force, or any contract, memorandum\\nor articles, on the removal of a person from the office of a director or any other\\noffice connected with the conduct and management of the affairs of the company,\\nthat person shall not be entitled to, or be paid, any compensation for the loss or\\ntermination of office.”;\\n(b) in sub-section (2), after the word, brackets and figure “sub-section (1)”, the\\nwords, brackets, figure and letter “or sub-section (1A)” shall be inserted.\",\n  \"amendment_operation\": \"INSERT\",\n  \"before_text\": \"\",\n  \"output_schema\": {\n    \"evidence\": [\n      {\n        \"quote\": \"verbatim substring of that source text\",\n        \"source_id\": \"exact supplied source id\"\n      }\n    ],\n    \"insufficient_evidence\": \"boolean\",\n    \"label\": \"High | Medium | Low | None; null only when insufficient_evidence=true\",\n    \"pair_id\": \"same pair_id\",\n    \"rationale\": \"string explaining how the rubric applies\",\n    \"rubric_version\": \"same rubric version\",\n    \"schema_version\": \"1.0.0\",\n    \"uncertainty\": \"string, empty only if no uncertainty\"\n  },\n  \"pair_id\": \"mat_e20dcc1843f5295412f0547a\",\n  \"proposed_rubric_not_legally_validated\": {\n    \"canonical_labels\": [\n      \"High\",\n      \"Medium\",\n      \"Low\",\n      \"None\"\n    ],\n    \"decision_protocol\": [\n      \"Compare amendment operation with the complete supplied before/after excerpts and source anchors.\",\n      \"Separate amendment materiality from temporal applicability and scenario-specific compliance consequence.\",\n      \"Cite exact evidence spans from supplied source records for each material claim.\",\n      \"If the version, operation, source, context, or legal effect is insufficiently evidenced, abstain rather than guessing.\",\n      \"Even a schema-valid, source-grounded machine assessment has workflow status REVIEW_REQUIRED and is not legal gold.\"\n    ],\n    \"dimension_registry_status\": \"ten_dimension_technical_registry_proposed_phase0_approval_pending\",\n    \"dimensions\": [\n      \"obligation\",\n      \"right\",\n      \"prohibition\",\n      \"scope\",\n      \"definition\",\n      \"threshold\",\n      \"time\",\n      \"liability\",\n      \"procedure\",\n      \"exemption\"\n    ],\n    \"legal_validation_status\": \"unverified_no_qualified_legal_reviewer\",\n    \"levels\": [\n      {\n        \"boundary_rule\": \"A change to a deadline or amount is not automatically High; use High only where evidence supports a fundamental substantive effect beyond a procedural parameter.\",\n        \"definition\": \"The evidenced amendment changes a substantive right, obligation, prohibition, legal scope or eligibility, liability, penalty, controlling exception, or major compliance requirement.\",\n        \"exclude_when\": [\n          \"Only wording length or edit distance changes\",\n          \"Only one scenario outcome changes without amendment-level significance evidence\",\n          \"The source evidence does not establish what changed\"\n        ],\n        \"include_when\": [\n          \"A duty is created, removed, or substantively changed\",\n          \"Conduct or persons covered by the law materially changes\",\n          \"A prohibition, liability, penalty, or controlling exception materially changes\",\n          \"The amendment substantively changes a major compliance requirement\"\n        ],\n        \"label\": \"High\"\n      },\n      {\n        \"boundary_rule\": \"A numeric change must be interpreted in context; a 10-to-15-day change is ordinarily Medium only when the cited text confirms the period is operative.\",\n        \"definition\": \"The evidenced amendment changes an operative compliance procedure, filing/reporting method, deadline, threshold, evidentiary requirement, or implementation condition while retaining the basic allocation of rights and duties.\",\n        \"exclude_when\": [\n          \"The change fundamentally reallocates rights/duties or changes material liability (High)\",\n          \"Only presentation changes with no operative effect (None)\",\n          \"No evidence establishes the parameter or process change\"\n        ],\n        \"include_when\": [\n          \"A required procedure or filing process changes\",\n          \"An operative deadline or threshold changes with practical compliance significance\",\n          \"Conditions or evidence required to satisfy an existing duty change\"\n        ],\n        \"label\": \"Medium\"\n      },\n      {\n        \"boundary_rule\": \"Do not infer Low merely from short text or small edit distance.\",\n        \"definition\": \"The evidenced amendment makes a narrow clarification, terminology update, cross-reference repair, or limited administrative refinement with no demonstrated material change to the core obligation or compliance outcome.\",\n        \"exclude_when\": [\n          \"A substantive legal effect or practical procedure changes (High/Medium)\",\n          \"The evidence is too incomplete to distinguish a limited clarification from a material change\"\n        ],\n        \"include_when\": [\n          \"A narrow clarification preserves the operative rule\",\n          \"A cross-reference is repaired while preserving the target\",\n          \"Administrative wording is refined without substantive effect\"\n        ],\n        \"label\": \"Low\"\n      },\n      {\n        \"boundary_rule\": \"A model must not infer None from missing evidence; use INSUFFICIENT_EVIDENCE when legal-effect absence cannot be supported.\",\n        \"definition\": \"The complete, sufficiently grounded comparison supports only a non-operative editorial/presentation change and supports no legal or compliance effect.\",\n        \"exclude_when\": [\n          \"Any supported change to legal scope, obligation, procedure, threshold, deadline, liability, or effect\",\n          \"Only a normalized-text match is available without contextual source support\"\n        ],\n        \"include_when\": [\n          \"Punctuation, spelling, layout, or mechanical renumbering changes while legal meaning and references are demonstrably preserved\"\n        ],\n        \"label\": \"None\"\n      }\n    ],\n    \"prohibited_inferences\": [\n      \"Citation existence proves legal correctness\",\n      \"The machine consensus label is adjudicated ground truth\",\n      \"Majority voting or LLM agreement replaces legal validation\",\n      \"Materiality alone determines a scenario's compliance consequence\"\n    ],\n    \"rubric_id\": \"proposed-materiality-rubric-v1\",\n    \"schema_version\": \"1.0.0\",\n    \"scope\": \"Amendment-level significance of an evidenced legal-text change; not a scenario-specific compliance outcome.\",\n    \"status\": \"proposed_operational_research_rubric_not_legally_validated\",\n    \"version\": \"1.0.0\"\n  },\n  \"sources\": [\n    {\n      \"locator\": {\n        \"line\": 1,\n        \"page\": 10\n      },\n      \"role\": \"amendment_instruction\",\n      \"source_id\": \"src_73ff6b08cbbe209ab709e642\",\n      \"source_sha256\": \"6c7e9d557747412f22e15e8dbd4242d8bf8a0d869771bfeccdf50163e94f670e\",\n      \"source_url\": \"https://indiacode.gov.in/items/a9595d79-e43a-4a18-943d-8ddf9fc9ac5f\",\n      \"text\": \"35. In section 243 of the principal Act,––\\n(a) after sub-section (1), the following sub-sections shall be inserted, namely:—\\n“(1A) The person who is not a fit and proper person pursuant to\\nsub-section (4A) of section 242 shall not hold the office of a director or any\\nother office connected with the conduct and management of the affairs of any\\ncompany for a period of five years from the date of the said decision:\\nProvided that the Central Government may, with the leave of the Tribunal,\\npermit such person to hold any such office before the expiry of the said period\\nof five years.\\n(1B) Notwithstanding anything contained in any other provision of this\\nAct, or any other law for the time being in force, or any contract, memorandum\\nor articles, on the removal of a person from the office of a director or any other\\noffice connected with the conduct and management of the affairs of the company,\\nthat person shall not be entitled to, or be paid, any compensation for the loss or\\ntermination of office.”;\\n(b) in sub-section (2), after the word, brackets and figure “sub-section (1)”, the\\nwords, brackets, figure and letter “or sub-section (1A)” shall be inserted.\"\n    },\n    {\n      \"locator\": {\n        \"version_id\": \"pver_ee2763b34b7fa2cc49985c39\"\n      },\n      \"role\": \"after_version_text\",\n      \"source_id\": \"src_73ff6b08cbbe209ab709e642\",\n      \"source_sha256\": \"6c7e9d557747412f22e15e8dbd4242d8bf8a0d869771bfeccdf50163e94f670e\",\n      \"source_url\": \"https://indiacode.gov.in/items/a9595d79-e43a-4a18-943d-8ddf9fc9ac5f\",\n      \"text\": \"or sub-section (1A)\"\n  }\n]\n}",
+        "{\n  \"allowed_labels\": [\"High\", \"Medium\", \"Low\", \"None\"],\n  \"invalid_output\": \"{\\n  \\\"after_text\\\": \\\"or sub-section (1A)\\\",\\n  \\\"amendment_instruction_text\\\": \\\"35. In section 243 of the principal Act,––\\\\n(a) after sub-section (1), the following sub-sections shall be inserted, namely:—\\\\n“(1A) The person who is not a fit and proper person pursuant to\\\\nsub-section (4A) of section 242 shall not hold the office of a director or any\\\\nother office connected with the conduct and management of the affairs of any\\\\ncompany for a period of five years from the date of the said decision:\\\\nProvided that the Central Government may, with the leave of the Tribunal,\\\\npermit such person to hold any such office before the expiry of the said period\\\\nof five years.\\\\n(1B) Notwithstanding anything contained in any other provision of this\\\\nAct, or any other law for the time being in force, or any contract, memorandum\\\\nor articles, on the removal of a person from the office of a director or any other\\\\noffice connected with the conduct and management of the affairs of the company,\\\\nthat person shall not be entitled to, or be paid, any compensation for the loss or\\\\ntermination of office.”;\\\\n(b) in sub-section (2), after the word, brackets and figure “sub-section (1)”, the\\\\nwords, brackets, figure and letter “or sub-section (1A)” shall be inserted.\\\",\\n  \\\"amendment_operation\\\": \\\"INSERT\\\",\\n  \\\"before_text\\\": \\\"\\\",\\n  \\\"output_schema\\\": {\\n    \\\"evidence\\\": [\\n      {\\n        \\\"quote\\\": \\\"verbatim substring of that source text\\\",\\n        \\\"source_id\\\": \\\"exact supplied source id\\\"\\n      }\\n    ],\\n    \\\"insufficient_evidence\\\": \\\"boolean\\\",\\n    \\\"label\\\": \\\"High | Medium | Low | None; null only when insufficient_evidence=true\\\",\\n    \\\"pair_id\\\": \\\"same pair_id\\\",\\n    \\\"rationale\\\": \\\"string explaining how the rubric applies\\\",\\n    \\\"rubric_version\\\": \\\"same rubric version\\\",\\n    \\\"schema_version\\\": \\\"1.0.0\\\",\\n    \\\"uncertainty\\\": \\\"string, empty only if no uncertainty\\\"\\n  },\\n  \\\"pair_id\\\": \\\"mat_e20dcc1843f5295412f0547a\\\",\\n  \\\"proposed_rubric_not_legally_validated\\\": {\\n    \\\"canonical_labels\\\": [\\n      \\\"High\\\",\\n      \\\"Medium\\\",\\n      \\\"Low\\\",\\n      \\\"None\\\"\\n    ],\\n    \\\"decision_protocol\\\": [\\n      \\\"Compare amendment operation with the complete supplied before/after excerpts and source anchors.\\\",\\n      \\\"Separate amendment materiality from temporal applicability and scenario-specific compliance consequence.\\\",\\n      \\\"Cite exact evidence spans from supplied source records for each material claim.\\\",\\n      \\\"If the version, operation, source, context, or legal effect is insufficiently evidenced, abstain rather than guessing.\\\",\\n      \\\"Even a schema-valid, source-grounded machine assessment has workflow status REVIEW_REQUIRED and is not legal gold.\\\"\\n    ],\\n    \\\"dimension_registry_status\\\": \\\"ten_dimension_technical_registry_proposed_phase0_approval_pending\\\",\\n    \\\"dimensions\\\": [\\n      \\\"obligation\\\",\\n      \\\"right\\\",\\n      \\\"prohibition\\\",\\n      \\\"scope\\\",\\n      \\\"definition\\\",\\n      \\\"threshold\\\",\\n      \\\"time\\\",\\n      \\\"liability\\\",\\n      \\\"procedure\\\",\\n      \\\"exemption\\\"\\n    ],\\n    \\\"legal_validation_status\\\": \\\"unverified_no_qualified_legal_reviewer\\\",\\n    \\\"levels\\\": [\\n      {\\n        \\\"boundary_rule\\\": \\\"A change to a deadline or amount is not automatically High; use High only where evidence supports a fundamental substantive effect beyond a procedural parameter.\\\",\\n        \\\"definition\\\": \\\"The evidenced amendment changes a substantive right, obligation, prohibition, legal scope or eligibility, liability, penalty, controlling exception, or major compliance requirement.\\\",\\n        \\\"exclude_when\\\": [\\n          \\\"Only wording length or edit distance changes\\\",\\n          \\\"Only one scenario outcome changes without amendment-level significance evidence\\\",\\n          \\\"The source evidence does not establish what changed\\\"\\n        ],\\n        \\\"include_when\\\": [\\n          \\\"A duty is created, removed, or substantively changed\\\",\\n          \\\"Conduct or persons covered by the law materially changes\\\",\\n          \\\"A prohibition, liability, penalty, or controlling exception materially changes\\\",\\n          \\\"The amendment substantively changes a major compliance requirement\\\"\\n        ],\\n        \\\"label\\\": \\\"High\\\"\\n      },\\n      {\\n        \\\"boundary_rule\\\": \\\"A numeric change must be interpreted in context; a 10-to-15-day change is ordinarily Medium only when the cited text confirms the period is operative.\\\",\\n        \\\"definition\\\": \\\"The evidenced amendment changes an operative compliance procedure, filing/reporting method, deadline, threshold, evidentiary requirement, or implementation condition while retaining the basic allocation of rights and duties.\\\",\\n        \\\"exclude_when\\\": [\\n          \\\"The change fundamentally reallocates rights/duties or changes material liability (High)\\\",\\n          \\\"Only presentation changes with no operative effect (None)\\\",\\n          \\\"No evidence establishes the parameter or process change\\\"\\n        ],\\n        \\\"include_when\\\": [\\n          \\\"A required procedure or filing process changes\\\",\\n          \\\"An operative deadline or threshold changes with practical compliance significance\\\",\\n          \\\"Conditions or evidence required to satisfy an existing duty change\\\"\\n        ],\\n        \\\"label\\\": \\\"Medium\\\"\\n      },\\n      {\\n        \\\"boundary_rule\\\": \\\"Do not infer Low merely from short text or small edit distance.\\\",\\n        \\\"definition\\\": \\\"The evidenced amendment makes a narrow clarification, terminology update, cross-reference repair, or limited administrative refinement with no demonstrated material change to the core obligation or compliance outcome.\\\",\\n        \\\"exclude_when\\\": [\\n          \\\"A substantive legal effect or practical procedure changes (High/Medium)\\\",\\n          \\\"The evidence is too incomplete to distinguish a limited clarification from a material change\\\"\\n        ],\\n        \\\"include_when\\\": [\\n          \\\"A narrow clarification preserves the operative rule\\\",\\n          \\\"A cross-reference is repaired while preserving the target\\\",\\n          \\\"Administrative wording is refined without substantive effect\\\"\\n        ],\\n        \\\"label\\\": \\\"Low\\\"\\n      },\\n      {\\n        \\\"boundary_rule\\\": \\\"A model must not infer None from missing evidence; use INSUFFICIENT_EVIDENCE when legal-effect absence cannot be supported.\\\",\\n        \\\"definition\\\": \\\"The complete, sufficiently grounded comparison supports only a non-operative editorial/presentation change and supports no legal or compliance effect.\\\",\\n        \\\"exclude_when\\\": [\\n          \\\"Any supported change to legal scope, obligation, procedure, threshold, deadline, liability, or effect\\\",\\n          \\\"Only a normalized-text match is available without contextual source support\\\"\\n        ],\\n        \\\"include_when\\\": [\\n          \\\"Punctuation, spelling, layout, or mechanical renumbering changes while legal meaning and references are demonstrably preserved\\\"\\n        ],\\n        \\\"label\\\": \\\"None\\\"\\n      }\\n    ],\\n    \\\"prohibited_inferences\\\": [\\n      \\\"Citation existence proves legal correctness\\\",\\n      \\\"The machine consensus label is adjudicated ground truth\\\",\\n      \\\"Majority voting or LLM agreement replaces legal validation\\\",\\n      \\\"Materiality alone determines a scenario's compliance consequence\\\"\\n    ],\\n    \\\"rubric_id\\\": \\\"proposed-materiality-rubric-v1\\\",\\n    \"  }"
+      ],
+      "raw_response_sha256": "8a4ac43a48776f3ca7d8301b74a69e01a744e7be2a0206ea7e54edd6e01d6969",
+      "uncertainty": "Output fields do not exactly match the assessment schema",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "last day of the previous quarter, or, if that day",
+          "source_id": "src_726705f7fc61363b6e330510"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "High",
+      "pair_id": "mat_3bf4e1de2910e0639568f12f",
+      "rationale": "The amendment changes 'last Friday' to 'last day' in the deadline context, altering the substantive obligation from a specific weekday to a calendar day without evidence of contextual preservation.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"last day of the previous quarter, or, if that day\",\n      \"source_id\": \"src_726705f7fc61363b6e330510\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_3bf4e1de2910e0639568f12f\",\n  \"rationale\": \"The amendment changes 'last Friday' to 'last day' in the deadline context, altering the substantive obligation from a specific weekday to a calendar day without evidence of contextual preservation.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"last day of the previous quarter, or, if that day\",\n      \"source_id\": \"src_726705f7fc61363b6e330510\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_3bf4e1de2910e0639568f12f\",\n  \"rationale\": \"The amendment changes 'last Friday' to 'last day' in the deadline context, altering the substantive obligation from a specific weekday to a calendar day without evidence of contextual preservation.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "86cf8bfc6eef0c1295f2a89b674d75b7621eda43eb4fc4de0f9527fa78b2a839",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "(i) he has not complied with the provisions of sub-section (1) of section 165.",
+          "source_id": "src_73ff6b08cbbe209ab709e642"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "High",
+      "pair_id": "mat_398dac09f25a41f5fe085757",
+      "rationale": "The amendment inserts a new clause (i) that creates a substantive obligation to comply with section 165(1), directly altering the legal scope of compliance requirements without procedural or temporal changes.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"(i) he has not complied with the provisions of sub-section (1) of section 165.\",\n      \"source_id\": \"src_73ff6b08cbbe209ab709e642\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_398dac09f25a41f5fe085757\",\n  \"rationale\": \"The amendment inserts a new clause (i) that creates a substantive obligation to comply with section 165(1), directly altering the legal scope of compliance requirements without procedural or temporal changes.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"(i) he has not complied with the provisions of sub-section (1) of section 165.\",\n      \"source_id\": \"src_73ff6b08cbbe209ab709e642\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_398dac09f25a41f5fe085757\",\n  \"rationale\": \"The amendment inserts a new clause (i) that creates a substantive obligation to comply with section 165(1), directly altering the legal scope of compliance requirements without procedural or temporal changes.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "70fc8edae7967588bd315bf9e47f6b781496aaa44086907660c223d1feec69bb",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "stage carriage or contract carriage, in respect of which a permit",
+          "source_id": "src_95267bd1a6e6edd43848c03f"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "High",
+      "pair_id": "mat_83cb8f64c8cf9597131f36e5",
+      "rationale": "The amendment replaces 'stage carriage or contract carriage' with 'transport vehicle' in the definition scope, changing the subject of the permit requirement from specific carriage types to vehicles, which materially alters the obligation's scope and applicability.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"stage carriage or contract carriage, in respect of which a permit\",\n      \"source_id\": \"src_95267bd1a6e6edd43848c03f\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_83cb8f64c8cf9597131f36e5\",\n  \"rationale\": \"The amendment replaces 'stage carriage or contract carriage' with 'transport vehicle' in the definition scope, changing the subject of the permit requirement from specific carriage types to vehicles, which materially alters the obligation's scope and applicability.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"stage carriage or contract carriage, in respect of which a permit\",\n      \"source_id\": \"src_95267bd1a6e6edd43848c03f\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_83cb8f64c8cf9597131f36e5\",\n  \"rationale\": \"The amendment replaces 'stage carriage or contract carriage' with 'transport vehicle' in the definition scope, changing the subject of the permit requirement from specific carriage types to vehicles, which materially alters the obligation's scope and applicability.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "c635ca981cb16aa8795e946c5a257e84343dcd740e21ddb6749b1c183e52457a",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "including the Central Government, any State Government or any local authority to whom a debt in respect of the payment of dues arising under any law for the time being in force, such as authorities to whom statutory dues are owed",
+          "source_id": "src_618aa45bac01b76de19ff611"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "High",
+      "pair_id": "mat_688beef91bf9956c6f7b8319",
+      "rationale": "The amendment inserts a substantive list of entities covered by the duty to pay statutory dues, materially expanding the scope of liability beyond prior wording.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"including the Central Government, any State Government or any local authority to whom a debt in respect of the payment of dues arising under any law for the time being in force, such as authorities to whom statutory dues are owed\",\n      \"source_id\": \"src_618aa45bac01b76de19ff611\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_688beef91bf9956c6f7b8319\",\n  \"rationale\": \"The amendment inserts a substantive list of entities covered by the duty to pay statutory dues, materially expanding the scope of liability beyond prior wording.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"including the Central Government, any State Government or any local authority to whom a debt in respect of the payment of dues arising under any law for the time being in force, such as authorities to whom statutory dues are owed\",\n      \"source_id\": \"src_618aa45bac01b76de19ff611\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_688beef91bf9956c6f7b8319\",\n  \"rationale\": \"The amendment inserts a substantive list of entities covered by the duty to pay statutory dues, materially expanding the scope of liability beyond prior wording.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "30f0e68398903d2b141d6f62c99618358117b2cf09bf10f416e559da97739e99",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "In section 38 of the principal Act, for the words “three years”, the words\n“ten years” shall be substituted.",
+          "source_id": "src_c81daaf704eb5583145bd290"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "High",
+      "pair_id": "mat_db938a0f0eb92bab6fb078cc",
+      "rationale": "The amendment changes the deadline from three years to ten years in section 38 of the principal Act, which is a substantive change to a compliance requirement under the High label boundary rule.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"In section 38 of the principal Act, for the words “three years”, the words\\n“ten years” shall be substituted.\",\n      \"source_id\": \"src_c81daaf704eb5583145bd290\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_db938a0f0eb92bab6fb078cc\",\n  \"rationale\": \"The amendment changes the deadline from three years to ten years in section 38 of the principal Act, which is a substantive change to a compliance requirement under the High label boundary rule.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"In section 38 of the principal Act, for the words “three years”, the words\\n“ten years” shall be substituted.\",\n      \"source_id\": \"src_c81daaf704eb5583145bd290\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_db938a0f0eb92bab6fb078cc\",\n  \"rationale\": \"The amendment changes the deadline from three years to ten years in section 38 of the principal Act, which is a substantive change to a compliance requirement under the High label boundary rule.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "a4c7dbca1b5b3889f0d8f7c6cb545305b30e9fa6ee4a4e0c2a170efb56ef5b23",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "or completion of such transactions as may be prescribed",
+          "source_id": "src_2f4b081203dd22bf8f6a9f7a"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "High",
+      "pair_id": "mat_08031e98498c98fa32a2e951",
+      "rationale": "The amendment inserts a phrase that expands the scope of transactions covered by the proviso, creating a new obligation for completion of transactions as prescribed. This materially changes the legal scope and compliance requirements.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"or completion of such transactions as may be prescribed\",\n      \"source_id\": \"src_2f4b081203dd22bf8f6a9f7a\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_08031e98498c98fa32a2e951\",\n  \"rationale\": \"The amendment inserts a phrase that expands the scope of transactions covered by the proviso, creating a new obligation for completion of transactions as prescribed. This materially changes the legal scope and compliance requirements.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"or completion of such transactions as may be prescribed\",\n      \"source_id\": \"src_2f4b081203dd22bf8f6a9f7a\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_08031e98498c98fa32a2e951\",\n  \"rationale\": \"The amendment inserts a phrase that expands the scope of transactions covered by the proviso, creating a new obligation for completion of transactions as prescribed. This materially changes the legal scope and compliance requirements.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "abb94f065c218f1ffb3f683bd53f51e0165f634859259f2e3678783701dd1444",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "which may extend to one thousand rupees",
+          "source_id": "src_95267bd1a6e6edd43848c03f"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "High",
+      "pair_id": "mat_bc4acfabeb51f81d44d17bfc",
+      "rationale": "The amendment substitutes a numeric threshold from 1,000 to 10,000 rupees, which materially increases the scope of liability under the law as per the rubric's definition of a substantive change to a compliance requirement.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"which may extend to one thousand rupees\",\n      \"source_id\": \"src_95267bd1a6e6edd43848c03f\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_bc4acfabeb51f81d44d17bfc\",\n  \"rationale\": \"The amendment substitutes a numeric threshold from 1,000 to 10,000 rupees, which materially increases the scope of liability under the law as per the rubric's definition of a substantive change to a compliance requirement.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"which may extend to one thousand rupees\",\n      \"source_id\": \"src_95267bd1a6e6edd43848c03f\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_bc4acfabeb51f81d44d17bfc\",\n  \"rationale\": \"The amendment substitutes a numeric threshold from 1,000 to 10,000 rupees, which materially increases the scope of liability under the law as per the rubric's definition of a substantive change to a compliance requirement.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "63411b78c118298cc4f95d3a7c43193e820bc3b8a80e9f5375a1bd7c8d49d7d3",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "(c) providing for limits of urban city by the State Governments under sub-section (1) of section 136A; and (d) providing for electronic monitoring and enforcement under sub-section (2) of section 136A.",
+          "source_id": "src_95267bd1a6e6edd43848c03f"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "High",
+      "pair_id": "mat_70db190e17bf249b7b42387b",
+      "rationale": "The amendment inserts new clauses (c) and (d) that establish State Government authority over urban city limits and electronic monitoring enforcement, both tied to specific sub-sections of section 136A. These changes create new substantive obligations and enforcement mechanisms.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"(c) providing for limits of urban city by the State Governments under sub-section (1) of section 136A; and (d) providing for electronic monitoring and enforcement under sub-section (2) of section 136A.\",\n      \"source_id\": \"src_95267bd1a6e6edd43848c03f\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_70db190e17bf249b7b42387b\",\n  \"rationale\": \"The amendment inserts new clauses (c) and (d) that establish State Government authority over urban city limits and electronic monitoring enforcement, both tied to specific sub-sections of section 136A. These changes create new substantive obligations and enforcement mechanisms.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"(c) providing for limits of urban city by the State Governments under sub-section (1) of section 136A; and (d) providing for electronic monitoring and enforcement under sub-section (2) of section 136A.\",\n      \"source_id\": \"src_95267bd1a6e6edd43848c03f\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_70db190e17bf249b7b42387b\",\n  \"rationale\": \"The amendment inserts new clauses (c) and (d) that establish State Government authority over urban city limits and electronic monitoring enforcement, both tied to specific sub-sections of section 136A. These changes create new substantive obligations and enforcement mechanisms.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "060d57c1c59b4a18fac449ab528ae377611d4b0fd5d9f13cdd215f2d3c07d788",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "section 149",
+          "source_id": "src_95267bd1a6e6edd43848c03f"
+        },
+        {
+          "quote": "section 150",
+          "source_id": "src_95267bd1a6e6edd43848c03f"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "High",
+      "pair_id": "mat_4c42b65249ca48221952c7f7",
+      "rationale": "The amendment substitutes section 149 with section 150 in the principal Act, changing the legal section reference which may alter the scope of obligations or procedures covered by the law.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"section 149\",\n      \"source_id\": \"src_95267bd1a6e6edd43848c03f\"\n    },\n    {\n      \"quote\": \"section 150\",\n      \"source_id\": \"src_95267bd1a6e6edd43848c03f\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_4c42b65249ca48221952c7f7\",\n  \"rationale\": \"The amendment substitutes section 149 with section 150 in the principal Act, changing the legal section reference which may alter the scope of obligations or procedures covered by the law.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"section 149\",\n      \"source_id\": \"src_95267bd1a6e6edd43848c03f\"\n    },\n    {\n      \"quote\": \"section 150\",\n      \"source_id\": \"src_95267bd1a6e6edd43848c03f\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_4c42b65249ca48221952c7f7\",\n  \"rationale\": \"The amendment substitutes section 149 with section 150 in the principal Act, changing the legal section reference which may alter the scope of obligations or procedures covered by the law.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "6236fa323392e0f6af8a4651dda31ca0244ddc084c12a254e9823e7d4d17ce18",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "(q) to any transport vehicle having been issued a licence under a scheme, under sub-section (3) of section 67 or sub-section (1) of section 88A, or plying under such orders as may be issued by the Central Government or by the State Government.",
+          "source_id": "src_95267bd1a6e6edd43848c03f"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "High",
+      "pair_id": "mat_cc42b7cdc91c25c19b971c18",
+      "rationale": "The amendment inserts a new clause (q) that expands the scope of vehicles eligible for certain licenses by adding specific conditions under sections 67 and 88A, and government orders. This materially changes the legal scope of applicability.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"(q) to any transport vehicle having been issued a licence under a scheme, under sub-section (3) of section 67 or sub-section (1) of section 88A, or plying under such orders as may be issued by the Central Government or by the State Government.\",\n      \"source_id\": \"src_95267bd1a6e6edd43848c03f\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_cc42b7cdc91c25c19b971c18\",\n  \"rationale\": \"The amendment inserts a new clause (q) that expands the scope of vehicles eligible for certain licenses by adding specific conditions under sections 67 and 88A, and government orders. This materially changes the legal scope of applicability.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"(q) to any transport vehicle having been issued a licence under a scheme, under sub-section (3) of section 67 or sub-section (1) of section 88A, or plying under such orders as may be issued by the Central Government or by the State Government.\",\n      \"source_id\": \"src_95267bd1a6e6edd43848c03f\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_cc42b7cdc91c25c19b971c18\",\n  \"rationale\": \"The amendment inserts a new clause (q) that expands the scope of vehicles eligible for certain licenses by adding specific conditions under sections 67 and 88A, and government orders. This materially changes the legal scope of applicability.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "3bf962f2c671f1dc94cc189beb3d250e6b22fb18fe6600284ee704c6989e3173",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "by the seal, if any",
+          "source_id": "src_0cbccfdb70e8e9f057dbb00e"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "Low",
+      "pair_id": "mat_9251893450a9c8bd3d7a8590",
+      "rationale": "The amendment adds a conditional phrase 'if any' without altering the core obligation, matching Low's definition of narrow clarification.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"by the seal, if any\",\n      \"source_id\": \"src_0cbccfdb70e8e9f057dbb00e\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"Low\",\n  \"pair_id\": \"mat_9251893450a9c8bd3d7a8590\",\n  \"rationale\": \"The amendment adds a conditional phrase 'if any' without altering the core obligation, matching Low's definition of narrow clarification.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"by the seal, if any\",\n      \"source_id\": \"src_0cbccfdb70e8e9f057dbb00e\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"Low\",\n  \"pair_id\": \"mat_9251893450a9c8bd3d7a8590\",\n  \"rationale\": \"The amendment adds a conditional phrase 'if any' without altering the core obligation, matching Low's definition of narrow clarification.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "0a8ac91eabf1c12ed60f4b560011b016bff2c3d66cab5daed0921fa7cc11b76e",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "Provided that the Regional Transport Authority may waive any such condition for a stage carriage permit operating in a rural area, as it deems fit.",
+          "source_id": "src_95267bd1a6e6edd43848c03f"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "High",
+      "pair_id": "mat_e2b212ca6b91884eeccab0fd",
+      "rationale": "The amendment inserts a proviso allowing the Regional Transport Authority to waive conditions for rural stage carriage permits, which constitutes a substantive change to obligations and scope under the rubric's High definition.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"Provided that the Regional Transport Authority may waive any such condition for a stage carriage permit operating in a rural area, as it deems fit.\",\n      \"source_id\": \"src_95267bd1a6e6edd43848c03f\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_e2b212ca6b91884eeccab0fd\",\n  \"rationale\": \"The amendment inserts a proviso allowing the Regional Transport Authority to waive conditions for rural stage carriage permits, which constitutes a substantive change to obligations and scope under the rubric's High definition.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"Provided that the Regional Transport Authority may waive any such condition for a stage carriage permit operating in a rural area, as it deems fit.\",\n      \"source_id\": \"src_95267bd1a6e6edd43848c03f\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_e2b212ca6b91884eeccab0fd\",\n  \"rationale\": \"The amendment inserts a proviso allowing the Regional Transport Authority to waive conditions for rural stage carriage permits, which constitutes a substantive change to obligations and scope under the rubric's High definition.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "dbd05291489b2fdab6880d19b8af6c64c4161b66c6fa64f17a61b8f459972002",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "NOT_ASSESSED_FRAGMENT_UNRESOLVED",
+      "citation_integrity": "NOT_ESTABLISHED",
+      "evidence": [],
+      "insufficient_evidence": null,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": null,
+      "pair_id": "mat_f073384e10cbf86405d1be3d",
+      "rationale": "No schema-valid, source-verified LLM assessment was produced.",
+      "raw_response": null,
+      "raw_response_attempts": [],
+      "raw_response_sha256": null,
+      "uncertainty": "Re-extraction did not yield one source-supported before/after fragment.",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "(4) The Aadhaar number issued to an individual under sub-section (3) shall be a twelve-digit identification number and any alternative virtual identity as an alternative to the actual Aadhaar number of an individual that shall be generated by the Authority in such manner as may be specified by regulations.",
+          "source_id": "src_c81daaf704eb5583145bd290"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "High",
+      "pair_id": "mat_fe230e5ee9ce232f41dd593e",
+      "rationale": "The amendment adds a new sub-section (4) defining the twelve-digit Aadhaar number format and alternative virtual identity generation, which materially changes the scope and definition of the identification system under the principal Act.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"(4) The Aadhaar number issued to an individual under sub-section (3) shall be a twelve-digit identification number and any alternative virtual identity as an alternative to the actual Aadhaar number of an individual that shall be generated by the Authority in such manner as may be specified by regulations.\",\n      \"source_id\": \"src_c81daaf704eb5583145bd290\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_fe230e5ee9ce232f41dd593e\",\n  \"rationale\": \"The amendment adds a new sub-section (4) defining the twelve-digit Aadhaar number format and alternative virtual identity generation, which materially changes the scope and definition of the identification system under the principal Act.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"(4) The Aadhaar number issued to an individual under sub-section (3) shall be a twelve-digit identification number and any alternative virtual identity as an alternative to the actual Aadhaar number of an individual that shall be generated by the Authority in such manner as may be specified by regulations.\",\n      \"source_id\": \"src_c81daaf704eb5583145bd290\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_fe230e5ee9ce232f41dd593e\",\n  \"rationale\": \"The amendment adds a new sub-section (4) defining the twelve-digit Aadhaar number format and alternative virtual identity generation, which materially changes the scope and definition of the identification system under the principal Act.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "596667b7174ed4e9c068b8b87a5b22bb992c3fd3c940bab041a65dc92aa6b517",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "one person",
+          "source_id": "src_726705f7fc61363b6e330510"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "High",
+      "pair_id": "mat_ca8210674f56599734ad7a8e",
+      "rationale": "The amendment changes the number of persons covered from a single person to up to four persons, altering the scope of eligibility without a temporal or procedural boundary.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"one person\",\n      \"source_id\": \"src_726705f7fc61363b6e330510\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_ca8210674f56599734ad7a8e\",\n  \"rationale\": \"The amendment changes the number of persons covered from a single person to up to four persons, altering the scope of eligibility without a temporal or procedural boundary.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"one person\",\n      \"source_id\": \"src_726705f7fc61363b6e330510\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_ca8210674f56599734ad7a8e\",\n  \"rationale\": \"The amendment changes the number of persons covered from a single person to up to four persons, altering the scope of eligibility without a temporal or procedural boundary.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "1d32b8b6b1972929e93e2056cf77f63e1a62fc22f83cd501bb2cae1f2ff872a4",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "NOT_ASSESSED_FRAGMENT_UNRESOLVED",
+      "citation_integrity": "NOT_ESTABLISHED",
+      "evidence": [],
+      "insufficient_evidence": null,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": null,
+      "pair_id": "mat_da9a0c78b92e51330bd0b0f1",
+      "rationale": "No schema-valid, source-verified LLM assessment was produced.",
+      "raw_response": null,
+      "raw_response_attempts": [],
+      "raw_response_sha256": null,
+      "uncertainty": "Re-extraction did not yield one source-supported before/after fragment.",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "NOT_ASSESSED_FRAGMENT_UNRESOLVED",
+      "citation_integrity": "NOT_ESTABLISHED",
+      "evidence": [],
+      "insufficient_evidence": null,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": null,
+      "pair_id": "mat_b52f18d09b58658c1547c5fa",
+      "rationale": "No schema-valid, source-verified LLM assessment was produced.",
+      "raw_response": null,
+      "raw_response_attempts": [],
+      "raw_response_sha256": null,
+      "uncertainty": "Re-extraction did not yield one source-supported before/after fragment.",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "SCHEMA_AND_CITATION_VALID",
+      "citation_integrity": "ALL_QUOTES_FOUND_IN_SUPPLIED_SOURCE_TEXT",
+      "evidence": [
+        {
+          "quote": "(c) the Director General of Police of the State shall be member of the State Executive Committee, ex officio.",
+          "source_id": "src_a234a3f5c6ac749e32f6f075"
+        }
+      ],
+      "insufficient_evidence": false,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": "High",
+      "pair_id": "mat_cd3d33bc93222e0cafae2223",
+      "rationale": "The amendment inserts a new clause (c) specifying the Director General of Police as ex officio member of the State Executive Committee, which creates a substantive obligation and changes the committee's composition without altering procedural parameters.",
+      "raw_response": "{\n  \"evidence\": [\n    {\n      \"quote\": \"(c) the Director General of Police of the State shall be member of the State Executive Committee, ex officio.\",\n      \"source_id\": \"src_a234a3f5c6ac749e32f6f075\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_cd3d33bc93222e0cafae2223\",\n  \"rationale\": \"The amendment inserts a new clause (c) specifying the Director General of Police as ex officio member of the State Executive Committee, which creates a substantive obligation and changes the committee's composition without altering procedural parameters.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"evidence\": [\n    {\n      \"quote\": \"(c) the Director General of Police of the State shall be member of the State Executive Committee, ex officio.\",\n      \"source_id\": \"src_a234a3f5c6ac749e32f6f075\"\n    }\n  ],\n  \"insufficient_evidence\": false,\n  \"label\": \"High\",\n  \"pair_id\": \"mat_cd3d33bc93222e0cafae2223\",\n  \"rationale\": \"The amendment inserts a new clause (c) specifying the Director General of Police as ex officio member of the State Executive Committee, which creates a substantive obligation and changes the committee's composition without altering procedural parameters.\",\n  \"rubric_version\": \"1.0.0\",\n  \"schema_version\": \"1.0.0\",\n  \"uncertainty\": \"\"\n}"
+      ],
+      "raw_response_sha256": "26ec1b7d0646036c7ebd9dd41fa0ead8990506fa601ea187810d3589bb9201d3",
+      "uncertainty": "",
+      "workflow_status": "REVIEW_REQUIRED"
+    },
+    {
+      "assessment_status": "INVALID_SCHEMA_OR_EVIDENCE",
+      "citation_integrity": "NOT_ESTABLISHED",
+      "evidence": [],
+      "insufficient_evidence": null,
+      "legal_correctness": "UNVERIFIED",
+      "materiality_label": null,
+      "pair_id": "mat_ff373a92367a05c862b41846",
+      "rationale": "No schema-valid, source-verified LLM assessment was produced.",
+      "raw_response": "{\n  \"allowed_labels\": [\"High\", \"Medium\", \"Low\", \"None\"],\n  \"invalid_output\": \"{\\n  \\\"after_text\\\": \\\"clause (b) of sub-section (1)\\\",\\n  \\\"amendment_instruction_text\\\": \\\"11. In section 17 of the principal Act, in the second proviso, for the words, brackets,\\\\nletter and figure “clause ( e) of sub-section ( 1)”, the words, brackets, letter and figure\\\\n“clause (b) of sub-section (1)” shall be substituted.\\\",\\n  \\\"amendment_operation\\\": \\\"SUBSTITUTE\\\",\\n  \\\"before_text\\\": \\\"clause ( e) of sub-section ( 1)\\\",\\n  \\\"output_schema\\\": {\\n    \\\"evidence\\\": [\\n      {\\n        \\\"quote\\\": \\\"verbatim substring of that source text\\\",\\n        \\\"source_id\\\": \\\"exact supplied source id\\\"\\n      }\\n    ],\\n    \\\"insufficient_evidence\\\": \\\"boolean\\\",\\n    \\\"label\\\": \\\"High | Medium | Low | None; null only when insufficient_evidence=true\\\",\\n    \\\"pair_id\\\": \\\"same pair_id\\\",\\n    \\\"rationale\\\": \\\"string explaining how the rubric applies\\\",\\n    \\\"rubric_version\\\": \\\"same rubric version\\\",\\n    \\\"schema_version\\\": \\\"1.0.0\\\",\\n    \\\"uncertainty\\\": \\\"string, empty only if no uncertainty\\\"\\n  },\\n  \\\"pair_id\\\": \\\"mat_ff373a92367a05c862b41846\\\",\\n  \\\"proposed_rubric_not_legally_validated\\\": {\\n    \\\"canonical_labels\\\": [\\n      \\\"High\\\",\\n      \\\"Medium\\\",\\n      \\\"Low\\\",\\n      \\\"None\\\"\\n    ],\\n    \\\"decision_protocol\\\": [\\n      \\\"Compare amendment operation with the complete supplied before/after excerpts and source anchors.\\\",\\n      \\\"Separate amendment materiality from temporal applicability and scenario-specific compliance consequence.\\\",\\n      \\\"Cite exact evidence spans from supplied source records for each material claim.\\\",\\n      \\\"If the version, operation, source, context, or legal effect is insufficiently evidenced, abstain rather than guessing.\\\",\\n      \\\"Even a schema-valid, source-grounded machine assessment has workflow status REVIEW_REQUIRED and is not legal gold.\\\"\\n    ],\\n    \\\"dimension_registry_status\\\": \\\"ten_dimension_technical_registry_proposed_phase0_approval_pending\\\",\\n    \\\"dimensions\\\": [\\n      \\\"obligation\\\",\\n      \\\"right\\\",\\n      \\\"prohibition\\\",\\n      \\\"scope\\\",\\n      \\\"definition\\\",\\n      \\\"threshold\\\",\\n      \\\"time\\\",\\n      \\\"liability\\\",\\n      \\\"procedure\\\",\\n      \\\"exemption\\\"\\n    ],\\n    \\\"legal_validation_status\\\": \\\"unverified_no_qualified_legal_reviewer\\\",\\n    \\\"levels\\\": [\\n      {\\n        \\\"boundary_rule\\\": \\\"A change to a deadline or amount is not automatically High; use High only where evidence supports a fundamental substantive effect beyond a procedural parameter.\\\",\\n        \\\"definition\\\": \\\"The evidenced amendment changes a substantive right, obligation, prohibition, legal scope or eligibility, liability, penalty, controlling exception, or major compliance requirement.\\\",\\n        \\\"exclude_when\\\": [\\n          \\\"Only wording length or edit distance changes\\\",\\n          \\\"Only one scenario outcome changes without amendment-level significance evidence\\\",\\n          \\\"The source evidence does not establish what changed\\\"\\n        ],\\n        \\\"include_when\\\": [\\n          \\\"A duty is created, removed, or substantively changed\\\",\\n          \\\"Conduct or persons covered by the law materially changes\\\",\\n          \\\"A prohibition, liability, penalty, or controlling exception materially changes\\\",\\n          \\\"The amendment substantively changes a major compliance requirement\\\"\\n        ],\\n        \\\"label\\\": \\\"High\\\"\\n      },\\n      {\\n        \\\"boundary_rule\\\": \\\"A numeric change must be interpreted in context; a 10-to-15-day change is ordinarily Medium only when the cited text confirms the period is operative.\\\",\\n        \\\"definition\\\": \\\"The evidenced amendment changes an operative compliance procedure, filing/reporting method, deadline, threshold, evidentiary requirement, or implementation condition while retaining the basic allocation of rights and duties.\\\",\\n        \\\"exclude_when\\\": [\\n          \\\"The change fundamentally reallocates rights/duties or changes material liability (High)\\\",\\n          \\\"Only presentation changes with no operative effect (None)\\\",\\n          \\\"No evidence establishes the parameter or process change\\\"\\n        ],\\n        \\\"include_when\\\": [\\n          \\\"A required procedure or filing process changes\\\",\\n          \\\"An operative deadline or threshold changes with practical compliance significance\\\",\\n          \\\"Conditions or evidence required to satisfy an existing duty change\\\"\\n        ],\\n        \\\"label\\\": \\\"Medium\\\"\\n      },\\n      {\\n        \\\"boundary_rule\\\": \\\"Do not infer Low merely from short text or small edit distance.\\\",\\n        \\\"definition\\\": \\\"The evidenced amendment makes a narrow clarification, terminology update, cross-reference repair, or limited administrative refinement with no demonstrated material change to the core obligation or compliance outcome.\\\",\\n        \\\"exclude_when\\\": [\\n          \\\"A substantive legal effect or practical procedure changes (High/Medium)\\\",\\n          \\\"The evidence is too incomplete to distinguish a limited clarification from a material change\\\"\\n        ],\\n        \\\"include_when\\\": [\\n          \\\"A narrow clarification preserves the operative rule\\\",\\n          \\\"A cross-reference is repaired while preserving the target\\\",\\n          \\\"Administrative wording is refined without substantive effect\\\"\\n        ],\\n        \\\"label\\\": \\\"Low\\\"\\n      },\\n      {\\n        \\\"boundary_rule\\\": \\\"A model must not infer None from missing evidence; use INSUFFICIENT_EVIDENCE when legal-effect absence cannot be supported.\\\",\\n        \\\"definition\\\": \\\"The complete, sufficiently grounded comparison supports only a non-operative editorial/presentation change and supports no legal or compliance effect.\\\",\\n        \\\"exclude_when\\\": [\\n          \\\"Any supported change to legal scope, obligation, procedure, threshold, deadline, liability, or effect\\\",\\n          \\\"Only a normalized-text match is available without contextual source support\\\"\\n        ],\\n        \\\"include_when\\\": [\\n          \\\"Punctuation, spelling, layout, or mechanical renumbering changes while legal meaning and references are demonstrably preserved\\\"\\n        ],\\n        \\\"label\\\": \\\"None\\\"\\n      }\\n    ],\\n    \\\"prohibited_inferences\\\": [\\n      \\\"Citation existence proves legal correctness\\\",\\n      \\\"The machine consensus label is adjudicated ground truth\\\",\\n      \\\"Majority voting or LLM agreement replaces legal validation\\\",\\n      \\\"Materiality alone determines a scenario's compliance consequence\\\"\\n    ],\\n    \\\"rubric_id\\\": \\\"proposed-materiality-rubric-v1\\\",\\n    \\\"schema_version\\\": \\\"1.0.0\\\",\\n    \\\"scope\\\": \\\"Amendment-level significance of an evidenced legal-text change; not a scenario-specific compliance outcome.\\\",\\n    \\\"status\\\": \\\"proposed_operational_research_rubric_not_legally_validated\\\",\\n    \\\"version\\\": \\\"1.0.0\\\",\\n    \\\"workflow_statuses_are_not_labels\\\": [\\n      \\\"REVIEW_REQUIRED\\\",\\n      \\\"INSUFFICIENT_EVIDENCE\\\"\\n    ]\\n  },\\n  \\\"rubric_version\\\": \\\"1.0.0\\\",\\n  \\\"sources\\\": [\\n    {\\n      \\\"locator\\\": {\\n        \\\"line\\\": 35,\\n        \\\"page\\\": 5\\n      },\\n      \\\"role\\\": \\\"amendment_instruction\\\",\\n      \\\"source_id\\\": \\\"src_294c0d2fedc5374a906e0e92\\\",\\n      \\\"source_sha256\\\": \\\"a4b24b643ade5061282fd1a0cb0a232ee8059de17b81673493c7e2497bf9c1bc\\\",\\n      \\\"source_url\\\": \\\"https://indiacode.gov.in/items/62a08274-d6b5-45bf-bd78-833182addc6e\\\",\\n      \\\"text\\\": \\\"11. In section 17 of the principal Act, in the second proviso, for the words, brackets,\\\\nletter and figure “clause ( e) of sub-section ( 1)”, the words, brackets, letter and figure\\\\n“clause (b) of sub-section (1)” shall be substituted.\\\"\\n    },\\n    {\\n      \\\"locator\\\": {\\n        \\\"version_id\\\": \\\"pver_623a09fc1f065d3c1f494fd7\\\"\\n      },\\n      \\\"role\\\": \\\"before_version_text\\\",\\n      \\\"source_id\\\": \\\"src_294c0d2fedc5374a906e0e92\\\",\\n      \\\"source_sha256\\\": \\\"a4b24b643ade5061282fd1a0cb0a232ee8059de17b81673493c7e2497bf9c1bc\\\",\\n      \\\"source_url\\\": \\\"https://indiacode.gov.in/items/62a08274-d6b5-45bf-bd78-833182addc6e\\\",\\n      \\\"text\\\": \\\"clause ( e) of sub-section ( 1)\\\"\\n    },\\n    {\\n      \\\"locator\\\": {\\n        \\\"version_id\\\": \\\"pver_b387c543dd80098e02d1f231\\\"\\n      },\\n      \\\"role\\\": \\\"after_version_text\\\",\\n      \\\"source_id\\\": \\\"src_294c0d2fedc5374a906e0e92\\\",\\n      \\\"source_sha256\\\": \\\"a4b24b643ade5061282fd1a0cb0a232ee8059de17b81673493c7e2497bf9c1bc\\\",\\n      \\\"source_url\\\": \\\"https://indiacode.gov.in/items/62a08274-d6b5-45bf-bd78-833182addc6e\\\",\\n      \\\"text\\\": \\\"clause (b) of sub-section (1)\\\"\\n    }\\n  ]\\n}\",\n  \"pair_id\": \"mat_ff373a92367a05c862b41846\",\n  \"required_schema\": {\n    \"evidence\": [\n      {\n        \"quote\": \"exact substring from that source text\",\n        \"source_id\": \"exact supplied source id\"\n      }\n    ],\n    \"insufficient_evidence\": \"boolean\",\n    \"label\": \"High | Medium | Low | None, or null only if insufficient_evidence is true\",\n    \"pair_id\": \"mat_ff373a92367a05c862b41846\",\n    \"rationale\": \"brief string\",\n    \"rubric_version\": \"1.0.0\",\n    \"schema_version\": \"1.0.0\",\n    \"uncertainty\": \"string\"\n  },\n  \"rubric_version\": \"1.0.0\",\n  \"source_evidence\": [\n    {\n      \"source_id\": \"src_294c0d2fedc5374a906e0e92\",\n      \"text\": \"11. In section 17 of the principal Act, in the second proviso, for the words, brackets,\\nletter and figure “clause ( e) of sub-section ( 1)”, the words, brackets, letter and figure\\n“clause (b) of sub-section (1)” shall be substituted.\"\n    },\n    {\n      \"source_id\": \"src_294c0d2fedc5374a906e0e92\",\n      \"text\": \"clause ( e) of sub-section ( 1)\"\n    },\n    {\n      \"source_id\": \"src_294c0d2fedc5374a906e0e92\",\n      \"text\": \"clause (b) of sub-section (1)\"\n    }\n  ],\n  \"sources\": [\n    {\n      \"source_id\": \"src_294c0d2fedc5374a906e0e92\",\n      \"text\": \"11. In section 17 of the principal Act, in the second proviso, for the words, brackets,\\nletter and figure “clause ( e) of sub-section ( 1)”, the words, brackets, letter and figure\\n“clause (b) of sub-section (1)” shall be substituted.\"\n    },\n    {\n      \"source_id\": \"src_2 94c0d2fedc5374a906e0e92\",\n      \"text\": \"clause ( e) of sub-section ( 1)\"\n    },\n    {\n      \"source_id\": \"src_294c0d2fedc5374a906e0e92\",\n      \"text\": \"clause (b) of sub-section (1)\"\n    }\n  ],\n  \"validation_error\": \"Output fields do not exactly match the assessment schema\"\n}",
+      "raw_response_attempts": [
+        "{\n  \"after_text\": \"clause (b) of sub-section (1)\",\n  \"amendment_instruction_text\": \"11. In section 17 of the principal Act, in the second proviso, for the words, brackets,\\nletter and figure “clause ( e) of sub-section ( 1)”, the words, brackets, letter and figure\\n“clause (b) of sub-section (1)” shall be substituted.\",\n  \"amendment_operation\": \"SUBSTITUTE\",\n  \"before_text\": \"clause ( e) of sub-section ( 1)\",\n  \"output_schema\": {\n    \"evidence\": [\n      {\n        \"quote\": \"verbatim substring of that source text\",\n        \"source_id\": \"exact supplied source id\"\n      }\n    ],\n    \"insufficient_evidence\": \"boolean\",\n    \"label\": \"High | Medium | Low | None; null only when insufficient_evidence=true\",\n    \"pair_id\": \"same pair_id\",\n    \"rationale\": \"string explaining how the rubric applies\",\n    \"rubric_version\": \"same rubric version\",\n    \"schema_version\": \"1.0.0\",\n    \"uncertainty\": \"string, empty only if no uncertainty\"\n  },\n  \"pair_id\": \"mat_ff373a92367a05c862b41846\",\n  \"proposed_rubric_not_legally_validated\": {\n    \"canonical_labels\": [\n      \"High\",\n      \"Medium\",\n      \"Low\",\n      \"None\"\n    ],\n    \"decision_protocol\": [\n      \"Compare amendment operation with the complete supplied before/after excerpts and source anchors.\",\n      \"Separate amendment materiality from temporal applicability and scenario-specific compliance consequence.\",\n      \"Cite exact evidence spans from supplied source records for each material claim.\",\n      \"If the version, operation, source, context, or legal effect is insufficiently evidenced, abstain rather than guessing.\",\n      \"Even a schema-valid, source-grounded machine assessment has workflow status REVIEW_REQUIRED and is not legal gold.\"\n    ],\n    \"dimension_registry_status\": \"ten_dimension_technical_registry_proposed_phase0_approval_pending\",\n    \"dimensions\": [\n      \"obligation\",\n      \"right\",\n      \"prohibition\",\n      \"scope\",\n      \"definition\",\n      \"threshold\",\n      \"time\",\n      \"liability\",\n      \"procedure\",\n      \"exemption\"\n    ],\n    \"legal_validation_status\": \"unverified_no_qualified_legal_reviewer\",\n    \"levels\": [\n      {\n        \"boundary_rule\": \"A change to a deadline or amount is not automatically High; use High only where evidence supports a fundamental substantive effect beyond a procedural parameter.\",\n        \"definition\": \"The evidenced amendment changes a substantive right, obligation, prohibition, legal scope or eligibility, liability, penalty, controlling exception, or major compliance requirement.\",\n        \"exclude_when\": [\n          \"Only wording length or edit distance changes\",\n          \"Only one scenario outcome changes without amendment-level significance evidence\",\n          \"The source evidence does not establish what changed\"\n        ],\n        \"include_when\": [\n          \"A duty is created, removed, or substantively changed\",\n          \"Conduct or persons covered by the law materially changes\",\n          \"A prohibition, liability, penalty, or controlling exception materially changes\",\n          \"The amendment substantively changes a major compliance requirement\"\n        ],\n        \"label\": \"High\"\n      },\n      {\n        \"boundary_rule\": \"A numeric change must be interpreted in context; a 10-to-15-day change is ordinarily Medium only when the cited text confirms the period is operative.\",\n        \"definition\": \"The evidenced amendment changes an operative compliance procedure, filing/reporting method, deadline, threshold, evidentiary requirement, or implementation condition while retaining the basic allocation of rights and duties.\",\n        \"exclude_when\": [\n          \"The change fundamentally reallocates rights/duties or changes material liability (High)\",\n          \"Only presentation changes with no operative effect (None)\",\n          \"No evidence establishes the parameter or process change\"\n        ],\n        \"include_when\": [\n          \"A required procedure or filing process changes\",\n          \"An operative deadline or threshold changes with practical compliance significance\",\n          \"Conditions or evidence required to satisfy an existing duty change\"\n        ],\n        \"label\": \"Medium\"\n      },\n      {\n        \"boundary_rule\": \"Do not infer Low merely from short text or small edit distance.\",\n        \"definition\": \"The evidenced amendment makes a narrow clarification, terminology update, cross-reference repair, or limited administrative refinement with no demonstrated material change to the core obligation or compliance outcome.\",\n        \"exclude_when\": [\n          \"A substantive legal effect or practical procedure changes (High/Medium)\",\n          \"The evidence is too incomplete to distinguish a limited clarification from a material change\"\n        ],\n        \"include_when\": [\n          \"A narrow clarification preserves the operative rule\",\n          \"A cross-reference is repaired while preserving the target\",\n          \"Administrative wording is refined without substantive effect\"\n        ],\n        \"label\": \"Low\"\n      },\n      {\n        \"boundary_rule\": \"A model must not infer None from missing evidence; use INSUFFICIENT_EVIDENCE when legal-effect absence cannot be supported.\",\n        \"definition\": \"The complete, sufficiently grounded comparison supports only a non-operative editorial/presentation change and supports no legal or compliance effect.\",\n        \"exclude_when\": [\n          \"Any supported change to legal scope, obligation, procedure, threshold, deadline, liability, or effect\",\n          \"Only a normalized-text match is available without contextual source support\"\n        ],\n        \"include_when\": [\n          \"Punctuation, spelling, layout, or mechanical renumbering changes while legal meaning and references are demonstrably preserved\"\n        ],\n        \"label\": \"None\"\n      }\n    ],\n    \"prohibited_inferences\": [\n      \"Citation existence proves legal correctness\",\n      \"The machine consensus label is adjudicated ground truth\",\n      \"Majority voting or LLM agreement replaces legal validation\",\n      \"Materiality alone determines a scenario's compliance consequence\"\n    ],\n    \"rubric_id\": \"proposed-materiality-rubric-v1\",\n    \"schema_version\": \"1.0.0\",\n    \"scope\": \"Amendment-level significance of an evidenced legal-text change; not a scenario-specific compliance outcome.\",\n    \"status\": \"proposed_operational_research_rubric_not_legally_validated\",\n    \"version\": \"1.0.0\",\n    \"workflow_statuses_are_not_labels\": [\n      \"REVIEW_REQUIRED\",\n      \"INSUFFICIENT_EVIDENCE\"\n    ]\n  },\n  \"rubric_version\": \"1.0.0\",\n  \"sources\": [\n    {\n      \"locator\": {\n        \"line\": 35,\n        \"page\": 5\n      },\n      \"role\": \"amendment_instruction\",\n      \"source_id\": \"src_294c0d2fedc5374a906e0e92\",\n      \"source_sha256\": \"a4b24b643ade5061282fd1a0cb0a232ee8059de17b81673493c7e2497bf9c1bc\",\n      \"source_url\": \"https://indiacode.gov.in/items/62a08274-d6b5-45bf-bd78-833182addc6e\",\n      \"text\": \"11. In section 17 of the principal Act, in the second proviso, for the words, brackets,\\nletter and figure “clause ( e) of sub-section ( 1)”, the words, brackets, letter and figure\\n“clause (b) of sub-section (1)” shall be substituted.\"\n    },\n    {\n      \"locator\": {\n        \"version_id\": \"pver_623a09fc1f065d3c1f494fd7\"\n      },\n      \"role\": \"before_version_text\",\n      \"source_id\": \"src_294c0d2fedc5374a906e0e92\",\n      \"source_sha256\": \"a4b24b643ade5061282fd1a0cb0a232ee8059de17b81673493c7e2497bf9c1bc\",\n      \"source_url\": \"https://indiacode.gov.in/items/62a08274-d6b5-45bf-bd78-833182addc6e\",\n      \"text\": \"clause ( e) of sub-section ( 1)\"\n    },\n    {\n      \"locator\": {\n        \"version_id\": \"pver_b387c543dd80098e02d1f231\"\n      },\n      \"role\": \"after_version_text\",\n      \"source_id\": \"src_294c0d2fedc5374a906e0e92\",\n      \"source_sha256\": \"a4b24b643ade5061282fd1a0cb0a232ee8059de17b81673493c7e2497bf9c1bc\",\n      \"source_url\": \"https://indiacode.gov.in/items/62a08274-d6b5-45bf-bd78-833182addc6e\",\n      \"text\": \"clause (b) of sub-section (1)\"\n    }\n  ]\n}",
+        "{\n  \"allowed_labels\": [\"High\", \"Medium\", \"Low\", \"None\"],\n  \"invalid_output\": \"{\\n  \\\"after_text\\\": \\\"clause (b) of sub-section (1)\\\",\\n  \\\"amendment_instruction_text\\\": \\\"11. In section 17 of the principal Act, in the second proviso, for the words, brackets,\\\\nletter and figure “clause ( e) of sub-section ( 1)”, the words, brackets, letter and figure\\\\n“clause (b) of sub-section (1)” shall be substituted.\\\",\\n  \\\"amendment_operation\\\": \\\"SUBSTITUTE\\\",\\n  \\\"before_text\\\": \\\"clause ( e) of sub-section ( 1)\\\",\\n  \\\"output_schema\\\": {\\n    \\\"evidence\\\": [\\n      {\\n        \\\"quote\\\": \\\"verbatim substring of that source text\\\",\\n        \\\"source_id\\\": \\\"exact supplied source id\\\"\\n      }\\n    ],\\n    \\\"insufficient_evidence\\\": \\\"boolean\\\",\\n    \\\"label\\\": \\\"High | Medium | Low | None; null only when insufficient_evidence=true\\\",\\n    \\\"pair_id\\\": \\\"same pair_id\\\",\\n    \\\"rationale\\\": \\\"string explaining how the rubric applies\\\",\\n    \\\"rubric_version\\\": \\\"same rubric version\\\",\\n    \\\"schema_version\\\": \\\"1.0.0\\\",\\n    \\\"uncertainty\\\": \\\"string, empty only if no uncertainty\\\"\\n  },\\n  \\\"pair_id\\\": \\\"mat_ff373a92367a05c862b41846\\\",\\n  \\\"proposed_rubric_not_legally_validated\\\": {\\n    \\\"canonical_labels\\\": [\\n      \\\"High\\\",\\n      \\\"Medium\\\",\\n      \\\"Low\\\",\\n      \\\"None\\\"\\n    ],\\n    \\\"decision_protocol\\\": [\\n      \\\"Compare amendment operation with the complete supplied before/after excerpts and source anchors.\\\",\\n      \\\"Separate amendment materiality from temporal applicability and scenario-specific compliance consequence.\\\",\\n      \\\"Cite exact evidence spans from supplied source records for each material claim.\\\",\\n      \\\"If the version, operation, source, context, or legal effect is insufficiently evidenced, abstain rather than guessing.\\\",\\n      \\\"Even a schema-valid, source-grounded machine assessment has workflow status REVIEW_REQUIRED and is not legal gold.\\\"\\n    ],\\n    \\\"dimension_registry_status\\\": \\\"ten_dimension_technical_registry_proposed_phase0_approval_pending\\\",\\n    \\\"dimensions\\\": [\\n      \\\"obligation\\\",\\n      \\\"right\\\",\\n      \\\"prohibition\\\",\\n      \\\"scope\\\",\\n      \\\"definition\\\",\\n      \\\"threshold\\\",\\n      \\\"time\\\",\\n      \\\"liability\\\",\\n      \\\"procedure\\\",\\n      \\\"exemption\\\"\\n    ],\\n    \\\"legal_validation_status\\\": \\\"unverified_no_qualified_legal_reviewer\\\",\\n    \\\"levels\\\": [\\n      {\\n        \\\"boundary_rule\\\": \\\"A change to a deadline or amount is not automatically High; use High only where evidence supports a fundamental substantive effect beyond a procedural parameter.\\\",\\n        \\\"definition\\\": \\\"The evidenced amendment changes a substantive right, obligation, prohibition, legal scope or eligibility, liability, penalty, controlling exception, or major compliance requirement.\\\",\\n        \\\"exclude_when\\\": [\\n          \\\"Only wording length or edit distance changes\\\",\\n          \\\"Only one scenario outcome changes without amendment-level significance evidence\\\",\\n          \\\"The source evidence does not establish what changed\\\"\\n        ],\\n        \\\"include_when\\\": [\\n          \\\"A duty is created, removed, or substantively changed\\\",\\n          \\\"Conduct or persons covered by the law materially changes\\\",\\n          \\\"A prohibition, liability, penalty, or controlling exception materially changes\\\",\\n          \\\"The amendment substantively changes a major compliance requirement\\\"\\n        ],\\n        \\\"label\\\": \\\"High\\\"\\n      },\\n      {\\n        \\\"boundary_rule\\\": \\\"A numeric change must be interpreted in context; a 10-to-15-day change is ordinarily Medium only when the cited text confirms the period is operative.\\\",\\n        \\\"definition\\\": \\\"The evidenced amendment changes an operative compliance procedure, filing/reporting method, deadline, threshold, evidentiary requirement, or implementation condition while retaining the basic allocation of rights and duties.\\\",\\n        \\\"exclude_when\\\": [\\n          \\\"The change fundamentally reallocates rights/duties or changes material liability (High)\\\",\\n          \\\"Only presentation changes with no operative effect (None)\\\",\\n          \\\"No evidence establishes the parameter or process change\\\"\\n        ],\\n        \\\"include_when\\\": [\\n          \\\"A required procedure or filing process changes\\\",\\n          \\\"An operative deadline or threshold changes with practical compliance significance\\\",\\n          \\\"Conditions or evidence required to satisfy an existing duty change\\\"\\n        ],\\n        \\\"label\\\": \\\"Medium\\\"\\n      },\\n      {\\n        \\\"boundary_rule\\\": \\\"Do not infer Low merely from short text or small edit distance.\\\",\\n        \\\"definition\\\": \\\"The evidenced amendment makes a narrow clarification, terminology update, cross-reference repair, or limited administrative refinement with no demonstrated material change to the core obligation or compliance outcome.\\\",\\n        \\\"exclude_when\\\": [\\n          \\\"A substantive legal effect or practical procedure changes (High/Medium)\\\",\\n          \\\"The evidence is too incomplete to distinguish a limited clarification from a material change\\\"\\n        ],\\n        \\\"include_when\\\": [\\n          \\\"A narrow clarification preserves the operative rule\\\",\\n          \\\"A cross-reference is repaired while preserving the target\\\",\\n          \\\"Administrative wording is refined without substantive effect\\\"\\n        ],\\n        \\\"label\\\": \\\"Low\\\"\\n      },\\n      {\\n        \\\"boundary_rule\\\": \\\"A model must not infer None from missing evidence; use INSUFFICIENT_EVIDENCE when legal-effect absence cannot be supported.\\\",\\n        \\\"definition\\\": \\\"The complete, sufficiently grounded comparison supports only a non-operative editorial/presentation change and supports no legal or compliance effect.\\\",\\n        \\\"exclude_when\\\": [\\n          \\\"Any supported change to legal scope, obligation, procedure, threshold, deadline, liability, or effect\\\",\\n          \\\"Only a normalized-text match is available without contextual source support\\\"\\n        ],\\n        \\\"include_when\\\": [\\n          \\\"Punctuation, spelling, layout, or mechanical renumbering changes while legal meaning and references are demonstrably preserved\\\"\\n        ],\\n        \\\"label\\\": \\\"None\\\"\\n      }\\n    ],\\n    \\\"prohibited_inferences\\\": [\\n      \\\"Citation existence proves legal correctness\\\",\\n      \\\"The machine consensus label is adjudicated ground truth\\\",\\n      \\\"Majority voting or LLM agreement replaces legal validation\\\",\\n      \\\"Materiality alone determines a scenario's compliance consequence\\\"\\n    ],\\n    \\\"rubric_id\\\": \\\"proposed-materiality-rubric-v1\\\",\\n    \\\"schema_version\\\": \\\"1.0.0\\\",\\n    \\\"scope\\\": \\\"Amendment-level significance of an evidenced legal-text change; not a scenario-specific compliance outcome.\\\",\\n    \\\"status\\\": \\\"proposed_operational_research_rubric_not_legally_validated\\\",\\n    \\\"version\\\": \\\"1.0.0\\\",\\n    \\\"workflow_statuses_are_not_labels\\\": [\\n      \\\"REVIEW_REQUIRED\\\",\\n      \\\"INSUFFICIENT_EVIDENCE\\\"\\n    ]\\n  },\\n  \\\"rubric_version\\\": \\\"1.0.0\\\",\\n  \\\"sources\\\": [\\n    {\\n      \\\"locator\\\": {\\n        \\\"line\\\": 35,\\n        \\\"page\\\": 5\\n      },\\n      \\\"role\\\": \\\"amendment_instruction\\\",\\n      \\\"source_id\\\": \\\"src_294c0d2fedc5374a906e0e92\\\",\\n      \\\"source_sha256\\\": \\\"a4b24b643ade5061282fd1a0cb0a232ee8059de17b81673493c7e2497bf9c1bc\\\",\\n      \\\"source_url\\\": \\\"https://indiacode.gov.in/items/62a08274-d6b5-45bf-bd78-833182addc6e\\\",\\n      \\\"text\\\": \\\"11. In section 17 of the principal Act, in the second proviso, for the words, brackets,\\\\nletter and figure “clause ( e) of sub-section ( 1)”, the words, brackets, letter and figure\\\\n“clause (b) of sub-section (1)” shall be substituted.\\\"\\n    },\\n    {\\n      \\\"locator\\\": {\\n        \\\"version_id\\\": \\\"pver_623a09fc1f065d3c1f494fd7\\\"\\n      },\\n      \\\"role\\\": \\\"before_version_text\\\",\\n      \\\"source_id\\\": \\\"src_294c0d2fedc5374a906e0e92\\\",\\n      \\\"source_sha256\\\": \\\"a4b24b643ade5061282fd1a0cb0a232ee8059de17b81673493c7e2497bf9c1bc\\\",\\n      \\\"source_url\\\": \\\"https://indiacode.gov.in/items/62a08274-d6b5-45bf-bd78-833182addc6e\\\",\\n      \\\"text\\\": \\\"clause ( e) of sub-section ( 1)\\\"\\n    },\\n    {\\n      \\\"locator\\\": {\\n        \\\"version_id\\\": \\\"pver_b387c543dd80098e02d1f231\\\"\\n      },\\n      \\\"role\\\": \\\"after_version_text\\\",\\n      \\\"source_id\\\": \\\"src_294c0d2fedc5374a906e0e92\\\",\\n      \\\"source_sha256\\\": \\\"a4b24b643ade5061282fd1a0cb0a232ee8059de17b81673493c7e2497bf9c1bc\\\",\\n      \\\"source_url\\\": \\\"https://indiacode.gov.in/items/62a08274-d6b5-45bf-bd78-833182addc6e\\\",\\n      \\\"text\\\": \\\"clause (b) of sub-section (1)\\\"\\n    }\\n  ]\\n}\",\n  \"pair_id\": \"mat_ff373a92367a05c862b41846\",\n  \"required_schema\": {\n    \"evidence\": [\n      {\n        \"quote\": \"exact substring from that source text\",\n        \"source_id\": \"exact supplied source id\"\n      }\n    ],\n    \"insufficient_evidence\": \"boolean\",\n    \"label\": \"High | Medium | Low | None, or null only if insufficient_evidence is true\",\n    \"pair_id\": \"mat_ff373a92367a05c862b41846\",\n    \"rationale\": \"brief string\",\n    \"rubric_version\": \"1.0.0\",\n    \"schema_version\": \"1.0.0\",\n    \"uncertainty\": \"string\"\n  },\n  \"rubric_version\": \"1.0.0\",\n  \"source_evidence\": [\n    {\n      \"source_id\": \"src_294c0d2fedc5374a906e0e92\",\n      \"text\": \"11. In section 17 of the principal Act, in the second proviso, for the words, brackets,\\nletter and figure “clause ( e) of sub-section ( 1)”, the words, brackets, letter and figure\\n“clause (b) of sub-section (1)” shall be substituted.\"\n    },\n    {\n      \"source_id\": \"src_294c0d2fedc5374a906e0e92\",\n      \"text\": \"clause ( e) of sub-section ( 1)\"\n    },\n    {\n      \"source_id\": \"src_294c0d2fedc5374a906e0e92\",\n      \"text\": \"clause (b) of sub-section (1)\"\n    }\n  ],\n  \"sources\": [\n    {\n      \"source_id\": \"src_294c0d2fedc5374a906e0e92\",\n      \"text\": \"11. In section 17 of the principal Act, in the second proviso, for the words, brackets,\\nletter and figure “clause ( e) of sub-section ( 1)”, the words, brackets, letter and figure\\n“clause (b) of sub-section (1)” shall be substituted.\"\n    },\n    {\n      \"source_id\": \"src_2 94c0d2fedc5374a906e0e92\",\n      \"text\": \"clause ( e) of sub-section ( 1)\"\n    },\n    {\n      \"source_id\": \"src_294c0d2fedc5374a906e0e92\",\n      \"text\": \"clause (b) of sub-section (1)\"\n    }\n  ],\n  \"validation_error\": \"Output fields do not exactly match the assessment schema\"\n}"
+      ],
+      "raw_response_sha256": "41690e793a9f1ac0ee0d0b9728043feeac011c2ac8a7831f7e640b2ce612eca2",
+      "uncertainty": "Output fields do not exactly match the assessment schema",
+      "workflow_status": "REVIEW_REQUIRED"
+    }
+  ],
+  "rubric_id": "proposed-materiality-rubric-v1",
+  "rubric_version": "1.0.0",
+  "schema_valid_count": 37,
+  "schema_version": "1.0.0",
+  "silver_label_agreement_only": {
+    "llm": {
+      "abstention_or_error_count": 13,
+      "eligible_pair_count": 37,
+      "metrics": {
+        "accuracy": 0.32432432432432434,
+        "confusion_matrix": {
+          "High": {
+            "High": 11,
+            "Low": 0,
+            "Medium": 0,
+            "None": 0
+          },
+          "Low": {
+            "High": 0,
+            "Low": 1,
+            "Medium": 0,
+            "None": 0
+          },
+          "Medium": {
+            "High": 23,
+            "Low": 2,
+            "Medium": 0,
+            "None": 0
+          },
+          "None": {
+            "High": 0,
+            "Low": 0,
+            "Medium": 0,
+            "None": 0
+          }
+        },
+        "gold_distribution": {
+          "High": 11,
+          "Low": 1,
+          "Medium": 25
+        },
+        "high_materiality_denominator": 11,
+        "high_materiality_false_negative_count": 0,
+        "high_materiality_false_negative_rate": 0.0,
+        "item_count": 37,
+        "macro_f1": 0.49444444444444446,
+        "per_class": {
+          "High": {
+            "f1": 0.48888888888888893,
+            "precision": 0.3235294117647059,
+            "recall": 1.0,
+            "support": 11
+          },
+          "Low": {
+            "f1": 0.5,
+            "precision": 0.3333333333333333,
+            "recall": 1.0,
+            "support": 1
+          },
+          "Medium": {
+            "f1": null,
+            "precision": null,
+            "recall": 0.0,
+            "support": 25
+          },
+          "None": {
+            "f1": null,
+            "precision": null,
+            "recall": null,
+            "support": 0
+          }
+        }
+      },
+      "reference_is_rule_derived_silver_not_gold": true,
+      "status": "silver_label_agreement_only"
+    },
+    "rule_a": {
+      "abstention_or_unresolved_count": 0,
+      "eligible_pair_count": 50,
+      "metrics": {
+        "accuracy": 0.62,
+        "confusion_matrix": {
+          "High": {
+            "High": 16,
+            "Low": 0,
+            "Medium": 0,
+            "None": 0
+          },
+          "Low": {
+            "High": 0,
+            "Low": 3,
+            "Medium": 0,
+            "None": 0
+          },
+          "Medium": {
+            "High": 0,
+            "Low": 19,
+            "Medium": 12,
+            "None": 0
+          },
+          "None": {
+            "High": 0,
+            "Low": 0,
+            "Medium": 0,
+            "None": 0
+          }
+        },
+        "gold_distribution": {
+          "High": 16,
+          "Low": 3,
+          "Medium": 31
+        },
+        "high_materiality_denominator": 16,
+        "high_materiality_false_negative_count": 0,
+        "high_materiality_false_negative_rate": 0.0,
+        "item_count": 50,
+        "macro_f1": 0.5993798449612403,
+        "per_class": {
+          "High": {
+            "f1": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "support": 16
+          },
+          "Low": {
+            "f1": 0.24000000000000002,
+            "precision": 0.13636363636363635,
+            "recall": 1.0,
+            "support": 3
+          },
+          "Medium": {
+            "f1": 0.5581395348837209,
+            "precision": 1.0,
+            "recall": 0.3870967741935484,
+            "support": 31
+          },
+          "None": {
+            "f1": null,
+            "precision": null,
+            "recall": null,
+            "support": 0
+          }
+        }
+      },
+      "reference_is_derived_from_same_rule_systems": true,
+      "status": "silver_label_agreement_only"
+    },
+    "rule_b": {
+      "abstention_or_unresolved_count": 0,
+      "eligible_pair_count": 50,
+      "metrics": {
+        "accuracy": 1.0,
+        "confusion_matrix": {
+          "High": {
+            "High": 16,
+            "Low": 0,
+            "Medium": 0,
+            "None": 0
+          },
+          "Low": {
+            "High": 0,
+            "Low": 3,
+            "Medium": 0,
+            "None": 0
+          },
+          "Medium": {
+            "High": 0,
+            "Low": 0,
+            "Medium": 31,
+            "None": 0
+          },
+          "None": {
+            "High": 0,
+            "Low": 0,
+            "Medium": 0,
+            "None": 0
+          }
+        },
+        "gold_distribution": {
+          "High": 16,
+          "Low": 3,
+          "Medium": 31
+        },
+        "high_materiality_denominator": 16,
+        "high_materiality_false_negative_count": 0,
+        "high_materiality_false_negative_rate": 0.0,
+        "item_count": 50,
+        "macro_f1": 1.0,
+        "per_class": {
+          "High": {
+            "f1": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "support": 16
+          },
+          "Low": {
+            "f1": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "support": 3
+          },
+          "Medium": {
+            "f1": 1.0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "support": 31
+          },
+          "None": {
+            "f1": null,
+            "precision": null,
+            "recall": null,
+            "support": 0
+          }
+        }
+      },
+      "reference_is_derived_from_same_rule_systems": true,
+      "status": "silver_label_agreement_only"
+    }
+  },
+  "source_round_sha256": "0d573528b7057adc0d0a4c92ffc6ed64d4f7e0cdebab3e70d097e8ae6a4ad365",
+  "source_silver_sha256": "d61f877a4a211de91927ea93f5994e0b6bf2c4a0f0818893e5a81ae2b8fce646",
+  "status": "llm_materiality_assessments_complete_with_review_required",
+  "temperature": 0.0
+}

@@ -47,3 +47,12 @@ Started the recommended source-fidelity audit; see [../reports/phase2/source_fid
 - **Phase B:** extraction **v2.2** adds a bounded compound splitter, the "respectively" fix and layout-aware furniture exclusion. An OCR *candidate* for IT 2008 is frozen; it is unverified and not used.
 - `build-amendment-extraction-version --version <current> --previous <frozen>` writes a new extraction version; it refuses any version other than the current extractor's.
 - See [../reports/phase2/extraction_v2.2_checkpoint.md](../reports/phase2/extraction_v2.2_checkpoint.md).
+
+## Phases C–G status (2026-10-12)
+
+- **C:** graph **v4**, an evidence-strength policy (`protocols/temporal_graph_protocol.v3.md`) and `graph-consumer-v1`.
+- **D:** materiality re-assessment **v2.5** (50 cases), None search v2, and LLM assessments v2.
+- **E:** risk tests extended. Section 19 demonstrations are confirmed to rest on stipulated applicability.
+- **F:** RAG drift only on aligned versions, honest UI labels, source-fidelity warnings.
+- **G:** benchmark freeze still refused (no gold).
+- See `docs/claims_evidence_matrix.md` and the per-phase checkpoint reports. The legal/research gate remains UNVERIFIED.

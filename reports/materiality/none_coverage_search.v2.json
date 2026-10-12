@@ -1,0 +1,14 @@
+{
+  "graph_id": null,
+  "graph_sha256": "fcff6fbc2bc2510d7b914677264e26b4e81555c73aa6aa835a5f30df1216d1c8",
+  "interpretation": "Textual equality is a search heuristic only. None requires supported absence of legal/compliance effect and remains unassigned without independent validation.",
+  "legal_correctness_claimed": false,
+  "none_gold_labels_created": 0,
+  "normalized_text_match_count": 0,
+  "rejected_candidate_count": 0,
+  "results": [],
+  "reviewable_candidate_count": 0,
+  "schema_version": "1.0.0",
+  "status": "none_category_unevaluated",
+  "transition_count_scanned": 136
+}

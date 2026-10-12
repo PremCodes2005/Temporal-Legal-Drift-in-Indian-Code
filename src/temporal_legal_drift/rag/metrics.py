@@ -93,6 +93,7 @@ def calculate_drift_metrics(
         "accuracy_definition": "retrieval confidence, paired-evidence completeness and metadata coverage; not legal correctness",
         "calculation_trace": {
             "semantic": {
+                "method": "cosine of deterministic 256-dimension feature-hash token vectors; not a pretrained semantic encoder",
                 "cosine_similarity_percent": round(cosine_similarity * 100, 1),
                 "formula": "100 × (1 - cosine similarity)",
             },

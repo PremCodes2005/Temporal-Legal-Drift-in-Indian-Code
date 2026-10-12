@@ -6,6 +6,22 @@ The repository is at TRL 2. Phases 0–11 provide configuration, source provenan
 
 A separate one-pair controlled temporal-drift demonstration is reported in `reports/phase9/temporal_drift_demo.md`. It produced the expected pre/post answer change, but its research-engineer-authored expectations are not legal gold.
 
+## Current state (2026-10-12)
+
+This is an **engineering research prototype**. The legal/research gate is open: no independent legal review, no legal gold labels, no frozen scientific benchmark and no legal-accuracy metrics exist. The paragraph above and the phase list below are the earlier Phase 0–11 summary; the corpus now has 100 tracked PDFs.
+
+| Layer | Current versioned artifact | Status |
+| --- | --- | --- |
+| Extraction | `data/processed/amendments/v2.2/extraction.json` (1,150 events) | Machine extraction; compound splitting and layout-aware furniture exclusion. Frozen v1/v2.1 kept. |
+| Source fidelity | `data/processed/layout/v1/`, `data/processed/ocr/v1/` | IT Amendment 2008 text unreliable; the OCR candidate is unverified and unused. |
+| Temporal graph | `data/interim/temporal_legal_knowledge_graph.v4.json` | 136 fragment transitions (86 machine-checked, 5 dated), 1,014 unresolved, 0 human-validated. |
+| Graph consumers | `versioning/consumer.py` (`graph-consumer-v1`) | Used by RAG for drift only on aligned fragments; risk does not consume the graph. |
+| Materiality | `data/silver/materiality_reassessment.v2.5.json`, LLM assessments v2 | Silver/LLM opinions only; None class unevaluated. |
+| Risk | `data/risk/*.v1.json` | Deterministic baseline; 13 abstention scaffolds and 2 conditional demonstrations. |
+| Release | `data/releases/active_release.json` | Commit-bound fresh-environment reproduction; see `docs/claims_evidence_matrix.md`. |
+
+A clean checkout must run `tldrift restore-release-inputs` before tests (CI does). Checkpoint reports: `reports/phase2/extraction_v2.2_checkpoint.md`, `reports/phase3/temporal_graph_v4_checkpoint.md`, `reports/materiality/phase_d_checkpoint.md`, `reports/risk/phase_e_checkpoint.md`, `reports/rag/phase_f_checkpoint.md`.
+
 ## Implemented boundary
 
 - **Phase 0:** draft research contract, terminology/temporal registries, novelty-audit template, gate status, and structural validation.

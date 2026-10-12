@@ -18,6 +18,9 @@ def build_disagreement_audit_v2(
     round_document: dict[str, Any],
     graph: dict[str, Any],
     reextracted_events: list[dict[str, Any]],
+    *,
+    version: str = "2.4",
+    pair_ids: list[str] | None = None,
 ) -> dict[str, Any]:
     """Re-extract only the original disagreement evidence and compare rule versions.
 
@@ -36,18 +39,28 @@ def build_disagreement_audit_v2(
         for item in graph.get("legal_sources", [])
     }
     reextracted_by_source_and_evidence: dict[tuple[str, str], list[dict[str, Any]]] = {}
+    parts_by_source_and_clause: dict[tuple[str, str], list[dict[str, Any]]] = {}
     for item in reextracted_events:
         key = (str(item.get("source_document")), str(item.get("evidence_text")))
         reextracted_by_source_and_evidence.setdefault(key, []).append(item)
+        if item.get("compound_part"):
+            clause_key = (str(item.get("source_document")), str(item["compound_part"]["clause_text_sha256"]))
+            parts_by_source_and_clause.setdefault(clause_key, []).append(item)
 
     audit_rows: list[dict[str, Any]] = []
-    for pair_id in silver["agreement"]["disagreement_pair_ids"]:
+    for pair_id in (pair_ids or silver["agreement"]["disagreement_pair_ids"]):
         task, silver_row = tasks[str(pair_id)], rows[str(pair_id)]
         original_event = events[str(task["amendment_event_id"])]
         source_id = str(original_event["evidence"]["source_id"])
         corpus_entry = corpus_entry_by_source.get(source_id)
         source_text = str(original_event["evidence"]["exact_text"])
         matches = reextracted_by_source_and_evidence.get((str(corpus_entry), source_text), [])
+        if not matches:
+            # From v2.2 a compound clause is split: pick the one part whose target and
+            # v1 wording identify the case; anything else stays unmatched.
+            matches = _matching_parts(
+                task, parts_by_source_and_clause.get((str(corpus_entry), sha256(source_text.encode()).hexdigest()), [])
+            )
         reparsed = matches[0] if len(matches) == 1 else None
 
         old_a = str(silver_row["annotator_a"]["label"])
@@ -66,7 +79,16 @@ def build_disagreement_audit_v2(
             new_task["before_text"] = None
             new_task["after_text"] = None
 
-        if extraction_status == "REVIEW_REQUIRED" or not reparsed or reparsed.get("operation") == "UNKNOWN":
+        # A required operand that was not extracted is missing evidence, never "identical text".
+        wording_missing = bool(reparsed) and (
+            (reparsed.get("operation") in {"SUBSTITUTE", "REPLACE"} and (reparsed.get("old_text") is None or reparsed.get("new_text") is None))
+            or (reparsed.get("operation") == "INSERT" and reparsed.get("new_text") is None)
+            or (reparsed.get("operation") in {"OMIT", "REPEAL"} and reparsed.get("old_text") is None)
+        )
+        if wording_missing:
+            new_task["before_text"] = None
+            new_task["after_text"] = None
+        if extraction_status == "REVIEW_REQUIRED" or not reparsed or reparsed.get("operation") == "UNKNOWN" or wording_missing:
             new_a = {"label": None, "status": "REVIEW_REQUIRED", "rationale": "Source event or operation is not represented as one unambiguous aligned fragment."}
             new_b = {"label": None, "status": "REVIEW_REQUIRED", "rationale": "No materiality label is emitted when the source fragment is unresolved."}
         else:
@@ -105,7 +127,9 @@ def build_disagreement_audit_v2(
                 "new_text": reparsed.get("new_text") if reparsed else None,
                 "status": extraction_status,
                 "defect_codes": defect_codes,
-                "source_span_check": _source_span_check(reparsed, source_text),
+                "compound_part": reparsed.get("compound_part") if reparsed else None,
+                "layout_cleaning": reparsed.get("layout_cleaning") if reparsed else None,
+                "source_span_check": _source_span_check(reparsed, _parsed_body(reparsed) if reparsed else source_text),
                 "consolidated_snapshot_support": consolidated_support,
             },
             "v2": {
@@ -130,8 +154,8 @@ def build_disagreement_audit_v2(
     ]
     matching = sum(item["v2"]["rule_a"]["label"] == item["v2"]["rule_b"]["label"] for item in comparable)
     return {
-        "schema_version": "2.4.0",
-        "audit_id": "materiality-disagreement-audit-v2.4",
+        "schema_version": f"{version}.0",
+        "audit_id": f"materiality-disagreement-audit-v{version}",
         "status": "diagnostic_reextraction_and_rule_reassessment_not_gold",
         "source_silver_sha256": sha256(canonical_json_bytes(silver)).hexdigest(),
         "source_round_sha256": sha256(canonical_json_bytes(round_document)).hexdigest(),
@@ -176,9 +200,9 @@ def build_disagreement_audit_v2(
 def render_disagreement_audit_v2(document: dict[str, Any]) -> str:
     rows = document["rows"]
     parts = [
-        "# Materiality Disagreement Review — Version 2.4",
+        f"# Materiality Re-extraction Review — {document['audit_id']}",
         "",
-        "This report re-extracts source clauses with extractor v2 and reassesses the original 19 cases. The v1 report and silver dataset remain unchanged. Machine outputs are not legal findings or gold labels.",
+        f"This report re-extracts source clauses with {document['extractor_version']} and reassesses {document['case_count']} frozen silver cases. The v1 report and silver dataset remain unchanged. Machine outputs are not legal findings or gold labels.",
         "",
         f"- Confirmed extraction/alignment defects: **{document['confirmed_alignment_defect_count']}**",
         f"- Review-required compound or unresolved cases: **{document['review_required_count']}**",
@@ -187,8 +211,8 @@ def render_disagreement_audit_v2(document: dict[str, Any]) -> str:
         f"- v1 disagreements: **{document['v1_rule_disagreement_count']}/{document['case_count']}**",
         f"- v2 comparable cases (both rules emitted labels): **{document['v2_comparable_count']}**",
         f"- v2 agreement among comparable cases: **{document['v2_rule_agreement_count']}/{document['v2_comparable_count']}**" if document["v2_comparable_count"] else "- v2 agreement: not calculable (no comparable cases)",
-        f"- v2 Rule A emitted labels for {document['v2_rule_a_labelled_count']}/19; Rule B proposed {document['v2_rule_b_labelled_count']}/19, with {document['v2_rule_b_review_held_label_count']} held for cross-source review and {document['v2_rule_b_abstention_count']} null-label abstentions.",
-        f"- Predictions changed from v1: Rule A **{document['rule_a_changed_from_v1_count']}/19**; Rule B **{document['rule_b_changed_from_v1_count']}/19**. The two Rule B label candidates are not score-eligible because their complete inserted text did not exactly match the existing consolidated snapshot.",
+        f"- v2 Rule A emitted labels for {document['v2_rule_a_labelled_count']}/{document['case_count']}; Rule B proposed {document['v2_rule_b_labelled_count']}/{document['case_count']}, with {document['v2_rule_b_review_held_label_count']} held for cross-source review and {document['v2_rule_b_abstention_count']} null-label abstentions.",
+        f"- Predictions changed from v1: Rule A **{document['rule_a_changed_from_v1_count']}/{document['case_count']}**; Rule B **{document['rule_b_changed_from_v1_count']}/{document['case_count']}**. Labels held for cross-source review are not score-eligible.",
         f"- Remaining paired Low-versus-Medium disagreements: **{document['v2_low_medium_disagreement_count']}**; abstentions are not counted as agreement.",
         "",
         "Rule B v1 assigned Medium solely from token similarity below 0.65 in all original disagreements. That ratio is not a legal-effect measure; v2 abstains with REVIEW_REQUIRED when low similarity is the only signal. Insertions correctly have an empty before fragment, but this makes a SequenceMatcher ratio of zero structurally uninformative.",
@@ -251,12 +275,48 @@ def _assess_extraction(task: dict[str, Any], old_event: dict[str, Any], new_even
             defects.append("target_path_detail_mismatch")
     if any(PAGE_FURNITURE.search(str(new_event.get(key) or "")) for key in ("old_text", "new_text")):
         defects.append("operand_contains_page_furniture")
-    source_check = _source_span_check(new_event, str(new_event.get("evidence_text", "")))
+    source_check = _source_span_check(new_event, _parsed_body(new_event))
     if not source_check:
         defects.append("reextracted_wording_not_source_supported")
     if defects:
         return "CONFIRMED_EXTRACTION_DEFECT", defects
     return "REEXTRACTED_ALIGNED", []
+
+
+def llm_task_overrides(reassessment: dict[str, Any]) -> dict[str, dict[str, Any] | None]:
+    """Corrected fragments for LLM assessment, or None where the fragment is not supported."""
+    overrides: dict[str, dict[str, Any] | None] = {}
+    for row in reassessment["rows"]:
+        extraction, new = row["extraction_v2"], row["v2"]
+        supported = (
+            extraction["status"] in {"REEXTRACTED_ALIGNED", "CONFIRMED_EXTRACTION_DEFECT"}
+            and extraction["matched_reparsed_event"]
+            and extraction["source_span_check"]
+            and extraction["consolidated_snapshot_support"] is not False
+            and new["before_text"] is not None and new["after_text"] is not None
+            and new["rule_a"]["status"] != "REVIEW_REQUIRED"
+        )
+        overrides[str(row["pair_id"])] = (
+            {"operation": extraction["operation"], "before_text": new["before_text"], "after_text": new["after_text"]}
+            if supported else None
+        )
+    return overrides
+
+
+def _parsed_body(event: dict[str, Any]) -> str:
+    """Text the operands were parsed from: the layout-cleaned body when furniture was removed."""
+    cleaning = event.get("layout_cleaning")
+    return str(cleaning["body_evidence_text"]) if isinstance(cleaning, dict) else str(event.get("evidence_text", ""))
+
+
+def _matching_parts(task: dict[str, Any], parts: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    section = str(task.get("provision_path", "")).split(":")[-1].upper()
+    wording = _normalise(str(task.get("after_text") or task.get("before_text") or ""))
+    return [
+        part for part in parts
+        if str(part.get("target_provision", "")).split(":")[-1].upper() == section
+        and wording and wording in _normalise(str(part.get("evidence_text", "")))
+    ]
 
 
 def _old_after_is_inserted_anchor(old_after: str, instruction: str) -> bool:

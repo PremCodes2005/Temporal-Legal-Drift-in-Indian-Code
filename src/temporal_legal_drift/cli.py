@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 from datetime import date
@@ -282,13 +283,13 @@ def build_parser() -> argparse.ArgumentParser:
 
     none_search = subparsers.add_parser("search-materiality-none")
     none_search.add_argument(
-        "--graph", type=Path, default=Path("data/interim/temporal_legal_knowledge_graph.v2.json")
+        "--graph", type=Path, default=Path("data/interim/temporal_legal_knowledge_graph.v4.json")
     )
     none_search.add_argument(
-        "--output", type=Path, default=Path("reports/materiality/none_coverage_search.v1.json")
+        "--output", type=Path, default=Path("reports/materiality/none_coverage_search.v2.json")
     )
     none_search.add_argument(
-        "--report", type=Path, default=Path("reports/materiality/none_coverage_search.v1.md")
+        "--report", type=Path, default=Path("reports/materiality/none_coverage_search.v2.md")
     )
 
     llm_assessment = subparsers.add_parser("assess-materiality-with-llm")
@@ -305,10 +306,14 @@ def build_parser() -> argparse.ArgumentParser:
         "--rubric", type=Path, default=Path("configs/annotation/proposed_materiality_rubric.v1.json")
     )
     llm_assessment.add_argument(
-        "--output", type=Path, default=Path("data/assessments/materiality_llm_assessments.v1.json")
+        "--reassessment", type=Path, default=Path("data/silver/materiality_reassessment.v2.5.json"),
+        help="versioned re-extraction audit supplying corrected fragments",
     )
     llm_assessment.add_argument(
-        "--lock", type=Path, default=Path("reports/materiality/materiality_llm_assessments.lock.json")
+        "--output", type=Path, default=Path("data/assessments/materiality_llm_assessments.v2.json")
+    )
+    llm_assessment.add_argument(
+        "--lock", type=Path, default=Path("reports/materiality/materiality_llm_assessments.v2.lock.json")
     )
 
     materiality_ensemble = subparsers.add_parser("build-materiality-ensemble")
@@ -337,9 +342,11 @@ def build_parser() -> argparse.ArgumentParser:
     disagreement_audit.add_argument("--round", type=Path, default=Path("data/annotations/materiality_annotation_round.v1.json"))
     disagreement_audit.add_argument("--silver", type=Path, default=Path("data/silver/materiality_silver_labels.v1.json"))
     disagreement_audit.add_argument("--graph", type=Path, default=Path("data/interim/temporal_legal_knowledge_graph.v2.json"))
-    disagreement_audit.add_argument("--extraction", type=Path, default=Path("data/processed/amendments/v2.1/extraction.json"))
-    disagreement_audit.add_argument("--output", type=Path, default=Path("data/silver/materiality_disagreement_audit.v2.4.json"))
-    disagreement_audit.add_argument("--report", type=Path, default=Path("reports/materiality/silver_disagreement_review.v2.4.md"))
+    disagreement_audit.add_argument("--extraction", type=Path, default=Path("data/processed/amendments/v2.2/extraction.json"))
+    disagreement_audit.add_argument("--version", default="2.5")
+    disagreement_audit.add_argument("--scope", choices=("disagreements", "all"), default="all")
+    disagreement_audit.add_argument("--output", type=Path, default=Path("data/silver/materiality_reassessment.v2.5.json"))
+    disagreement_audit.add_argument("--report", type=Path, default=Path("reports/materiality/materiality_reassessment.v2.5.md"))
 
     agreement = subparsers.add_parser("calculate-materiality-agreement")
     agreement.add_argument(
@@ -816,6 +823,10 @@ def run(args: argparse.Namespace) -> int:
             load_json(_resolve(root, args.round)),
             load_json(_resolve(root, args.graph)),
             extraction_v2["events"],
+            version=args.version,
+            pair_ids=None if args.scope == "disagreements" else [
+                str(row["pair_id"]) for row in load_json(_resolve(root, args.silver))["rows"]
+            ],
         )
         atomic_write_new(_resolve(root, args.output), canonical_json_bytes(result))
         atomic_write_new(_resolve(root, args.report), render_disagreement_audit_v2(result).encode("utf-8"))
@@ -824,19 +835,27 @@ def run(args: argparse.Namespace) -> int:
 
     if args.command == "search-materiality-none":
         result = search_potential_none_cases(load_json(_resolve(root, args.graph)))
-        from .jsonio import atomic_replace, canonical_json_bytes
+        from .jsonio import atomic_write_new, canonical_json_bytes
 
-        atomic_replace(_resolve(root, args.output), canonical_json_bytes(result))
-        atomic_replace(_resolve(root, args.report), render_none_coverage_report(result).encode("utf-8"))
+        # Versioned outputs are write-once; an earlier search is never replaced.
+        atomic_write_new(_resolve(root, args.output), canonical_json_bytes(result))
+        atomic_write_new(_resolve(root, args.report), render_none_coverage_report(result).encode("utf-8"))
         print(json.dumps({key: value for key, value in result.items() if key != "results"}, indent=2, ensure_ascii=False))
         return 0
 
     if args.command == "assess-materiality-with-llm":
+        from .materiality.audit import llm_task_overrides
+
+        reassessment_path = _resolve(root, args.reassessment)
+        reassessment = load_json(reassessment_path)
         result = assess_materiality_with_llm(
             load_json(_resolve(root, args.silver)),
             load_json(_resolve(root, args.round)),
             load_json(_resolve(root, args.graph)),
             load_json(_resolve(root, args.rubric)),
+            task_overrides=llm_task_overrides(reassessment),
+            assessment_id="materiality-llm-assessments-v2",
+            reassessment_sha256=hashlib.sha256(reassessment_path.read_bytes()).hexdigest(),
             progress_callback=lambda current, total, pair_id, status: print(
                 f"LLM materiality assessment {current}/{total}: {pair_id} [{status}]",
                 file=sys.stderr,

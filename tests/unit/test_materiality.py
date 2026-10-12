@@ -130,6 +130,29 @@ class MaterialityWorkflowTests(unittest.TestCase):
         self.assertEqual(result["silver_label_agreement_only"]["llm"]["eligible_pair_count"], 50)
         self.assertTrue(result["silver_label_agreement_only"]["llm"]["reference_is_rule_derived_silver_not_gold"])
 
+    def test_llm_overrides_send_corrected_fragments_and_skip_unresolved_cases(self) -> None:
+        seen: dict[str, dict[str, object]] = {}
+        mock = self._mock_assessor()
+
+        def request(messages: list[dict[str, str]]) -> str:
+            payload = json.loads(messages[1]["content"])
+            seen[payload["pair_id"]] = payload
+            return mock(messages)
+
+        first, second = (str(row["pair_id"]) for row in self.silver["rows"][:2])
+        overrides = {str(row["pair_id"]): None for row in self.silver["rows"]}
+        overrides[first] = {"operation": "SUBSTITUTE", "before_text": "three years", "after_text": "ten years"}
+        result = assess_materiality_with_llm(
+            self.silver, self.round, self.graph, self.rubric, request_model=request,
+            task_overrides=overrides, assessment_id="test-v2", reassessment_sha256="0" * 64,
+        )
+        self.assertEqual(set(seen), {first})  # unresolved fragments never reach the model
+        self.assertEqual((seen[first]["before_text"], seen[first]["after_text"]), ("three years", "ten years"))
+        by_id = {row["pair_id"]: row for row in result["rows"]}
+        self.assertEqual(by_id[second]["assessment_status"], "NOT_ASSESSED_FRAGMENT_UNRESOLVED")
+        self.assertIsNone(by_id[second]["materiality_label"])
+        self.assertEqual(result["fragment_source"]["reassessment_sha256"], "0" * 64)
+
     def test_structured_assessment_validator_rejects_unknown_source_and_bad_shape(self) -> None:
         task = self.round["tasks"][0]
         source = task["source_evidence"][0]
@@ -221,6 +244,20 @@ class MaterialityWorkflowTests(unittest.TestCase):
         self.assertIn("REVIEW_REQUIRED", report)
         for pair_id in self.silver["agreement"]["disagreement_pair_ids"]:
             self.assertIn(pair_id, report)
+
+    def test_reextraction_audit_never_reads_missing_operands_as_identical_text(self) -> None:
+        pair_id = "mat_859f1a5bc4b6b3208d6a6994"  # Disaster Management s.11: whole-section substitution
+        task = next(item for item in self.round["tasks"] if item["pair_id"] == pair_id)
+        event = next(item for item in self.graph["amendment_events"] if item["amendment_event_id"] == task["amendment_event_id"])
+        entry = next(item["corpus_entry_id"] for item in self.graph["legal_sources"] if item["source_id"] == event["evidence"]["source_id"])
+        reparsed = {"source_document": entry, "evidence_text": event["evidence"]["exact_text"], "operation": "SUBSTITUTE",
+                    "target_provision": task["provision_path"], "old_text": None, "new_text": None}
+        audit = build_disagreement_audit_v2(self.silver, self.round, self.graph, [reparsed], version="9.9", pair_ids=[pair_id])
+        row = audit["rows"][0]
+        self.assertIsNone(row["v2"]["rule_a"]["label"])
+        self.assertIsNone(row["v2"]["rule_b"]["label"])
+        self.assertEqual(row["v2"]["rule_a"]["status"], "REVIEW_REQUIRED")
+        self.assertEqual(audit["audit_id"], "materiality-disagreement-audit-v9.9")
 
     def test_reextraction_audit_preserves_v1_and_abstains_on_size_only(self) -> None:
         events = load_json(ROOT / "data/processed/amendments/v2.1/extraction.json")["events"]

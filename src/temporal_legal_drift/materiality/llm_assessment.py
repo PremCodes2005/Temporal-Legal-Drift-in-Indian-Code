@@ -32,6 +32,9 @@ def assess_materiality_with_llm(
     *,
     request_model: RequestModel | None = None,
     progress_callback: ProgressCallback | None = None,
+    task_overrides: dict[str, dict[str, Any] | None] | None = None,
+    assessment_id: str = "materiality-llm-assessments-v1",
+    reassessment_sha256: str | None = None,
 ) -> dict[str, Any]:
     """Assess each silver pair independently; outputs stay opinions, never gold labels."""
     _validate_rubric(rubric)
@@ -53,6 +56,18 @@ def assess_materiality_with_llm(
     for silver_row in silver_rows:
         pair_id = str(silver_row["pair_id"])
         task = task_by_id[pair_id]
+        if task_overrides is not None:
+            # Corrected fragments come from a versioned re-extraction audit; an
+            # unresolved fragment is not sent to the model at all.
+            override = task_overrides.get(pair_id)
+            if override is None:
+                assessments.append(_failed_assessment(
+                    pair_id, "NOT_ASSESSED_FRAGMENT_UNRESOLVED",
+                    "Re-extraction did not yield one source-supported before/after fragment.", None, []))
+                if progress_callback is not None:
+                    progress_callback(len(assessments), len(silver_rows), pair_id, "NOT_ASSESSED_FRAGMENT_UNRESOLVED")
+                continue
+            task = {**task, **override}
         evidence = _build_assessment_evidence(task, versions, legal_sources)
         messages = _make_prompt(task, evidence, rubric)
         raw_output: str | None = None
@@ -140,7 +155,11 @@ def assess_materiality_with_llm(
     }
     return {
         "schema_version": "1.0.0",
-        "assessment_id": "materiality-llm-assessments-v1",
+        "assessment_id": assessment_id,
+        "fragment_source": (
+            {"reassessment_sha256": reassessment_sha256, "policy": "corrected v2.2 fragments; unresolved cases not assessed"}
+            if task_overrides is not None else "annotation round v1 fragments"
+        ),
         "status": "llm_materiality_assessments_complete_with_review_required",
         "source_silver_sha256": sha256(canonical_json_bytes(silver)).hexdigest(),
         "source_round_sha256": silver["source_round_sha256"],

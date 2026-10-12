@@ -230,9 +230,10 @@ class HybridRetriever:
             scores[entry_id] = max(scores.get(entry_id, 0.0), item.score)
         candidates = []
         for amending, target in relations.items():
-            combined = scores.get(str(amending), 0.0) + scores.get(str(target), 0.0)
-            if combined:
-                candidates.append((combined, str(amending), str(target)))
+            # Both instruments must have been retrieved; a relation whose amending Act
+            # was not found must not pull an unrelated amendment into the answer.
+            if scores.get(str(amending), 0.0) and scores.get(str(target), 0.0):
+                candidates.append((scores[str(amending)] + scores[str(target)], str(amending), str(target)))
         if not candidates:
             return None
         _, amending, target = max(candidates)
