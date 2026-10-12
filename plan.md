@@ -2,10 +2,14 @@
 
 ## Temporal Legal Drift in the Indian Code
 
-**Status:** Research specification; TRL 2  
+**Status:** Research specification with an engineering prototype; legal/research validation pending
 **Target:** Lab-validated research prototype; TRL 4  
 **Core orientation:** Temporal legal reasoning and compliance-drift evaluation over versioned Indian law  
-**Implementation status:** The Phase 0-11 engineering foundation and connected local research dashboard now exist: research-contract validation, provenance-controlled acquisition, immutable raw storage, parsing/normalization, a technical provision-version graph, an evidence-constrained temporal applicability resolver, an evidence-linked 50-task annotation workload, compliance-scenario authoring scaffolds, a leakage-audited technical release dry run, baseline and metric infrastructure, six-condition temporal-LLM execution, structured answer normalization, false-stability/false-instability scoring, automated explanation-support checks, fresh-environment engineering reproduction, live project APIs, controlled evidence/scenario intake, tests, gates, CI, and a bounded read-only project-evaluation agent. The local technical corpus contains 100 downloaded and normalized Indian legal documents. The reconciled technical graph contains 100 instruments and 6,320 evidence-linked provision snapshots, plus unresolved amendment candidates; these are not approved historical transitions. The controlled Phase 9 smoke run executed 78/78 planned conditions with schema-valid responses; all responses abstained where scenario facts, legal questions, or historical versions were unavailable. This is operational evidence only. The RAG drift display uses separate semantic, lexical, and conceptual scores with weighted-RMS aggregation and a component-disagreement warning. Materiality gold labels, complete legally validated pre/post pairs, expert-authored scenarios, legal-gold applicability determinations, a frozen benchmark, publishable performance metrics, and independent expert validation do not exist. The evaluation agent is not the optional source-monitoring agent described in Phase 12; that monitoring agent remains unimplemented because its Phase 11 legal-validation dependency has not passed.
+**Audit basis:** Repository commit `68030875a719aa626fb05f294880de2953084781`, inspected 2026-10-12; recheck the checkout before relying on these counts. See `docs/verification.md` for checks actually executed. The Phase 0-12 sequence below is the **research plan**; later implementation reports use overlapping but non-identical phase numbers.
+
+**Implemented engineering, not legal gold:** The repository has 100 tracked local PDFs, acquisition/ingestion and parsing, a generalized amendment extractor, a technical temporal graph and conservative applicability resolver, a 50-case frozen **machine-silver** materiality workflow, scenario scaffolds, a deterministic compliance-risk engine, a technical benchmark dry run, baseline/evaluation infrastructure, an executed 78-condition LLM smoke run, automated explanation-support diagnostics, a Python API, and a React/Vite single-prompt RAG dashboard. `reports/phase3/temporal_graph_checkpoint.v2.json` records 5,657 provision identities, 5,891 version records, 864 machine amendment events, 66 machine-validated **fragment** transitions, 6 dated transitions, 747 unresolved transitions, and **0 independently legally validated transitions**. `reports/materiality/implementation_status.md` records 31/50 rule agreements and 19 original disagreements, not human agreement or accuracy. `reports/risk/checkpoint.v1.md` records 13 structured abstention scaffolds and two conditional Section 19 demonstrations, not 13 expert-gold risk outcomes. The prior audit ran 115 tests successfully and both engineering CLI checks passed; it did not rerun the frontend, live India Code, a model provider, remote CI, or legal review.
+
+**Unfinished research:** Historical provision completeness, source-text fidelity, approved temporal applicability, a legally approved materiality taxonomy, gold labels, substantive scenario/risk outcomes, a frozen scientific benchmark, model-performance estimates, and independent expert validation remain open. The optional read-only `evaluation_agent/` audits project artifacts; it is not the optional legislative source-monitoring agent of Phase 12. No patentability, legal correctness, or TRL 4 claim follows from the engineering checks.
 
 This plan distinguishes implemented engineering artifacts from planned research work. It reports no model performance, legal validation, or scientific benchmark result.
 
@@ -61,6 +65,8 @@ The research problem therefore contains three distinct decisions:
 - **Compliance consequence:** what does the applicable law imply for these facts?
 
 These decisions must be represented and evaluated separately. A material amendment need not change every scenario outcome, and a correct materiality label cannot compensate for applying the wrong legal version.
+
+The newer compliance-risk deliverable adds a **fourth downstream assessment**, not a substitute for any of the three: given an applicable obligation, scenario facts, and a supported consequence, determine provisional severity, urgency, uncertainty, and escalation. Neither large textual drift nor a High materiality label automatically means High risk. A risk result with missing evidence is unknown, not `None`.
 
 ---
 
@@ -161,6 +167,7 @@ The paper must position amendment materiality as one component of temporal compl
 - publication, enactment/assent, commencement, applicability, and legal-effect evidence;
 - materiality annotation using the canonical four levels;
 - controlled compliance scenarios;
+- scenario-specific obligation, consequence, and conditional risk assessment;
 - LLM pre/post reasoning evaluation;
 - version, applicability, outcome, citation, and explanation evaluation;
 - expert legal validation; and
@@ -178,7 +185,7 @@ The paper must position amendment materiality as one component of temporal compl
 
 ### 6.3 Phase 0 corpus decisions
 
-Before data acquisition, the team must approve:
+Before expanding the technical pilot into a claimed benchmark, the team must approve:
 
 - included legal domains and instruments;
 - date range;
@@ -333,6 +340,7 @@ flowchart TD
     H[Amendment representation and aligned pre/post pairs]
     I[Materiality annotation and modelling]
     J[Controlled compliance scenarios]
+    R[Obligation and consequence assessment]
     K[LLM evaluation conditions]
     L[Compliance conclusion normalization]
     M[Drift, citation, and explanation metrics]
@@ -345,7 +353,9 @@ flowchart TD
     E --> H --> I
     G --> J
     I --> J
+    J --> R
     J --> K --> L --> M --> N
+    R --> M
     E --> O
     G --> O
     I --> O
@@ -358,9 +368,26 @@ flowchart TD
 - Version reconstruction does not decide materiality.
 - Materiality does not decide applicability.
 - Applicability does not decide the compliance consequence without scenario facts.
+- Compliance risk is computed from the applicable obligation, facts, and consequence, with uncertainty and escalation; no drift-score shortcut is permitted.
 - Model output does not become gold truth.
 - Expert validation is part of the core, not an optional post-processing step.
 - The monitoring agent is downstream of validated benchmark components.
+
+**Current integration boundary:** This diagram is the intended research architecture. The implemented RAG index currently reads `data/interim/version_graph.v1.json`, not the newer `temporal_legal_knowledge_graph.v2.json`. The risk API reads a versioned, server-owned obligation registry rather than invoking the point-in-time graph resolver for every request. Live India Code lookup supplements local retrieval but does not itself reconstruct historical legal applicability. The frontend is a single-prompt React/Vite assistant with a separate risk tab; the older dual-PDF comparison API still exists. These paths must be reconciled and tested before an end-to-end validated-law claim.
+
+### Deliverable-chain status at the audited checkout
+
+| Requested component | Current status | Evidence / missing link |
+|---|---|---|
+| Gazette and authoritative-source ingestion | Bounded engineering pipeline | `ingestion/` records source, hash, deduplication, failures and human-review queue; this is not comprehensive or continuous Gazette monitoring. |
+| Legal amendment extractor | Machine candidate extractor | `amendment_extraction/` accounts for 37 configured amending Acts and 864 events; source fidelity and unresolved cases still require review. |
+| Temporal legal knowledge graph | Technical fragment graph | `versioning/temporal_graph.py` links entities and 66 machine-checked fragment transitions; only 6 have supported dates and none is independently legally validated. |
+| Materiality classification | Proposed rubric and silver triage | 50 frozen machine cases and versioned disagreement audit; no legally validated classifier or gold metric. |
+| Compliance risk assessment | Deterministic conditional baseline | `risk/` models obligations, facts, consequence, urgency and abstention for a narrow registry; no corpus-wide or expert-gold outcome set. |
+| Explainable LLM | RAG answer and automated support diagnostics | `rag/` has optional model generation and extractive fallback; `explanations/` checks support on non-gold records. The risk result is not yet a verified input to one unified explainable-LLM chain. |
+| Compliance decision dashboard | Working UI/API components | `frontend/` provides prompt, corpus, drift/score views and risk tab; it must present uncertainty and source limitations, not a legally final decision. |
+
+This table documents **component existence and integration gaps**, not patentability or a complete autonomous legal-decision system.
 
 ---
 
@@ -381,11 +408,15 @@ The following is a conceptual schema, not an implemented database.
 | `materiality_annotation` | pair ID, annotator, guideline version, level, dimensions, evidence spans, rationale, confidence |
 | `materiality_gold` | pair ID, frozen level/dimensions, agreement, adjudication status, gold rationale |
 | `compliance_scenario` | scenario ID, schema version, facts, legal question, reference date, governing version, expected answer, expected consequence, expected change, evidence, expert rationale |
+| `obligation_rule` | rule/version ID, provision/version, scope, applicability status and supported dates, obligation, consequence, severity, evidence IDs, operational rationale |
+| `compliance_risk` | risk ID, scenario/version, obligation, consequence, severity, urgency, risk level or null, evidence, uncertainty, escalation, legal-validation status |
 | `model_run` | model/version, condition, prompt/config versions, temperature, retrieval settings, run time, seed where available |
 | `llm_assertion` | run ID, scenario ID, normalized answer, raw answer, citations, explanation, confidence if supplied |
 | `evaluation_result` | applicability, version, outcome, materiality, citation, explanation, and drift labels/metrics; reviewer notes |
 
 All derived records must preserve a chain to source artifact hashes, transformation versions, annotation versions, and expert decisions.
+
+The implemented `schemas/risk/` contracts model provisional risk separately from the research benchmark's `schemas/scenario/` contract. The current obligation registry covers only two conditional Section 19 demonstrations. Its `legal_validation` output remains `UNVERIFIED`; it must not be presented as a corpus-wide legal risk knowledge base.
 
 ---
 
@@ -415,6 +446,7 @@ The benchmark contains linked but separately evaluable objects:
 - **Track D - Compliance consequence:** answer the scenario under the applicable law.
 - **Track E - Temporal propagation:** determine whether the model updates appropriately across versions.
 - **Track F - Evidence-grounded explanation:** justify version, amendment, materiality, and consequence.
+- **Track G - Conditional compliance risk:** where source-backed obligations and scenario facts permit it, evaluate severity, urgency, abstention, and escalation independently of textual drift.
 
 This modular design prevents a single end-to-end score from hiding whether failure originated in parsing, reconstruction, applicability, materiality, or compliance reasoning.
 
@@ -550,6 +582,12 @@ No actual legal example should be added until it is supported by authoritative s
 - Record why the answer should or should not change.
 - Avoid scenarios whose expected answer cannot be reliably adjudicated.
 - Balance changed and unchanged expected outcomes sufficiently to make both false-stability and false-instability rates meaningful.
+
+### 13.4 Compliance-risk extension and current coverage
+
+For a risk assessment, additionally specify organization type, industry, jurisdiction, activity, exposure, applicable provision, and the facts needed by an evidence-linked obligation rule. Keep expected **compliance outcome** and expected **risk** separate from amendment materiality. The deterministic baseline must select an applicable rule using explicit date/scope evidence, evaluate the scenario facts, attach obligation/consequence evidence, and return provisional risk, urgency, uncertainty, and escalation—or abstain. Unknown risk is `null`, not a zero/`None` risk level. Drift percentages must not enter the risk calculation.
+
+The existing `data/risk/compliance_scenarios.v1.json` converts 13 source templates into structured **abstention** cases and adds two conditional Section 19 demonstration inputs. It does not contain 13 substantive, independently validated expected legal outcomes. `data/risk/obligation_registry.v1.json` and `src/temporal_legal_drift/risk/` implement a bounded operational model, not legal gold. The next research work is source-grounded scenario authorship, historical applicability validation, independent expected-outcome review where available, and wider rule coverage. See `reports/risk/checkpoint.v1.md` and `protocols/compliance_risk_protocol.v1.md`.
 
 ---
 
@@ -750,6 +788,10 @@ False stability measures failure to propagate a required legal change. False ins
 
 Use an agreement statistic appropriate to the annotation design. Report confidence intervals and the denominator for every rate. Preserve an explicit unresolved/insufficient-evidence category at workflow level even if it is not a materiality label.
 
+### 17.7 Conditional compliance-risk assessment
+
+On an independently adjudicated scenario set, evaluate applicable-rule/version selection, obligation identification, consequence accuracy, risk-level accuracy, urgency, evidence validity, escalation/abstention, false positives, and false negatives. Report denominators, class/domain coverage, and uncertain cases. Until such gold exists, report only deterministic-contract and synthetic-fixture results—not legal risk accuracy. The existing risk baseline's expected engineering behavior is intentionally distinct from expert legal outcomes. Report textual drift and materiality separately; do not use either as a risk proxy.
+
 ---
 
 ## 18. Leakage and Statistical Controls
@@ -891,7 +933,7 @@ Define how authoritative Indian legal evidence is identified, acquired, stored, 
 - source protocol;
 - provenance schema;
 - pilot source manifest;
-- immutable source artifacts when later implementation is authorised; and
+- immutable source artifacts with versioned provenance; and
 - exception/quarantine policy.
 
 **Validation checks**
@@ -1195,6 +1237,60 @@ Proceed only when the approved scenario subset has independent legal validation 
 
 Phases 0-5.
 
+### Phase 6R - Conditional compliance-risk assessment (new deliverable)
+
+This supplemental workstream follows scenario construction; it does not renumber the original research phases. An engineering prototype already exists in `src/temporal_legal_drift/risk/`, but its research gate remains open.
+
+**Objective**
+
+Assess scenario-specific obligations, consequences, urgency, and escalation **independently of drift magnitude**.
+
+**Inputs**
+
+- authoritative obligation and consequence evidence;
+- a governing provision/version and date established by the approved applicability process;
+- complete scenario facts and scope; and
+- a versioned risk rule and evaluation rubric.
+
+**Implementation tasks**
+
+- preserve the current deterministic engine, strict scenario/output schemas, source hashes, and abstention behavior;
+- audit existing obligation models against exact source spans and dates;
+- author substantive, source-backed versions of the 13 scenario scaffolds without overwriting their present abstention records;
+- define expected obligation, consequence, severity, urgency, risk, and expert rationale independently of engine predictions;
+- test deadline boundaries, out-of-scope cases, missing facts/evidence, contradictions, and false-positive/false-negative behavior; and
+- compare later intelligent assessments with the deterministic baseline only on an adjudicated benchmark.
+
+**Outputs**
+
+- versioned scenario/rule/evidence records and a risk evaluation set;
+- reproducible baseline traces and uncertainty/escalation outcomes;
+- source-to-version-to-scenario-to-risk provenance; and
+- an explicit legal-validation status and error analysis.
+
+**Validation checks**
+
+- no risk is inferred from drift score or materiality class alone;
+- unknown risk remains null and is escalated, not recoded as `None`;
+- every assessed obligation and consequence has source evidence and supported applicability;
+- expected answers are not copied from model outputs; and
+- reported legal metrics use an independently reviewed set, not synthetic tests or scaffolds.
+
+**Gate**
+
+Engineering gate: deterministic contracts, provenance, abstention, and regressions pass. **Research gate: open** until substantive scenarios and applicable legal outcomes are independently validated. The existing `reports/risk/checkpoint.v1.json` records engineering checks true and research checkpoint false.
+
+**Failure conditions**
+
+- unsupported historical applicability or source text;
+- high drift or materiality used as a risk shortcut;
+- an unresolved case presented as no risk; or
+- conditional demonstrations described as legal-gold benchmark results.
+
+**Dependencies**
+
+Phases 0-6 for research claims. The bounded engineering implementation can remain available with `legal_validation: UNVERIFIED` while those dependencies are unresolved.
+
 ### Phase 7 - Benchmark freeze and leakage audit
 
 **Objective**
@@ -1206,7 +1302,8 @@ Freeze benchmark objects, releases, and leakage-resistant evaluation splits befo
 - reconstructed versions;
 - applicability records;
 - frozen materiality annotations;
-- scenarios; and
+- scenarios;
+- risk evidence/expectations if Track G is included; and
 - approved split strategy.
 
 **Implementation tasks**
@@ -1251,7 +1348,7 @@ Freeze benchmark objects, releases, and leakage-resistant evaluation splits befo
 
 **Dependencies**
 
-Phases 0-6.
+Phases 0-6; Phase 6R is additionally required for a claimed risk benchmark track.
 
 ### Phase 8 - Baselines and materiality modelling
 
@@ -1552,6 +1649,7 @@ Phase 11.
 | 4 | Temporal applicability is legally validated; ambiguity is escalated |
 | 5 | Four-level taxonomy and dimensions are frozen after the double-annotated pilot |
 | 6 | Controlled scenarios and expected-change labels receive independent legal validation |
+| 6R | Risk remains separate from drift; source-backed obligations, scenario outcomes, abstention, and escalation are validated before legal-risk claims |
 | 7 | Benchmark, schemas, release version, and leakage-resistant splits are frozen |
 | 8 | Baselines are reproducible; proposed-model success is not required |
 | 9 | LLM drift evaluation is controlled and reproducible |
@@ -1651,8 +1749,12 @@ The agent must never:
 | Priority | Risk / issue | Required treatment |
 |---|---|---|
 | Resolved foundation issue | No implementation existed at the initial audit | Phase 0-11 engineering infrastructure now exists; do not confuse implemented machinery or the non-gold smoke run with missing gold data and scientific evaluation |
-| Critical | No benchmark currently exists | Do not report dataset size, coverage, labels, or results as completed |
+| Critical | A technical release dry run exists but no frozen scientific benchmark | Do not report silver labels, scaffolds, or technical-release counts as legal-gold benchmark performance |
 | Critical | Historical Indian provision reconstruction may be difficult or incomplete | Pilot source availability and reconstruction before modelling |
+| Critical | Phase 3 graph contains only machine-validated amendment fragments (66 transitions, 6 dated, 747 unresolved, 0 independently legally validated) | Keep fragments distinct from complete historical consolidations; resolve source/date evidence and validate before legal claims |
+| High | Phase 4 has 19 original rule disagreements, five confirmed extraction/alignment defects, and no supported real `None` class | Audit source spans, preserve frozen v1 silver data, abstain where incomplete, and do not report rule agreement as legal accuracy |
+| High | Risk implementation covers 13 abstention scaffolds and two conditional Section 19 demonstrations, not 13 substantive expert-gold outcomes | Author source-backed scenario facts/obligations, retain unknown risk as null, and independently validate expected consequences |
+| High | RAG reads version graph v1 while the newer temporal graph v2 and risk registry remain separate | Define and test an evidence-preserving interface before claiming one integrated historical-law runtime |
 | Critical | Temporal applicability may require nuanced legal interpretation | Use a temporal-semantics registry, qualified review, and unresolved/escalation outcomes |
 | High | Older repository notes centre eCFR and a standalone materiality classifier | Treat eCFR material as historical methodology only; it must not define the active project |
 | High | Ten-versus-eleven materiality-dimension discrepancy | Resolve in Phase 0 and separate compliance consequence from materiality |
@@ -1665,14 +1767,14 @@ The agent must never:
 | Medium | `paper/flowsight_transactions_april_2026.csv` is not CSV and is byte-identical to the review PDF | Never treat it as a dataset; correct/remove only under separate explicit authorization |
 | Medium | `paper.zip` is an archive snapshot matching current archived files | Treat it as a snapshot, not a newer or independent source |
 | Medium | Citation verification remains required, especially for recent/emerging work | Verify bibliographic and novelty claims from primary sources before submission |
-| Medium | This workspace is not connected to the private GitHub history because authentication is unavailable | The environment definition, tests, and CI now exist; authenticate and reconcile with the remote before committing/pushing |
+| Medium | Local Git history and `origin` are present; remote CI and latest remote state were not fetched or verified in the 2026-10-12 audit | Check remote state separately before claiming CI or synchronization; do not treat local tracking status as a remote verification |
 | Medium | LaTeX and DOCX manuscript coverage differ | Choose and synchronize a publication source of truth under a separate documentation task |
 
 ---
 
 ## 25. Target Repository Layout
 
-This layout is scaffolded and Phase 0-11 engineering modules contain operational code. Phase 5-8 artifacts remain non-gold workloads or dry runs. Phase 9-10 contain an executed non-gold LLM smoke run and automated support diagnostics, not a frozen benchmark or legal-quality result. Phase 11 contains engineering reproduction evidence but no independent expert validation.
+The tree below remains a **target** layout, not an inventory of folders already present. The actual package also contains `ingestion/`, `amendment_extraction/`, `materiality/`, `rag/`, `risk/`, and `evaluation_agent/`; the React/Vite source is in `frontend/` and compiled assets in `web/`. Phase 5-8 research artifacts remain non-gold workloads or dry runs. Phase 9-10 contain an executed non-gold LLM smoke run and automated support diagnostics, not a frozen benchmark or legal-quality result. Phase 11 contains saved engineering-reproduction evidence but no independent expert validation.
 
 ```text
 project/
@@ -1714,7 +1816,8 @@ project/
     reproducibility/
     webapp/                 # local connected research APIs
     monitoring/             # optional
-  web/                      # dependency-free research dashboard
+  frontend/                 # React/Vite source (already present)
+  web/                      # generated frontend assets (already present)
   tests/
     fixtures/
     unit/
@@ -1747,6 +1850,8 @@ The core project is complete only when a fresh, documented run can:
 12. reproduce reported metrics from frozen manifests; and
 13. pass independent legal-expert validation.
 
+For the newer compliance-risk deliverable, a supported fresh run must additionally select an evidence-backed applicable obligation, apply it to structured scenario facts, report consequence/severity/urgency, preserve unknown risk and escalation, and reproduce risk metrics on independently adjudicated cases. The present deterministic risk engine and two conditional demonstrations do **not** satisfy this research condition. Risk metrics must not be derived from textual drift percentages.
+
 Additional completion conditions:
 
 - no core gate remains failed or undocumented;
@@ -1758,9 +1863,9 @@ Additional completion conditions:
 
 ---
 
-## 27. Pre-Implementation Checklist
+## 27. Open Research-Readiness Checklist
 
-Implementation must not begin until the Phase 0 items below are resolved or explicitly deferred with owner and rationale.
+Engineering implementation has already begun. The unchecked items below are **not claims that no code exists**; they are open approvals and evidence requirements before scientific benchmark, legal-validity, or TRL 4 claims. Resolve or explicitly defer each with an owner and rationale; do not retroactively mark it complete merely because an engineering gate passed.
 
 ### Research contract
 
@@ -1811,13 +1916,15 @@ Implementation must not begin until the Phase 0 items below are resolved or expl
 - [ ] Pre-register primary metrics, denominators, comparisons, and confidence intervals.
 - [ ] Define fresh-environment reproduction tolerance.
 - [ ] Define drift-metric normalization and answer-mapping rules.
+- [ ] Define a risk evaluation rubric and independent expected-outcome protocol; keep unknown risk distinct from `None`.
+- [ ] Specify risk false-positive/false-negative denominators and abstention reporting on source-backed cases.
 
 ### Implementation readiness
 
-- [ ] Establish version control when authorized.
-- [ ] Select and lock the implementation environment when authorized.
-- [ ] Define test, CI, data-access, and secret-management policies.
+- [ ] Reconcile the current local Git baseline with the remote and inspect actual CI runs before claiming remote verification.
+- [ ] Lock and document the implementation environment, including frontend dependency resolution.
+- [ ] Review existing test/CI coverage, data-access, and secret-management policies; add missing checks only through a scoped change.
 - [ ] Confirm compute/API budget and provider data-handling constraints.
-- [ ] Assign owners and dependencies for Phases 1-11.
+- [ ] Assign owners and dependencies for the remaining research gates, including Phase 6R.
 
 Until this checklist and the Phase 0 gate pass, all technical work should be treated as exploratory prototyping rather than valid benchmark construction.
