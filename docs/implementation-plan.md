@@ -1,17 +1,61 @@
-# Implementation plan from the audited stopping point
+# Implementation roadmap (Phase 0–10)
 
-This is a **proposed next-work sequence**, not a claim that these deliverables exist. The full research specification remains [../plan.md](../plan.md); its phase numbers do not map one-to-one to the later implementation reports. Audit base: `6803087` on 2026-10-12. Preserve frozen artifacts and make new versions for changed outputs.
+**Purpose.** This is the actionable execution roadmap: implementation order, dependencies, gates, current status and next work. The research contract and completion criteria live in [../plan.md](../plan.md); the two must agree. Every status cell points to code, an artifact, a test, or a labelled saved report. A file existing is not completion.
 
-| Order | Proposed task | Acceptance evidence / stop condition |
-| --- | --- | --- |
-| 1 | Reconcile the source-of-truth map and legal text fidelity. Start with the documented IT 2008 PDF glyph issue and Phase 4 v2.3 extraction defects; inspect exact source pages and normalized spans before changing extraction. | Versioned source-fidelity findings, corrected *new* extraction artifact if justified, provenance hashes, targeted regression tests. Stop on unsupported text; do not hand-edit silver labels. |
-| 2 | Extend temporal reconstruction only where commencement and principal-Act evidence support it. Distinguish consolidated snapshots, amendment instructions, and effective legal versions. | New transition candidates with before/after source anchors, date evidence, explicit unresolved reasons, and point-in-time regression cases. Do not promote machine checks to legally validated transitions. |
-| 2a | Decide whether and how to connect RAG retrieval and risk assessment to the newer temporal graph. Today RAG uses `version_graph.v1.json`, and risk uses a versioned obligation registry. | Documented interface decision, version compatibility tests, and evidence-preserving migration plan before any integration code; do not silently treat graph v2 as already consumed by these paths. |
-| 3 | Develop scenario/obligation coverage. The 13 existing risk scenarios are abstention scaffolds; author facts and obligation models from traceable provisions, preserving unanswerable cases. | Versioned scenario records with evidence, expected engineering behavior, uncertainty and independent rationale fields. If expert review remains unavailable, retain research-gate status as unverified. |
-| 4 | Revisit materiality disagreement and `None` coverage without optimizing for agreement. The 50 labels are frozen silver; the 19 original disagreements and v2.3 audit remain traceable. | A new versioned audit with complete evidence spans, explicit defect versus judgment categories, abstentions, and class coverage; no gold metrics without independent labels. |
-| 5 | Freeze an evaluable benchmark only after applicability, answer/consequence expectations, coverage targets, and leakage-resistant splits are set. | Versioned benchmark manifest and split audit; document infeasible Act/domain/temporal holdouts instead of reporting random-only performance. |
-| 6 | Execute controlled model and explanation evaluations against the frozen benchmark, then reproduce in a fresh environment. | Prompt/model/retrieval configuration, raw predictions, denominators for false stability/instability, citations, expert or clearly non-expert judgment status, hashes and rerun logs. |
+- **Revision:** 2026-10-12, rev 2.
+- **Git baseline:** `c0832d2` on `main`, equal to `origin/main`. Remote CI passed on `c0832d2`, `a683a1e`, `74aef24`, `58c9868` and `a2d03b1`; all four jobs were observed.
+- **Active release:** `data/releases/active_release.json` → v0.5.0, bound to `53ce12d`.
+- **Evidence sources:** the per-phase checkpoint reports linked below, [claims_evidence_matrix.md](claims_evidence_matrix.md), and [verification.md](verification.md).
 
-Cross-cutting checks: `schemas/` compatibility, source and graph fingerprints, abstention behavior, `python -m unittest discover -s tests -v`, `validate-contract`, `check-gates`, and frontend build/API checks when UI changes. Existing CI checks Python 3.11–3.13 but has no frontend build step. A passing engineering gate is not the scientific completion criterion. See [verification.md](verification.md) for what was actually run in this audit.
+Status vocabulary:
+- **VERIFIED** — implemented, with tests or gates observed passing.
+- **UNDER-TESTED** — implemented, but material behaviour lacks tests.
+- **CONDITIONAL** — implemented only as a stipulated or conditional demonstration.
+- **MISSING** — proposed but not implemented.
+- **BLOCKED-SOURCE** — needs better source evidence.
+- **BLOCKED-LEGAL** — needs independent legal validation.
 
-**Recommended first task for Claude Code:** a bounded, read-only-to-start source-fidelity audit of the IT 2008 amendment and the five confirmed Phase 4 extraction/alignment defects listed in `reports/materiality/silver_disagreement_review.v2.3.md`. Propose a separately versioned repair only after locating exact authoritative spans; do not alter the frozen v1 silver dataset or claim legal validation.
+## Current versus target inventory
+
+| Component | Current state (evidence) | Status | Gap to target |
+| --- | --- | --- | --- |
+| Reproducibility | Commit-bound releases v0.2.1–v0.5.0; restore, rebuild and refusal tests (`tests/unit/test_reproducibility.py`); CI runs Python 3.11–3.13 plus a frontend build-diff job | VERIFIED | Re-cut a release after each code/schema change |
+| Source ingestion | `ingestion/` registry, discovery, downloader, dedup/revision, failure log, `HUMAN_REVIEW_PENDING` queue (`tests/unit/test_ingestion.py`); 100 tracked PDFs | VERIFIED (bounded) | Not comprehensive India Code coverage; no continuous monitoring (out of scope until Phase 9 passes) |
+| Text fidelity | Layout furniture v1, OCR candidate v1 (IT 2008), `source_text_unreliable` | VERIFIED (detection) / BLOCKED-SOURCE (IT 2008 text) | OCR needs manual verification against page images |
+| Amendment extraction | v2.2: 1,150 events, 232 UNKNOWN, 1,953 unresolved records (`reports/phase2/extraction_v2.2_checkpoint.md`) | VERIFIED (machine) | Nested `(A)/(i)` and "respectively" clauses abstain; commencement extracted only Act-wide |
+| Temporal graph | v4: 136 transitions, 86 machine-checked, 5 dated, 1,014 unresolved, 0 human-validated (`reports/phase3/temporal_graph_v4_checkpoint.md`) | VERIFIED (machine) / BLOCKED-LEGAL | 218 same-provision candidates need ordered reconstruction |
+| Applicability | `applicability/resolver.py` with approved-fact semantics; 10 tests covering publication-only, assent-only, deferred, partial, transitional, retrospective, conflicting, uncertain and multiple-active cases | VERIFIED (engine) / BLOCKED-LEGAL | No approved facts exist for the real corpus |
+| Graph consumer | `versioning/consumer.py` (`graph-consumer-v1`), used by RAG drift | VERIFIED | Risk does not consume it |
+| Materiality | Silver v1 frozen; re-assessment v2.5 (50 cases); LLM v2 (37/50 valid, High-biased) (`reports/materiality/phase_d_checkpoint.md`) | VERIFIED (silver workflow) / BLOCKED-LEGAL | None class unevaluated; no gold labels |
+| Compliance risk | Deterministic engine, 26 tests, 13 abstention scaffolds, 2 Section 19 demonstrations (`reports/risk/phase_e_checkpoint.md`) | VERIFIED (engine) / CONDITIONAL (demonstrations) | Substantive scenarios need supported facts and outcomes |
+| Explainable LLM | RAG answers with honest labels and fallback disclosure; explanation-support *evaluator* (`explanations/evaluator.py`) | UNDER-TESTED | **MISSING:** a structured explanation contract over the full chain (provision/version/date, amendment, materiality status, obligation, consequence, risk, citations, uncertainty, escalation) with an anchor validator |
+| Orchestration | Components connected by files; no run record | MISSING | Versioned end-to-end run with correlation IDs, stage provenance, idempotent restart and safe failure |
+| Human review / audit | Review states exist as fields only | MISSING | Append-only reviewer actions (identity, timestamp, prior state, reason) through the API; a click is never legal approval |
+| Dashboard | RAG assistant, corpus, drift explanation, risk tab; honest labels (`reports/rag/phase_f_checkpoint.md`) | UNDER-TESTED | Review workflow views; no browser or mobile audit yet |
+| Benchmark | Phase 7 technical dry run on older inputs; freeze refused without gold | CONDITIONAL / BLOCKED-LEGAL | Engineering dry run on current inputs with a split and leakage audit |
+
+## Phases
+
+| Phase | Scope | Gate | Status | Next work |
+| --- | --- | --- | --- | --- |
+| 0 Baseline & reproducibility | Releases, restore, locks, CI | Clean checkout reproduces inputs, tests and gates; refusal paths tested | **PASS** (v0.5.0; CI green on `c0832d2`) | New release per code change |
+| 1 Source ingestion | Registry, dedup, versions, failures, review queue | Duplicates reused, revisions versioned, failures recorded, queue populated | **PASS (bounded)**; audit in this revision | Continuous discovery is out of scope |
+| 2 Fidelity & extraction | OCR/layout, compound clauses, operands, reasons | Accepted events traceable to reliable text; failures have reasons | **PASS (machine)** | Manual OCR verification (BLOCKED-SOURCE) |
+| 3 Temporal graph | Graph v4, policy, point-in-time | Counts reconcile; unsupported versions abstain | **PASS (machine)** | Ordered same-provision reconstruction |
+| 4 Materiality | Silver triage, LLM, baselines | Reproducible, evidence-linked triage and abstention | **PASS (silver)** | Gold labels (BLOCKED-LEGAL) |
+| 5 Compliance risk | Deterministic conditional risk | Deterministic and evidence-linked; unknown is null | **PASS (engine)** | Supported scenarios (BLOCKED-LEGAL) |
+| 6 Explainable LLM | Structured explanation contract and validator | Structurally valid, evidence-bounded, fallback explicit | **IN PROGRESS** | Implement `explanations/contract.py` (ADR 0005) |
+| 7 Orchestration | End-to-end run with provenance | One traced run source → review state; unreliable source ends unresolved | **IN PROGRESS** | Implement `orchestration/` (ADR 0006) |
+| 8 Dashboard & review | Review workflow and audit trail | Tasks work; API and UI states reconcile; no approval implied | Not started | After 6–7 contracts are stable |
+| 9 Benchmark | Engineering dry run v2, splits, leakage | Manifests, split audit, data card, metric definitions reproducible | Not started | Gold benchmark is BLOCKED-LEGAL |
+| 10 Final reproducibility | Full clean-environment run, docs | Every claimed engineering result reproduces | Not started | — |
+
+## Open decisions
+
+1. **Who may record a legal-review decision.** Until a qualified reviewer is identified, reviewer actions are recorded as `reviewer_role: unqualified_engineering_review`, and the legal gate stays UNVERIFIED.
+2. **Whether the risk engine consumes graph applicability.** This needs a risk schema v2 and an expert-reviewed applicability policy. It is deferred.
+3. **Whether IT 2008 OCR text may replace the embedded text layer** after manual verification. This needs a reviewer.
+
+## Change log
+
+- **rev 2 (2026-10-12).** Re-based on the Phase 0–10 architecture target supplied by the project lead. Its historical counts were replaced by verified current figures. The full original proposal document was not attached to the request, so it is not stored. This revision supersedes rev 1 (audit-based next-work list, base `6803087`), which remains in Git history.

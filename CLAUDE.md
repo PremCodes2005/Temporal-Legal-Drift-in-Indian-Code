@@ -1,6 +1,6 @@
 # Claude Code handoff: Temporal Legal Drift in the Indian Code
 
-Read [docs/handoff.md](docs/handoff.md) first, then [docs/context.md](docs/context.md), [docs/verification.md](docs/verification.md), and the existing [plan.md](plan.md). The `docs/` files describe the audited checkout at commit `68030875a719aa626fb05f294880de2953084781` (2026-10-12); recheck Git state before relying on them. `plan.md` is a research specification, not a record of completed work. The older root `context.md` is dated 2026-08-24 and inaccurately says no application exists; do not use it as current implementation evidence.
+**Roadmap and status: [docs/implementation-plan.md](docs/implementation-plan.md)** (Phase 0–10; research contract in [plan.md](plan.md) §0). Read [docs/handoff.md](docs/handoff.md) first, then [docs/context.md](docs/context.md), [docs/verification.md](docs/verification.md), and the existing [plan.md](plan.md). The `docs/` files describe the audited checkout at commit `68030875a719aa626fb05f294880de2953084781` (2026-10-12); recheck Git state before relying on them. `plan.md` is a research specification, not a record of completed work. The older root `context.md` is dated 2026-08-24 and inaccurately says no application exists; do not use it as current implementation evidence.
 
 ## Project boundaries
 

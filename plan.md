@@ -14,6 +14,73 @@
 
 This plan distinguishes implemented engineering artifacts from planned research work. It reports no model performance, legal validation, or scientific benchmark result.
 
+## 0. Revision 2026-10-12 (rev 2): canonical architecture and completion criteria
+
+**Role of the two plans.** This file is the canonical **research contract**: the questions, definitions, architecture and completion criteria. The actionable phase-by-phase roadmap is [docs/implementation-plan.md](docs/implementation-plan.md), which holds order, dependencies, gates, current status and next work. Current verified figures live there and in [docs/claims_evidence_matrix.md](docs/claims_evidence_matrix.md). Counts quoted elsewhere in this file are dated audit findings, not live status.
+
+- **Git baseline:** `c0832d2` (release v0.5.0, bound to `53ce12d`).
+- **Evidence:** per-phase checkpoint reports under `reports/`, and `docs/verification.md`.
+
+### 0.1 Target workflow
+
+authoritative Indian legal source → immutable ingestion and provenance → reliable text extraction → amendment event and affected provision → temporal provision graph → scenario-specific temporal applicability → materiality assessment → applicable obligation and compliance consequence → conditional compliance-risk assessment → evidence-grounded explanation → human review or escalation → audit trail and dashboard → controlled benchmark evaluation.
+
+Every substantive output must trace back to the following. A stage that cannot supply them must abstain rather than guess.
+- the source document, source SHA-256, and page/locator with evidence span;
+- the amendment event and the provision version;
+- the applicable date;
+- the transformation version.
+
+### 0.2 Separate concepts (no shortcuts between them)
+
+| Concept | Question it answers | May not be inferred from |
+| --- | --- | --- |
+| Textual / vector drift | How did retrieved text change? | — |
+| Materiality | How legally significant may the amendment be? | drift magnitude |
+| Temporal applicability | Which version governs this scenario and date? | publication date, newest PDF |
+| Compliance consequence | What does that version imply for these facts? | materiality class |
+| Operational risk | Conditional obligation × consequence × urgency × uncertainty | drift, materiality alone |
+
+"High drift → high risk" and "High materiality → changed answer" are prohibited. Unknown risk is `null`, not "None".
+
+### 0.3 Phases and completion criteria
+
+The implementation phases below replace the overlapping numbering used in earlier reports. Research phases 0–12 in §20 remain the scientific design.
+
+| Phase | Completion criterion (engineering) | Research/legal criterion |
+| --- | --- | --- |
+| 0 Baseline & reproducibility | A clean checkout restores declared inputs and passes tests and gates; overwrite and tamper refusal tested | — |
+| 1 Source ingestion | Duplicate bytes reuse an artifact; changed bytes create a version; failures are logged; new documents are queued for review | Source sufficiency approved by a reviewer |
+| 2 Fidelity & extraction | Every accepted event is traceable to reliable text; every failure has a reason; no coverage from guessing | Hand-checked extraction fixtures |
+| 3 Temporal graph | Counts, hashes, links, dates and supersession validate; unsupported versions abstain | Independently validated transitions |
+| 4 Materiality | Reproducible, evidence-linked triage with abstention; silver agreement reported only as such | Independent gold labels; then precision/recall/F1 |
+| 5 Compliance risk | Deterministic and evidence-linked; unknown is null | Independently adjudicated outcomes |
+| 6 Explainable LLM | Structured, schema-valid, evidence-bounded explanations; fallback explicit; raw and normalized output kept | Expert explanation review |
+| 7 Orchestration | One traced run from source to review state through versioned interfaces; unreliable sources end unresolved | — |
+| 8 Dashboard & review | Representative tasks on desktop and mobile; API and UI states reconcile; append-only reviewer audit; no implied approval | Qualified reviewer identity |
+| 9 Benchmark | Frozen manifests, split and leakage audit, data card, metric definitions and claim-evidence matrix reproduce | Gold reference outcomes for false stability/instability |
+| 10 Final reproducibility | Every claimed engineering result reproduces in a clean environment; docs agree | Independent validation actually performed |
+
+**Mapping from earlier numbering:**
+- Implementation Phase 2 = extraction.
+- Phase 3 = graph.
+- Phase 4 = applicability, now part of this plan's Phase 3.
+- Phases 5–7 = materiality, scenarios and the release dry run (this plan's Phases 4, 5 and 9).
+- The "Phase A–G" labels of the 2026-10-12 repair run map to Phases 0, 2, 3, 4, 5, 6/8 and 9.
+
+### 0.4 Claims boundary
+
+An implemented architecture is a technical demonstration, not a patentability opinion. Engineering gates, machine agreement, short-fragment matches, LLM consensus and citation presence are not legal validation. Without a qualified independent reviewer the legal/research gate stays **UNVERIFIED**.
+
+### 0.5 Change log
+
+- **rev 2 (2026-10-12).**
+  - Adopted the Phase 0–10 architecture target supplied by the project lead.
+  - Reconciled it with verified repository state: extraction v2.2, graph v4, release v0.5.0, CI green. Historical figures in that proposal (56/58 tests, 76 events, zero labels) are superseded.
+  - Removed contradictory phase numbering by the mapping above.
+  - The supplied proposal's full text was not attached and is not stored.
+- **rev 1 (2026-10-12, `bd43b4d`).** Added the compliance-risk deliverable and integration-boundary notes.
+
 ---
 
 ## 1. Project Definition

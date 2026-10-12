@@ -1,5 +1,7 @@
 # Claude Code handoff
 
+**Current roadmap and phase status: [implementation-plan.md](implementation-plan.md).** Research contract: [../plan.md](../plan.md) §0.
+
 ## Exact stopping point
 
 Audit date: 2026-10-12. Last verified commit: `68030875a719aa626fb05f294880de2953084781` (`main`, same as local `origin/main` at inspection; no remote fetch was performed). Its subject is `pre migration commit`; it added the earlier generic `CLAUDE.md`. The preceding substantive commit is `befa8cb` (`phase 5 completed with phase 4(19 test seperate)`), which added risk, materiality, reports, frontend risk view and tests. Git was clean **before** this documentation task. At handoff, only `CLAUDE.md` and newly created `docs/` files should differ; verify with `git status` before further work. No application code, configuration, dependencies, tests or existing architecture were intentionally changed.

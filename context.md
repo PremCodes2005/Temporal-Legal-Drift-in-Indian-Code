@@ -1,4 +1,4 @@
-> **Historical snapshot (2026-08-24).** This file predates the implementation and is kept unchanged below. For the current repository state see `README.md` (Current state), `docs/context.md`, `docs/handoff.md` and `docs/claims_evidence_matrix.md`.
+> **Roadmap: [docs/implementation-plan.md](docs/implementation-plan.md).** **Historical snapshot (2026-08-24).** This file predates the implementation and is kept unchanged below. For the current repository state see `README.md` (Current state), `docs/context.md`, `docs/handoff.md` and `docs/claims_evidence_matrix.md`.
 
 # Project Context: Temporal Legal Drift in the Indian Code
 
