@@ -19,8 +19,9 @@ UNRESOLVED_REASONS = frozenset({
     # v2.1: source-fidelity reasons; the event is kept but its wording is not trusted.
     "source_text_unreliable",
     "operand_contains_page_furniture",
+    "layout_furniture_removed",
 })
-EXTRACTOR_VERSION = "generalised-amendment-extractor-v2.1"
+EXTRACTOR_VERSION = "generalised-amendment-extractor-v2.2"
 
 
 @dataclass(frozen=True)
@@ -43,6 +44,12 @@ class AmendmentEvent:
     confidence: float
     review_status: str = "HUMAN_REVIEW_PENDING"
     extraction_version: str = EXTRACTOR_VERSION
+    # v2.2: set when one enumerated item of a compound clause was split out;
+    # evidence_text is then the item's exact lines and header_text its context.
+    compound_part: dict[str, object] | None = None
+    # v2.2: set when layout-identified page furniture changed the parsed fields;
+    # lists each removed line (page, line, zone) and the parsed body text.
+    layout_cleaning: dict[str, object] | None = None
 
     def __post_init__(self) -> None:
         if self.operation not in AMENDMENT_OPERATIONS:

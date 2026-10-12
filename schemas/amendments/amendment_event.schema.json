@@ -28,6 +28,8 @@
     "evidence_text": {"type": "string", "minLength": 1},
     "confidence": {"type": "number", "minimum": 0, "maximum": 1},
     "review_status": {"const": "HUMAN_REVIEW_PENDING"},
-    "extraction_version": {"enum": ["generalised-amendment-extractor-v1", "generalised-amendment-extractor-v2.1"]}
+    "extraction_version": {"enum": ["generalised-amendment-extractor-v1", "generalised-amendment-extractor-v2.1", "generalised-amendment-extractor-v2.2"]},
+    "compound_part": {"type": ["object", "null"], "required": ["marker", "index", "count", "clause_number", "clause_page", "clause_line", "header_text", "clause_text_sha256"]},
+    "layout_cleaning": {"type": ["object", "null"], "required": ["removed_lines", "body_evidence_text"]}
   }
 }

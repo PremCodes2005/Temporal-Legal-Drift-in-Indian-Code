@@ -40,3 +40,10 @@ Started the recommended source-fidelity audit; see [../reports/phase2/source_fid
 - RAG still indexes `version_graph.v1`, and risk still uses its obligation registry. Neither consumes v3.
 - Legal/research gate: UNVERIFIED.
 - Details: [../reports/phase3/temporal_graph_v3_checkpoint.md](../reports/phase3/temporal_graph_v3_checkpoint.md).
+
+## Phase A/B status (2026-10-12)
+
+- **Phase A:** pypdf pinned to 6.16.2 and frontend deps pinned; release v0.2.1 is bound to commit `63f81ed`. CI now also builds the frontend and diffs it against `web/`. Remote CI on `58c9868` was observed green.
+- **Phase B:** extraction **v2.2** adds a bounded compound splitter, the "respectively" fix and layout-aware furniture exclusion. An OCR *candidate* for IT 2008 is frozen; it is unverified and not used.
+- `build-amendment-extraction-version --version <current> --previous <frozen>` writes a new extraction version; it refuses any version other than the current extractor's.
+- See [../reports/phase2/extraction_v2.2_checkpoint.md](../reports/phase2/extraction_v2.2_checkpoint.md).

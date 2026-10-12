@@ -434,6 +434,8 @@ class TemporalGraphBuilder:
             label_status = "ABSTAIN" if flags else str(label.get("label_status", "ABSTAIN"))
             act_commencement = commencement_by_entry.get(source_entry)
             event_record = {
+                **({"compound_part": raw_event["compound_part"]} if raw_event.get("compound_part") else {}),
+                **({"layout_cleaning": raw_event["layout_cleaning"]} if raw_event.get("layout_cleaning") else {}),
                 "amendment_event_id": graph_event_id,
                 "phase2_amendment_id": amendment_id,
                 "amendment_act_id": amendment_act_by_entry[source_entry]["amendment_act_id"],
@@ -445,7 +447,10 @@ class TemporalGraphBuilder:
                 # Never use Phase 2's document-wide date copied to each clause.
                 # Re-derive only an unambiguous Act-wide commencement statement.
                 "effective_date": act_commencement["effective_date"] if act_commencement and act_commencement["status"] == "ACT_WIDE_UNAMBIGUOUS" else None,
-                "target_path_detail": _target_path_detail(str(raw_event["evidence_text"])),
+                "target_path_detail": _target_path_detail(
+                    f"{raw_event['compound_part']['header_text']}\n{raw_event['evidence_text']}"
+                    if raw_event.get("compound_part") else str(raw_event["evidence_text"])
+                ),
                 "source_fidelity_flags": flags,
                 "resolution_status": (
                     "SILVER_EVIDENCE_RESOLVED" if label_status == "AUTO_ACCEPTED" and target_provision
@@ -568,7 +573,9 @@ class TemporalGraphBuilder:
                 "source_hash_verified": len(str(event_record["evidence"]["source_sha256"])) == 64,
                 "old_new_fragments_reconstructable": True,
                 "forward_operation_round_trip": _forward_round_trip(
-                    operation, before_text, after_text, str(event_record["evidence"]["exact_text"])
+                    operation, before_text, after_text,
+                    str(event_record["layout_cleaning"]["body_evidence_text"]) if event_record.get("layout_cleaning")
+                    else str(event_record["evidence"]["exact_text"]),
                 ),
                 "after_fragment_matches_consolidated_principal_act": bool(after_supported_versions),
                 "effective_date_evidenced": effective_date is not None,

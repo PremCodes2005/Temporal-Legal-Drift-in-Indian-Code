@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections import Counter
+from hashlib import sha256
 from pathlib import Path
 
 from temporal_legal_drift.corpus import CorpusManifest
@@ -10,6 +11,8 @@ from temporal_legal_drift.jsonio import atomic_write_new, canonical_json_bytes, 
 
 from .extractor import GeneralisedAmendmentExtractor
 from .models import EXTRACTOR_VERSION, UNRESOLVED_REASONS
+
+LAYOUT_ARTIFACT = "data/processed/layout/v1/gazette_furniture.json"
 
 
 class AmendmentExtractionPipeline:
@@ -29,6 +32,8 @@ class AmendmentExtractionPipeline:
         configured = [
             entry for entry in manifest.entries if entry.instrument_type == "amending_act"
         ]
+        layout_path = self.root / LAYOUT_ARTIFACT
+        layout = load_json(layout_path) if layout_path.is_file() else {"documents": {}}
         events = []
         unresolved = []
         processed: list[str] = []
@@ -48,6 +53,7 @@ class AmendmentExtractionPipeline:
                 source_sha256=str(source["sha256"]),
                 amending_act=entry.entry_id.replace("-", " ").title(),
                 source_risk=entry.known_extraction_risk,
+                furniture=_furniture_by_page(layout["documents"].get(entry.entry_id), str(source["sha256"])),
             )
             events.extend(item.to_dict() for item in extracted)
             unresolved.extend(item.to_dict() for item in failures)
@@ -92,6 +98,10 @@ class AmendmentExtractionPipeline:
         document = {
             "schema_version": "1.0.0",
             "extractor_version": EXTRACTOR_VERSION,
+            "layout_artifact": {
+                "path": LAYOUT_ARTIFACT,
+                "sha256": sha256(layout_path.read_bytes()).hexdigest() if layout_path.is_file() else None,
+            },
             "status": "machine_extracted_human_review_required_not_legal_gold",
             "configured_amending_act_count": len(configured),
             "processed_amending_act_count": len(processed),
@@ -117,6 +127,17 @@ class AmendmentExtractionPipeline:
 
     def write(self, document: dict[str, object], output: Path) -> None:
         atomic_write_new(output, canonical_json_bytes(document))
+
+
+def _furniture_by_page(document: dict[str, object] | None, source_sha256: str) -> dict[int, dict[str, str]]:
+    if not document:
+        return {}
+    if document["source_sha256"] != source_sha256:
+        raise ValueError("layout furniture was computed from a different source PDF")
+    pages: dict[int, dict[str, str]] = {}
+    for run in document["runs"]:  # type: ignore[union-attr]
+        pages.setdefault(int(run["page"]), {})["".join(str(run["text"]).split())] = str(run["zone"])
+    return pages
 
 
 def _rate(numerator: int, denominator: int) -> dict[str, object]:

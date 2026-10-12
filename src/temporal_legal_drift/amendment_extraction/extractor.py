@@ -58,6 +58,7 @@ class Clause:
     block_id: str
     page: int | None
     line: int | None
+    anchors: tuple[tuple[int | None, int | None], ...] = ()  # (page, line) per text line
 
 
 class GeneralisedAmendmentExtractor:
@@ -69,7 +70,9 @@ class GeneralisedAmendmentExtractor:
         source_sha256: str,
         amending_act: str,
         source_risk: str | None = None,
+        furniture: dict[int, dict[str, str]] | None = None,
     ) -> tuple[tuple[AmendmentEvent, ...], tuple[UnresolvedAmendment, ...]]:
+        """Extract events; ``furniture`` maps page -> {whitespace-free line: layout zone}."""
         clauses = _segment_clauses(document)
         all_text = "\n".join(
             str(block.get("normalized_text", ""))
@@ -85,63 +88,87 @@ class GeneralisedAmendmentExtractor:
         unresolved: list[UnresolvedAmendment] = []
         current_principal = defaults[0] if len(defaults) == 1 else None
         candidate_clauses = [clause for clause in clauses if AMENDMENT_CUE.search(clause.text)]
-        for clause in candidate_clauses:
-            explicit_targets = _act_references(clause.text[:800])
-            principal_act = explicit_targets[0] if explicit_targets else current_principal
-            if explicit_targets:
-                current_principal = explicit_targets[0]
-            elif "principal act" not in clause.text.lower() and len(defaults) == 1:
-                principal_act = defaults[0]
+        for parent in candidate_clauses:
+            for clause, compound_part in _compound_parts(parent):
+                # Parse the statutory body only: layout-identified furniture lines are
+                # dropped from the parsed view, while evidence_text stays verbatim.
+                removed = _furniture_lines(clause, furniture or {})
+                removed_lines = {item["line_index"] for item in removed}
+                body = "\n".join(
+                    line for index, line in enumerate(clause.text.splitlines()) if index not in removed_lines
+                ) or clause.text
+                # A split part resolves Act and target with its enumeration header as context.
+                context = f"{compound_part['header_text']}\n{body}" if compound_part else body
+                explicit_targets = _act_references(context[:800])
+                principal_act = explicit_targets[0] if explicit_targets else current_principal
+                if explicit_targets:
+                    current_principal = explicit_targets[0]
+                elif "principal act" not in context.lower() and len(defaults) == 1:
+                    principal_act = defaults[0]
 
-            target, target_ambiguous = _target_provision(clause.text)
-            operation, operation_ambiguous = _operation(clause.text)
-            old_text, new_text = _wording(clause.text, operation)
-            amendment_id = _event_id(
-                source_document, clause.page, clause.line, target, operation, clause.text
-            )
-            confidence = _confidence(
-                principal_act, target, operation, old_text, new_text, effective_date
-            )
-            event = AmendmentEvent(
-                amendment_id=amendment_id,
-                amending_act=amending_act,
-                principal_act=principal_act,
-                target_provision=target,
-                operation=operation,
-                old_text=old_text,
-                new_text=new_text,
-                effective_date=effective_date,
-                assent_date=assent_date,
-                publication_date=publication_date,
-                source_document=source_document,
-                source_page=clause.page,
-                source_line=clause.line,
-                source_sha256=source_sha256,
-                evidence_text=clause.text,
-                confidence=confidence,
-            )
-            events.append(event)
-            reasons: list[tuple[str, str]] = []
-            if principal_act is None or target is None:
-                reasons.append(("target_not_found", "principal Act or affected provision was not resolved"))
-            if target_ambiguous:
-                reasons.append(("ambiguous_section", "multiple candidate target sections were found"))
-            if operation == "UNKNOWN" or operation_ambiguous:
-                reasons.append(("unclear_operation", "operation cues were absent or conflicting"))
-            if operation in {"SUBSTITUTE", "REPLACE", "MODIFY", "REPEAL", "RENUMBER"} and old_text is None:
-                reasons.append(("missing_old_text", "old wording was not explicit in the amendment clause"))
-            if operation in {"INSERT", "SUBSTITUTE", "REPLACE", "MODIFY", "RENUMBER"} and new_text is None:
-                reasons.append(("missing_new_text", "new wording was not explicit in the amendment clause"))
-            if commencement_unclear:
-                reasons.append(("commencement_unclear", "commencement depends on notification or could not be dated"))
-            if source_risk:
-                reasons.append(("source_text_unreliable", f"source text layer has a known fidelity risk: {source_risk}"))
-            if any(PAGE_FURNITURE.search(value or "") for value in (old_text, new_text)):
-                reasons.append(("operand_contains_page_furniture", "extracted wording contains page headers or watermark text; margin notes may also be interleaved"))
-            unresolved.extend(
-                _unresolved(source_document, event, clause, code, detail)
-                for code, detail in dict.fromkeys(reasons)
-            )
+                target, target_ambiguous = _target_provision(context)
+                operation, operation_ambiguous = _operation(body)
+                old_text, new_text = _wording(body, operation)
+                raw_context = f"{compound_part['header_text']}\n{clause.text}" if compound_part else clause.text
+                raw_operation = _operation(clause.text)[0]
+                layout_cleaning = None
+                if removed and (target, operation, old_text, new_text) != (
+                    _target_provision(raw_context)[0], raw_operation, *_wording(clause.text, raw_operation)
+                ):
+                    layout_cleaning = {
+                        "removed_lines": [{key: item[key] for key in ("page", "line", "text", "zone")} for item in removed],
+                        "body_evidence_text": body,
+                    }
+                amendment_id = _event_id(
+                    source_document, clause.page, clause.line, target, operation, clause.text
+                )
+                confidence = _confidence(
+                    principal_act, target, operation, old_text, new_text, effective_date
+                )
+                event = AmendmentEvent(
+                    amendment_id=amendment_id,
+                    amending_act=amending_act,
+                    principal_act=principal_act,
+                    target_provision=target,
+                    operation=operation,
+                    old_text=old_text,
+                    new_text=new_text,
+                    effective_date=effective_date,
+                    assent_date=assent_date,
+                    publication_date=publication_date,
+                    source_document=source_document,
+                    source_page=clause.page,
+                    source_line=clause.line,
+                    source_sha256=source_sha256,
+                    evidence_text=clause.text,
+                    confidence=confidence,
+                    compound_part=compound_part,
+                    layout_cleaning=layout_cleaning,
+                )
+                events.append(event)
+                reasons: list[tuple[str, str]] = []
+                if principal_act is None or target is None:
+                    reasons.append(("target_not_found", "principal Act or affected provision was not resolved"))
+                if target_ambiguous:
+                    reasons.append(("ambiguous_section", "multiple candidate target sections were found"))
+                if operation == "UNKNOWN" or operation_ambiguous:
+                    reasons.append(("unclear_operation", "operation cues were absent or conflicting"))
+                if operation in {"SUBSTITUTE", "REPLACE", "MODIFY", "REPEAL", "RENUMBER"} and old_text is None:
+                    reasons.append(("missing_old_text", "old wording was not explicit in the amendment clause"))
+                if operation in {"INSERT", "SUBSTITUTE", "REPLACE", "MODIFY", "RENUMBER"} and new_text is None:
+                    reasons.append(("missing_new_text", "new wording was not explicit in the amendment clause"))
+                if commencement_unclear:
+                    reasons.append(("commencement_unclear", "commencement depends on notification or could not be dated"))
+                if source_risk:
+                    reasons.append(("source_text_unreliable", f"source text layer has a known fidelity risk: {source_risk}"))
+                if layout_cleaning:
+                    reasons.append(("layout_furniture_removed", "page headers, watermark or margin notes were excluded by layout; review the parsed body against the page"))
+                if any(PAGE_FURNITURE.search(value or "") for value in (old_text, new_text)):
+                    reasons.append(("operand_contains_page_furniture", "extracted wording contains page headers or watermark text; margin notes may also be interleaved"))
+                unresolved.extend(
+                    _unresolved(source_document, event, clause, code, detail)
+                    for code, detail in dict.fromkeys(reasons)
+                )
 
         if not candidate_clauses:
             evidence = all_text[:1500].strip() or "No normalized text was available."
@@ -156,6 +183,84 @@ class GeneralisedAmendmentExtractor:
                 detail="no amendment clause with a supported cue was segmented",
             ))
         return tuple(events), tuple(unresolved)
+
+
+DIRECTIVE = re.compile(
+    r"\bshall\s+(?:respectively\s+)?be\s+(?:inserted|substituted|replaced|omitted|repealed|re-?numbered)\b", re.I
+)
+_ITEM_MARKER = re.compile(r"^\((?P<marker>[ivx]+|[a-z])\)\s")
+_ROMAN = ("i", "ii", "iii", "iv", "v", "vi", "vii", "viii", "ix", "x", "xi", "xii", "xiii", "xiv", "xv",
+          "xvi", "xvii", "xviii", "xix", "xx")
+_LETTERS = tuple("abcdefghijklmnopqrstuvwxyz")
+_ENUMERATION_HEADER_END = re.compile(r"[,:]\s*[—–-]+\s*$")
+_PAYLOAD_CLOSED = re.compile(r"[”’\"']\s*[.;]\s*(?:and|or)?\s*$")
+
+
+def _compound_parts(clause: Clause) -> list[tuple[Clause, dict[str, object] | None]]:
+    """Split "In section N,— (i) ...; (ii) ..." into one operation per enumerated item.
+
+    Split only when every boundary is unambiguous: a directive-free header ending
+    in ",—", items in strict (a)/(i) sequence at line starts, a quoted payload
+    closed before the next item, and exactly one directive per item. Anything
+    else is returned whole so the existing compound abstention applies.
+    """
+    whole = [(clause, None)]
+    lines = clause.text.splitlines()
+    if len(DIRECTIVE.findall(clause.text)) < 2 or len(clause.anchors) != len(lines):
+        return whole
+    first = next((index for index, line in enumerate(lines) if _ITEM_MARKER.match(line)), None)
+    if first is None or _ITEM_MARKER.match(lines[first]).group("marker") not in {"a", "i"}:
+        return whole
+    header = "\n".join(lines[:first])
+    if not header or DIRECTIVE.search(header) or "namely" in header.lower() or not _ENUMERATION_HEADER_END.search(header):
+        return whole
+    sequence = _ROMAN if _ITEM_MARKER.match(lines[first]).group("marker") == "i" else _LETTERS
+    starts = [first]
+    for index in range(first + 1, len(lines)):
+        match = _ITEM_MARKER.match(lines[index])
+        expected = sequence[len(starts)] if len(starts) < len(sequence) else None
+        if not match or match.group("marker") != expected:
+            continue
+        current = "\n".join(lines[starts[-1]:index])
+        # Inside a quoted payload an enumerated line is statutory text, not a new item.
+        if "namely" in current.lower() and not _PAYLOAD_CLOSED.search(lines[index - 1]):
+            continue
+        starts.append(index)
+    if len(starts) < 2:
+        return whole
+    bounds = list(zip(starts, [*starts[1:], len(lines)]))
+    texts = ["\n".join(lines[start:end]) for start, end in bounds]
+    if any(len(DIRECTIVE.findall(text)) != 1 for text in texts):
+        return whole
+    clause_sha = sha256(clause.text.encode()).hexdigest()
+    parts = []
+    for index, ((start, end), text) in enumerate(zip(bounds, texts), 1):
+        page, line = clause.anchors[start]
+        marker = f"({sequence[index - 1]})"
+        parts.append((
+            Clause(f"{clause.number}{marker}", text, clause.block_id, page, line, clause.anchors[start:end]),
+            {
+                "marker": marker,
+                "index": index,
+                "count": len(bounds),
+                "clause_number": clause.number,
+                "clause_page": clause.page,
+                "clause_line": clause.line,
+                "header_text": header,
+                "clause_text_sha256": clause_sha,
+            },
+        ))
+    return parts
+
+
+def _furniture_lines(clause: Clause, furniture: dict[int, dict[str, str]]) -> list[dict[str, object]]:
+    """Clause lines whose whole text equals a layout-classified furniture run on the same page."""
+    removed = []
+    for index, (line, (page, line_number)) in enumerate(zip(clause.text.splitlines(), clause.anchors)):
+        zone = furniture.get(page, {}).get("".join(line.split())) if page is not None else None
+        if zone:
+            removed.append({"line_index": index, "page": page, "line": line_number, "text": line, "zone": zone})
+    return removed
 
 
 def _segment_clauses(document: dict[str, object]) -> list[Clause]:
@@ -177,12 +282,14 @@ def _segment_clauses(document: dict[str, object]) -> list[Clause]:
                 current = {
                     "number": match.group("number"),
                     "lines": [line],
+                    "anchors": [(page, line_number)],
                     "block_id": block_id,
                     "page": page,
                     "line": line_number,
                 }
             elif current and line:
                 current["lines"].append(line)  # type: ignore[union-attr]
+                current["anchors"].append((page, line_number))  # type: ignore[union-attr]
     if current:
         results.append(_finish_clause(current))
     return results
@@ -195,6 +302,7 @@ def _finish_clause(value: dict[str, object]) -> Clause:
         str(value["block_id"]),
         value["page"] if isinstance(value["page"], int) else None,
         value["line"] if isinstance(value["line"], int) else None,
+        tuple(value["anchors"]),  # type: ignore[arg-type]
     )
 
 
@@ -243,14 +351,11 @@ def _target_provision(text: str) -> tuple[str | None, bool]:
 
 
 def _operation(text: str) -> tuple[str, bool]:
-    directives = re.findall(
-        r"\bshall\s+be\s+(?:inserted|substituted|replaced|omitted|repealed|re-?numbered)\b",
-        text,
-        re.I,
-    )
+    directives = DIRECTIVE.findall(text)
     # One event represents one controlled operation. Do not silently reduce a
-    # compound numbered clause to whichever quoted operand happens to be last.
-    if len(directives) > 1:
+    # compound numbered clause to whichever quoted operand happens to be last;
+    # "respectively" pairs several old/new operands under one directive.
+    if len(directives) > 1 or re.search(r"\brespectively\b", text, re.I):
         return "UNKNOWN", True
     matches = [name for name, pattern in OPERATION_PATTERNS if pattern.search(text)]
     unique = list(dict.fromkeys(matches))
@@ -275,7 +380,7 @@ def _wording(text: str, operation: str) -> tuple[str | None, str | None]:
         # Preserve the whole inserted unit instead of extracting an inner
         # definition term such as "costs" or "open offer".
         unit_marker = re.search(
-            r"\bfollowing\s+(?:new\s+)?(?:section|sub-section|clause|proviso)\b[\s\S]{0,500}?"
+            r"\bfollowing\s+(?:new\s+)?(?:sub-sections?|sections?|sub-clauses?|clauses?|provisos?|Explanation)\b[\s\S]{0,500}?"
             r"\bshall\s+be\s+inserted\s*,?\s*namely\s*[:—-]",
             text,
             re.I,

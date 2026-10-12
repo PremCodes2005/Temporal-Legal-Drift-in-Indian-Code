@@ -11,6 +11,7 @@ from temporal_legal_drift.amendment_extraction import (
     silver_metrics,
 )
 from temporal_legal_drift.amendment_extraction.models import UNRESOLVED_REASONS
+from temporal_legal_drift.amendment_extraction.pipeline import _furniture_by_page
 from temporal_legal_drift.jsonio import load_json
 
 
@@ -72,7 +73,7 @@ namely:—
         self.assertEqual(events[0].new_text, "or completion of such transactions as may be prescribed,")
         self.assertFalse(unresolved)
 
-    def test_compound_same_operation_clause_abstains_instead_of_selecting_one_operand(self) -> None:
+    def test_compound_clause_splits_into_one_operation_per_enumerated_item(self) -> None:
         instruction = """1. In section 74,—
 (i) the following proviso shall be inserted, namely: “first insertion”;
 (ii) the following clause shall be inserted, namely: “second insertion.”"""
@@ -80,10 +81,56 @@ namely:—
             {"blocks": [{"block_id": "x", "source_anchor": "pdf:page:1", "normalized_text": instruction}]},
             source_document="compound-fixture", source_sha256="1" * 64, amending_act="Fixture Amendment Act",
         )
-        self.assertEqual(len(events), 1)
-        self.assertEqual(events[0].operation, "UNKNOWN")
-        self.assertIsNone(events[0].new_text)
-        self.assertTrue(any(item.reason_code == "unclear_operation" for item in unresolved))
+        self.assertEqual([(e.operation, e.target_provision, e.new_text, e.source_line) for e in events], [
+            ("INSERT", "section:74", "first insertion", 2),
+            ("INSERT", "section:74", "second insertion.", 3),
+        ])
+        self.assertEqual([e.compound_part["marker"] for e in events], ["(i)", "(ii)"])
+        self.assertTrue(all(e.evidence_text in instruction and e.compound_part["header_text"] == "1. In section 74,—" for e in events))
+        self.assertFalse(any(item.reason_code == "unclear_operation" for item in unresolved))
+
+    def test_ambiguous_compound_clauses_still_abstain(self) -> None:
+        for instruction in (
+            # "respectively" pairs several operands with one directive.
+            """1. In section 25,—
+(a) for the words "x", the words "y" shall be substituted;
+(b) for the words "p" and "q", the words "r" and "s" shall respectively be substituted.""",
+            # Items out of sequence.
+            """1. In section 25,—
+(a) for the words "x", the words "y" shall be substituted;
+(c) for the words "p", the words "r" shall be substituted.""",
+            # Two directives in one item.
+            """1. In section 25,—
+(a) the words "x" shall be omitted and the words "y" shall be inserted;
+(b) for the words "p", the words "r" shall be substituted.""",
+        ):
+            events, unresolved = GeneralisedAmendmentExtractor().extract(
+                {"blocks": [{"block_id": "x", "source_anchor": "pdf:page:1", "normalized_text": instruction}]},
+                source_document="ambiguous-compound", source_sha256="1" * 64, amending_act="Fixture Amendment Act",
+            )
+            self.assertEqual(events[-1].operation, "UNKNOWN", instruction)
+            self.assertIn("unclear_operation", {item.reason_code for item in unresolved})
+            # Only the "respectively" clause is cleanly enumerated; its unambiguous item (a) may split out.
+            if "respectively" in instruction:
+                self.assertEqual([(e.operation, e.old_text, e.new_text) for e in events],
+                                 [("SUBSTITUTE", "x", "y"), ("UNKNOWN", None, None)])
+            else:
+                self.assertEqual(len(events), 1)
+                self.assertIsNone(events[0].compound_part)
+
+    def test_enumerated_lines_inside_a_quoted_payload_are_not_split(self) -> None:
+        instruction = """1. In section 31,—
+(a) after sub-section (1), the following sub-sections shall be inserted, namely:—
+“(1A) The Court may determine—
+(b) whether costs are payable.”;
+(b) for the words "old", the words "new" shall be substituted."""
+        events, _ = GeneralisedAmendmentExtractor().extract(
+            {"blocks": [{"block_id": "x", "source_anchor": "pdf:page:1", "normalized_text": instruction}]},
+            source_document="payload-fixture", source_sha256="1" * 64, amending_act="Fixture Amendment Act",
+        )
+        self.assertEqual([e.compound_part["marker"] for e in events], ["(a)", "(b)"])
+        self.assertIn("(b) whether costs are payable.", events[0].new_text)
+        self.assertEqual((events[1].old_text, events[1].new_text), ("old", "new"))
 
     def test_inserted_new_section_with_alphabetic_number_targets_created_section(self) -> None:
         instruction = "An Act to amend the Fixture Act, 2020.\n1. After section 6, the following section shall be inserted, namely:— ‘6A. No shall apply.’"
@@ -124,6 +171,51 @@ convertible into other securities from various sellers.'."""
         self.assertIn("GAZETTE OF INDIA", events[0].new_text)  # evidence is preserved, not cleaned
         self.assertIn("operand_contains_page_furniture", {item.reason_code for item in unresolved})
 
+    def test_layout_furniture_is_excluded_from_parsed_operand_but_kept_in_evidence(self) -> None:
+        # Verbatim normalized lines of competition-amendment-act-2023 clause 8, pages 6-7;
+        # furniture comes from the tracked frozen layout artifact (pypdf 6.16.2 coordinates).
+        layout = load_json(ROOT / "data/processed/layout/v1/gazette_furniture.json")["documents"]["competition-amendment-act-2023"]
+        furniture = _furniture_by_page(layout, layout["source_sha256"])
+        page6 = """8. After section 6 of the principal Act, the following section shall be inserted, namely:—
+'6A. Nothing contained in sub-section (2A) of section 6 and section 43A shall
+prevent the implementation of an open offer or an acquisition of shares or securities
+15 of 1992.
+15 of 1992.
+Insertion of a
+new section
+6A.
+Open offers,
+etc.
+IndiaCode"""
+        page7 = """SEC. 1] THE GAZETTE OF INDIA EXTRAORDINARY 7
+convertible into other securities from various sellers.'."""
+        events, unresolved = GeneralisedAmendmentExtractor().extract(
+            {"blocks": [
+                {"block_id": "p6", "source_anchor": "pdf:page:6", "normalized_text": page6},
+                {"block_id": "p7", "source_anchor": "pdf:page:7", "normalized_text": page7},
+            ]},
+            source_document="competition-amendment-act-2023", source_sha256=layout["source_sha256"],
+            amending_act="Fixture Amendment Act", furniture=furniture,
+        )
+        self.assertEqual(events[0].new_text, (
+            "6A. Nothing contained in sub-section (2A) of section 6 and section 43A shall prevent the "
+            "implementation of an open offer or an acquisition of shares or securities convertible into "
+            "other securities from various sellers."
+        ))
+        removed = events[0].layout_cleaning["removed_lines"]
+        self.assertEqual({item["zone"] for item in removed},
+                         {"right_margin_note", "left_margin_note", "watermark", "running_header"})
+        self.assertEqual(len(removed), 9)
+        self.assertIn("Open offers,", events[0].evidence_text)  # evidence is not rewritten
+        reasons = {item.reason_code for item in unresolved}
+        self.assertIn("layout_furniture_removed", reasons)
+        self.assertNotIn("operand_contains_page_furniture", reasons)
+
+    def test_layout_furniture_from_a_different_pdf_is_refused(self) -> None:
+        layout = {"source_sha256": "a" * 64, "runs": []}
+        with self.assertRaises(ValueError):
+            _furniture_by_page(layout, "b" * 64)
+
     def test_real_compound_clause_does_not_use_insertion_anchor_as_operand(self) -> None:
         # Verbatim normalized text: wild-life amendment, page 12, line 2; v1 recorded the anchor "derivative thereof".
         instruction = """31. In section 50 of the principal Act, in sub-section (1),—
@@ -139,10 +231,13 @@ scheduled specimen" shall be inserted."""
             {"blocks": [{"block_id": "x", "source_anchor": "pdf:page:12", "normalized_text": instruction}]},
             source_document="wild-life-fixture", source_sha256="5" * 64, amending_act="Fixture Amendment Act",
         )
-        self.assertEqual(len(events), 1)
-        self.assertEqual(events[0].operation, "UNKNOWN")
-        self.assertIsNone(events[0].new_text)
-        self.assertIn("unclear_operation", {item.reason_code for item in unresolved})
+        self.assertEqual([(e.operation, e.new_text, e.source_line) for e in events], [
+            ("INSERT", "or the Management Authority or any officer authorised by the Management Authority", 2),
+            ("INSERT", "or any customs officer not below the rank of an inspector or any officer of the coast guard not below the rank of an Assistant Commandant", 5),
+            ("INSERT", "or scheduled specimen", 8),
+        ])
+        self.assertNotIn("derivative thereof", {e.new_text for e in events})
+        self.assertTrue(all(e.target_provision == "section:50" for e in events))
 
     def test_known_source_fidelity_risk_routes_every_event_to_review(self) -> None:
         # Verbatim OCR text layer: it-amendment-act-2008, clause 12 ("otrtCen" is a garbled glyph run).

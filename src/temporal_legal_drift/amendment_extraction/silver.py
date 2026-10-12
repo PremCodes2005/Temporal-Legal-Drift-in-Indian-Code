@@ -33,6 +33,14 @@ _ANY_TARGET = re.compile(r"\bsection\s+(\d{1,3}[A-Z]{0,3})\b", re.I)
 
 def build_silver_label(event: dict[str, object], document_text: str) -> SilverAmendmentLabel:
     evidence = str(event.get("evidence_text", ""))
+    layout_cleaning = event.get("layout_cleaning")
+    if isinstance(layout_cleaning, dict):
+        # Wording is supported by the parsed statutory body, not by page furniture.
+        evidence = str(layout_cleaning["body_evidence_text"])
+    compound_part = event.get("compound_part")
+    if isinstance(compound_part, dict):
+        # A split item names its section only in the clause header it was enumerated under.
+        evidence = f"{compound_part['header_text']}\n{evidence}"
     operation = str(event.get("operation", "UNKNOWN"))
     target = event.get("target_provision")
     target_number = str(target).split(":", 1)[-1] if target else None

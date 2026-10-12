@@ -36,7 +36,7 @@ RELEASE_INPUT_GLOBS = (
 # Write-once builders re-run in the fresh copy; each exits non-zero unless it
 # regenerates byte-identical output.
 REBUILD_COMMANDS = (
-    ("build-amendment-extraction-v2.1",),
+    ("build-amendment-extraction-version", "--version", "v2.2", "--previous", "v2.1"),
     ("build-amendment-silver-labels", "--extraction-version", "v2.1"),
     ("build-temporal-knowledge-graph", "--graph-version", "v3"),
 )
@@ -90,6 +90,10 @@ REQUIRED_ARTIFACTS = (
     "reports/phase10/explanation_plan.lock.json",
     "data/scenarios/temporal_drift_demo.v1.json",
     "data/processed/amendments/v2.1/extraction.json",
+    "data/processed/amendments/v2.2/extraction.json",
+    "data/manifests/amendment_extraction_v2.2.provenance.json",
+    "data/processed/layout/v1/gazette_furniture.json",
+    "data/processed/ocr/v1/it-amendment-act-2008.json",
     "data/processed/amendments/v2.1/silver_labels.v2.1.json",
     "data/manifests/amendment_extraction_v2.1.provenance.json",
     "reports/phase2/silver_label_checkpoint.v2.1.json",
@@ -286,7 +290,8 @@ def _release_document(
         "limitations": [
             "Engineering reproduction does not replace independent legal-expert validation.",
             "Normalized text is a frozen input: regenerating it from the PDFs with pypdf 6.16.2 matches 99/100 documents; it-amendment-act-2008 differs by one whitespace character.",
-            "Graph v2 and extraction v1 are frozen historical artifacts that current code no longer regenerates byte-for-byte.",
+            "Graph v2 and extractions v1 and v2.1 are frozen historical artifacts that current code no longer regenerates byte-for-byte.",
+            "Layout furniture (pypdf 6.16.2) and the IT 2008 OCR candidate (tesseract 5.5.3) are frozen inputs; their builders need tools not installed in the verification environment.",
             "The benchmark remains unfrozen because materiality and scenario gold are unavailable.",
         ],
     }

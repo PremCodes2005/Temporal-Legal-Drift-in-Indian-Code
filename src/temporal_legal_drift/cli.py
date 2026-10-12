@@ -10,7 +10,7 @@ from pathlib import Path
 
 from .acquisition import AcquisitionService, RawArtifactStore, SourcePolicy, SourceRequest
 from .acquisition.models import SourceArtifact
-from .amendment_extraction.checkpoint import build_extraction_v2_1, build_phase2_checkpoint
+from .amendment_extraction.checkpoint import build_phase2_checkpoint, build_versioned_extraction
 from .amendment_extraction.pipeline import AmendmentExtractionPipeline
 from .amendment_extraction.silver_checkpoint import build_silver_label_checkpoint
 from .applicability import ApplicabilityQuery, ApplicabilityResolver, TemporalFact
@@ -92,9 +92,14 @@ def build_parser() -> argparse.ArgumentParser:
 
     subparsers.add_parser("build-ingestion-checkpoint")
     subparsers.add_parser("build-amendment-extraction-checkpoint")
-    subparsers.add_parser("build-amendment-extraction-v2.1")
+    subparsers.add_parser("build-layout-furniture")
+    ocr_candidate = subparsers.add_parser("build-ocr-candidate")
+    ocr_candidate.add_argument("--entry", required=True)
+    versioned_extraction = subparsers.add_parser("build-amendment-extraction-version")
+    versioned_extraction.add_argument("--version", required=True, help="must match the current extractor, e.g. v2.2")
+    versioned_extraction.add_argument("--previous", required=True, help="frozen version to compare with, e.g. v2.1")
     silver_labels = subparsers.add_parser("build-amendment-silver-labels")
-    silver_labels.add_argument("--extraction-version", choices=("v1", "v2.1"), default="v1")
+    silver_labels.add_argument("--extraction-version", choices=("v1", "v2.1", "v2.2"), default="v1")
     subparsers.add_parser("build-risk-checkpoint")
     assess_risk = subparsers.add_parser("assess-risk")
     assess_risk.add_argument("--scenario", type=Path, required=True)
@@ -572,8 +577,20 @@ def run(args: argparse.Namespace) -> int:
         print(json.dumps(result, indent=2, ensure_ascii=False))
         return 0
 
-    if args.command == "build-amendment-extraction-v2.1":
-        print(json.dumps(build_extraction_v2_1(root), indent=2, ensure_ascii=False))
+    if args.command == "build-layout-furniture":
+        from .parsing.layout import build_layout_furniture_artifact
+
+        print(json.dumps(build_layout_furniture_artifact(root), indent=2, ensure_ascii=False))
+        return 0
+
+    if args.command == "build-ocr-candidate":
+        from .parsing.ocr import build_ocr_candidate
+
+        print(json.dumps(build_ocr_candidate(root, args.entry), indent=2, ensure_ascii=False))
+        return 0
+
+    if args.command == "build-amendment-extraction-version":
+        print(json.dumps(build_versioned_extraction(root, args.version, args.previous), indent=2, ensure_ascii=False))
         return 0
 
     if args.command == "build-amendment-silver-labels":

@@ -1,0 +1,110 @@
+{
+  "all_events_traceable": true,
+  "amendment_event_count": 1150,
+  "artifact_path": "data/processed/amendments/v2.2/extraction.json",
+  "artifact_sha256": "5b1a09abe4ecfb03605c1d9a21de40d2d443c12532b997723e2f2cca7af7710d",
+  "comparison_to_previous": {
+    "event_count": [
+      864,
+      1150
+    ],
+    "event_ids_only_in_v2.1": 250,
+    "event_ids_only_in_v2.2": 536,
+    "unresolved_reason_counts_v2.1": {
+      "ambiguous_section": 17,
+      "commencement_unclear": 657,
+      "missing_new_text": 215,
+      "missing_old_text": 142,
+      "operand_contains_page_furniture": 14,
+      "parsing_failure": 0,
+      "source_text_unreliable": 35,
+      "target_not_found": 88,
+      "unclear_operation": 340
+    },
+    "unresolved_record_count": [
+      1508,
+      1953
+    ]
+  },
+  "configured_amending_act_count": 37,
+  "every_document_accounted_for": true,
+  "extractor_version": "generalised-amendment-extractor-v2.2",
+  "human_review_required": true,
+  "legal_correctness_claimed": false,
+  "metrics": {
+    "commencement_extraction_coverage": {
+      "denominator": 1150,
+      "numerator": 200,
+      "percent": 17.39
+    },
+    "controlled_fixture_accuracy": {
+      "commencement_extraction_accuracy": {
+        "denominator": 8,
+        "numerator": 8,
+        "percent": 100.0
+      },
+      "fixture_count": 8,
+      "old_new_extraction_accuracy": {
+        "denominator": 6,
+        "numerator": 6,
+        "percent": 100.0
+      },
+      "operation_accuracy": {
+        "denominator": 8,
+        "numerator": 8,
+        "percent": 100.0
+      },
+      "scope": "controlled parser fixtures only; not real-corpus legal accuracy",
+      "target_identification_accuracy": {
+        "denominator": 8,
+        "numerator": 8,
+        "percent": 100.0
+      }
+    },
+    "old_new_extraction_coverage": {
+      "denominator": 1150,
+      "numerator": 594,
+      "percent": 51.65
+    },
+    "operation_resolution_coverage": {
+      "denominator": 1150,
+      "numerator": 918,
+      "percent": 79.83
+    },
+    "real_corpus_accuracy": {
+      "commencement_extraction_accuracy": null,
+      "old_new_extraction_accuracy": null,
+      "operation_accuracy": null,
+      "reason": "human-reviewed gold labels are not available",
+      "target_identification_accuracy": null
+    },
+    "target_identification_coverage": {
+      "denominator": 1150,
+      "numerator": 1017,
+      "percent": 88.43
+    },
+    "unresolved_event_rate": {
+      "denominator": 1150,
+      "numerator": 1053,
+      "percent": 91.57
+    },
+    "unresolved_reason_counts": {
+      "ambiguous_section": 17,
+      "commencement_unclear": 905,
+      "layout_furniture_removed": 130,
+      "missing_new_text": 275,
+      "missing_old_text": 224,
+      "operand_contains_page_furniture": 2,
+      "parsing_failure": 0,
+      "source_text_unreliable": 35,
+      "target_not_found": 133,
+      "unclear_operation": 232
+    },
+    "unresolved_record_count": 1953
+  },
+  "previous_artifact_path": "data/processed/amendments/v2.1/extraction.json",
+  "previous_artifact_sha256": "91a453ad37eb0271652c672ecb683186231c8ac999a007373da4ff451503dc5d",
+  "schema_version": "1.0.0",
+  "supersedes_nothing": "v2.1 and earlier extraction artifacts remain frozen records",
+  "unresolved_count": 1953
+}
