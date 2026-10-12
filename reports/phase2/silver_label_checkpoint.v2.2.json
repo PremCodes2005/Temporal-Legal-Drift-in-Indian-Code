@@ -1,0 +1,79 @@
+{
+  "artifact_path": "data/processed/amendments/v2.2/silver_labels.v2.2.json",
+  "artifact_sha256": "6e0a51d630898023bfda9dca83a1f79da901bc68da6f3571d493c6758604465c",
+  "checks": {
+    "accuracy_not_mislabeled": true,
+    "all_accepted_labels_are_evidence_constrained": true,
+    "all_disagreements_abstain": true,
+    "all_labels_reference_known_events": true,
+    "coverage_and_abstention_reported": true,
+    "one_label_decision_per_extracted_event": true,
+    "source_extraction_unchanged": true
+  },
+  "deliverable": "evidence-constrained amendment silver labels v2.2",
+  "human_validation_still_required_for_accuracy": true,
+  "legal_gold_created": false,
+  "metrics": {
+    "abstained_count": 648,
+    "abstention_rate": {
+      "denominator": 1150,
+      "numerator": 648,
+      "percent": 56.35
+    },
+    "accepted_exact_evidence_support_rate": {
+      "denominator": 502,
+      "numerator": 502,
+      "percent": 100.0
+    },
+    "auto_accepted_count": 502,
+    "auto_label_coverage": {
+      "denominator": 1150,
+      "numerator": 502,
+      "percent": 43.65
+    },
+    "confidence_tier_counts": {
+      "ABSTAIN": 648,
+      "HIGH": 502,
+      "LOW": 0,
+      "MEDIUM": 0
+    },
+    "field_acceptance": {
+      "effective_date": {
+        "denominator": 1150,
+        "numerator": 200,
+        "percent": 17.39
+      },
+      "new_text": {
+        "denominator": 1150,
+        "numerator": 875,
+        "percent": 76.09
+      },
+      "old_text": {
+        "denominator": 1150,
+        "numerator": 926,
+        "percent": 80.52
+      },
+      "operation": {
+        "denominator": 1150,
+        "numerator": 819,
+        "percent": 71.22
+      },
+      "principal_act": {
+        "denominator": 1150,
+        "numerator": 1148,
+        "percent": 99.83
+      },
+      "target_provision": {
+        "denominator": 1150,
+        "numerator": 963,
+        "percent": 83.74
+      }
+    },
+    "label_count": 1150,
+    "mean_agreement_score": 0.8642,
+    "metric_interpretation": "agreement and evidence-support metrics for machine-generated silver labels; not real-corpus legal accuracy"
+  },
+  "phase": 2,
+  "schema_version": "1.0.0",
+  "status": "passed"
+}

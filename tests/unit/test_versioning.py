@@ -14,7 +14,8 @@ from temporal_legal_drift.versioning.models import (
     VersionGraph,
     VersionTransition,
 )
-from temporal_legal_drift.versioning.temporal_graph import TemporalGraphBuilder, _target_path_detail
+from temporal_legal_drift.jsonio import load_json
+from temporal_legal_drift.versioning.temporal_graph import TemporalGraph, TemporalGraphBuilder, _target_path_detail
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -146,6 +147,45 @@ class TemporalKnowledgeGraphTests(unittest.TestCase):
         kept = graph.get_provision_version("arbitration-and-conciliation-act-1996", "7", "2016-01-01")
         self.assertEqual(kept["status"], "RESOLVED_FRAGMENT")
         self.assertEqual(kept["version"]["text_scope"], "AMENDMENT_CONTROLLED_FRAGMENT")
+
+    def test_v4_short_fragment_policy_and_layout_cleaned_corroboration(self) -> None:
+        from temporal_legal_drift.versioning.temporal_graph import _short_fragment_specific
+
+        # Mere presence of "ten years" (old wording still present) is not specific corroboration.
+        self.assertFalse(_short_fragment_specific("SUBSTITUTE", "three years", "ten years", "", ["three years or ten years"]))
+        self.assertTrue(_short_fragment_specific("SUBSTITUTE", "three years", "ten years", "", ["for ten years"]))
+        self.assertFalse(_short_fragment_specific("SUBSTITUTE", "x", "ten years", "", ["ten years and ten years"]))
+        self.assertTrue(_short_fragment_specific(
+            "INSERT", "", "or culture", 'after the words "art", the words "or culture" shall be inserted', ["art or culture"]))
+        graph = TemporalGraph.from_dict(load_json(ROOT / "data/interim/temporal_legal_knowledge_graph.v4.json"))
+        self.assertEqual(graph.validate(), ())
+        events = {item["amendment_event_id"]: item for item in graph.amendment_events}
+        for item in graph.transitions:
+            event = events[item["amendment_event_id"]]
+            self.assertFalse(event.get("source_fidelity_flags"))
+            if event.get("layout_cleaning"):
+                self.assertTrue(item["validation_checks"]["after_fragment_matches_consolidated_principal_act"])
+            if item["validation_checks"].get("after_fragment_corroboration_specific") is False:
+                self.assertEqual(item["validation_status"], "MACHINE_SHORT_FRAGMENT_MATCH_ONLY")
+
+    def test_graph_consumer_contract_labels_scope_and_abstains(self) -> None:
+        from temporal_legal_drift.versioning.consumer import GraphConsumer, IncompatibleGraphError
+
+        consumer = GraphConsumer(ROOT, "v4")
+        supported = consumer.provision_at("arbitration-and-conciliation-act-1996", "7", "2016-01-01")
+        self.assertEqual(supported["status"], "FRAGMENT_SUPPORTED")
+        self.assertEqual(supported["version_scope"], "AMENDMENT_CONTROLLED_FRAGMENT")
+        self.assertFalse(supported["is_complete_consolidated_text"])
+        self.assertEqual(supported["applicability_status"], "NOT_DETERMINED_REQUIRES_SCENARIO_FACTS_AND_REVIEW")
+        self.assertEqual(supported["legal_validation"], "UNVERIFIED")
+        self.assertTrue(supported["source_evidence"][0]["exact_text"] and supported["source_evidence"][0]["source_url"])
+        unresolved = consumer.provision_at("arbitration-and-conciliation-act-1996", "31", "2016-01-01")
+        self.assertEqual((unresolved["status"], unresolved["text"]), ("UNRESOLVED", None))
+        self.assertTrue(unresolved["abstention_reasons"])
+        missing = consumer.provision_at("arbitration-and-conciliation-act-1996", "9999", "2016-01-01")
+        self.assertEqual(missing["status"], "UNRESOLVED")
+        with self.assertRaises(IncompatibleGraphError):
+            GraphConsumer(ROOT, "v2")
 
     def test_point_in_time_query_abstains_without_effective_date(self) -> None:
         result = self.graph.get_provision_version(

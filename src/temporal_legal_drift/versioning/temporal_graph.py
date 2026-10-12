@@ -26,7 +26,12 @@ SOURCE_FIDELITY_REASONS = frozenset({"source_text_unreliable", "operand_contains
 GRAPH_INPUTS = {
     "v2": ("data/processed/amendments/v1/extraction.json", "data/processed/amendments/v1/silver_labels.v1.json"),
     "v3": ("data/processed/amendments/v2.1/extraction.json", "data/processed/amendments/v2.1/silver_labels.v2.1.json"),
+    "v4": ("data/processed/amendments/v2.2/extraction.json", "data/processed/amendments/v2.2/silver_labels.v2.2.json"),
 }
+# Evidence-strength policy (protocols/temporal_graph_protocol.v3.md) applies from v4;
+# earlier graph versions keep their original rules so they stay byte-reproducible.
+STRICT_EVIDENCE_POLICY_VERSIONS = frozenset({"v4"})
+SHORT_FRAGMENT_MIN_CHARACTERS = 15
 _GENERAL_COMMENCEMENT = re.compile(
     r"\b(?:this\s+act|it)\s+(?:shall\s+be\s+deemed\s+to\s+have\s+come|"
     r"shall\s+come)\s+into\s+force\s+on\s+the\s+"
@@ -302,6 +307,7 @@ class TemporalGraphBuilder:
     def build(self, root: Path, graph_version: str = "v2") -> TemporalGraph:
         root = root.resolve()
         extraction_path, silver_path = GRAPH_INPUTS[graph_version]
+        strict = graph_version in STRICT_EVIDENCE_POLICY_VERSIONS
         manifest = CorpusManifest.from_file(root / "configs/corpus/pilot_v1.json")
         report = load_json(root / "reports/corpus/india-code-temporal-pilot-v1.lock.json")
         base_graph = VersionGraph.from_dict(load_json(root / "data/interim/version_graph.v1.json"))
@@ -529,6 +535,27 @@ class TemporalGraphBuilder:
             before_id = _id("pver", provision["provision_id"], event_record["amendment_event_id"], "before")
             after_id = _id("pver", provision["provision_id"], event_record["amendment_event_id"], "after")
             effective_date = event_record.get("effective_date")
+            consolidated_versions = [
+                item for item in versions
+                if item.get("provision_id") == provision["provision_id"]
+                and item.get("text_scope") == "COMPLETE_CONSOLIDATED_SOURCE_SNAPSHOT"
+            ]
+            after_supported_versions = [
+                item for item in consolidated_versions
+                if _normalise_for_match(after_text)
+                and _normalise_for_match(after_text) in _normalise_for_match(str(item["text"]))
+            ]
+            short_fragment_specific = None
+            if strict:
+                if event_record.get("layout_cleaning") and not after_supported_versions:
+                    # A layout-cleaned operand becomes a transition only with consolidated-text support.
+                    unresolved.append(_unresolved_transition(event_record, ["layout_cleaned_operand_not_corroborated"]))
+                    continue
+                if after_supported_versions and len(_normalise_for_match(after_text)) < SHORT_FRAGMENT_MIN_CHARACTERS:
+                    short_fragment_specific = _short_fragment_specific(
+                        operation, before_text, after_text, str(event_record["evidence"]["exact_text"]),
+                        [str(item["text"]) for item in after_supported_versions],
+                    )
             versions.extend((
                 {
                     "version_id": before_id,
@@ -557,16 +584,6 @@ class TemporalGraphBuilder:
                     "source_ids": [source_id],
                 },
             ))
-            consolidated_versions = [
-                item for item in versions
-                if item.get("provision_id") == provision["provision_id"]
-                and item.get("text_scope") == "COMPLETE_CONSOLIDATED_SOURCE_SNAPSHOT"
-            ]
-            after_supported_versions = [
-                item for item in consolidated_versions
-                if _normalise_for_match(after_text)
-                and _normalise_for_match(after_text) in _normalise_for_match(str(item["text"]))
-            ]
             checks = {
                 "silver_label_auto_accepted": True,
                 "target_provision_exists": True,
@@ -580,6 +597,8 @@ class TemporalGraphBuilder:
                 "after_fragment_matches_consolidated_principal_act": bool(after_supported_versions),
                 "effective_date_evidenced": effective_date is not None,
                 "human_legal_reviewed": False,
+                **({"after_fragment_corroboration_specific": short_fragment_specific}
+                   if short_fragment_specific is not None else {}),
             }
             corroborating_source_ids = sorted({
                 source_id,
@@ -599,7 +618,8 @@ class TemporalGraphBuilder:
                     if effective_date else "UNRESOLVED"
                 ),
                 "validation_status": (
-                    "MACHINE_CROSS_SOURCE_CORROBORATED"
+                    "MACHINE_SHORT_FRAGMENT_MATCH_ONLY" if short_fragment_specific is False
+                    else "MACHINE_CROSS_SOURCE_CORROBORATED"
                     if checks["after_fragment_matches_consolidated_principal_act"]
                     else "MACHINE_INTERNAL_CHECKS_ONLY"
                 ),
@@ -706,7 +726,9 @@ def write_temporal_graph_and_checkpoint(
             and all(item.get("source_integrity_verified") is True for item in graph.legal_sources)
         ),
         "all_37_amending_acts_are_represented": len(graph.amendment_acts) == 37,
-        "all_864_phase2_events_are_accounted_for": len(graph.amendment_events) == 864,
+        # Key name kept for v2/v3 so their checkpoints stay byte-reproducible.
+        ("all_864_phase2_events_are_accounted_for" if graph_version in {"v2", "v3"} else "all_phase2_events_are_accounted_for"):
+            len(graph.amendment_events) == len(load_json(root / GRAPH_INPUTS[graph_version][0])["events"]),
         "at_least_20_machine_evidence_validated_transitions": len(fully_checked) >= 20,
         "twenty_transition_validation_candidates_created": len(validation_set) == 20,
         "validation_candidate_ids_are_unique": (
@@ -788,9 +810,19 @@ def write_temporal_graph_and_checkpoint(
             "unresolved_transitions": len(graph.unresolved_transitions),
             "human_validated_transitions": 0,
             "source_fidelity_flagged_events": sum(bool(item.get("source_fidelity_flags")) for item in graph.amendment_events),
+            **({
+                "short_fragment_match_only_transitions": sum(
+                    item["validation_status"] == "MACHINE_SHORT_FRAGMENT_MATCH_ONLY" for item in graph.transitions),
+                "layout_cleaned_transitions": sum(
+                    bool(next(e for e in graph.amendment_events if e["amendment_event_id"] == item["amendment_event_id"]).get("layout_cleaning"))
+                    for item in graph.transitions),
+                "compound_part_events": sum(bool(item.get("compound_part")) for item in graph.amendment_events),
+            } if graph_version in STRICT_EVIDENCE_POLICY_VERSIONS else {}),
             "cross_source_corroborated_transitions": sum(
                 item["validation_checks"].get("after_fragment_matches_consolidated_principal_act") is True
                 and item["validation_checks"].get("forward_operation_round_trip") is True
+                # From v4 a context-free short-fragment match is not counted as corroboration.
+                and item["validation_checks"].get("after_fragment_corroboration_specific") is not False
                 for item in graph.transitions
             ),
         },
@@ -859,6 +891,21 @@ def _fragments(operation: str, old_text: object, new_text: object) -> tuple[str 
     if operation in {"OMIT", "REPEAL"} and old:
         return old, ""
     return None, None
+
+
+def _short_fragment_specific(
+    operation: str, before: str, after: str, evidence: str, consolidated_texts: list[str]
+) -> bool:
+    """A short after-fragment corroborates only with context, not by mere substring presence."""
+    fragment = _normalise_for_match(after)
+    texts = [_normalise_for_match(text) for text in consolidated_texts]
+    if operation == "INSERT":
+        anchor = re.search(r"\bafter\s+the\s+words[^\"“'‘]{0,40}[\"“'‘]([^\"”'’]+)[\"”'’]", evidence, re.I)
+        return bool(anchor) and any(f"{_normalise_for_match(anchor.group(1))} {fragment}" in text for text in texts)
+    if operation in {"SUBSTITUTE", "REPLACE"} and before:
+        old = _normalise_for_match(before)
+        return any(f" {text} ".count(f" {fragment} ") == 1 and f" {old} " not in f" {text} " for text in texts)
+    return False
 
 
 def _forward_round_trip(operation: str, before: str, after: str, evidence: str) -> bool:

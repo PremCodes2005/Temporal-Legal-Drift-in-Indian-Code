@@ -30,6 +30,8 @@ RELEASE_INPUT_GLOBS = (
     "data/interim/phase3_transition_validation_candidates.v1.json",
     "data/interim/temporal_legal_knowledge_graph.v3.json",
     "data/interim/phase3_transition_validation_candidates.v3.json",
+    "data/interim/temporal_legal_knowledge_graph.v4.json",
+    "data/interim/phase3_transition_validation_candidates.v4.json",
     "data/interim/temporal_fact_candidates.v1.json",
     "data/interim/cross_version_validation.v1.json",
 )
@@ -39,6 +41,8 @@ REBUILD_COMMANDS = (
     ("build-amendment-extraction-version", "--version", "v2.2", "--previous", "v2.1"),
     ("build-amendment-silver-labels", "--extraction-version", "v2.1"),
     ("build-temporal-knowledge-graph", "--graph-version", "v3"),
+    ("build-amendment-silver-labels", "--extraction-version", "v2.2"),
+    ("build-temporal-knowledge-graph", "--graph-version", "v4"),
 )
 
 
@@ -102,6 +106,11 @@ REQUIRED_ARTIFACTS = (
     "data/interim/temporal_legal_knowledge_graph.v3.json",
     "data/interim/phase3_transition_validation_candidates.v3.json",
     "reports/phase3/temporal_graph_checkpoint.v3.json",
+    "data/interim/temporal_legal_knowledge_graph.v4.json",
+    "data/interim/phase3_transition_validation_candidates.v4.json",
+    "reports/phase3/temporal_graph_checkpoint.v4.json",
+    "data/processed/amendments/v2.2/silver_labels.v2.2.json",
+    "reports/phase2/silver_label_checkpoint.v2.2.json",
     "experiments/phase9/temporal_drift_demo.v1.json",
     "experiments/phase9/temporal_drift_demo.results.v1.json",
     "reports/phase9/temporal_drift_demo.lock.json",

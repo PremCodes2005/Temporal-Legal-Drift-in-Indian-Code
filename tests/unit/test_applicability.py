@@ -105,6 +105,53 @@ class ApplicabilityTests(unittest.TestCase):
         self.assertEqual(conflicting.status, "unresolved_escalate")
         self.assertEqual(uncertain_result.status, "unresolved_escalate")
 
+    def test_assent_only_does_not_establish_applicability(self) -> None:
+        result = ApplicabilityResolver(self.graph, (self.fact("tmp_assent", "enactment_or_assent", "ver_new", date(2020, 1, 1)),)).resolve(
+            ApplicabilityQuery("s1", "lin_1", date(2021, 1, 1))
+        )
+        self.assertEqual(result.status, "unresolved_escalate")
+        self.assertIsNone(result.governing_version_id)
+        self.assertIn("publication_or_assent_evidence_does_not_establish_applicability", result.escalation_reasons)
+
+    def test_deferred_commencement_is_not_yet_effective_before_its_date(self) -> None:
+        resolver = ApplicabilityResolver(self.graph, (self.fact("tmp_deferred", "deferred_commencement", "ver_new", date(2022, 1, 1)),))
+        before = resolver.resolve(ApplicabilityQuery("s1", "lin_1", date(2021, 6, 1)))
+        after = resolver.resolve(ApplicabilityQuery("s2", "lin_1", date(2022, 1, 1)))
+        self.assertEqual((before.status, before.governing_version_id), ("not_yet_effective", None))
+        self.assertEqual(after.governing_version_id, "ver_new")
+
+    def test_transitional_provision_requires_explicit_adjudication(self) -> None:
+        result = ApplicabilityResolver(self.graph, (
+            self.fact("tmp_new", "commencement", "ver_new", date(2021, 1, 1)),
+            self.fact("tmp_transition", "transitional_provision", "ver_old", date(2021, 1, 1)),
+        )).resolve(ApplicabilityQuery("s1", "lin_1", date(2021, 6, 1)))
+        self.assertEqual(result.status, "unresolved_escalate")
+        self.assertIn("transitional_rule_requires_explicit_adjudication", result.escalation_reasons)
+
+    def test_retrospective_effect_uses_the_evidenced_effective_date_not_enactment(self) -> None:
+        # Enacted in 2022 but evidenced as effective from 2020: a 2021 reference date takes the new version.
+        resolver = ApplicabilityResolver(self.graph, (
+            self.fact("tmp_old", "commencement", "ver_old", date(2019, 1, 1)),
+            self.fact("tmp_assent", "enactment_or_assent", "ver_new", date(2022, 1, 1)),
+            self.fact("tmp_retro", "retrospective_effect", "ver_new", date(2020, 1, 1)),
+        ))
+        result = resolver.resolve(ApplicabilityQuery("s1", "lin_1", date(2021, 1, 1)))
+        self.assertEqual(result.governing_version_id, "ver_new")
+        self.assertEqual(result.status, "resolved_requires_expert_confirmation")
+
+    def test_multiple_active_versions_without_supersession_path_escalate(self) -> None:
+        evidence = EvidenceReference("src_1", "0" * 64, "doc_1", "blk_1", "page:1", "1" * 64)
+        text = "1. Duty.—Parallel."
+        parallel = ProvisionVersion("ver_parallel", "lin_1", "parallel", text, sha256(text.encode()).hexdigest(), evidence)
+        graph = VersionGraph(self.graph.instruments, self.graph.lineages, (*self.graph.versions, parallel),
+                             self.graph.amendment_events, self.graph.transitions)
+        result = ApplicabilityResolver(graph, (
+            self.fact("tmp_new", "commencement", "ver_new", date(2021, 1, 1)),
+            self.fact("tmp_parallel", "commencement", "ver_parallel", date(2021, 1, 1)),
+        )).resolve(ApplicabilityQuery("s1", "lin_1", date(2021, 6, 1)))
+        self.assertEqual(result.status, "unresolved_escalate")
+        self.assertIn("multiple_active_versions_without_proven_supersession_path", result.escalation_reasons)
+
     def test_real_corpus_candidate_extractor_never_auto_approves(self) -> None:
         old = self.graph.reconstruct("ver_old")
         dated_text = "1. Duty.—It shall come into force on 1 January 2020."

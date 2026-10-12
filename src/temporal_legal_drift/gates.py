@@ -296,6 +296,10 @@ def _phase3(root: Path) -> PhaseGateResult:
     v3_checkpoint = load_json(root / "reports" / "phase3" / "temporal_graph_checkpoint.v3.json")
     v3_graph_path = root / str(v3_checkpoint["graph_path"])
     v3_queue_path = root / str(v3_checkpoint["validation_dataset_path"])
+    v4_checkpoint = load_json(root / "reports" / "phase3" / "temporal_graph_checkpoint.v4.json")
+    v4_graph_path = root / str(v4_checkpoint["graph_path"])
+    v4_graph = load_json(v4_graph_path) if v4_graph_path.is_file() else {}
+    v4_events = {str(item["amendment_event_id"]): item for item in v4_graph.get("amendment_events", [])}
     manifest = CorpusManifest.from_file(root / "configs" / "corpus" / "pilot_v1.json")
     checks = {
         "version_graph_schema_present": (
@@ -372,6 +376,28 @@ def _phase3(root: Path) -> PhaseGateResult:
         ) and bool(v3_checkpoint.get("inputs")),
         "source_fidelity_flagged_events_never_transitions": (
             v3_checkpoint.get("checks", {}).get("no_source_fidelity_flagged_event_became_transition") is True
+        ),
+        "temporal_graph_v4_checkpoint_passed": (
+            v4_checkpoint.get("engineering_status") == "passed"
+            and all(v4_checkpoint.get("checks", {}).values())
+            and v4_checkpoint.get("counts", {}).get("human_validated_transitions") == 0
+        ),
+        "temporal_graph_v4_hash_and_inputs_reconcile": (
+            v4_graph_path.is_file()
+            and sha256(v4_graph_path.read_bytes()).hexdigest() == v4_checkpoint.get("graph_sha256")
+            and bool(v4_checkpoint.get("inputs"))
+            and all(
+                (root / relative).is_file() and sha256((root / relative).read_bytes()).hexdigest() == digest
+                for relative, digest in v4_checkpoint.get("inputs", {}).items()
+            )
+        ),
+        "v4_weak_or_unreliable_evidence_never_strong_transition": bool(v4_graph) and all(
+            not v4_events[str(item["amendment_event_id"])].get("source_fidelity_flags")
+            and (item["validation_status"] != "MACHINE_CROSS_SOURCE_CORROBORATED"
+                 or item["validation_checks"].get("after_fragment_corroboration_specific") is not False)
+            and (not v4_events[str(item["amendment_event_id"])].get("layout_cleaning")
+                 or item["validation_checks"].get("after_fragment_matches_consolidated_principal_act") is True)
+            for item in v4_graph.get("transitions", [])
         ),
     }
     return PhaseGateResult(

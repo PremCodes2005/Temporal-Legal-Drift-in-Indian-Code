@@ -171,7 +171,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
 
     temporal_graph = subparsers.add_parser("build-temporal-knowledge-graph")
-    temporal_graph.add_argument("--graph-version", choices=("v2", "v3"), default="v2")
+    temporal_graph.add_argument("--graph-version", choices=("v2", "v3", "v4"), default="v2")
     point_query = subparsers.add_parser("get-provision-version")
     point_query.add_argument(
         "--graph", type=Path, default=Path("data/interim/temporal_legal_knowledge_graph.v2.json")
