@@ -1,0 +1,9 @@
+# Fired by OnFailure= of the monitor or health unit; %i is the failed unit's name.
+[Unit]
+Description=Temporal Legal Drift alert for %i
+
+[Service]
+Type=oneshot
+User=tldrift
+EnvironmentFile=-/etc/tldrift/tldrift.env
+ExecStart=/srv/temporal-legal-drift/deploy/alert.sh %i

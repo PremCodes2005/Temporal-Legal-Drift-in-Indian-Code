@@ -43,3 +43,9 @@ The intended research scope and acceptance criteria remain in [plan.md](../plan.
 - Drift scoring is drift-metrics-v3; see `docs/methodology/drift_score.v3.md`.
 - Query responses carry clause-level evidence: Act, provision, operation, amendment event, source hash, page and offset. The UI shows it with a separate indicator for each of textual drift, materiality, answer change and risk.
 - The last live e-Gazette attempt failed on the server's incomplete TLS chain (see `verification.md`).
+
+## Update (2026-10-12, follow-up)
+
+- **e-Gazette:** live discovery works over a pinned-intermediate TLS context with full verification (ADR 0010).
+- **Deployment:** the daily job is packaged as systemd timers with missed-run alerting (ADR 0011).
+- **Accessibility:** the comparison view passed real-Chrome keyboard, accessibility-tree and 320px checks.

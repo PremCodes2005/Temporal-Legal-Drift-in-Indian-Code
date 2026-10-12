@@ -5,7 +5,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Callable, Mapping, Protocol
 from urllib.error import HTTPError, URLError
-from urllib.request import HTTPRedirectHandler, Request, build_opener
+import ssl
+from http.cookiejar import CookieJar
+from urllib.request import HTTPCookieProcessor, HTTPRedirectHandler, HTTPSHandler, Request, build_opener
 
 from temporal_legal_drift.errors import AcquisitionError
 
@@ -51,6 +53,10 @@ class _PolicyRedirectHandler(HTTPRedirectHandler):
 class UrllibTransport:
     user_agent = "TemporalLegalDriftResearch/0.1 (+provenance-controlled acquisition)"
 
+    def __init__(self, ssl_context: ssl.SSLContext | None = None, cookie_jar: CookieJar | None = None) -> None:
+        self.ssl_context = ssl_context
+        self.cookie_jar = cookie_jar
+
     def fetch(
         self,
         url: str,
@@ -58,9 +64,15 @@ class UrllibTransport:
         timeout: float,
         maximum_bytes: int,
         validate_url: Callable[[str], None],
+        headers: Mapping[str, str] | None = None,
     ) -> FetchResponse:
-        request = Request(url, headers={"User-Agent": self.user_agent, "Accept": "*/*"})
-        opener = build_opener(_PolicyRedirectHandler(validate_url))
+        request = Request(url, headers={"User-Agent": self.user_agent, "Accept": "*/*", **(headers or {})})
+        handlers = [_PolicyRedirectHandler(validate_url)]
+        if self.ssl_context is not None:
+            handlers.append(HTTPSHandler(context=self.ssl_context))
+        if self.cookie_jar is not None:
+            handlers.append(HTTPCookieProcessor(self.cookie_jar))
+        opener = build_opener(*handlers)
         try:
             with opener.open(request, timeout=timeout) as response:
                 declared_length = response.headers.get("Content-Length")

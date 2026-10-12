@@ -8,6 +8,7 @@ validated; a mismatch raises SourceShapeError or yields REVIEW_REQUIRED.
 from __future__ import annotations
 
 import html
+from http.cookiejar import CookieJar
 import re
 import time
 from datetime import datetime
@@ -15,6 +16,7 @@ from typing import Callable
 from urllib.parse import urlparse
 
 from temporal_legal_drift.acquisition.fetch import Transport, UrllibTransport
+from temporal_legal_drift.acquisition.tls import LETS_ENCRYPT_GEN_Y_CHAIN, pinned_intermediate_context
 from temporal_legal_drift.errors import AcquisitionError
 
 from .indiacode import DiscoveredRecord, SourceShapeError
@@ -67,7 +69,8 @@ class EGazetteConnector:
 
     def __init__(self, transport: Transport | None = None, *, pause_seconds: float = 2.0,
                  sleep: Callable[[float], None] = time.sleep) -> None:
-        self.transport = transport or UrllibTransport()
+        # egazette.gov.in serves its leaf without the intermediate (docs/sprint/s1_source_access_decision.v3.md).
+        self.transport = transport or UrllibTransport(pinned_intermediate_context(LETS_ENCRYPT_GEN_Y_CHAIN), CookieJar())
         self.pause_seconds = pause_seconds
         self.sleep = sleep
 
@@ -77,7 +80,11 @@ class EGazetteConnector:
         session = re.match(r"(https://egazette\.gov\.in/\(S\([a-z0-9]+\)\))/", home.final_url)
         if session is None:
             raise SourceShapeError(f"no cookieless session URL after redirect: {home.final_url}")
-        page = self._fetch(f"{session.group(1)}/RecentUploads.aspx?Category=1", MAX_HTML_BYTES)
+        # Like a browser following the home-page link: same session cookies plus a Referer; without them the site serves error.aspx.
+        page = self._fetch(f"{session.group(1)}/RecentUploads.aspx?Category=1", MAX_HTML_BYTES,
+                           headers={"Referer": f"{session.group(1)}/default.aspx"})
+        if "/error.aspx" in page.final_url.lower():
+            raise SourceShapeError(f"listing redirected to the site's error page: {page.final_url}")
         records = []
         for row in parse_listing(page.payload.decode("utf-8", "replace")):
             identity = GAZETTE_ID.match(row["UGID"])
@@ -106,8 +113,9 @@ class EGazetteConnector:
             raise AcquisitionError(f"expected a PDF from {url}, received {response.media_type}")
         return response.payload
 
-    def _fetch(self, url: str, limit: int):
+    def _fetch(self, url: str, limit: int, headers: dict[str, str] | None = None):
         validate_official_url(url)
-        response = self.transport.fetch(url, timeout=60, maximum_bytes=limit, validate_url=validate_official_url)
+        response = self.transport.fetch(url, timeout=60, maximum_bytes=limit, validate_url=validate_official_url,
+                                        **({"headers": headers} if headers else {}))
         self.sleep(self.pause_seconds)
         return response

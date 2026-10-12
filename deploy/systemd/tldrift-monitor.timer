@@ -1,0 +1,10 @@
+[Unit]
+Description=Hourly trigger for Temporal Legal Drift source monitoring
+
+[Timer]
+OnCalendar=hourly
+RandomizedDelaySec=10m
+Persistent=true
+
+[Install]
+WantedBy=timers.target

@@ -108,5 +108,13 @@ describe("mobile layout", () => {
     const css = readFileSync("src/styles.css", "utf8");
     expect(css).toMatch(/@media \(max-width:900px\)\{[^@]*\.compare-grid\{grid-template-columns:1fr\}/);
     expect(css).toMatch(/@media \(max-width:520px\)\{\.indicator-strip\{grid-template-columns:1fr\}/);
+    // Found in real Chrome at 320px: unbreakable codes in the open score panel pushed the page 5px wider than the screen.
+    expect(css).toContain(".score-explanation{overflow-wrap:anywhere}");
+  });
+
+  it("gives screen readers a text cue for removed and inserted words, not only strike-through styling", () => {
+    const css = readFileSync("src/styles.css", "utf8");
+    expect(css).toContain('.compare-text del::before{content:" [removed: "}');
+    expect(css).toContain('.compare-text ins::before{content:" [inserted: "}');
   });
 });

@@ -271,8 +271,9 @@ class FakeTransport:
     def __init__(self, responses: dict[str, tuple[str, bytes, str | None]]) -> None:
         self.responses = responses
 
-    def fetch(self, url, *, timeout, maximum_bytes, validate_url):
+    def fetch(self, url, *, timeout, maximum_bytes, validate_url, headers=None):
         validate_url(url)
+        self.requests = getattr(self, "requests", []) + [(url, headers)]
         for prefix, (media_type, payload, final_url) in self.responses.items():
             if url.startswith(prefix):
                 return FetchResponse(payload, final_url or url, media_type, {})
@@ -299,12 +300,22 @@ class ConnectorTests(unittest.TestCase):
             "https://egazette.gov.in/": ("text/html", b"<html/>", "https://egazette.gov.in/(S(abc123))/default.aspx"),
         })
         found = EGazetteConnector(transport, pause_seconds=0, sleep=lambda _: None).discover(None)
+        self.assertEqual(transport.requests[-1], ("https://egazette.gov.in/(S(abc123))/RecentUploads.aspx?Category=1",
+                                                  {"Referer": "https://egazette.gov.in/(S(abc123))/default.aspx"}))
         self.assertEqual([r.official_id for r in found], ["CG-DL-E-10102026-277026", "CG-DL-E-10102026-277027"])
         self.assertEqual(found[0].canonical_url, "https://egazette.gov.in/WriteReadData/2026/277026.pdf")
         self.assertEqual([r.download_eligible for r in found], [True, False])
         self.assertEqual(found[0].stated_dates, {"issued": "2026-10-09", "published": "2026-10-10"})
         with self.assertRaises(SourceShapeError):
             parse_listing("<html>changed layout</html>")
+
+    def test_egazette_error_page_redirect_is_a_visible_shape_failure(self) -> None:
+        transport = FakeTransport({
+            "https://egazette.gov.in/(S(abc123))/RecentUploads.aspx": ("text/html", b"<html/>", "https://egazette.gov.in/(S(abc123))/error.aspx"),
+            "https://egazette.gov.in/": ("text/html", b"<html/>", "https://egazette.gov.in/(S(abc123))/default.aspx"),
+        })
+        with self.assertRaisesRegex(SourceShapeError, "error page"):
+            EGazetteConnector(transport, pause_seconds=0, sleep=lambda _: None).discover(None)
 
     def test_indiacode_shape_change_and_allowlist(self) -> None:
         transport = FakeTransport({"https://indiacode.gov.in/server/api/discover": ("application/json", b'{"unexpected": 1}', None)})

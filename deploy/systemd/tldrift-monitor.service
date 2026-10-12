@@ -1,0 +1,18 @@
+# Daily official-source discovery. Triggered hourly; the service itself enforces at most one start per source per 24 h.
+[Unit]
+Description=Temporal Legal Drift source monitoring (India Code, e-Gazette)
+Wants=network-online.target
+After=network-online.target
+OnFailure=tldrift-alert@%n.service
+
+[Service]
+Type=oneshot
+User=tldrift
+WorkingDirectory=/srv/temporal-legal-drift
+EnvironmentFile=-/etc/tldrift/tldrift.env
+ExecStart=/srv/temporal-legal-drift/.venv/bin/tldrift monitor-run --owner %H
+TimeoutStartSec=5h
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ReadWritePaths=/srv/temporal-legal-drift/data

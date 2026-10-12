@@ -82,3 +82,20 @@ Remote GitHub Actions has still not been observed. See [../reports/phase3/tempor
   - screen-reader testing;
   - viewports below 500px;
   - remote CI for this commit (until observed).
+
+## e-Gazette TLS, live ingestion, deployment and browser accessibility addendum (2026-10-12)
+
+- **Executed:**
+  - Chain inspection (`openssl s_client`): leaf only, issued by Let's Encrypt YR2.
+  - Intermediate verification: letsencrypt.org bytes = AIA bytes for all 6 Gen-Y intermediates, and `openssl verify` to the system store for all 8 pinned certificates.
+  - `tests/unit/test_tls.py` (9 tests): valid chain, missing intermediate, intermediate not an anchor, hostname mismatch, foreign CA, tampered pin, cookie/Referer session.
+  - Live: see `docs/sprint/s1_source_access_decision.v3.md`. Two audited manual retries, one audited manual import of a real Gazette PDF through storage, parsing, extraction, the review queue and the overlay, and one TLS-only handshake with the final pin set.
+  - Deployment: `tests/unit/test_deploy.py` (9 tests) covering missed-run and stale alerts, the `--check` exit code, unit wiring to real CLI commands, and the alert script's delivery and failure paths. Defect fixed: `monitor-health` loaded graph v4 and failed when it was absent.
+  - Real Chrome 154 (headless, DevTools protocol; `frontend/scripts/browser-a11y-check.mjs`): 22 Tab stops, all with a visible focus ring; Enter opens and Space closes the score explanation; no unnamed controls; heading outline and landmarks present; no horizontal scroll at 320, 360, 414 and 480px with the score panel open.
+- **Defects found in the browser and fixed:**
+  - At ≤414px, unbreakable text in the score panel overflowed: the formula table (425px wide) and a raw enum code.
+  - Inserted and removed words were exposed only as `insertion`/`deletion` roles, which major screen readers do not announce by default. They now carry visually hidden "[removed: …]" / "[inserted: …]" text, confirmed in the accessibility tree.
+- **Not executed:**
+  - listening with VoiceOver or NVDA (only the browser's accessibility tree was inspected);
+  - a real systemd host or `systemd-analyze verify`;
+  - a scheduled (non-manual) e-Gazette run that downloads an amending Act; none was listed today.

@@ -37,6 +37,8 @@ from .indiacode import DiscoveredRecord, SourceShapeError
 
 WINDOW = timedelta(hours=24)
 LEASE = timedelta(hours=6)
+MISSED_RUN_GRACE = timedelta(hours=2)  # the trigger fires hourly; two silent hours past eligibility means it is not running
+STALE_AFTER_HOURS = 48
 MAX_STAGE_ATTEMPTS = 3
 ROOT = "data/monitoring"
 PIPELINE_VERSION = "source-monitoring-v2"
@@ -416,18 +418,25 @@ class MonitoringService:
         folder = self.base / "review_queue"
         queue = [load_json(p) for p in sorted(folder.glob("*.json"))] if folder.is_dir() else []
         states = [doc["versions"][-1]["state"] for doc in self.documents() if doc["versions"]]
-        sources = []
+        sources, alerts = [], []
         for key in sorted(set(self.connectors) | set(state)):
             entry = state.get(key, {})
             success = entry.get("last_success_at")
             lag = (now - _parse_time(success)).total_seconds() / 3600 if success else None
+            eligible = entry.get("next_eligible_at")
+            if eligible and now > _parse_time(eligible) + MISSED_RUN_GRACE:
+                alerts.append({"source_key": key, "code": "SCHEDULER_MISSED_RUN",
+                               "detail": f"eligible since {eligible} but no attempt was started"})
+            if entry.get("last_attempt_at") and (lag is None or lag > STALE_AFTER_HOURS):
+                alerts.append({"source_key": key, "code": "INGESTION_STALE",
+                               "detail": f"last success {success or 'never'}; last status {entry.get('last_status')}"})
             sources.append({
                 "source_key": key, "last_attempt_at": entry.get("last_attempt_at"), "last_success_at": success,
                 "next_eligible_at": entry.get("next_eligible_at"), "last_status": entry.get("last_status"),
                 "lag_hours": round(lag, 1) if lag is not None else None,
-                "scheduled_ingestion_healthy": lag is not None and lag <= 48,
+                "scheduled_ingestion_healthy": lag is not None and lag <= STALE_AFTER_HOURS,
             })
-        return {"sources": sources, "review_queue_pending": sum(item["status"] == "HUMAN_REVIEW_PENDING" for item in queue),
+        return {"sources": sources, "alerts": alerts, "review_queue_pending": sum(item["status"] == "HUMAN_REVIEW_PENDING" for item in queue),
                 "document_states": {name: states.count(name) for name in sorted(set(states))},
                 "failed_documents": states.count("FAILED"),
                 "time_base": "UTC", "coverage_claim": "partial; see docs/sprint/s1_source_access_decision.v2.md"}

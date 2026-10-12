@@ -89,3 +89,12 @@ Not achieved in the sprint:
 | 4 Clause evidence | **PASS** — operation, provision, event ID, hashes, offsets, `AMBIGUOUS_CANDIDATES` | `rag/rag_pipeline.py`, `tests/unit/test_rag.py` |
 | 5 UI | **PASS (headless + jsdom)** — version status, four separate indicators, clause metadata, PDF-at-page, legend, score explanation | `frontend/src/{ResultInsights,SourceHealth,ComparisonPanel}.jsx`, `frontend/src/__tests__/` |
 | 6 E2E + ops | **PASS (mocked)**. Live e-Gazette: **FAILED (TLS chain)**, recorded and not bypassed | `tests/integration/test_monitoring_e2e.py`, `docs/verification.md` |
+
+## Follow-up sprint: e-Gazette TLS, live ingestion, deployment, accessibility (2026-10-12)
+
+| Item | Result | Evidence |
+| --- | --- | --- |
+| e-Gazette `CERTIFICATE_VERIFY_FAILED` | **FIXED** — pinned verified Gen-Y intermediates, full verification kept | ADR 0010, `tests/unit/test_tls.py` |
+| Live download → storage → parse → review queue | **PASS (audited manual import)**; scheduled discovery live `OK` (20 rows, none eligible) | `docs/sprint/s1_source_access_decision.v3.md` |
+| Always-on deployment + missed-run alerting | **PASS (tests)**; no host provisioned | ADR 0011, runbook, `tests/unit/test_deploy.py` |
+| Real-browser keyboard / AX tree / sub-500px | **PASS after 2 fixes**; no listening test | `frontend/scripts/browser-a11y-check.mjs`, `docs/verification.md` |

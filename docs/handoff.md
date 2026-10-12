@@ -81,3 +81,19 @@ Top follow-up: e-Gazette TLS chain. e-Gazette live run on 2026-10-12T16:26Z: `SO
 
 The legal/research gate is unchanged: UNVERIFIED.
 - HTTP field contracts: [api_contracts.md](api_contracts.md).
+
+## e-Gazette live + deployment + accessibility status (2026-10-12)
+
+- **e-Gazette live ingestion works:**
+  - TLS uses pinned, verified Let's Encrypt intermediates with full verification (ADR 0010);
+  - the session uses a cookie jar and Referer;
+  - one real Gazette PDF went through every stage to the review queue (decision record v3).
+- **Daily job deployment:** systemd units, missed-run and stale alerts, and an optional heartbeat (ADR 0011; runbook). It is not yet installed on an always-on host.
+- **Accessibility:** real-Chrome keyboard, accessibility-tree and 320–480px checks pass after two fixes. Re-run with `frontend/scripts/browser-a11y-check.mjs`.
+- **Follow-ups:**
+  - a reviewed policy for commencement notifications;
+  - a fidelity check for Devanagari text;
+  - provisioning the host;
+  - a listening test with a real screen reader.
+
+The legal/research gate is unchanged: UNVERIFIED.

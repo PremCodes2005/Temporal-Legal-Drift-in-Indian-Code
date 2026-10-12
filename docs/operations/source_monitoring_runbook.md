@@ -5,9 +5,10 @@ Commands (from the repository root, Python 3.11+ with `pypdf==6.16.2` installed)
 | Purpose | Command |
 | --- | --- |
 | Daily run (safe to call hourly; at most one attempt per source per rolling 24 h, UTC) | `tldrift monitor-run --owner <host-name>` |
-| Audited manual retry inside the window | `tldrift monitor-run --owner <host> --manual-reason "<why>"` |
+| Audited manual retry inside the window (one source; the window is not moved) | `tldrift monitor-run --owner <host> --source egazette --manual-reason "<why>"` |
 | Bounded history backfill (≤ 20 pages; does not move the daily window) | `tldrift monitor-backfill --owner <host> --pages N --reason "<why>"` |
 | Health (also `GET /api/sources/health`) | `tldrift monitor-health` |
+| Alert check (exit 3 on a missed run or stale ingestion) | `tldrift monitor-health --check` |
 
 ## Scheduling
 
@@ -37,5 +38,29 @@ Times are stored in **UTC**; display local time separately. Recommended trigger:
 - **Allowlist.** Only `indiacode.gov.in` and `egazette.gov.in` are fetched, and redirects are validated. Limits: 50 MB per file, 2 s between requests, at most 5 pages × 20 items per run.
 - **No automatic effect on the graph, base index or releases.** New or revised documents enter the review queue. Their text is served only through the monitored overlay (`data/runtime/rag_overlay`), labelled `monitored_unreviewed` / `HUMAN_REVIEW_PENDING`, bound to the base index identity and switched by an atomic pointer (ADR 0009). Graph v4, the base RAG index and every release are unchanged. Applicability stays `NOT_DETERMINED`; a publication is not commencement.
 - **e-Gazette** is `SUPPORTED_FRAGILE_HTML_DISCOVERY` (`docs/sprint/s1_source_access_decision.v2.md`): a session listing of “Bills & Acts” plus static PDFs. A layout change fails visibly (`SourceShapeError`) and nothing new is served. `MonitoringService.manual_import` remains the fallback.
-- **Known e-Gazette TLS issue (2026-10-12):** the server omits its intermediate certificate, so Python reports `CERTIFICATE_VERIFY_FAILED`. Do **not** disable verification. Fix by pinning the official Let's Encrypt intermediate for that host (open follow-up).
+- **e-Gazette TLS:** the server omits its intermediate certificate. The connector pins Let's Encrypt's verified Gen-Y intermediates (ADR 0010). If the site moves to another CA, runs fail as `SOURCE_UNAVAILABLE`: verify and pin the new intermediate. Never disable verification.
 - **Pause:** remove the cron entry. There is no hidden daemon.
+
+## Always-on deployment (systemd, ADR 0011)
+
+1. **Install.** On a Linux host that stays on, create the user `tldrift` and check out the repository at `/srv/temporal-legal-drift`. Then run:
+   - `python3 -m venv .venv`
+   - `.venv/bin/pip install -e '.[pdf]'`
+   - `.venv/bin/tldrift restore-release-inputs`
+2. **Configure alerts.** Copy `deploy/systemd/tldrift.env.example` to `/etc/tldrift/tldrift.env` (mode 0640, `root:tldrift`). Set `TLDRIFT_ALERT_COMMAND`, and optionally a dead-man's-switch `TLDRIFT_HEARTBEAT_URL`.
+3. **Enable the timers.**
+   - Copy `deploy/systemd/*.service` and `*.timer` to `/etc/systemd/system/`.
+   - Run `systemctl daemon-reload && systemctl enable --now tldrift-monitor.timer tldrift-health.timer`.
+4. **Test the alert path once.** Run `systemctl start tldrift-alert@manual-test.service` and confirm the message arrives.
+5. **Observe.**
+   - `systemctl list-timers 'tldrift-*'`
+   - `journalctl -u tldrift-monitor.service`
+   - `tldrift monitor-health`
+
+**What alerts:**
+- `SCHEDULER_MISSED_RUN`: the trigger is not firing.
+- `INGESTION_STALE`: no success for more than 48 h.
+- Any non-zero exit of the monitor job.
+- The heartbeat stopping: the whole host is down. This needs the external heartbeat service.
+
+**Pause:** `systemctl disable --now tldrift-monitor.timer`. Keep the health timer so the pause is visible.

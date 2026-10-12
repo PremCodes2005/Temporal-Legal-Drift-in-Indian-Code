@@ -97,13 +97,15 @@ def build_parser() -> argparse.ArgumentParser:
     monitor_run = subparsers.add_parser("monitor-run", help="daily-gated official-source discovery (at most once per 24 h per source)")
     monitor_run.add_argument("--owner", required=True, help="worker identity recorded in the lease")
     monitor_run.add_argument("--page-size", type=int, default=20)
-    monitor_run.add_argument("--manual-reason", help="audited manual retry outside the 24 h window")
+    monitor_run.add_argument("--manual-reason", help="audited manual retry outside the 24 h window (requires --source)")
+    monitor_run.add_argument("--source", choices=["india_code", "egazette"], help="limit the run to one source")
     monitor_backfill = subparsers.add_parser("monitor-backfill")
     monitor_backfill.add_argument("--owner", required=True)
     monitor_backfill.add_argument("--pages", type=int, required=True)
     monitor_backfill.add_argument("--page-size", type=int, default=20)
     monitor_backfill.add_argument("--reason", required=True)
-    subparsers.add_parser("monitor-health")
+    monitor_health = subparsers.add_parser("monitor-health")
+    monitor_health.add_argument("--check", action="store_true", help="exit 3 when a missed run or stale ingestion is detected (for alerting)")
     subparsers.add_parser("monitor-resume", help="finish interrupted document processing from stored artifacts")
     run_case_parser = subparsers.add_parser("run-case")
     run_case_parser.add_argument("--case", type=Path, required=True, help="JSON case file, e.g. configs/cases/arbitration-s7-2016.json")
@@ -613,11 +615,16 @@ def run(args: argparse.Namespace) -> int:
         page_size = getattr(args, "page_size", 20)
         if not 1 <= page_size <= 50:
             raise ValueError("--page-size must be between 1 and 50")
-        service = MonitoringService(
-            root, {"india_code": IndiaCodeConnector(page_size=page_size), "egazette": EGazetteConnector()},
-            parser=PdfParser(), index_updater=update_monitored_overlay,
-            graph_mapper=GraphConsumer(root, "v4").candidate_target,
-        )
+        connectors = {"india_code": IndiaCodeConnector(page_size=page_size), "egazette": EGazetteConnector()}
+        if getattr(args, "source", None):
+            connectors = {args.source: connectors[args.source]}
+        elif getattr(args, "manual_reason", None):
+            raise ValueError("--manual-reason requires --source, so a retry never bypasses another source's window")
+        # The health check reads state only; it must not fail because processing inputs (graph v4) are unavailable.
+        processing = {} if args.command == "monitor-health" else {
+            "parser": PdfParser(), "index_updater": update_monitored_overlay,
+            "graph_mapper": GraphConsumer(root, "v4").candidate_target}
+        service = MonitoringService(root, connectors, **processing)
         if args.command == "monitor-run":
             result = service.run_due(args.owner, manual_reason=args.manual_reason)
         elif args.command == "monitor-backfill":
@@ -627,7 +634,7 @@ def run(args: argparse.Namespace) -> int:
         else:
             result = service.health()
         print(json.dumps(result, indent=2, ensure_ascii=False))
-        return 0
+        return 3 if getattr(args, "check", False) and result["alerts"] else 0
 
     if args.command == "build-layout-furniture":
         from .parsing.layout import build_layout_furniture_artifact
