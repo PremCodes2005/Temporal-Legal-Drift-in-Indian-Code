@@ -2,7 +2,7 @@
 
 **Purpose.** This is the actionable execution roadmap: implementation order, dependencies, gates, current status and next work. The research contract and completion criteria live in [../plan.md](../plan.md); the two must agree. Every status cell points to code, an artifact, a test, or a labelled saved report. A file existing is not completion.
 
-- **Revision:** 2026-10-12, rev 2.
+- **Revision:** 2026-10-12, rev 3 (adds the S0–S6 sprint status).
 - **Git baseline:** `c0832d2` on `main`, equal to `origin/main`. Remote CI passed on `c0832d2`, `a683a1e`, `74aef24`, `58c9868` and `a2d03b1`; all four jobs were observed.
 - **Active release:** `data/releases/active_release.json` → v0.5.0, bound to `53ce12d`.
 - **Evidence sources:** the per-phase checkpoint reports linked below, [claims_evidence_matrix.md](claims_evidence_matrix.md), and [verification.md](verification.md).
@@ -44,11 +44,30 @@ Status vocabulary:
 | 3 Temporal graph | Graph v4, policy, point-in-time | Counts reconcile; unsupported versions abstain | **PASS (machine)** | Ordered same-provision reconstruction |
 | 4 Materiality | Silver triage, LLM, baselines | Reproducible, evidence-linked triage and abstention | **PASS (silver)** | Gold labels (BLOCKED-LEGAL) |
 | 5 Compliance risk | Deterministic conditional risk | Deterministic and evidence-linked; unknown is null | **PASS (engine)** | Supported scenarios (BLOCKED-LEGAL) |
-| 6 Explainable LLM | Structured explanation contract and validator | Structurally valid, evidence-bounded, fallback explicit | **IN PROGRESS** | Implement `explanations/contract.py` (ADR 0005) |
-| 7 Orchestration | End-to-end run with provenance | One traced run source → review state; unreliable source ends unresolved | **IN PROGRESS** | Implement `orchestration/` (ADR 0006) |
-| 8 Dashboard & review | Review workflow and audit trail | Tasks work; API and UI states reconcile; no approval implied | Not started | After 6–7 contracts are stable |
+| 6 Explainable LLM | Structured explanation contract and validator | Structurally valid, evidence-bounded, fallback explicit | **PASS** (ADR 0005, `tests/integration/test_orchestration.py`) | Expert explanation review (BLOCKED-LEGAL) |
+| 7 Orchestration | End-to-end run with provenance | One traced run source → review state; unreliable source ends unresolved | **PASS** (ADR 0006, `run-case`) | Approved temporal facts (BLOCKED-LEGAL) |
+| 8 Dashboard & review | Review workflow and audit trail | Tasks work; API and UI states reconcile; no approval implied | **PASS (headless)** (ADR 0007, `tests/integration/test_review_api.py`) | Qualified reviewer identity |
 | 9 Benchmark | Engineering dry run v2, splits, leakage | Manifests, split audit, data card, metric definitions reproducible | Not started | Gold benchmark is BLOCKED-LEGAL |
 | 10 Final reproducibility | Full clean-environment run, docs | Every claimed engineering result reproduces | Not started | — |
+
+## Sprint S0–S6 (plan.md §0.6–0.12) — status 2026-10-12
+
+| Stage | Result | Evidence |
+| --- | --- | --- |
+| S0 Freeze & inspect | **PASS** — baseline `62f7bfd`, 156 tests, gates exit 0, v0.6.0 active, CI green on `af16acd` | `docs/verification.md` |
+| S1 Source feasibility | **PASS (scoped)** — India Code via DSpace REST; e-Gazette `ACCESS_LIMITED` (manual import); served-rendition checksum addendum | `docs/sprint/s1_source_access_decision.v1.md` |
+| S2 Scheduled incremental pipeline | **PASS** — 24 h gate, cross-process lease, revisions, stage cache, review queue, no auto-activation; real bounded run took 3 documents to review and a repeat reprocessed nothing | `monitoring/`, `tests/unit/test_monitoring.py`, ADR 0008, `docs/operations/source_monitoring_runbook.md` |
+| S3 Score contract | **PASS** — drift-metrics-v2: no hidden substitutes, removed a corpus-specific term hack, spelling normalisation, unavailable states, recomputable trace, frozen fixtures | `rag/metrics.py`, `tests/unit/test_drift_scoring.py` |
+| S4 Clause comparison | **PASS** — comparison-record-v1 with support class, honest roles, spans, abstention codes | `rag/rag_pipeline.py`, `tests/unit/test_rag.py` |
+| S5 UX integration | **PASS (headless)** — comparison view, unavailable states, source health, shareable links; desktop 1440px and 500px screenshots | `frontend/src/ComparisonPanel.jsx`, `tests/unit/test_frontend_contract.py` |
+| S6 Integrated release | Release cut after this update (see `data/releases/active_release.json`) | `docs/verification.md` |
+
+Not achieved in the sprint:
+- page-region (PDF-coordinate) highlighting; it is explicitly declared unavailable;
+- live e-Gazette synchronization;
+- an always-on deployment host (the runbook names the requirement);
+- browser keyboard and screen-reader testing;
+- viewports below 500px.
 
 ## Open decisions
 

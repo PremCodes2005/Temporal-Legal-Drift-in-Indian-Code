@@ -52,3 +52,16 @@ The following were executed after Stage 3B:
 - **v0.1.0:** its manifest and lock hashes are unchanged.
 
 Remote GitHub Actions has still not been observed. See [../reports/phase3/temporal_graph_v3_checkpoint.md](../reports/phase3/temporal_graph_v3_checkpoint.md).
+
+## Sprint S0–S6 addendum (2026-10-12)
+
+- **Executed locally:**
+  - full suite (count in the release manifest), `validate-contract`, `check-gates`;
+  - `npm run build`;
+  - a real bounded `monitor-run` / `monitor-backfill` against India Code: about 20 requests, 3 PDFs;
+  - headless Chrome screenshots at 1440px and 500px. 500px is headless Chrome's minimum window width; narrower captures crop.
+- **Not executed:**
+  - live e-Gazette ingestion (access-limited);
+  - an always-on scheduler host;
+  - keyboard and screen-reader testing in a real browser;
+  - an LLM provider in the RAG flow (tests force the extractive fallback).

@@ -58,3 +58,12 @@ Started the recommended source-fidelity audit; see [../reports/phase2/source_fid
 - **F:** RAG drift only on aligned versions, honest UI labels, source-fidelity warnings.
 - **G:** benchmark freeze still refused (no gold).
 - See `docs/claims_evidence_matrix.md` and the per-phase checkpoint reports. The legal/research gate remains UNVERIFIED.
+
+## Sprint S0–S6 status (2026-10-12)
+
+The plan.md rev 3 sprint is implemented; see the sprint table in [implementation-plan.md](implementation-plan.md):
+- daily India Code monitoring (`tldrift monitor-run`; see the runbook);
+- drift-metrics-v2;
+- comparison-record-v1 and the comparison UI.
+
+The legal/research gate is unchanged: UNVERIFIED.

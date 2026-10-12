@@ -16,6 +16,9 @@ Every claim below is an **engineering** claim with the evidence that supports it
 | LLM materiality assessments are schema- and citation-validated | `data/assessments/materiality_llm_assessments.v2.json` | qwen3:4b, temperature 0: 37/50 valid, 3 schema failures retained, 10 not assessed; exact-quote check | 34/37 labelled High; 13/37 agreement with Rule A; citation presence ≠ interpretation |
 | Risk never uses drift and never turns unknown into "None" | `risk/engine.py`; `tests/unit/test_risk.py` | 26 risk tests | 2 conditional demonstrations only; stipulated applicability |
 | RAG drift scores compare only aligned versions | `rag_pipeline.py`; `tests/unit/test_rag.py` | Regression tests for the unaligned-pair and wrong-relation defects | Feature-hash vectors, not semantic embeddings |
+| India Code is checked at most once per 24 h and only new/revised bytes are processed | `monitoring/`, `data/monitoring/state.v1.json` (operational, git-ignored) | 9 monitoring tests; real bounded run: 3 new → review, repeat run 3 unchanged | e-Gazette access-limited; no always-on host; not complete coverage |
+| Every displayed drift number recomputes from the response | drift-metrics-v2 | `tests/unit/test_drift_scoring.py` formula reproduction | Heuristic diagnostics, not legal accuracy or probability |
+| Comparisons state their support and abstain honestly | comparison-record-v1 | `tests/unit/test_rag.py` | No PDF-coordinate highlighting |
 | *Legal gold labels, legal accuracy, precision/recall/F1* | — | *not claimed* | No independent legal reviewer |
 | *Frozen scientific benchmark* | `reports/phase7` (dry run only) | Gate `non_gold_release_cannot_freeze` | Freeze refused without gold and scenario expectations |
 | *Temporal-drift model performance* | `reports/phase9` smoke run | — | Unscored without ExpectedChange labels |

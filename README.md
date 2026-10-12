@@ -18,6 +18,7 @@ This is an **engineering research prototype**. The legal/research gate is open: 
 | Graph consumers | `versioning/consumer.py` (`graph-consumer-v1`) | Used by RAG for drift only on aligned fragments; risk does not consume the graph. |
 | Materiality | `data/silver/materiality_reassessment.v2.5.json`, LLM assessments v2 | Silver/LLM opinions only; None class unevaluated. |
 | Risk | `data/risk/*.v1.json` | Deterministic baseline; 13 abstention scaffolds and 2 conditional demonstrations. |
+| Source monitoring | `src/temporal_legal_drift/monitoring/` | Daily-gated India Code discovery into a review queue; e-Gazette access-limited; see `docs/operations/source_monitoring_runbook.md`. |
 | Release | `data/releases/active_release.json` | Commit-bound fresh-environment reproduction; see `docs/claims_evidence_matrix.md`. |
 
 A clean checkout must run `tldrift restore-release-inputs` before tests (CI does). Checkpoint reports: `reports/phase2/extraction_v2.2_checkpoint.md`, `reports/phase3/temporal_graph_v4_checkpoint.md`, `reports/materiality/phase_d_checkpoint.md`, `reports/risk/phase_e_checkpoint.md`, `reports/rag/phase_f_checkpoint.md`.
