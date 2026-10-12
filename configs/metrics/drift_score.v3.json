@@ -1,0 +1,20 @@
+{
+  "aggregation": {
+    "formula": "sqrt(sum(w_i * c_i^2) / sum(w_i)) over vector, lexical, conceptual",
+    "method": "weighted_root_mean_square",
+    "requires_all_components": true
+  },
+  "bands": {"High": "66.7-100.0", "Low": "0.0-33.3", "Medium": "33.4-66.6"},
+  "bands_describe": "measured text movement only; not materiality, compliance outcome, urgency or risk",
+  "components": {
+    "conceptual": {"method": "deterministic legal-cue proxy (obligation, permission, prohibition, penalty, scope cue groups x70; numeric change +20; 'shall not' polarity +10; -ize/-ise normalised) or a schema-validated evidence-bound LLM score when available", "range": [0, 100], "weight": 0.3},
+    "lexical": {"method": "100 x (1 - (0.55 x token-set Jaccard + 0.45 x token-sequence similarity))", "range": [0, 100], "weight": 0.3},
+    "vector": {"method": "100 x (1 - cosine) of deterministic 256-dimension feature-hash token vectors; not a pretrained semantic encoder", "output_key": "semantic_drift_percent", "range": [0, 100], "weight": 0.4}
+  },
+  "contract_version": "drift-metrics-v3",
+  "disagreement_threshold": 60.0,
+  "missing_component_policy": "a missing component and the overall score are reported as unavailable with a reason; nothing is substituted",
+  "reliability_indicators": ["evidence_coverage", "pairing", "temporal_certainty", "retrieval_relevance"],
+  "reliability_policy": "reported separately; never folded into drift and never called accuracy",
+  "unit_of_analysis": "one provision-aligned before/after clause pair selected for the question"
+}

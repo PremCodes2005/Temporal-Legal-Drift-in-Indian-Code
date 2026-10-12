@@ -61,8 +61,9 @@ class GraphConsumer:
                     and act_entry.get(str(provision["act_id"])) == target_entry_id
                     and len(clause) >= 40 and clause in haystack):
                 matches.append((transition, event, provision))
+        self.last_alignment_candidates = [item[0]["transition_id"] for item in matches]
         if len(matches) != 1:
-            return None  # none or ambiguous: the caller abstains from version comparison
+            return None  # none or ambiguous (see last_alignment_candidates): the caller abstains
         transition, event, provision = matches[0]
         return {
             "interface_version": INTERFACE_VERSION,
@@ -77,6 +78,9 @@ class GraphConsumer:
             "before_text": versions[str(transition["before_version_id"])]["text"],
             "after_text": versions[str(transition["after_version_id"])]["text"],
             "effective_date": transition.get("effective_date"),
+            "operation": transition.get("operation"),
+            "amendment_event_id": event["amendment_event_id"],
+            "provision_path": provision.get("canonical_path"),
             "source_evidence": event["evidence"],
         }
 

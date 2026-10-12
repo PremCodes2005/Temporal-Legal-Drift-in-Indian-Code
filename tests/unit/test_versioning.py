@@ -187,6 +187,29 @@ class TemporalKnowledgeGraphTests(unittest.TestCase):
         with self.assertRaises(IncompatibleGraphError):
             GraphConsumer(ROOT, "v2")
 
+    def test_clause_alignment_resolves_insert_and_substitute_and_refuses_wrong_act(self) -> None:
+        from temporal_legal_drift.versioning.consumer import GraphConsumer
+
+        consumer = GraphConsumer(ROOT, "v4")
+        entry_by_source = {s["source_id"]: s["corpus_entry_id"] for s in consumer.graph.legal_sources}
+        act_entry = {a["act_id"]: a["corpus_entry_id"] for a in consumer.graph.acts}
+        provisions = {p["provision_id"]: p for p in consumer.graph.provisions}
+        events = {e["amendment_event_id"]: e for e in consumer.graph.amendment_events}
+        for operation in ("INSERT", "SUBSTITUTE"):
+            transition = next(t for t in consumer.graph.transitions
+                              if t["operation"] == operation and t["validation_status"] == "MACHINE_CROSS_SOURCE_CORROBORATED")
+            event = events[transition["amendment_event_id"]]
+            amending = entry_by_source[event["evidence"]["source_id"]]
+            target = act_entry[provisions[transition["target_provision_id"]]["act_id"]]
+            aligned = consumer.aligned_fragments(amending, target, event["evidence"]["exact_text"])
+            if consumer.last_alignment_candidates and len(consumer.last_alignment_candidates) > 1:
+                self.assertIsNone(aligned)  # an ambiguous clause is never resolved by choice
+                continue
+            self.assertEqual((aligned["operation"], aligned["transition_id"]), (operation, transition["transition_id"]))
+            self.assertEqual(aligned["amendment_event_id"], event["amendment_event_id"])
+            self.assertFalse(aligned["is_complete_consolidated_text"])
+            self.assertIsNone(consumer.aligned_fragments(amending, "not-the-target-act", event["evidence"]["exact_text"]))
+
     def test_point_in_time_query_abstains_without_effective_date(self) -> None:
         result = self.graph.get_provision_version(
             "it-act-2000-consolidated", "19", "2010-01-01"

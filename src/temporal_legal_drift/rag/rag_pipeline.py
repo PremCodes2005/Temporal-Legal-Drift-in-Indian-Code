@@ -63,14 +63,16 @@ class RagPipeline:
         self.retriever = HybridRetriever(self.root)
         self.live_repository = IndiaCodeLiveRepository()
 
-    def _graph_alignment(self, pre: RetrievedChunk, post: RetrievedChunk) -> dict[str, object] | None:
+    def _graph_alignment(self, pre: RetrievedChunk, post: RetrievedChunk) -> tuple[dict[str, object] | None, list[str]]:
         from temporal_legal_drift.versioning.consumer import GraphConsumer, IncompatibleGraphError
 
         try:
             consumer = GraphConsumer(self.root, "v4")
         except (IncompatibleGraphError, OSError, ValueError):
-            return None  # no verified graph: abstain from version comparison
-        return consumer.aligned_fragments(str(pre.metadata.get("entry_id")), str(post.metadata.get("entry_id")), pre.text)
+            return None, []  # no verified graph: abstain from version comparison
+        aligned = consumer.aligned_fragments(str(pre.metadata.get("entry_id")), str(post.metadata.get("entry_id")), pre.text)
+        candidates = getattr(consumer, "last_alignment_candidates", [])
+        return aligned, candidates if len(candidates) > 1 else []
 
     def _source_fidelity_warnings(self, *items: RetrievedChunk | None) -> list[dict[str, str]]:
         from temporal_legal_drift.corpus import CorpusManifest
@@ -178,13 +180,18 @@ class RagPipeline:
         scoring = _select_scoring_evidence(pre, post, query) if pre is not None and post is not None else None
         graph_alignment = None
         if pre is not None and post is not None and scoring is None:
-            graph_alignment = self._graph_alignment(pre, post)
-            if graph_alignment is not None:
+            graph_alignment, competing = self._graph_alignment(pre, post)
+            if competing:
+                pair_status = "ambiguous_graph_candidates"  # several transitions fit: keep them, do not choose
+                graph_alignment = {"competing_transition_ids": competing}
+            elif graph_alignment is not None:
                 scoring = (str(graph_alignment["before_text"]), str(graph_alignment["after_text"]), "graph_v4_transition_fragments")
                 pair_status = "graph_aligned_amendment_fragments"
             else:
                 # Two excerpts that are not shown to be the same provision are not versions.
                 pair_status = "instruction_and_consolidated_text_not_aligned"
+        if pair_status == "ambiguous_graph_candidates":
+            scoring = None
         if scoring is not None and scoring[2] == "query_section_reconstruction":
             pair_status = "consolidated_footnote_reconstruction"
         if pre is not None and post is not None and scoring is not None:
@@ -211,6 +218,8 @@ class RagPipeline:
                 "user_supplied_before_after_text": False,
                 "graph_alignment": graph_alignment,
             }
+            metric_document["reliability"] = _reliability(pre, post, pair_status, graph_alignment)
+            metric_document["question_relevance"] = _question_relevance(query, metric_pre_text, metric_post_text, graph_alignment)
         citations = _citations(pre, post)
         verification = _verification(query, pre, post, pair_status, generation, citations, metric_document is not None)
         answer_markdown = _answer_markdown(generation, citations, guidance, answer_type)
@@ -699,6 +708,9 @@ def _reconstructed_comparison(
             if not shared:
                 continue
             provision = re.split(r"\s+\d+\.\s+Subs\.", post_text, maxsplit=1, flags=re.I)[0]
+            # Only reconstruct the section the question names; another section's footnote is not this clause.
+            if not re.match(rf"\s*(?:section\s+)?{re.escape(section.group(1))}\s*\.", provision, re.I):
+                continue
             reconstructed = re.sub(
                 rf"\d*\[{re.escape(current)}\]", old_clean, provision, count=1
             )
@@ -784,12 +796,53 @@ def _provision_subject(query: str) -> str:
     return f"Section {section.group(1)}" if section else "the relevant provision"
 
 
+def _reliability(pre: RetrievedChunk, post: RetrievedChunk, pair_status: str,
+                 graph_alignment: dict[str, object] | None) -> dict[str, object]:
+    """Separate reliability indicators; deliberately not combined with drift (drift-metrics-v3)."""
+    if graph_alignment and graph_alignment.get("effective_date"):
+        temporal = {"status": "EFFECTIVE_DATE_EVIDENCED", "date": graph_alignment["effective_date"],
+                    "basis": "Act-wide commencement in graph v4; scenario applicability not determined"}
+    else:
+        stated = re.search(r"\(w\.e\.f\.\s*([0-9]{1,2}-[0-9]{1,2}-[0-9]{4})\)", post.text)
+        temporal = ({"status": "FOOTNOTE_STATED_DATE_UNVERIFIED", "date": stated.group(1),
+                     "basis": "date printed in the India Code footnote; not an approved temporal fact"}
+                    if stated else {"status": "UNRESOLVED", "date": None, "basis": "no supported effective date"})
+    return {
+        "evidence_coverage": "BOTH_SIDES" if pre.text.strip() and post.text.strip() else "ONE_SIDE",
+        "pairing": SUPPORT_CLASSES.get(pair_status, "NOT_A_COMPARISON"),
+        "temporal_certainty": temporal,
+        "retrieval_relevance": round((pre.score + post.score) / 2, 3),
+        "note": "Reliability indicators are reported separately; they are not drift and not accuracy.",
+    }
+
+
+def _question_relevance(query: str, before: str, after: str, graph_alignment: dict[str, object] | None) -> dict[str, object]:
+    requested = re.search(r"\bsection\s+(\d+[a-z]{0,3})", query, re.I)
+    compared = str(graph_alignment["section"]) if graph_alignment else (
+        (re.match(r"\s*(\d+[A-Za-z]{0,3})\s*\.", after) or re.match(r"\s*(\d+[A-Za-z]{0,3})\s*\.", before) or [None, None])[1])
+    if not requested:
+        status = "NO_SECTION_IN_QUESTION"
+    elif compared and compared.lower() == requested.group(1).lower():
+        status = "MATCHES_REQUESTED_SECTION"
+    else:
+        status = "DIFFERENT_SECTION"
+    return {
+        "status": status, "requested_section": requested.group(1) if requested else None, "compared_section": compared,
+        "answers_scenario_question": False,
+        "explanation": ("The score measures how the selected clause's text moved. It does not decide whether a "
+                        "particular situation is answered differently; that needs the applicable version, the facts "
+                        "and the consequence, which are assessed separately."),
+    }
+
+
 COMPARISON_CONTRACT_VERSION = "comparison-record-v1"
 SUPPORT_CLASSES = {
     "graph_aligned_amendment_fragments": "GRAPH_TRANSITION_FRAGMENTS",
     "consolidated_footnote_reconstruction": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
     "instruction_and_consolidated_text_not_aligned": "UNALIGNED_EXCERPTS",
+    "ambiguous_graph_candidates": "AMBIGUOUS_CANDIDATES",
 }
+_SOURCE_HASHES: dict[str, str] | None = None
 
 
 def _comparison_record(
@@ -802,6 +855,8 @@ def _comparison_record(
     reasons: list[str] = []
     if support == "UNALIGNED_EXCERPTS":
         reasons.append("PAIR_UNALIGNED")
+    if support == "AMBIGUOUS_CANDIDATES":
+        reasons.append("PAIR_AMBIGUOUS")
     if support != "NOT_A_COMPARISON" and metrics is None:
         reasons.append("SCORING_UNAVAILABLE")
     if metrics and metrics.get("overall_drift_percent") is None:
@@ -814,6 +869,7 @@ def _comparison_record(
         "GRAPH_TRANSITION_FRAGMENTS": ("before_fragment", "after_fragment"),
         "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION": ("reconstructed_earlier_wording", "current_consolidated_text"),
         "UNALIGNED_EXCERPTS": ("amendment_instruction_excerpt", "available_act_text_excerpt"),
+        "AMBIGUOUS_CANDIDATES": ("amendment_instruction_excerpt", "available_act_text_excerpt"),
     }.get(support, (None, None))
     basis = (metrics or {}).get("score_basis") or {}
 
@@ -821,8 +877,19 @@ def _comparison_record(
         if item is None or role is None:
             return None
         page = re.search(r"page:(\d+)", str(item.metadata.get("source_anchor") or ""))
+        quoted = " ".join(str(text or "").split())
+        chunk = " ".join(item.text.split())
+        start = chunk.find(quoted) if quoted else -1
+        filename = item.metadata.get("filename")
         return {
             "role": role,
+            "source_id": item.metadata.get("source_artifact_id"),
+            "source_sha256": _source_hash(str(item.metadata.get("entry_id"))),
+            "document_version": item.metadata.get("version"),
+            "chunk_id": item.chunk_id,
+            "text_offset": {"start": start, "end": start + len(quoted)} if start >= 0 else None,
+            "span_basis": "exact_source_span" if start >= 0 else "derived_text_not_a_verbatim_source_span" if quoted else None,
+            "local_pdf_url": f"/corpus/{filename}#page={page.group(1)}" if filename and page else None,
             "entry_id": item.metadata.get("entry_id"),
             "act_name": item.metadata.get("act_name"),
             "source_url": item.metadata.get("source_url") or item.metadata.get("official_portal_url"),
@@ -837,9 +904,18 @@ def _comparison_record(
         "contract_version": COMPARISON_CONTRACT_VERSION,
         "query_id": "q_" + sha256(f"{query}\n{mode}".encode()).hexdigest()[:16],
         "support_class": support,
-        "before": side(pre, roles[0], basis.get("pre_excerpt")),
+        # A footnote reconstruction is derived from the consolidated Act's own footnote, so it cites that source.
+        "before": side(post if support == "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION" else pre, roles[0], basis.get("pre_excerpt")),
         "after": side(post, roles[1], basis.get("post_excerpt")),
         "graph_transition_id": (graph_alignment or {}).get("transition_id"),
+        "amendment_event_id": (graph_alignment or {}).get("amendment_event_id"),
+        "operation": (graph_alignment or {}).get("operation") or ("SUBSTITUTE" if support == "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION" else None),
+        "provision_path": (graph_alignment or {}).get("provision_path") or (
+            f"section:{(metrics or {}).get('question_relevance', {}).get('compared_section')}" if metrics and (metrics.get("question_relevance") or {}).get("compared_section") else None),
+        "competing_transition_ids": (graph_alignment or {}).get("competing_transition_ids", []),
+        "requested_date": _requested_date(query),
+        "reliability": (metrics or {}).get("reliability"),
+        "question_relevance": (metrics or {}).get("question_relevance"),
         "supported_effective_date": (graph_alignment or {}).get("effective_date"),
         "changed_spans": (metrics or {}).get("changed_spans", []),
         "scoring_contract_version": (metrics or {}).get("metrics_contract_version"),
@@ -849,6 +925,30 @@ def _comparison_record(
         "abstention_reasons": list(dict.fromkeys(reasons)),
         "legal_validation": "UNVERIFIED",
     }
+
+
+def _source_hash(entry_id: str) -> str | None:
+    """SHA-256 of the corpus PDF behind a chunk (from the frozen corpus lock)."""
+    global _SOURCE_HASHES
+    if _SOURCE_HASHES is None:
+        lock = Path(__file__).resolve().parents[3] / "reports/corpus/india-code-temporal-pilot-v1.lock.json"
+        _SOURCE_HASHES = {str(e["entry_id"]): str(e["sha256"]) for e in json.loads(lock.read_text()).get("entries", [])} if lock.is_file() else {}
+    return _SOURCE_HASHES.get(entry_id)
+
+
+_MONTHS = ("january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december")
+
+
+def _requested_date(query: str) -> dict[str, object] | None:
+    """A date constraint stated in the question, kept as a constraint, never as applicability."""
+    iso = re.search(r"\b(\d{4}-\d{2}-\d{2})\b", query)
+    if iso:
+        return {"value": iso.group(1), "precision": "day"}
+    written = re.search(r"\b(\d{1,2})\s+(" + "|".join(_MONTHS) + r")\s+(\d{4})\b", query, re.I)
+    if written:
+        return {"value": f"{written.group(3)}-{_MONTHS.index(written.group(2).lower()) + 1:02d}-{int(written.group(1)):02d}", "precision": "day"}
+    year = re.search(r"\b(?:in|on|as of|during)\s+((?:19|20)\d{2})\b", query, re.I)
+    return {"value": year.group(1), "precision": "year"} if year else None
 
 
 def _citations(pre: RetrievedChunk | None, post: RetrievedChunk | None) -> list[dict[str, object]]:

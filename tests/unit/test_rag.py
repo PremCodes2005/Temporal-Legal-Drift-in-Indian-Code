@@ -100,11 +100,60 @@ class RagPipelineTests(unittest.TestCase):
         self.assertEqual(reconstructed["support_class"], "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION")
         self.assertEqual(reconstructed["before"]["role"], "reconstructed_earlier_wording")
         self.assertTrue(reconstructed["changed_spans"])
-        self.assertEqual(reconstructed["scoring_contract_version"], "drift-metrics-v2")
+        self.assertEqual(reconstructed["scoring_contract_version"], "drift-metrics-v3")
         self.assertIn("unavailable", reconstructed["before"]["page_region_highlight"])
         self.assertEqual(reconstructed["applicability_status"], "NOT_DETERMINED_REQUIRES_SCENARIO_FACTS_AND_REVIEW")
         lookup = self.pipeline.answer("What does the Consumer Protection Act say about mediation?", "generic")["comparison"]
         self.assertEqual((lookup["support_class"], lookup["before"]), ("NOT_A_COMPARISON", None))
+
+    def test_footnote_reconstruction_only_for_the_requested_section(self) -> None:
+        pre = RetrievedChunk("amendment", "In section 20, for digital signature, electronic signature shall be substituted.", 0.9, 0.9, 0.9,
+                             {"document_type": "amending_act"})
+        post = RetrievedChunk("consolidated", "20. Controller to act as repository.—The 1[electronic signature] Certificate. "
+                              "1. Subs. by Act 10 of 2009, s. 9, for \"digital signature\" (w.e.f. 27-10-2009).", 0.9, 0.9, 0.9,
+                              {"document_type": "consolidated_act"})
+        from temporal_legal_drift.rag.rag_pipeline import _reconstructed_comparison
+        self.assertEqual(_reconstructed_comparison(pre, post, "Compare section 19 before and after")[0], None)
+        self.assertIsNotNone(_reconstructed_comparison(pre, post, "Compare section 20 before and after")[0])
+
+    def test_clause_evidence_is_anchored_attributed_and_date_constrained(self) -> None:
+        comparison = self.pipeline.answer(
+            "Compare Section 19 before and after the IT Amendment Act, 2008 as of 1 January 2010.", "specific")["comparison"]
+        after, before = comparison["after"], comparison["before"]
+        self.assertEqual(after["span_basis"], "exact_source_span")
+        chunk = next(c for c in self.pipeline.retriever.ensure_index()["chunks"] if c["chunk_id"] == after["chunk_id"])
+        text = " ".join(chunk["text"].split())
+        self.assertEqual(text[after["text_offset"]["start"]:after["text_offset"]["end"]], " ".join(after["compared_text"].split()))
+        self.assertEqual(len(after["source_sha256"]), 64)
+        self.assertTrue(after["local_pdf_url"].endswith(f"#page={after['page']}"))
+        # The reconstructed wording is derived from the consolidated footnote and cites that source, not the amending Act.
+        self.assertEqual(before["span_basis"], "derived_text_not_a_verbatim_source_span")
+        self.assertEqual(before["entry_id"], after["entry_id"])
+        self.assertEqual((comparison["operation"], comparison["provision_path"]), ("SUBSTITUTE", "section:19"))
+        self.assertEqual(comparison["requested_date"], {"value": "2010-01-01", "precision": "day"})
+
+    def test_ambiguous_graph_alignment_keeps_competitors_and_abstains(self) -> None:
+        from temporal_legal_drift.versioning.consumer import GraphConsumer
+
+        with patch.object(GraphConsumer, "aligned_fragments", lambda self, *a: setattr(self, "last_alignment_candidates", ["t1", "t2"]) or None):
+            result = self.pipeline.answer("What changed in the IT Act amendment regarding data privacy?", "specific")
+        comparison = result["comparison"]
+        self.assertEqual(comparison["support_class"], "AMBIGUOUS_CANDIDATES")
+        self.assertEqual(comparison["competing_transition_ids"], ["t1", "t2"])
+        self.assertIn("PAIR_AMBIGUOUS", comparison["abstention_reasons"])
+        self.assertIsNone(result["metrics"])
+
+    def test_score_carries_separate_reliability_and_question_relevance(self) -> None:
+        metrics = self.pipeline.answer("Compare Section 19 before and after the IT Amendment Act, 2008.", "specific")["metrics"]
+        self.assertEqual(metrics["metrics_contract_version"], "drift-metrics-v3")
+        self.assertEqual(metrics["reliability"]["pairing"], "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION")
+        self.assertEqual(metrics["reliability"]["temporal_certainty"]["status"], "FOOTNOTE_STATED_DATE_UNVERIFIED")
+        self.assertEqual(metrics["question_relevance"]["status"], "MATCHES_REQUESTED_SECTION")
+        self.assertFalse(metrics["question_relevance"]["answers_scenario_question"])
+        # Reliability is not folded into drift: the overall score recomputes from the three components alone.
+        components = [metrics["semantic_drift_percent"], metrics["lexical_drift_percent"], metrics["conceptual_drift_percent"]]
+        recomputed = (0.4 * components[0] ** 2 + 0.3 * components[1] ** 2 + 0.3 * components[2] ** 2) ** 0.5
+        self.assertAlmostEqual(metrics["overall_drift_percent"], recomputed, delta=0.1)
 
     def test_unrelated_amendment_is_not_paired_when_its_act_was_not_retrieved(self) -> None:
         result = self.pipeline.answer(

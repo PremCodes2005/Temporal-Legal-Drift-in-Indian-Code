@@ -10,7 +10,7 @@ from pathlib import Path
 from temporal_legal_drift.rag.metrics import DRIFT_DISAGREEMENT_THRESHOLD, DRIFT_WEIGHTS, calculate_drift_metrics
 from temporal_legal_drift.rag.retriever import HybridRetriever
 
-FIXTURES = json.loads((Path(__file__).resolve().parents[1] / "fixtures/drift_scoring/fixtures.v1.json").read_text())
+FIXTURES = json.loads((Path(__file__).resolve().parents[1] / "fixtures/drift_scoring/fixtures.v2.json").read_text())
 
 
 def score(case: dict) -> dict:
@@ -24,6 +24,16 @@ def score(case: dict) -> dict:
 
 
 class DriftScoringFixtureTests(unittest.TestCase):
+    def test_machine_readable_methodology_matches_the_code(self) -> None:
+        from temporal_legal_drift.rag.metrics import DRIFT_LEVEL_THRESHOLDS, METRICS_CONTRACT_VERSION
+
+        config = json.loads((Path(__file__).resolve().parents[2] / "configs/metrics/drift_score.v3.json").read_text())
+        self.assertEqual(config["contract_version"], METRICS_CONTRACT_VERSION)
+        self.assertEqual({name: spec["weight"] for name, spec in config["components"].items()},
+                         {"vector": DRIFT_WEIGHTS["semantic"], "lexical": DRIFT_WEIGHTS["lexical"], "conceptual": DRIFT_WEIGHTS["conceptual"]})
+        self.assertEqual(config["disagreement_threshold"], DRIFT_DISAGREEMENT_THRESHOLD)
+        self.assertEqual(config["bands"], DRIFT_LEVEL_THRESHOLDS)
+
     def test_fixture_set_is_labelled_synthetic(self) -> None:
         self.assertEqual(FIXTURES["status"], "SYNTHETIC_ENGINEERING_FIXTURES_NOT_LEGAL_LABELS")
 

@@ -23,7 +23,7 @@ DRIFT_LEVEL_THRESHOLDS = {
 }
 DRIFT_WEIGHTS = {"semantic": 0.40, "lexical": 0.30, "conceptual": 0.30}
 DRIFT_DISAGREEMENT_THRESHOLD = 60.0
-METRICS_CONTRACT_VERSION = "drift-metrics-v2"
+METRICS_CONTRACT_VERSION = "drift-metrics-v3"  # configs/metrics/drift_score.v3.json
 
 
 def calculate_drift_metrics(
