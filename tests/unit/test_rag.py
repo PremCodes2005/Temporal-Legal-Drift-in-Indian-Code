@@ -90,6 +90,22 @@ class RagPipelineTests(unittest.TestCase):
         self.assertEqual([item["entry_id"] for item in result["source_fidelity_warnings"]], ["it-amendment-act-2008"])
         self.assertEqual(result["source_guidance"]["url"].split("?")[0], INDIA_CODE_HOME)
 
+    def test_comparison_record_states_support_roles_and_abstention_codes(self) -> None:
+        unaligned = self.pipeline.answer("What changed in the IT Act amendment regarding data privacy?", "specific")["comparison"]
+        self.assertEqual(unaligned["contract_version"], "comparison-record-v1")
+        self.assertEqual(unaligned["support_class"], "UNALIGNED_EXCERPTS")
+        self.assertEqual(unaligned["before"]["role"], "amendment_instruction_excerpt")  # not "pre-amendment law"
+        self.assertTrue({"PAIR_UNALIGNED", "SCORING_UNAVAILABLE", "SOURCE_TEXT_UNRELIABLE"} <= set(unaligned["abstention_reasons"]))
+        reconstructed = self.pipeline.answer("Compare Section 19 before and after the IT Amendment Act, 2008.", "specific")["comparison"]
+        self.assertEqual(reconstructed["support_class"], "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION")
+        self.assertEqual(reconstructed["before"]["role"], "reconstructed_earlier_wording")
+        self.assertTrue(reconstructed["changed_spans"])
+        self.assertEqual(reconstructed["scoring_contract_version"], "drift-metrics-v2")
+        self.assertIn("unavailable", reconstructed["before"]["page_region_highlight"])
+        self.assertEqual(reconstructed["applicability_status"], "NOT_DETERMINED_REQUIRES_SCENARIO_FACTS_AND_REVIEW")
+        lookup = self.pipeline.answer("What does the Consumer Protection Act say about mediation?", "generic")["comparison"]
+        self.assertEqual((lookup["support_class"], lookup["before"]), ("NOT_A_COMPARISON", None))
+
     def test_unrelated_amendment_is_not_paired_when_its_act_was_not_retrieved(self) -> None:
         result = self.pipeline.answer(
             "What changed in the Arbitration and Conciliation Act section 7 regarding electronic communication?",

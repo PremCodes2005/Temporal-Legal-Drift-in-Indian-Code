@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import os
 import re
+from hashlib import sha256
 import socket
 from dataclasses import dataclass
 from pathlib import Path
@@ -230,6 +231,10 @@ class RagPipeline:
             },
             "metrics": metric_document,
             "source_fidelity_warnings": self._source_fidelity_warnings(pre, post),
+            "comparison": _comparison_record(
+                query, mode, pre, post, pair_status, metric_document, graph_alignment,
+                self._source_fidelity_warnings(pre, post), generation,
+            ),
             "retrieval": {
                 "pair_status": pair_status,
                 "candidate_count": len(retrieved),
@@ -777,6 +782,73 @@ def _difference_summary(pre: str, post: str, mode: str) -> list[str]:
 def _provision_subject(query: str) -> str:
     section = re.search(r"\bsection\s+(\d+[a-z]?)", query, re.I)
     return f"Section {section.group(1)}" if section else "the relevant provision"
+
+
+COMPARISON_CONTRACT_VERSION = "comparison-record-v1"
+SUPPORT_CLASSES = {
+    "graph_aligned_amendment_fragments": "GRAPH_TRANSITION_FRAGMENTS",
+    "consolidated_footnote_reconstruction": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+    "instruction_and_consolidated_text_not_aligned": "UNALIGNED_EXCERPTS",
+}
+
+
+def _comparison_record(
+    query: str, mode: str, pre: RetrievedChunk | None, post: RetrievedChunk | None, pair_status: str,
+    metrics: dict[str, object] | None, graph_alignment: dict[str, object] | None,
+    fidelity: list[dict[str, str]], generation: GenerationResult,
+) -> dict[str, object]:
+    """Versioned record of what was compared, on what support, and why anything abstained."""
+    support = SUPPORT_CLASSES.get(pair_status, "NOT_A_COMPARISON")
+    reasons: list[str] = []
+    if support == "UNALIGNED_EXCERPTS":
+        reasons.append("PAIR_UNALIGNED")
+    if support != "NOT_A_COMPARISON" and metrics is None:
+        reasons.append("SCORING_UNAVAILABLE")
+    if metrics and metrics.get("overall_drift_percent") is None:
+        reasons.append("SCORING_UNAVAILABLE")
+    if fidelity:
+        reasons.append("SOURCE_TEXT_UNRELIABLE")
+    if generation.method.startswith("extractive") and generation.warning:
+        reasons.append("MODEL_UNAVAILABLE")
+    roles = {
+        "GRAPH_TRANSITION_FRAGMENTS": ("before_fragment", "after_fragment"),
+        "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION": ("reconstructed_earlier_wording", "current_consolidated_text"),
+        "UNALIGNED_EXCERPTS": ("amendment_instruction_excerpt", "available_act_text_excerpt"),
+    }.get(support, (None, None))
+    basis = (metrics or {}).get("score_basis") or {}
+
+    def side(item: RetrievedChunk | None, role: str | None, text: object) -> dict[str, object] | None:
+        if item is None or role is None:
+            return None
+        page = re.search(r"page:(\d+)", str(item.metadata.get("source_anchor") or ""))
+        return {
+            "role": role,
+            "entry_id": item.metadata.get("entry_id"),
+            "act_name": item.metadata.get("act_name"),
+            "source_url": item.metadata.get("source_url") or item.metadata.get("official_portal_url"),
+            "source_anchor": item.metadata.get("source_anchor"),
+            "page": int(page.group(1)) if page else None,
+            "line": None,  # chunk-level retrieval does not track lines
+            "page_region_highlight": "unavailable: no verified PDF text coordinates for this chunk",
+            "compared_text": text,
+        }
+
+    return {
+        "contract_version": COMPARISON_CONTRACT_VERSION,
+        "query_id": "q_" + sha256(f"{query}\n{mode}".encode()).hexdigest()[:16],
+        "support_class": support,
+        "before": side(pre, roles[0], basis.get("pre_excerpt")),
+        "after": side(post, roles[1], basis.get("post_excerpt")),
+        "graph_transition_id": (graph_alignment or {}).get("transition_id"),
+        "supported_effective_date": (graph_alignment or {}).get("effective_date"),
+        "changed_spans": (metrics or {}).get("changed_spans", []),
+        "scoring_contract_version": (metrics or {}).get("metrics_contract_version"),
+        "materiality_status": "NOT_ASSESSED_IN_QUERY_FLOW",
+        "applicability_status": "NOT_DETERMINED_REQUIRES_SCENARIO_FACTS_AND_REVIEW",
+        "consequence_status": "NOT_DETERMINED",
+        "abstention_reasons": list(dict.fromkeys(reasons)),
+        "legal_validation": "UNVERIFIED",
+    }
 
 
 def _citations(pre: RetrievedChunk | None, post: RetrievedChunk | None) -> list[dict[str, object]]:
