@@ -91,6 +91,7 @@ class HybridRetriever:
             "rag_index_version": document.get("rag_index_version"),
             "graph_fingerprint": document.get("graph_fingerprint"),
             "index_identity": document.get("index_identity"),
+            "monitored_overlay": self._overlay_status(),
             "official_repository": INDIA_CODE_HOME,
             "metadata_fields": ["document_type", "version", "act_name", "date"],
         }
@@ -159,7 +160,7 @@ class HybridRetriever:
         candidates = (
             self._chroma_candidates(query_vector, entry_ids, max(100, limit * 8))
             if self.backend == "chroma"
-            else document.get("chunks", [])
+            else [*document.get("chunks", []), *self._overlay_chunks()]
         )
         for raw in candidates:
             if not isinstance(raw, dict):
@@ -192,6 +193,33 @@ class HybridRetriever:
             )
         results.sort(key=lambda item: (-item.score, item.chunk_id))
         return results[:limit]
+
+    def _overlay_chunks(self) -> list[dict[str, object]]:
+        """Chunks of newly discovered, unreviewed documents, used only while bound to this base index."""
+        loaded = self._load_overlay()
+        return loaded[0] if loaded else []
+
+    def _overlay_status(self) -> dict[str, object]:
+        pointer = self.root / OVERLAY_POINTER
+        if not pointer.is_file():
+            return {"status": "NONE"}
+        loaded = self._load_overlay()
+        active = load_json(pointer)
+        return {"status": "ACTIVE" if loaded else "INACTIVE_INCOMPATIBLE_OR_TAMPERED",
+                "overlay_sha256": active.get("overlay_sha256"), "documents": len(active.get("documents", [])),
+                "chunks": len(loaded[0]) if loaded else 0, "review_status": "HUMAN_REVIEW_PENDING"}
+
+    def _load_overlay(self) -> tuple[list[dict[str, object]], dict[str, object]] | None:
+        pointer = self.root / OVERLAY_POINTER
+        if not pointer.is_file():
+            return None
+        active = load_json(pointer)
+        path = self.root / OVERLAY_DIR / f"overlay.{active.get('overlay_sha256')}.json"
+        if not path.is_file() or sha256(path.read_bytes()).hexdigest() != active.get("overlay_sha256"):
+            return None  # tampered or missing: never serve it
+        if active.get("base_index_identity") != self.ensure_index().get("index_identity"):
+            return None  # bound to another base index version: rebuild the overlay instead
+        return load_json(path)["chunks"], active
 
     def _chroma_candidates(
         self, query_vector: list[float], entry_ids: set[str] | None, limit: int
@@ -595,6 +623,59 @@ class HybridRetriever:
                 embeddings=[item["embedding"] for item in batch],
                 metadatas=metadatas,
             )
+
+
+OVERLAY_DIR = "data/runtime/rag_overlay"
+OVERLAY_POINTER = f"{OVERLAY_DIR}/active.json"
+OVERLAY_VERSION = "monitored-overlay-v1"
+
+
+def update_monitored_overlay(root: Path, documents: list[dict[str, object]]) -> dict[str, object]:
+    """Rebuild the small overlay of monitored documents and switch it in atomically.
+
+    The base 100-document index is never rebuilt. The previous overlay file stays
+    on disk; the pointer moves only after the new file is written and re-verified.
+    """
+    from temporal_legal_drift.jsonio import atomic_replace, atomic_write_new, canonical_json_bytes
+
+    root = root.resolve()
+    base_identity = HybridRetriever(root).ensure_index().get("index_identity")
+    chunks: list[dict[str, object]] = []
+    for item in sorted(documents, key=lambda value: (str(value["official_id"]), int(value["version"]))):
+        record = dict(item["record"])
+        for block in item["normalized"].get("blocks", []):
+            text = " ".join(str(block.get("normalized_text", "")).split())
+            for part_number, part in enumerate(_split_text(text)):
+                key = f"{item['official_id']}\n{item['version']}\n{block.get('block_id')}\n{part_number}"
+                chunks.append({
+                    "chunk_id": f"mon_{sha256(key.encode()).hexdigest()[:24]}",
+                    "text": part,
+                    "embedding": _embedding(_tokens(part)),
+                    "metadata": {
+                        "entry_id": item["official_id"], "document_type": "monitored_unreviewed",
+                        "version": f"monitored_v{item['version']}", "act_name": record.get("title"),
+                        "date": (record.get("stated_dates") or {}).get("published") or record.get("accessioned_at"),
+                        "official_identifier": item["official_id"], "source_url": record.get("canonical_url"),
+                        "source_kind": item["source_key"], "source_sha256": item["sha256"],
+                        "source_anchor": block.get("source_anchor"), "block_id": block.get("block_id"),
+                        "sections": sorted(set(match.lower() for match in SECTION_RE.findall(part))),
+                        "primary_sections": _primary_sections(part), "review_status": "HUMAN_REVIEW_PENDING",
+                    },
+                })
+    document = {"schema_version": "1.0.0", "overlay_version": OVERLAY_VERSION, "base_index_identity": base_identity,
+                "documents": [[item["official_id"], item["version"], item["sha256"]] for item in documents], "chunks": chunks}
+    payload = canonical_json_bytes(document)
+    digest = sha256(payload).hexdigest()
+    path = root / OVERLAY_DIR / f"overlay.{digest}.json"
+    atomic_write_new(path, payload)
+    if sha256(path.read_bytes()).hexdigest() != digest:
+        raise ValueError("overlay verification failed; the previous overlay remains active")
+    pointer = root / OVERLAY_POINTER
+    previous = load_json(pointer).get("overlay_sha256") if pointer.is_file() else None
+    atomic_replace(pointer, canonical_json_bytes({"overlay_sha256": digest, "base_index_identity": base_identity,
+                                                  "documents": document["documents"], "previous_overlay_sha256": previous}))
+    return {"status": "ACTIVATED", "overlay_sha256": digest, "previous_overlay_sha256": previous,
+            "chunks": len(chunks), "documents": len(documents), "base_index_identity": base_identity}
 
 
 def _document_metadata(entry: dict[str, object]) -> dict[str, object]:

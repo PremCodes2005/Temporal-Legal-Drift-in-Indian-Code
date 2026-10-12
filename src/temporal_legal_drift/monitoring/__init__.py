@@ -1,6 +1,7 @@
-"""Scheduled, incremental official-source monitoring (plan.md §0.7, ADR 0008)."""
+"""Scheduled, incremental official-source monitoring (plan.md §0.7, ADRs 0008-0009)."""
 
+from .egazette import EGazetteConnector
 from .indiacode import IndiaCodeConnector
 from .service import MonitoringService
 
-__all__ = ["IndiaCodeConnector", "MonitoringService"]
+__all__ = ["EGazetteConnector", "IndiaCodeConnector", "MonitoringService"]

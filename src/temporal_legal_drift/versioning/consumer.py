@@ -80,6 +80,30 @@ class GraphConsumer:
             "source_evidence": event["evidence"],
         }
 
+    def candidate_target(self, event: dict[str, object]) -> dict[str, object]:
+        """Map a newly extracted amendment event to an existing provision identity, read-only.
+
+        The graph itself is never modified; the result is a review candidate.
+        """
+        from .temporal_graph import _title_similarity
+
+        base = {"interface_version": INTERFACE_VERSION, "graph_version": self.graph_version, "graph_sha256": self.graph_sha256}
+        principal = str(event.get("principal_act") or "")
+        section = str(event.get("target_provision") or "").split(":")[-1].upper()
+        if not principal or not section:
+            return {**base, "status": "TARGET_UNRESOLVED", "reason": "principal Act or section not extracted"}
+        ranked = sorted(((_title_similarity(principal, str(act["corpus_entry_id"])), str(act["act_id"]), str(act["corpus_entry_id"]))
+                         for act in self.graph.acts), reverse=True)
+        if not ranked or ranked[0][0] < 0.55 or (len(ranked) > 1 and ranked[0][0] - ranked[1][0] < 0.1):
+            return {**base, "status": "TARGET_NOT_IN_CORPUS", "principal_act": principal,
+                    "best_match": ranked[0][2] if ranked else None, "best_score": ranked[0][0] if ranked else None}
+        act_id, entry_id = ranked[0][1], ranked[0][2]
+        provision = next((p for p in self.graph.provisions if p["act_id"] == act_id and str(p["section"]).upper() == section), None)
+        if provision is None:
+            return {**base, "status": "PROVISION_NOT_IN_GRAPH", "act": entry_id, "section": section}
+        return {**base, "status": "TARGET_PROVISION_FOUND", "act": entry_id, "section": section,
+                "provision_id": provision["provision_id"], "match_score": ranked[0][0], "legal_validation": "UNVERIFIED"}
+
     def provision_at(self, act: str, section: str, on_date: str) -> dict[str, object]:
         base = {
             "interface_version": INTERFACE_VERSION,

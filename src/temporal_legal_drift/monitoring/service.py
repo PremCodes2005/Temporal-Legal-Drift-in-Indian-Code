@@ -1,12 +1,17 @@
-"""Incremental, 24-hour-gated official-source monitoring (plan.md §0.7, ADR 0008).
+"""Incremental, 24-hour-gated official-source monitoring (plan.md §0.7, ADR 0008, ADR 0009).
 
-Discovery → bounded download → SHA-256 (and the source's MD5 where offered)
-→ immutable artifact → identity/byte comparison with prior observations →
-only new or revised content goes to the review queue and downstream stages.
-Downstream stage outputs are cached by content hash plus stage version, so an
-unchanged download only updates ``last_seen_at``. Nothing here asserts legal
-effect: a publication is not commencement, and new documents never alter the
-active graph, index or any frozen release automatically.
+Each discovered official document follows a persisted state machine:
+
+    DISCOVERED → FETCHED → HASHED → VERIFIED → EXTRACTION_PENDING → PROCESSED
+                                               ↘ REVIEW_REQUIRED / FAILED
+
+Every transition is written before the next stage starts, so a crash resumes
+only incomplete stages. A known document whose source metadata is unchanged is
+not re-downloaded; identical bytes are never reprocessed; changed bytes for the
+same official ID create a new linked version. Nothing here asserts legal
+effect: discovery, a changed PDF, an amendment event, a commenced change and a
+changed scenario answer are different findings, and new documents never alter
+the active graph, frozen releases or the base index.
 """
 
 from __future__ import annotations
@@ -14,10 +19,11 @@ from __future__ import annotations
 import fcntl
 import json
 import os
+import re
 from contextlib import contextmanager
 from dataclasses import asdict
-from datetime import datetime, timedelta, timezone
-from hashlib import md5, sha256
+from datetime import datetime, timedelta
+from hashlib import sha256
 from pathlib import Path
 from typing import Any, Callable, Iterator
 from uuid import uuid4
@@ -25,36 +31,47 @@ from uuid import uuid4
 from temporal_legal_drift.acquisition.models import utc_now_iso
 from temporal_legal_drift.amendment_extraction.extractor import GeneralisedAmendmentExtractor
 from temporal_legal_drift.amendment_extraction.models import EXTRACTOR_VERSION
-from temporal_legal_drift.jsonio import atomic_replace, atomic_write_new, canonical_json_bytes
+from temporal_legal_drift.jsonio import atomic_replace, atomic_write_new, canonical_json_bytes, load_json
 
 from .indiacode import DiscoveredRecord, SourceShapeError
 
 WINDOW = timedelta(hours=24)
-LEASE = timedelta(hours=1)
-ACCESS_LIMITED_SOURCES = {"egazette": "No documented machine interface; reviewed manual import only (S1 decision v1)."}
+LEASE = timedelta(hours=6)
+MAX_STAGE_ATTEMPTS = 3
 ROOT = "data/monitoring"
+PIPELINE_VERSION = "source-monitoring-v2"
+TERMINAL = {"PROCESSED", "REVIEW_REQUIRED"}
 
 
 def _parse_time(value: str) -> datetime:
     return datetime.fromisoformat(value.replace("Z", "+00:00"))
 
 
+def _normal(text: str) -> str:
+    return " ".join(re.findall(r"[a-z0-9]+", str(text).casefold()))
+
+
 class MonitoringService:
     def __init__(self, root: Path, connectors: dict[str, Any], *, clock: Callable[[], str] = utc_now_iso,
-                 parser: Any | None = None) -> None:
+                 parser: Any | None = None,
+                 index_updater: Callable[[Path, list[dict[str, Any]]], dict[str, Any]] | None = None,
+                 graph_mapper: Callable[[dict[str, Any]], dict[str, Any]] | None = None) -> None:
         self.root = root.resolve()
         self.base = self.root / ROOT
         self.connectors = connectors
         self.clock = clock
         self.parser = parser
+        self.index_updater = index_updater
+        self.graph_mapper = graph_mapper
 
     # ---------- scheduling ----------
     def run_due(self, owner: str, *, manual_reason: str | None = None) -> list[dict[str, Any]]:
-        """Attempt each connector at most once per rolling 24 h; ``manual_reason`` records an audited retry."""
+        """Each source starts at most once per 24 h after its previous start, even after errors or restarts."""
+        self.resume_incomplete()
         return [result for key in sorted(self.connectors) if (result := self._run_source(key, owner, manual_reason)) is not None]
 
     def backfill(self, source_key: str, owner: str, *, pages: int, reason: str) -> dict[str, Any]:
-        """Bounded historical pages; recorded as backfill, never as the daily run, and does not move the daily window."""
+        """Bounded historical pages; recorded as backfill and never moves the daily window."""
         if not 1 <= pages <= 20:
             raise ValueError("backfill pages must be between 1 and 20")
         if len(reason.strip()) < 10:
@@ -63,27 +80,27 @@ class MonitoringService:
 
     def _run_source(self, key: str, owner: str, manual_reason: str | None) -> dict[str, Any] | None:
         now = _parse_time(self.clock())
+        if manual_reason is not None and len(manual_reason.strip()) < 10:
+            raise ValueError("a manual retry requires a reason")
         with self._locked_state() as state:
             entry = state.setdefault(key, {"source_key": key})
             eligible = entry.get("next_eligible_at")
             if manual_reason is None and eligible and _parse_time(eligible) > now:
-                return None  # not due: at most one automatic attempt per 24 h window
+                return None  # not due
             lease_until = entry.get("lease_expires_at")
-            if lease_until and _parse_time(lease_until) > now and entry.get("lease_owner") != owner:
-                return {"source_key": key, "status": "SKIPPED_LEASE_HELD", "lease_owner": entry["lease_owner"]}
-            if manual_reason is not None and len(manual_reason.strip()) < 10:
-                raise ValueError("a manual retry requires a reason")
+            if lease_until and _parse_time(lease_until) > now:
+                return {"source_key": key, "status": "SKIPPED_LEASE_HELD", "lease_owner": entry.get("lease_owner")}
+            # The window is anchored to this attempt's start and persisted before any network call.
             entry.update(lease_owner=owner, lease_expires_at=(now + LEASE).isoformat(), last_attempt_at=now.isoformat())
             if manual_reason is None:
                 entry["next_eligible_at"] = (now + WINDOW).isoformat()
             since = entry.get("cursor")
         mode = "MANUAL_RETRY" if manual_reason else "SCHEDULED"
-        # First run has no cursor: take one page to establish it; history is a separate backfill.
         result = self._execute(key, owner, mode=mode, since=since, max_pages=5 if since else 1, reason=manual_reason)
         with self._locked_state() as state:
             entry = state[key]
             entry.update(lease_owner=None, lease_expires_at=None, last_run_id=result["run_id"], last_status=result["status"])
-            if result["status"] == "OK":
+            if result["status"] in {"OK", "PARTIAL_FAILURE"}:
                 entry["last_success_at"] = result["completed_at"]
                 if result.get("cursor"):
                     entry["cursor"] = max(result["cursor"], entry.get("cursor") or "")
@@ -92,116 +109,241 @@ class MonitoringService:
     # ---------- one run ----------
     def _execute(self, key: str, owner: str, *, mode: str, since: str | None, max_pages: int,
                  reason: str | None) -> dict[str, Any]:
-        started = self.clock()
         run_id = f"mon_{uuid4().hex[:20]}"
-        manifest: dict[str, Any] = {"schema_version": "1.0.0", "run_id": run_id, "source_key": key, "mode": mode,
-                                    "owner": owner, "reason": reason, "started_at": started, "since_cursor": since,
-                                    "records": [], "counts": {}, "graph_index_update": "NONE_PENDING_REVIEW"}
+        manifest: dict[str, Any] = {"schema_version": "2.0.0", "pipeline_version": PIPELINE_VERSION, "run_id": run_id,
+                                    "source_key": key, "mode": mode, "owner": owner, "reason": reason,
+                                    "started_at": self.clock(), "since_cursor": since, "records": []}
         connector = self.connectors[key]
         try:
             discovered = connector.discover(since, max_pages=max_pages)
             manifest["status"] = "OK"
         except SourceShapeError as error:
             discovered, manifest["status"], manifest["error"] = [], "SOURCE_SHAPE_CHANGED", str(error)
-        except Exception as error:  # network outage, HTTP failure, policy refusal
+        except Exception as error:  # outage, HTTP failure, policy refusal: observable, retried next window
             discovered, manifest["status"], manifest["error"] = [], "SOURCE_UNAVAILABLE", f"{type(error).__name__}: {error}"
         for record in discovered:
             manifest["records"].append(self._ingest(record, connector, run_id))
         statuses = [item["status"] for item in manifest["records"]]
         manifest["counts"] = {name: statuses.count(name) for name in sorted(set(statuses))}
         manifest["cursor"] = max((r.accessioned_at for r in discovered), default=None)
-        if manifest["status"] == "OK" and any(s == "DOWNLOAD_FAILED" for s in statuses):
+        if manifest["status"] == "OK" and "FAILED" in statuses:
             manifest["status"] = "PARTIAL_FAILURE"
         manifest["completed_at"] = self.clock()
         atomic_write_new(self.base / "runs" / f"{run_id}.json", canonical_json_bytes(manifest))
         return manifest
 
+    # ---------- per-document state machine ----------
     def _ingest(self, record: DiscoveredRecord, connector: Any, run_id: str) -> dict[str, Any]:
-        # Only verified content is a baseline; failed or mismatched downloads never are.
-        prior = [item for item in self.observations() if item["official_id"] == record.official_id
-                 and item["status"] in {"NEW", "REVISED", "UNCHANGED"}]
-        base = {"official_id": record.official_id, "title": record.title, "canonical_url": record.canonical_url}
-        if not record.bitstream_url:
-            self._observe(record, run_id, None, "NO_SINGLE_PDF_BITSTREAM")
-            return {**base, "status": "REVIEW_REQUIRED", "reason": "item has no single PDF in its ORIGINAL bundle"}
-        try:
-            payload = connector.download(record.bitstream_url)
-        except Exception as error:
-            self._observe(record, run_id, None, "DOWNLOAD_FAILED", f"{type(error).__name__}: {error}")
-            return {**base, "status": "DOWNLOAD_FAILED", "error": f"{type(error).__name__}: {error}"}
-        digest = sha256(payload).hexdigest()
-        # India Code serves a stamped rendition whose bytes differ from the stored file the
-        # repository MD5 describes (S1 addendum); served bytes were byte-identical across
-        # downloads, so the served SHA-256 is the integrity basis and the MD5 is recorded.
-        checksum = ("REPOSITORY_MD5_VERIFIED" if record.bitstream_md5 and md5(payload).hexdigest() == record.bitstream_md5
-                    else "SERVED_RENDITION_DIFFERS_FROM_REPOSITORY_MD5" if record.bitstream_md5 else "NO_REPOSITORY_CHECKSUM")
-        base["repository_checksum"] = checksum
-        atomic_write_new(self.root / "data/raw/monitoring/sha256" / digest[:2] / f"{digest}.pdf", payload)
-        if any(item["sha256"] == digest for item in prior):
-            self._observe(record, run_id, digest, "UNCHANGED")
-            return {**base, "status": "UNCHANGED", "sha256": digest}  # last_seen only; no downstream work
-        previous = prior[-1]["sha256"] if prior else None
-        status = "REVISED" if previous else "NEW"
-        self._observe(record, run_id, digest, status, previous_sha256=previous)
-        stages = self._process(digest, payload, record)
-        queue_id = "mreview_" + sha256(f"{record.official_id}\n{digest}".encode()).hexdigest()[:20]
-        atomic_write_new(self.base / "review_queue" / f"{queue_id}.json", canonical_json_bytes({
-            "schema_version": "1.0.0", "queue_id": queue_id, "status": "HUMAN_REVIEW_PENDING",
-            "official_id": record.official_id, "sha256": digest, "previous_sha256": previous, "change": status,
-            "title": record.title, "canonical_url": record.canonical_url, "stated_dates": record.stated_dates,
-            "stages": stages, "legal_effect_claimed": False,
-            "note": "Publication is not commencement; applicability remains unresolved until reviewed facts exist.",
-        }))
-        return {**base, "status": status, "sha256": digest, "previous_sha256": previous, "queue_id": queue_id, "stages": stages}
+        doc_id = "doc_" + sha256(f"{record.source_key}\n{record.official_id}".encode()).hexdigest()[:20]
+        doc = self._load_document(doc_id) or {"schema_version": "1.0.0", "doc_id": doc_id, "source_key": record.source_key,
+                                               "official_id": record.official_id, "versions": []}
+        base = {"doc_id": doc_id, "official_id": record.official_id, "title": record.title}
+        fingerprint = record.metadata_fingerprint()
+        latest = doc["versions"][-1] if doc["versions"] else None
+        if not record.download_eligible:
+            self._observe(record, run_id, None, "METADATA_ONLY")
+            return {**base, "status": "METADATA_ONLY"}
+        if latest and latest["metadata_fingerprint"] == fingerprint and latest["state"] in TERMINAL:
+            # The source describes the same bytes as a completed version: no download, no downstream work.
+            self._observe(record, run_id, latest.get("sha256"), "UNCHANGED_NOT_REFETCHED")
+            return {**base, "status": "UNCHANGED", "version": latest["version"]}
+        if latest and latest["state"] not in TERMINAL and latest["metadata_fingerprint"] == fingerprint:
+            version = latest  # interrupted earlier: resume only incomplete stages
+        else:
+            version = {"version": len(doc["versions"]) + 1, "metadata_fingerprint": fingerprint, "state": "DISCOVERED",
+                       "history": [], "record": asdict(record), "attempts": 0}
+            doc["versions"].append(version)
+            self._transition(doc, version, "DISCOVERED", run_id)
+        result = self._advance(doc, version, record, connector, run_id)
+        self._observe(record, run_id, version.get("sha256"), result["status"], version.get("error"),
+                      version.get("previous_sha256"))
+        return {**base, **result}
 
+    def _advance(self, doc: dict, version: dict, record: DiscoveredRecord, connector: Any, run_id: str) -> dict[str, Any]:
+        try:
+            if not version.get("sha256"):
+                payload = connector.download(record.bitstream_url)
+                digest = sha256(payload).hexdigest()
+                relative = f"data/raw/monitoring/sha256/{digest[:2]}/{digest}.pdf"
+                atomic_write_new(self.root / relative, payload)  # identical bytes share one immutable artifact
+                version.update(sha256=digest, artifact=relative)
+                self._transition(doc, version, "FETCHED", run_id)
+            payload = (self.root / version["artifact"]).read_bytes()
+            if "HASHED" not in self._done(version):
+                if sha256(payload).hexdigest() != version["sha256"]:
+                    raise ValueError("stored artifact no longer matches its recorded SHA-256")
+                earlier = [v for v in doc["versions"] if v is not version and v.get("sha256")]
+                version["previous_sha256"] = earlier[-1]["sha256"] if earlier else None
+                version["same_bytes_as_official_ids"] = sorted({
+                    o["official_id"] for o in self.observations()
+                    if o.get("sha256") == version["sha256"] and o["official_id"] != record.official_id})
+                self._transition(doc, version, "HASHED", run_id)
+                if earlier and earlier[-1]["sha256"] == version["sha256"]:
+                    # Same bytes as the previous version: only the source metadata changed.
+                    version["same_bytes_as_version"] = earlier[-1]["version"]
+                    self._transition(doc, version, earlier[-1]["state"], run_id)
+                    return {"status": "UNCHANGED", "version": version["version"], "sha256": version["sha256"]}
+            elif sha256(payload).hexdigest() != version["sha256"]:
+                raise ValueError("stored artifact no longer matches its recorded SHA-256")
+            if "VERIFIED" not in self._done(version):
+                problem = self._verify(payload, record)
+                if problem:
+                    version["review_reason"] = problem
+                    self._transition(doc, version, "REVIEW_REQUIRED", run_id)
+                    return self._queue(doc, version, record, "REVIEW_REQUIRED")
+                self._transition(doc, version, "VERIFIED", run_id)
+                self._transition(doc, version, "EXTRACTION_PENDING", run_id)
+            stages = self._process(version["sha256"], payload, record)
+            version["stages"] = stages
+            outcome = "PROCESSED" if stages.get("terminal") == "PROCESSED" else "REVIEW_REQUIRED"
+            version["review_reason"] = stages.get("review_reason")
+            self._transition(doc, version, outcome, run_id)
+            return self._queue(doc, version, record, outcome)
+        except Exception as error:  # recoverable: resumed at the next run, bounded attempts
+            version["attempts"] = version.get("attempts", 0) + 1
+            version["error"] = f"{type(error).__name__}: {error}"
+            state = "REVIEW_REQUIRED" if version["attempts"] >= MAX_STAGE_ATTEMPTS else "FAILED"
+            self._transition(doc, version, state, run_id)
+            return {"status": "FAILED" if state == "FAILED" else "REVIEW_REQUIRED", "error": version["error"],
+                    "version": version["version"]}
+
+    def resume_incomplete(self) -> list[dict[str, Any]]:
+        """Finish interrupted or failed versions from stored artifacts; never rediscovers or refetches early."""
+        resumed = []
+        for doc in self.documents():
+            version = doc["versions"][-1] if doc["versions"] else None
+            if not version or version["state"] in TERMINAL or not version.get("sha256"):
+                continue  # complete, or never fetched (waits for its source's next scheduled discovery)
+            record = DiscoveredRecord(**version["record"])
+            resumed.append({"doc_id": doc["doc_id"], **self._advance(doc, version, record, None, f"resume_{uuid4().hex[:16]}")})
+        return resumed
+
+    @staticmethod
+    def _verify(payload: bytes, record: DiscoveredRecord) -> str | None:
+        if not payload.startswith(b"%PDF-"):
+            return "downloaded bytes are not a PDF"
+        if record.size_tolerance and record.bitstream_bytes:
+            if abs(len(payload) - record.bitstream_bytes) > record.bitstream_bytes * record.size_tolerance:
+                return f"size {len(payload)} differs from the listed size {record.bitstream_bytes} beyond tolerance"
+        return None
+
+    # ---------- downstream stages ----------
     def _process(self, digest: str, payload: bytes, record: DiscoveredRecord) -> dict[str, Any]:
-        """Parse and extract, cached by content hash + stage version; failures stay reviewable."""
-        stages: dict[str, Any] = {}
-        parser_version = f"{getattr(self.parser, 'name', 'none')}-{getattr(self.parser, 'version', '0')}"
-        parse_key = f"parse:{parser_version}:{digest}"
+        stages: dict[str, Any] = {"pipeline_version": PIPELINE_VERSION}
+        if self.parser is None:
+            return {**stages, "parse": "PARSER_UNAVAILABLE", "terminal": "REVIEW_REQUIRED", "review_reason": "PARSER_UNAVAILABLE"}
+        parser_version = f"{getattr(self.parser, 'name', 'parser')}-{getattr(self.parser, 'version', '0')}"
         normalized_path = self.base / "normalized" / f"{digest}.{parser_version}.json"
-        if self._cached(parse_key):
+        if normalized_path.is_file():
             stages["parse"] = "CACHED"
-        elif self.parser is None:
-            stages["parse"] = "PARSER_UNAVAILABLE"
-            return stages
         else:
             from temporal_legal_drift.parsing.models import ParseContext
 
             try:
                 document = self.parser.parse(payload, ParseContext(record.official_id, digest, "application/pdf", f"{digest}.pdf"))
             except Exception as error:
-                self._stage_run(parse_key, "FAILED", f"{type(error).__name__}: {error}")
-                stages["parse"] = "FAILED"
-                return stages
+                return {**stages, "parse": f"FAILED: {type(error).__name__}", "terminal": "REVIEW_REQUIRED",
+                        "review_reason": "SOURCE_TEXT_UNREADABLE"}
             atomic_write_new(normalized_path, canonical_json_bytes(document.to_dict()))
-            self._stage_run(parse_key, "OK")
             stages["parse"] = "OK"
-        extract_key = f"extract:{EXTRACTOR_VERSION}:{parser_version}:{digest}"
-        if self._cached(extract_key):
-            stages["extract"] = "CACHED"
-            return stages
-        document = json.loads(normalized_path.read_text(encoding="utf-8"))
+        document = load_json(normalized_path)
+        fidelity = _text_fidelity(document)
+        stages["text_fidelity"] = fidelity
+        if fidelity["status"] == "UNREADABLE":
+            return {**stages, "terminal": "REVIEW_REQUIRED", "review_reason": "SOURCE_TEXT_UNREADABLE"}
         events, unresolved = GeneralisedAmendmentExtractor().extract(
-            document, source_document=record.official_id, source_sha256=digest, amending_act=record.title)
-        atomic_write_new(self.base / "candidates" / f"{digest}.{EXTRACTOR_VERSION}.json", canonical_json_bytes({
-            "extractor_version": EXTRACTOR_VERSION, "official_id": record.official_id, "sha256": digest,
-            "events": [item.to_dict() for item in events], "unresolved": [item.to_dict() for item in unresolved],
-            "status": "machine_candidates_not_in_active_graph",
-        }))
-        self._stage_run(extract_key, "OK")
-        stages["extract"] = {"status": "OK", "events": len(events), "unresolved": len(unresolved)}
+            document, source_document=record.official_id, source_sha256=digest, amending_act=record.title,
+            source_risk="automated text-fidelity check flagged this document" if fidelity["status"] == "UNRELIABLE" else None)
+        candidates = []
+        for event in (item.to_dict() for item in events):
+            fingerprint = "evt_" + sha256(_normal(event["evidence_text"]).encode()).hexdigest()[:24]
+            reasons = sorted({u.reason_code for u in unresolved if u.amendment_id == event["amendment_id"]})
+            candidates.append(self._record_candidate(fingerprint, event, record, digest, reasons))
+        stages["extract"] = {"version": EXTRACTOR_VERSION, "events": len(events), "unresolved_records": len(unresolved),
+                             "candidate_fingerprints": [item["fingerprint"] for item in candidates]}
+        stages["applicability"] = {
+            "status": "NOT_DETERMINED",
+            "publication_fact": {"date": record.stated_dates.get("published") or record.stated_dates.get("issued"),
+                                 "status": "UNAPPROVED", "note": "publication is not commencement"},
+        }
+        if self.index_updater is None:
+            stages["index"] = {"status": "NOT_CONFIGURED"}
+        else:
+            try:
+                stages["index"] = self.index_updater(self.root, self.processed_documents(include=(record.official_id, digest)))
+            except Exception as error:  # the previous overlay stays active; the document waits for review
+                return {**stages, "index": {"status": "FAILED", "error": f"{type(error).__name__}: {error}"},
+                        "terminal": "REVIEW_REQUIRED", "review_reason": "INDEX_UPDATE_FAILED"}
+        stages["terminal"] = "PROCESSED"
         return stages
 
-    # ---------- reviewed manual import (ACCESS_LIMITED sources) ----------
+    def _record_candidate(self, fingerprint: str, event: dict[str, Any], record: DiscoveredRecord, digest: str,
+                          reasons: list[str]) -> dict[str, Any]:
+        """One candidate per amendment text; a second portal adds provenance instead of a duplicate event."""
+        path = self.base / "candidates" / f"{fingerprint}.json"
+        provenance = {"source_key": record.source_key, "official_id": record.official_id, "sha256": digest,
+                      "page": event.get("source_page"), "line": event.get("source_line"), "canonical_url": record.canonical_url}
+        with self._file_lock("candidates"):
+            existing = load_json(path) if path.is_file() else {
+                "schema_version": "1.0.0", "fingerprint": fingerprint, "status": "MACHINE_CANDIDATE_PENDING_REVIEW",
+                "event": event, "unresolved_reasons": reasons, "provenance": [],
+                "graph_candidate": self.graph_mapper(event) if self.graph_mapper else {"status": "NOT_CONFIGURED"},
+                "materiality_triage": _materiality_triage(event, reasons),
+                "legal_effect_claimed": False,
+            }
+            if provenance not in existing["provenance"]:
+                existing["provenance"].append(provenance)
+            existing["linked_sources"] = sorted({item["source_key"] for item in existing["provenance"]})
+            atomic_replace(path, canonical_json_bytes(existing))
+        return existing
+
+    def candidates(self) -> list[dict[str, Any]]:
+        folder = self.base / "candidates"
+        return [load_json(path) for path in sorted(folder.glob("evt_*.json"))] if folder.is_dir() else []
+
+    def _queue(self, doc: dict, version: dict, record: DiscoveredRecord, outcome: str) -> dict[str, Any]:
+        queue_id = "mreview_" + sha256(f"{record.official_id}\n{version.get('sha256')}".encode()).hexdigest()[:20]
+        change = "REVISED" if version.get("previous_sha256") else "NEW"
+        item = {
+            "schema_version": "2.0.0", "queue_id": queue_id, "status": "HUMAN_REVIEW_PENDING", "doc_id": doc["doc_id"],
+            "official_id": record.official_id, "source_key": record.source_key, "version": version["version"],
+            "sha256": version.get("sha256"), "previous_sha256": version.get("previous_sha256"), "change": change,
+            "outcome": outcome, "review_reason": version.get("review_reason"), "title": record.title,
+            "canonical_url": record.canonical_url, "stated_dates": record.stated_dates, "stages": version.get("stages"),
+            "legal_effect_claimed": False,
+            "note": "Discovery or a changed PDF is not an amendment, a commenced change or a changed scenario answer.",
+        }
+        atomic_write_new(self.base / "review_queue" / f"{queue_id}.json", canonical_json_bytes(item))
+        version["queue_id"] = queue_id
+        self._save_document(doc)
+        return {"status": change, "outcome": outcome, "version": version["version"], "sha256": version.get("sha256"),
+                "previous_sha256": version.get("previous_sha256"), "queue_id": queue_id, "stages": version.get("stages"),
+                "review_reason": version.get("review_reason"),
+                "same_bytes_as_official_ids": version.get("same_bytes_as_official_ids", [])}
+
+    def processed_documents(self, include: tuple[str, str] | None = None) -> list[dict[str, Any]]:
+        """Parsed text of every processed monitored version (for the index overlay)."""
+        docs = []
+        for doc in self.documents():
+            for version in doc["versions"]:
+                ready = version["state"] == "PROCESSED" or include == (doc["official_id"], version.get("sha256"))
+                normalized = sorted((self.base / "normalized").glob(f"{version.get('sha256')}.*.json")) if ready else []
+                if normalized:
+                    docs.append({"doc_id": doc["doc_id"], "official_id": doc["official_id"], "source_key": doc["source_key"],
+                                 "version": version["version"], "sha256": version["sha256"], "record": version["record"],
+                                 "normalized": load_json(normalized[-1])})
+        return docs
+
+    # ---------- reviewed manual import ----------
     def manual_import(self, source_key: str, *, official_id: str, canonical_url: str, title: str,
                       payload: bytes, reviewer_id: str, reason: str) -> dict[str, Any]:
-        if source_key not in ACCESS_LIMITED_SOURCES:
-            raise ValueError("manual import is only for ACCESS_LIMITED sources")
+        if source_key != "egazette":
+            raise ValueError("manual import is only offered for e-Gazette documents outside the daily listing")
         if not payload.startswith(b"%PDF-") or len(reason.strip()) < 10 or not reviewer_id.strip():
             raise ValueError("manual import needs a PDF, a reviewer and a reason")
         record = DiscoveredRecord(source_key, official_id, None, title, canonical_url, self.clock(), None,
-                                  {"issued": None, "enactment": None}, None, "manual", None, len(payload))
+                                  {"issued": None, "published": None}, None, "manual", None, len(payload),
+                                  {"manual_import_by": reviewer_id})
 
         class _Manual:
             @staticmethod
@@ -212,6 +354,26 @@ class MonitoringService:
         return {**result, "imported_by": reviewer_id, "reason": reason, "mode": "MANUAL_IMPORT"}
 
     # ---------- storage ----------
+    def _transition(self, doc: dict, version: dict, state: str, run_id: str) -> None:
+        version["state"] = state
+        version["history"].append({"state": state, "at": self.clock(), "run_id": run_id})
+        self._save_document(doc)
+
+    @staticmethod
+    def _done(version: dict) -> set[str]:
+        return {item["state"] for item in version["history"]}
+
+    def _load_document(self, doc_id: str) -> dict | None:
+        path = self.base / "documents" / f"{doc_id}.json"
+        return load_json(path) if path.is_file() else None
+
+    def _save_document(self, doc: dict) -> None:
+        atomic_replace(self.base / "documents" / f"{doc['doc_id']}.json", canonical_json_bytes(doc))
+
+    def documents(self) -> list[dict[str, Any]]:
+        folder = self.base / "documents"
+        return [load_json(path) for path in sorted(folder.glob("doc_*.json"))] if folder.is_dir() else []
+
     def observations(self) -> list[dict[str, Any]]:
         path = self.base / "observations.v1.jsonl"
         return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()] if path.is_file() else []
@@ -221,15 +383,6 @@ class MonitoringService:
         self._append("observations.v1.jsonl", {**asdict(record), "run_id": run_id, "observed_at": self.clock(),
                                                "sha256": digest, "status": status, "error": error,
                                                "previous_sha256": previous_sha256})
-
-    def _cached(self, key: str) -> bool:
-        path = self.base / "stage_runs.v1.jsonl"
-        return path.is_file() and any(
-            json.loads(line).get("key") == key and json.loads(line).get("status") == "OK"
-            for line in path.read_text(encoding="utf-8").splitlines() if line.strip())
-
-    def _stage_run(self, key: str, status: str, error: str | None = None) -> None:
-        self._append("stage_runs.v1.jsonl", {"key": key, "status": status, "error": error, "at": self.clock()})
 
     def _append(self, name: str, value: dict[str, Any]) -> None:
         path = self.base / name
@@ -241,10 +394,15 @@ class MonitoringService:
             os.fsync(handle.fileno())
 
     @contextmanager
-    def _locked_state(self) -> Iterator[dict[str, Any]]:
+    def _file_lock(self, name: str) -> Iterator[None]:
         self.base.mkdir(parents=True, exist_ok=True)
-        with (self.base / ".state.lock").open("w") as lock:
-            fcntl.flock(lock, fcntl.LOCK_EX)  # cross-process: one worker updates state at a time
+        with (self.base / f".{name}.lock").open("w") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            yield
+
+    @contextmanager
+    def _locked_state(self) -> Iterator[dict[str, Any]]:
+        with self._file_lock("state"):
             path = self.base / "state.v1.json"
             state = json.loads(path.read_text(encoding="utf-8"))["sources"] if path.is_file() else {}
             yield state
@@ -255,7 +413,9 @@ class MonitoringService:
         path = self.base / "state.v1.json"
         state = json.loads(path.read_text(encoding="utf-8"))["sources"] if path.is_file() else {}
         now = _parse_time(self.clock())
-        queue = [json.loads(p.read_text()) for p in sorted((self.base / "review_queue").glob("*.json"))] if (self.base / "review_queue").is_dir() else []
+        folder = self.base / "review_queue"
+        queue = [load_json(p) for p in sorted(folder.glob("*.json"))] if folder.is_dir() else []
+        states = [doc["versions"][-1]["state"] for doc in self.documents() if doc["versions"]]
         sources = []
         for key in sorted(set(self.connectors) | set(state)):
             entry = state.get(key, {})
@@ -267,7 +427,32 @@ class MonitoringService:
                 "lag_hours": round(lag, 1) if lag is not None else None,
                 "scheduled_ingestion_healthy": lag is not None and lag <= 48,
             })
-        sources += [{"source_key": key, "status": "ACCESS_LIMITED", "detail": detail} for key, detail in ACCESS_LIMITED_SOURCES.items()]
         return {"sources": sources, "review_queue_pending": sum(item["status"] == "HUMAN_REVIEW_PENDING" for item in queue),
-                "failed_observations": sum(o["status"] in {"DOWNLOAD_FAILED", "CHECKSUM_MISMATCH"} for o in self.observations()),
-                "time_base": "UTC", "coverage_claim": "partial; see docs/sprint/s1_source_access_decision.v1.md"}
+                "document_states": {name: states.count(name) for name in sorted(set(states))},
+                "failed_documents": states.count("FAILED"),
+                "time_base": "UTC", "coverage_claim": "partial; see docs/sprint/s1_source_access_decision.v2.md"}
+
+
+def _text_fidelity(document: dict[str, Any]) -> dict[str, Any]:
+    """Cheap, explainable signal that routes documents to review; it does not certify text."""
+    text = " ".join(str(block.get("normalized_text", "")) for block in document.get("blocks", []))
+    words = re.findall(r"\S+", text)
+    if len(words) < 20:
+        return {"status": "UNREADABLE", "words": len(words), "reason": "little or no extractable text (scanned image?)"}
+    odd = sum(bool(re.search(r"[A-Za-z]", word)) and bool(re.search(r"[^A-Za-z0-9.,;:()'\"\-–—/\[\]“”‘’]", word)) for word in words)
+    ratio = odd / len(words)
+    return {"status": "UNRELIABLE" if ratio > 0.08 else "READABLE", "words": len(words), "odd_token_ratio": round(ratio, 4),
+            "method": "share of word tokens mixing letters with unexpected symbols; threshold 0.08"}
+
+
+def _materiality_triage(event: dict[str, Any], reasons: list[str]) -> dict[str, Any]:
+    from temporal_legal_drift.materiality.silver import _cue_transition_annotator
+
+    operation, before, after = event.get("operation"), event.get("old_text"), event.get("new_text")
+    if {"source_text_unreliable", "operand_contains_page_furniture", "unclear_operation"} & set(reasons):
+        return {"status": "REVIEW_REQUIRED", "label": None, "reason": "unreliable or ambiguous operand"}
+    if (operation == "INSERT" and after) or (operation in {"SUBSTITUTE", "REPLACE"} and before and after) or (operation == "OMIT" and before):
+        result = _cue_transition_annotator({"operation": operation, "before_text": before or "", "after_text": after or ""})
+        return {"status": "PROVISIONAL_RULE_OUTPUT", "label": result["label"], "method": "rule_a_cue_transition",
+                "rationale": result["rationale"], "is_gold": False}
+    return {"status": "INSUFFICIENT_EVIDENCE", "label": None, "reason": "operands not extracted"}

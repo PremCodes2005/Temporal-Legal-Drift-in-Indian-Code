@@ -86,10 +86,10 @@ class DashboardService:
         return self.get_run(str(record["correlation_id"]))
 
     def source_health(self) -> dict[str, object]:
-        from temporal_legal_drift.monitoring import IndiaCodeConnector, MonitoringService
+        from temporal_legal_drift.monitoring import EGazetteConnector, IndiaCodeConnector, MonitoringService
         from temporal_legal_drift.versioning.consumer import GraphConsumer, IncompatibleGraphError
 
-        health = MonitoringService(self.root, {"india_code": IndiaCodeConnector()}).health()
+        health = MonitoringService(self.root, {"india_code": IndiaCodeConnector(), "egazette": EGazetteConnector()}).health()
         try:
             consumer = GraphConsumer(self.root, "v4")
             graph = {"graph_version": "v4", "graph_sha256": consumer.graph_sha256, "verified": True}

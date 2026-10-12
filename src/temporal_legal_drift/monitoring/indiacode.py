@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import json
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Callable
 from urllib.parse import urlencode, urlparse
 
@@ -39,6 +39,17 @@ class DiscoveredRecord:
     bitstream_url: str | None
     bitstream_md5: str | None
     bitstream_bytes: int | None
+    listing: dict[str, object] = field(default_factory=dict)  # source-specific listing fields
+    download_eligible: bool = True                              # False: keep as a metadata observation only
+    size_tolerance: float | None = None                         # e.g. 0.15 when only an approximate size is listed
+
+    def metadata_fingerprint(self) -> str:
+        """What the source says about the bytes, without downloading them."""
+        from hashlib import sha256
+        from json import dumps
+
+        return sha256(dumps([self.bitstream_md5, self.bitstream_bytes, self.last_modified, self.listing], sort_keys=True,
+                            default=str).encode()).hexdigest()
 
 
 def validate_official_url(url: str) -> None:

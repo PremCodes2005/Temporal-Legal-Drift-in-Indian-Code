@@ -1,4 +1,4 @@
-"""Incremental source monitoring with a fake clock, fake connector and fake HTTP; no network."""
+"""Incremental source monitoring with a fake clock, fake connectors, fake parser and fake HTTP; no network."""
 
 from __future__ import annotations
 
@@ -6,15 +6,20 @@ import json
 import tempfile
 import threading
 import unittest
-from hashlib import md5
 from pathlib import Path
+from unittest.mock import patch
 
 from temporal_legal_drift.acquisition.fetch import FetchResponse
-from temporal_legal_drift.monitoring import IndiaCodeConnector, MonitoringService
+from temporal_legal_drift.monitoring import EGazetteConnector, IndiaCodeConnector, MonitoringService
+from temporal_legal_drift.monitoring.egazette import parse_listing
 from temporal_legal_drift.monitoring.indiacode import DiscoveredRecord, SourceShapeError
 
 PDF_A = b"%PDF-1.4 synthetic test document A"
 PDF_B = b"%PDF-1.4 synthetic test document B (revised)"
+AMENDMENT = ("THE SYNTHETIC (AMENDMENT) ACT, 2026\nAn Act to amend the Synthetic Act, 2020.\n"
+             "1. This Act may be called the Synthetic (Amendment) Act, 2026.\n"
+             '2. In section 5 of the Synthetic Act, 2020, for the words "ten days", the words "fifteen days" shall be substituted.\n'
+             + "Filler sentence with ordinary words to exceed the readable-text threshold. " * 4)
 
 
 class Clock:
@@ -25,30 +30,53 @@ class Clock:
         return self.value
 
 
-def record(official_id: str, accessioned: str, url: str = "https://indiacode.gov.in/server/api/core/bitstreams/x/content",
-           checksum: str | None = None) -> DiscoveredRecord:
-    return DiscoveredRecord("india_code", official_id, "123456789/1", f"Synthetic Act {official_id}",
-                            f"https://indiacode.gov.in/items/{official_id}", accessioned, None,
-                            {"issued": None, "enactment": None}, "a.pdf", url, checksum, 10)
+class Document:
+    def __init__(self, text: str) -> None:
+        self.text = text
+
+    def to_dict(self) -> dict:
+        return {"blocks": [{"block_id": "b1", "source_anchor": "pdf:page:1", "normalized_text": self.text}]}
+
+
+class FakeParser:
+    name, version = "fake-parser", "1"
+
+    def __init__(self, text: str = AMENDMENT) -> None:
+        self.text = text
+        self.calls = 0
+
+    def parse(self, payload, context):
+        self.calls += 1
+        return Document(self.text)
+
+
+def record(source: str, official_id: str, accessioned: str, url: str, *, md5: str | None = "m1", size: int | None = 10,
+           eligible: bool = True, tolerance: float | None = None) -> DiscoveredRecord:
+    return DiscoveredRecord(source, official_id, None, f"Synthetic (Amendment) Act {official_id}", url, accessioned, None,
+                            {"issued": None, "published": accessioned[:10]}, "a.pdf", url, md5, size,
+                            download_eligible=eligible, size_tolerance=tolerance)
 
 
 class FakeConnector:
     def __init__(self) -> None:
         self.records: list[DiscoveredRecord] = []
-        self.payloads: dict[str, bytes] = {}
+        self.payloads: dict[str, object] = {}
         self.discover_calls = 0
+        self.downloads: list[str] = []
         self.fail: Exception | None = None
 
     def discover(self, since, *, max_pages):
         self.discover_calls += 1
         if self.fail:
             raise self.fail
-        return [item for item in self.records if since is None or item.accessioned_at > since]
+        return list(self.records)
 
     def download(self, url):
-        if isinstance(self.payloads.get(url), Exception):
-            raise self.payloads[url]
-        return self.payloads[url]
+        self.downloads.append(url)
+        value = self.payloads[url]
+        if isinstance(value, Exception):
+            raise value
+        return value
 
 
 class MonitoringTests(unittest.TestCase):
@@ -56,158 +84,260 @@ class MonitoringTests(unittest.TestCase):
         self.temporary = tempfile.TemporaryDirectory()
         self.root = Path(self.temporary.name)
         self.clock = Clock("2026-10-12T00:00:00+00:00")
-        self.connector = FakeConnector()
-        self.service = MonitoringService(self.root, {"india_code": self.connector}, clock=self.clock)
+        self.india, self.gazette = FakeConnector(), FakeConnector()
+        self.parser = FakeParser()
+        self.index_calls: list[int] = []
+        self.service = MonitoringService(
+            self.root, {"india_code": self.india, "egazette": self.gazette}, clock=self.clock, parser=self.parser,
+            index_updater=lambda root, docs: self.index_calls.append(len(docs)) or {"status": "ACTIVATED", "documents": len(docs)},
+            graph_mapper=lambda event: {"status": "TARGET_UNRESOLVED"})
         self.url = "https://indiacode.gov.in/server/api/core/bitstreams/a/content"
 
     def tearDown(self) -> None:
         self.temporary.cleanup()
 
-    def test_at_most_one_automatic_attempt_per_rolling_24_hours(self) -> None:
-        self.assertEqual(len(self.service.run_due("worker-1")), 1)
-        self.clock.value = "2026-10-12T23:59:59+00:00"
-        self.assertEqual(self.service.run_due("worker-1"), [])          # restart inside the window
-        self.assertEqual(self.service.run_due("worker-2"), [])          # second worker inside the window
-        self.clock.value = "2026-10-13T00:00:00+00:00"
-        self.assertEqual(len(self.service.run_due("worker-2")), 1)      # window boundary is inclusive
-        self.assertEqual(self.connector.discover_calls, 2)
+    def next_day(self, hours: int = 24) -> None:
+        from datetime import datetime, timedelta
+        self.clock.value = (datetime.fromisoformat(self.clock.value) + timedelta(hours=hours)).isoformat()
 
-    def test_concurrent_workers_do_not_duplicate_the_daily_attempt(self) -> None:
+    def queue(self) -> list[dict]:
+        return [json.loads(p.read_text()) for p in sorted((self.root / "data/monitoring/review_queue").glob("*.json"))]
+
+    # --- scheduling ---
+    def test_never_starts_earlier_than_24_hours_after_the_previous_start(self) -> None:
+        self.assertEqual(len(self.service.run_due("w1")), 2)
+        self.next_day(23)
+        self.assertEqual(self.service.run_due("w1"), [])
+        self.assertEqual(self.service.run_due("w2"), [])
+        self.next_day(1)
+        self.assertEqual(len(self.service.run_due("w2")), 2)
+        self.assertEqual((self.india.discover_calls, self.gazette.discover_calls), (2, 2))
+
+    def test_concurrent_scheduler_attempts_start_one_run_per_source(self) -> None:
         results: list[list] = []
-        threads = [threading.Thread(target=lambda name=name: results.append(self.service.run_due(name))) for name in ("a", "b", "c")]
+        threads = [threading.Thread(target=lambda n=n: results.append(self.service.run_due(n))) for n in "abc"]
         for thread in threads:
             thread.start()
         for thread in threads:
             thread.join()
-        self.assertEqual(self.connector.discover_calls, 1)
-        self.assertEqual(sum(len(item) for item in results), 1)
+        self.assertEqual((self.india.discover_calls, self.gazette.discover_calls), (1, 1))
 
-    def test_new_unchanged_revised_and_duplicate_bytes(self) -> None:
-        self.connector.records = [record("item-1", "2026-10-11T10:00:00Z", self.url, md5(PDF_A).hexdigest())]
-        self.connector.payloads[self.url] = PDF_A
-        first = self.service.run_due("w")[0]
-        self.assertEqual(first["records"][0]["status"], "NEW")
-        queue = list((self.root / "data/monitoring/review_queue").glob("*.json"))
-        self.assertEqual(len(queue), 1)
-        self.assertFalse(json.loads(queue[0].read_text())["legal_effect_claimed"])
-        # Same official item, unchanged bytes (forced re-check): no new queue entry, no downstream work.
-        unchanged = self.service.backfill("india_code", "w", pages=1, reason="Re-check unchanged bytes.")
-        self.assertEqual(unchanged["records"][0]["status"], "UNCHANGED")
-        self.assertEqual(len(list((self.root / "data/monitoring/review_queue").glob("*.json"))), 1)
-        # Changed bytes for the same official ID: a linked revision, both artifacts kept.
-        self.connector.records = [record("item-1", "2026-10-11T10:00:00Z", self.url, md5(PDF_B).hexdigest())]
-        self.connector.payloads[self.url] = PDF_B
-        revised = self.service.backfill("india_code", "w", pages=1, reason="Source revised in place.")["records"][0]
+    def test_outage_is_visible_and_waits_for_the_next_window(self) -> None:
+        self.india.fail = OSError("outage")
+        result = next(r for r in self.service.run_due("w") if r["source_key"] == "india_code")
+        self.assertEqual(result["status"], "SOURCE_UNAVAILABLE")
+        health = {s["source_key"]: s for s in self.service.health()["sources"]}
+        self.assertEqual(health["india_code"]["last_status"], "SOURCE_UNAVAILABLE")
+        self.assertFalse(health["india_code"]["scheduled_ingestion_healthy"])
+        self.india.fail = None
+        self.next_day(12)
+        self.assertEqual(self.service.run_due("w"), [])  # no hidden rapid retry after an error
+
+    # --- incremental processing ---
+    def test_first_discovery_is_processed_once_and_unchanged_next_cycle_is_not_refetched(self) -> None:
+        self.india.records = [record("india_code", "item-1", "2026-10-11T10:00:00Z", self.url)]
+        self.india.payloads[self.url] = PDF_A
+        first = self.service.run_due("w")[1]["records"][0]
+        self.assertEqual((first["status"], first["outcome"]), ("NEW", "PROCESSED"))
+        stages = first["stages"]
+        self.assertEqual(stages["applicability"]["status"], "NOT_DETERMINED")
+        self.assertEqual(stages["applicability"]["publication_fact"]["status"], "UNAPPROVED")
+        self.assertEqual(stages["index"]["status"], "ACTIVATED")
+        doc = self.service.documents()[0]
+        self.assertEqual([h["state"] for h in doc["versions"][0]["history"]],
+                         ["DISCOVERED", "FETCHED", "HASHED", "VERIFIED", "EXTRACTION_PENDING", "PROCESSED"])
+        self.next_day()
+        second = self.service.run_due("w")[1]["records"][0]
+        self.assertEqual(second["status"], "UNCHANGED")
+        self.assertEqual(len(self.india.downloads), 1)       # not re-downloaded
+        self.assertEqual(self.parser.calls, 1)               # no duplicate processing run
+        self.assertEqual(len(self.queue()), 1)
+
+    def test_changed_bytes_under_same_official_id_create_a_linked_version(self) -> None:
+        self.india.records = [record("india_code", "item-1", "2026-10-11T10:00:00Z", self.url, md5="m1")]
+        self.india.payloads[self.url] = PDF_A
+        self.service.run_due("w")
+        self.next_day()
+        self.india.records = [record("india_code", "item-1", "2026-10-11T10:00:00Z", self.url, md5="m2")]
+        self.india.payloads[self.url] = PDF_B
+        revised = self.service.run_due("w")[1]["records"][0]
         self.assertEqual(revised["status"], "REVISED")
+        self.assertEqual(revised["version"], 2)
         self.assertIsNotNone(revised["previous_sha256"])
         self.assertEqual(len(list((self.root / "data/raw/monitoring/sha256").rglob("*.pdf"))), 2)
-        # Same bytes under a second official item: one artifact, two observations.
+        self.assertTrue(all(not item["legal_effect_claimed"] for item in self.queue()))
+
+    def test_same_bytes_under_another_official_id_share_one_artifact(self) -> None:
         other = "https://indiacode.gov.in/server/api/core/bitstreams/b/content"
-        self.connector.records = [record("item-2", "2026-10-11T11:00:00Z", other)]
-        self.connector.payloads[other] = PDF_B
-        self.service.backfill("india_code", "w", pages=1, reason="Duplicate bytes, other identity.")
-        self.assertEqual(len(list((self.root / "data/raw/monitoring/sha256").rglob("*.pdf"))), 2)
-        self.assertEqual({o["official_id"] for o in self.service.observations()}, {"item-1", "item-2"})
+        self.india.records = [record("india_code", "item-1", "2026-10-11T10:00:00Z", self.url),
+                              record("india_code", "item-2", "2026-10-11T11:00:00Z", other)]
+        self.india.payloads[self.url] = PDF_A
+        self.india.payloads[other] = PDF_A
+        records = self.service.run_due("w")[1]["records"]
+        self.assertEqual(len(list((self.root / "data/raw/monitoring/sha256").rglob("*.pdf"))), 1)
+        self.assertEqual(records[1]["same_bytes_as_official_ids"], ["item-1"])
 
-    def test_served_rendition_checksum_is_recorded_and_download_failure_is_not_dropped(self) -> None:
-        self.connector.records = [record("stamped", "2026-10-11T10:00:00Z", self.url, "0" * 32),
-                                  record("down", "2026-10-11T09:00:00Z", "https://indiacode.gov.in/x")]
-        self.connector.payloads[self.url] = PDF_A
-        self.connector.payloads["https://indiacode.gov.in/x"] = TimeoutError("network")
-        result = self.service.run_due("w")[0]
-        by_id = {item["official_id"]: item for item in result["records"]}
-        self.assertEqual(by_id["stamped"]["status"], "NEW")
-        self.assertEqual(by_id["stamped"]["repository_checksum"], "SERVED_RENDITION_DIFFERS_FROM_REPOSITORY_MD5")
-        self.assertEqual(by_id["down"]["status"], "DOWNLOAD_FAILED")
-        self.assertEqual(result["status"], "PARTIAL_FAILURE")
-        self.assertEqual(self.service.health()["failed_observations"], 1)
+    def test_same_amendment_from_both_portals_links_one_candidate(self) -> None:
+        gazette_url = "https://egazette.gov.in/WriteReadData/2026/1.pdf"
+        self.india.records = [record("india_code", "item-1", "2026-10-11T10:00:00Z", self.url)]
+        self.gazette.records = [record("egazette", "CG-DL-E-11102026-1", "2026-10-11", gazette_url, md5=None)]
+        self.india.payloads[self.url] = PDF_A
+        self.gazette.payloads[gazette_url] = PDF_B  # different bytes (stamped vs gazette copy), same amendment text
+        self.service.run_due("w")
+        candidates = self.service.candidates()
+        substitute = [c for c in candidates if c["event"]["operation"] == "SUBSTITUTE"]
+        self.assertEqual(len(substitute), 1)
+        self.assertEqual(substitute[0]["linked_sources"], ["egazette", "india_code"])
+        self.assertEqual(len(substitute[0]["provenance"]), 2)
+        self.assertEqual(substitute[0]["materiality_triage"]["status"], "PROVISIONAL_RULE_OUTPUT")
+        self.assertFalse(substitute[0]["legal_effect_claimed"])
 
-    def test_outage_keeps_cursor_and_retry_is_audited(self) -> None:
-        self.connector.fail = OSError("outage")
-        result = self.service.run_due("w")[0]
-        self.assertEqual(result["status"], "SOURCE_UNAVAILABLE")
-        state = json.loads((self.root / "data/monitoring/state.v1.json").read_text())["sources"]["india_code"]
-        self.assertIsNone(state.get("last_success_at"))
-        self.assertEqual(self.service.run_due("w"), [])  # next automatic attempt waits for the window
-        with self.assertRaises(ValueError):
-            self.service.run_due("w", manual_reason="")
-        self.connector.fail = None
-        retry = self.service.run_due("w", manual_reason="Operator retry after outage.")[0]
-        self.assertEqual((retry["mode"], retry["status"]), ("MANUAL_RETRY", "OK"))
+    def test_failed_download_retries_only_at_the_next_eligible_cycle(self) -> None:
+        self.india.records = [record("india_code", "item-1", "2026-10-11T10:00:00Z", self.url)]
+        self.india.payloads[self.url] = TimeoutError("network")
+        failed = self.service.run_due("w")[1]
+        self.assertEqual((failed["status"], failed["records"][0]["status"]), ("PARTIAL_FAILURE", "FAILED"))
+        self.india.payloads[self.url] = PDF_A
+        self.next_day(6)
+        self.service.run_due("w")
+        self.assertEqual(len(self.india.downloads), 1)  # no refetch before the window
+        self.next_day(18)
+        retried = self.service.run_due("w")[1]["records"][0]
+        self.assertEqual((retried["status"], retried["outcome"]), ("NEW", "PROCESSED"))
 
-    def test_parse_stage_is_cached_by_content_and_version_and_failures_stay_reviewable(self) -> None:
-        class FailingParser:
-            name, version = "test-parser", "1"
+    def test_interrupted_processing_resumes_only_incomplete_stages(self) -> None:
+        self.india.records = [record("india_code", "item-1", "2026-10-11T10:00:00Z", self.url)]
+        self.india.payloads[self.url] = PDF_A
+        calls = {"n": 0}
 
-            def parse(self, payload, context):
-                raise ValueError("unreadable")
+        def flaky(event):
+            calls["n"] += 1
+            if calls["n"] == 1:
+                raise RuntimeError("crash during graph mapping")
+            return {"status": "TARGET_UNRESOLVED"}
 
-        service = MonitoringService(self.root, {"india_code": self.connector}, clock=self.clock, parser=FailingParser())
-        self.connector.records = [record("item-1", "2026-10-11T10:00:00Z", self.url)]
-        self.connector.payloads[self.url] = PDF_A
+        self.service.graph_mapper = flaky
+        interrupted = self.service.run_due("w")[1]["records"][0]
+        self.assertEqual(interrupted["status"], "FAILED")
+        resumed = self.service.resume_incomplete()
+        self.assertEqual(resumed[0]["outcome"], "PROCESSED")
+        self.assertEqual(len(self.india.downloads), 1)  # fetched once
+        self.assertEqual(self.parser.calls, 1)           # parse output reused from cache
+
+    def test_tampered_artifact_is_detected_on_resume(self) -> None:
+        self.india.records = [record("india_code", "item-1", "2026-10-11T10:00:00Z", self.url)]
+        self.india.payloads[self.url] = PDF_A
+        self.service.graph_mapper = lambda event: (_ for _ in ()).throw(RuntimeError("crash"))
+        self.service.run_due("w")
+        artifact = next((self.root / "data/raw/monitoring/sha256").rglob("*.pdf"))
+        artifact.chmod(0o644)
+        artifact.write_bytes(b"%PDF-1.4 tampered")
+        resumed = self.service.resume_incomplete()
+        self.assertIn("no longer matches its recorded SHA-256", resumed[0]["error"])
+
+    def test_unreadable_and_ocr_uncertain_documents_go_to_review(self) -> None:
+        self.india.records = [record("india_code", "item-1", "2026-10-11T10:00:00Z", self.url)]
+        self.india.payloads[self.url] = PDF_A
+        self.parser.text = "scan"
+        unreadable = self.service.run_due("w")[1]["records"][0]
+        self.assertEqual((unreadable["outcome"], unreadable["review_reason"]), ("REVIEW_REQUIRED", "SOURCE_TEXT_UNREADABLE"))
+        garbled = AMENDMENT + " ~h~ ~a~ette (j{ ~i4 1{flT n-1JlI\\'I sh@ll b€ subst!tuted " * 20
+        service = MonitoringService(self.root / "other", {"india_code": self.india}, clock=self.clock,
+                                    parser=FakeParser(garbled), graph_mapper=lambda event: {"status": "TARGET_UNRESOLVED"})
         result = service.run_due("w")[0]["records"][0]
-        self.assertEqual(result["stages"]["parse"], "FAILED")
-        self.assertEqual(result["status"], "NEW")  # still queued for review
+        self.assertEqual(result["stages"]["text_fidelity"]["status"], "UNRELIABLE")
+        self.assertTrue(all(c["materiality_triage"]["status"] == "REVIEW_REQUIRED" for c in service.candidates()))
 
-    def test_access_limited_source_is_reported_and_manual_import_is_attributed(self) -> None:
-        health = self.service.health()
-        self.assertIn({"source_key": "egazette", "status": "ACCESS_LIMITED",
-                       "detail": "No documented machine interface; reviewed manual import only (S1 decision v1)."}, health["sources"])
-        imported = self.service.manual_import("egazette", official_id="CG-DL-E-00000000-1", canonical_url="https://egazette.gov.in/",
-                                              title="Synthetic gazette", payload=PDF_A, reviewer_id="project-engineer",
-                                              reason="Downloaded from the portal by hand.")
-        self.assertEqual((imported["mode"], imported["status"]), ("MANUAL_IMPORT", "NEW"))
-        with self.assertRaises(ValueError):
-            self.service.manual_import("india_code", official_id="x", canonical_url="https://indiacode.gov.in/", title="x",
-                                       payload=PDF_A, reviewer_id="r", reason="not allowed here")
+    def test_index_failure_keeps_document_reviewable(self) -> None:
+        self.india.records = [record("india_code", "item-1", "2026-10-11T10:00:00Z", self.url)]
+        self.india.payloads[self.url] = PDF_A
+        self.service.index_updater = lambda root, docs: (_ for _ in ()).throw(OSError("disk full"))
+        result = self.service.run_due("w")[1]["records"][0]
+        self.assertEqual((result["outcome"], result["review_reason"]), ("REVIEW_REQUIRED", "INDEX_UPDATE_FAILED"))
+
+    def test_gazette_metadata_only_rows_and_size_mismatch(self) -> None:
+        url = "https://egazette.gov.in/WriteReadData/2026/2.pdf"
+        self.gazette.records = [record("egazette", "CG-DL-E-11102026-9", "2026-10-11", "https://egazette.gov.in/x", eligible=False),
+                                record("egazette", "CG-DL-E-11102026-2", "2026-10-11", url, md5=None, size=10_000, tolerance=0.15)]
+        self.gazette.payloads[url] = PDF_A  # far smaller than listed
+        records = self.service.run_due("w")[0]["records"]
+        self.assertEqual(records[0]["status"], "METADATA_ONLY")
+        self.assertEqual(records[1]["outcome"], "REVIEW_REQUIRED")
+        self.assertIn("listed size", records[1]["review_reason"])
+        self.assertEqual(self.gazette.downloads, [url])
 
 
 class FakeTransport:
-    def __init__(self, responses: dict[str, tuple[str, bytes]]) -> None:
+    def __init__(self, responses: dict[str, tuple[str, bytes, str | None]]) -> None:
         self.responses = responses
-        self.urls: list[str] = []
 
     def fetch(self, url, *, timeout, maximum_bytes, validate_url):
         validate_url(url)
-        self.urls.append(url)
-        for prefix, (media_type, payload) in self.responses.items():
+        for prefix, (media_type, payload, final_url) in self.responses.items():
             if url.startswith(prefix):
-                return FetchResponse(payload, url, media_type, {})
+                return FetchResponse(payload, final_url or url, media_type, {})
         raise OSError(f"unexpected url {url}")
 
 
-def _item(uuid: str, accessioned: str) -> dict:
-    return {"_embedded": {"indexableObject": {"uuid": uuid, "handle": "123456789/9", "lastModified": accessioned,
-            "metadata": {"dc.title": [{"value": f"Act {uuid}"}], "dc.date.accessioned": [{"value": accessioned}]}}}}
+def _listing(rows: list[dict[str, str]]) -> bytes:
+    cells = []
+    for index, row in enumerate(rows):
+        for name, value in row.items():
+            cells.append(f'<span id="gvGazetteList_lbl_{name}_{index}"><font color="Black">{value}</font></span>')
+    return ("<table>" + "".join(cells) + "</table>").encode()
 
 
-class IndiaCodeConnectorTests(unittest.TestCase):
-    """Response shapes recorded in docs/sprint/s1_source_access_decision.v1.md; contents are synthetic."""
-
-    def connector(self, items: list[dict]) -> tuple[IndiaCodeConnector, FakeTransport]:
-        bundles = {"_embedded": {"bundles": [{"name": "ORIGINAL", "_embedded": {"bitstreams": {"_embedded": {"bitstreams": [
-            {"name": "a.pdf", "sizeBytes": 10, "checkSum": {"checkSumAlgorithm": "MD5", "value": "abc"},
-             "_links": {"content": {"href": "https://indiacode.gov.in/server/api/core/bitstreams/b1/content"}}}]}}}}]}}
+class ConnectorTests(unittest.TestCase):
+    def test_egazette_listing_is_parsed_filtered_and_mapped_to_static_pdf(self) -> None:
+        base = {"Ministry": "Ministry of Law", "Department": "Legislative Department", "Office": "x", "Category": "Extra Ordinary",
+                "IssueDate": "09-Oct-2026", "PublishDate": "10-Oct-2026", "FileSize": "0.58 MB"}
+        rows = [{**base, "Subject": "The Synthetic (Amendment) Act, 2026", "PartSection": "Part II-Section 1", "UGID": "CG-DL-E-10102026-277026"},
+                {**base, "Subject": "Notification under the Railway Act 1989", "PartSection": "Part II-Section 3-Sub-Section (ii)", "UGID": "CG-DL-E-10102026-277027"}]
         transport = FakeTransport({
-            "https://indiacode.gov.in/server/api/discover/search/objects": ("application/json", json.dumps(
-                {"_embedded": {"searchResult": {"_embedded": {"objects": items}}}}).encode()),
-            "https://indiacode.gov.in/server/api/core/items/": ("application/json", json.dumps(bundles).encode()),
+            "https://egazette.gov.in/RecentUploads": ("text/html", b"", None),
+            "https://egazette.gov.in/(S(abc123))/RecentUploads.aspx": ("text/html", _listing(rows), None),
+            "https://egazette.gov.in/": ("text/html", b"<html/>", "https://egazette.gov.in/(S(abc123))/default.aspx"),
         })
-        return IndiaCodeConnector(transport, pause_seconds=0, sleep=lambda _: None), transport
+        found = EGazetteConnector(transport, pause_seconds=0, sleep=lambda _: None).discover(None)
+        self.assertEqual([r.official_id for r in found], ["CG-DL-E-10102026-277026", "CG-DL-E-10102026-277027"])
+        self.assertEqual(found[0].canonical_url, "https://egazette.gov.in/WriteReadData/2026/277026.pdf")
+        self.assertEqual([r.download_eligible for r in found], [True, False])
+        self.assertEqual(found[0].stated_dates, {"issued": "2026-10-09", "published": "2026-10-10"})
+        with self.assertRaises(SourceShapeError):
+            parse_listing("<html>changed layout</html>")
 
-    def test_discovery_stops_at_the_cursor_and_reads_checksums(self) -> None:
-        connector, transport = self.connector([_item("n2", "2026-10-10T00:00:00Z"), _item("n1", "2026-10-09T00:00:00Z")])
-        found = connector.discover("2026-10-09T00:00:00Z")
-        self.assertEqual([item.official_id for item in found], ["n2"])
-        self.assertEqual((found[0].bitstream_md5, found[0].bitstream_bytes), ("abc", 10))
-        self.assertIn("sort=dc.date.accessioned%2CDESC", transport.urls[0])
-
-    def test_changed_response_shape_and_off_allowlist_urls_are_refused(self) -> None:
-        connector, _ = self.connector([{"unexpected": True}])
+    def test_indiacode_shape_change_and_allowlist(self) -> None:
+        transport = FakeTransport({"https://indiacode.gov.in/server/api/discover": ("application/json", b'{"unexpected": 1}', None)})
+        connector = IndiaCodeConnector(transport, pause_seconds=0, sleep=lambda _: None)
         with self.assertRaises(SourceShapeError):
             connector.discover(None)
         with self.assertRaises(Exception):
             connector.download("https://example.com/a.pdf")
+
+
+class OverlayTests(unittest.TestCase):
+    def test_tampered_or_rebased_overlay_is_never_served(self) -> None:
+        from temporal_legal_drift.rag.retriever import OVERLAY_DIR, OVERLAY_POINTER, HybridRetriever
+        from temporal_legal_drift.jsonio import canonical_json_bytes
+        from hashlib import sha256
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            body = canonical_json_bytes({"chunks": [{"chunk_id": "mon_1", "text": "x", "embedding": [], "metadata": {}}]})
+            digest = sha256(body).hexdigest()
+            (root / OVERLAY_DIR).mkdir(parents=True)
+            (root / OVERLAY_DIR / f"overlay.{digest}.json").write_bytes(body)
+            (root / OVERLAY_POINTER).write_bytes(canonical_json_bytes({"overlay_sha256": digest, "base_index_identity": "base-1"}))
+            with patch.object(HybridRetriever, "_active_version", return_value={"rag_index_version": "t"}), \
+                    patch.object(HybridRetriever, "ensure_index", return_value={"index_identity": "base-1"}):
+                retriever = HybridRetriever(root)
+                self.assertEqual(len(retriever._overlay_chunks()), 1)
+                (root / OVERLAY_DIR / f"overlay.{digest}.json").write_bytes(body + b" ")
+                self.assertEqual(retriever._overlay_chunks(), [])  # tampered
+            (root / OVERLAY_DIR / f"overlay.{digest}.json").write_bytes(body)
+            with patch.object(HybridRetriever, "_active_version", return_value={"rag_index_version": "t"}), \
+                    patch.object(HybridRetriever, "ensure_index", return_value={"index_identity": "base-2"}):
+                self.assertEqual(HybridRetriever(root)._overlay_chunks(), [])  # bound to another base index
 
 
 if __name__ == "__main__":

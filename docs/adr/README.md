@@ -12,5 +12,6 @@ These ADRs are **retrospective descriptions of decisions visible in the current 
 | [0006](0006-versioned-case-orchestration.md) | Idempotent case orchestration through versioned interfaces (2026-10-12) |
 | [0007](0007-append-only-review-ledger.md) | Append-only, hash-chained review ledger (2026-10-12) |
 | [0008](0008-incremental-official-source-monitoring.md) | Incremental 24-hour official-source monitoring (2026-10-12) |
+| [0009](0009-document-state-machine-and-index-overlay.md) | Document state machine, cross-portal linking, index overlay (2026-10-12) |
 
 Audit base: commit `68030875a719aa626fb05f294880de2953084781`, 2026-10-12. Verification limits: [../verification.md](../verification.md).
