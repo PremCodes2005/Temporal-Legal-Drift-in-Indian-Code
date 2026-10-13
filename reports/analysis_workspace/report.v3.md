@@ -27,6 +27,7 @@ Older links (`#analysis/<id>[/<view>]`) open the matching page. A link ending in
 ## Screenshots (`screenshots/v3/`)
 
 - `assistant-empty-desktop.jpg`: the question page before asking.
+- `assistant-question-area-with-answer.jpg`: the full question area (status, scheduled ingestion, suggestions) kept above an answer, on the user's server at port 8765.
 - `assistant-ibc99-desktop.jpg` and `assistant-ibc99-390.jpg`: the answer page.
 - `assistant-ibc99-day15-situation.jpg`: the unfolded situation after a facts re-run.
 - `drift-ibc99-desktop.jpg` and `drift-ibc99-390-top.jpg`: the Drift explanation page.

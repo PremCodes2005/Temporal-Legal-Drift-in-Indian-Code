@@ -16,6 +16,7 @@ Status: **accepted 2026-10-13**. UI reference: v0.13.0 (commit `6db1c49`), `Assi
 - **Address:** `#assistant/<id>`. Older `#analysis/<id>[/<view>]` links still open the matching page.
 - **Clause comparison:** each side's text is in a keyboard-scrollable box, so the page stays short. The full clauses are on the Drift explanation page.
 - **Mode switch:** the Specific/Generic buttons expose `aria-pressed`.
+- **Question area (as in v0.13.0):** it stays complete above every answer: heading, India Code status, the scheduled-ingestion line, the labelled question box and the three suggested questions. It is not collapsed once an answer appears.
 
 ## Not changed
 

@@ -359,6 +359,24 @@ describe("links, history and keyboard", () => {
     await waitFor(() => expect(screen.getByRole("article", { name: "Answer" }).textContent).toContain(analysis.answer.direct_answer));
   });
 
+  it("keeps the full question area above an answer: status, scheduled ingestion, labelled input and the 3 suggestions", async () => {
+    const health = { sources: [{ source_key: "india_code", last_success_at: "2026-10-12T14:21:16Z", scheduled_ingestion_healthy: true },
+      { source_key: "egazette", last_success_at: "2026-10-12T16:42:42Z", scheduled_ingestion_healthy: true }], review_queue_pending: 4 };
+    const base = fetch.getMockImplementation();
+    fetch.mockImplementation(async (url, init) => (String(url).includes("/api/sources/health") ? { ok: true, status: 200, json: async () => health } : base(url, init)));
+    const analysis = responses.ibc99;
+    window.history.replaceState(null, "", `#assistant/${analysis.analysis_id}`);
+    render(<App />);
+    await waitFor(() => screen.getByRole("article", { name: "Answer" }));
+    expect(screen.getByRole("heading", { name: "Ask what changed in Indian law." })).toBeTruthy();
+    await waitFor(() => expect(screen.getByText(/Scheduled ingestion \(stored in UTC\):/).parentElement.textContent)
+      .toMatch(/India Code: last checked .* · e-Gazette: last checked .* · 4 new document\(s\) awaiting review/));
+    expect(screen.getByLabelText("Legal research question").value).toBe(analysis.query);
+    const suggestions = screen.getByText("Try asking").parentElement.querySelectorAll("button");
+    expect([...suggestions].map((b) => b.textContent)).toEqual(["What changed in the IT Act amendment regarding data privacy?",
+      "Compare Section 19 before and after the IT Amendment Act, 2008.", "What penalties were introduced for privacy violations in the IT Act?"]);
+  });
+
   it("opens older #analysis/<id>/<view> links on the assistant, with the situation open for 'scenario'", async () => {
     const analysis = responses.ibc99;
     window.history.replaceState(null, "", `#analysis/${analysis.analysis_id}/scenario`);

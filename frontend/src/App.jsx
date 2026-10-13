@@ -182,14 +182,14 @@ function AssistantWorkspace({ status, error: statusError, starterQuery, autoRun 
     finally { setBusy(false); }
   };
 
-  const compact = Boolean(result);
+  // As in v0.13.0, the full question area (status, scheduled ingestion, suggestions) stays above every answer.
   return <section className="page-section">
-    <div className={`hero ${compact ? "compact" : ""}`}>
-      {!compact && <><span className="section-kicker">Single-prompt legal research</span>
+    <div className="hero">
+      <span className="section-kicker">Single-prompt legal research</span>
       <h2>Ask what changed in Indian law.</h2>
       <p>The assistant checks the live India Code repository and uses the local evidence cache for reproducible amendment comparisons and traceable source anchors.</p>
       <RepositoryStatus status={status} error={statusError} />
-      <SourceHealth request={api} /></>}
+      <SourceHealth request={api} />
       <form className="prompt-panel" onSubmit={submit}>
         <label htmlFor="legal-query" className="sr-only">Legal research question</label>
         <textarea id="legal-query" rows="4" maxLength="4000" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Ask a question, for example: What changed in the IT Act amendment regarding data privacy?" />
@@ -201,7 +201,7 @@ function AssistantWorkspace({ status, error: statusError, starterQuery, autoRun 
           <button className="send-button" type="submit" disabled={busy || !query.trim()}>{busy ? "Searching…" : "Analyse"}<span aria-hidden="true">→</span></button>
         </div>
       </form>
-      {!compact && <div className="suggestions"><span>Try asking</span>{suggestions.map((item) => <button key={item} type="button" onClick={() => setQuery(item)}>{item}</button>)}</div>}
+      <div className="suggestions"><span>Try asking</span>{suggestions.map((item) => <button key={item} type="button" onClick={() => setQuery(item)}>{item}</button>)}</div>
       {error && <div className="form-error" role="alert"><strong>Analysis could not be completed.</strong><span>{error}</span></div>}
     </div>
     {busy && <div className="loading-panel"><span className="spinner"/><div><strong>Retrieving versioned legal evidence…</strong><p>Classifying the question, matching documents and validating the response context.</p></div></div>}
