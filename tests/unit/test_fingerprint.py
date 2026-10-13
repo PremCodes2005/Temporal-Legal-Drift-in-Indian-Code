@@ -17,7 +17,7 @@ from temporal_legal_drift.rag.metrics import calculate_drift_metrics
 from temporal_legal_drift.rag.rag_pipeline import RagPipeline
 
 ROOT = Path(__file__).resolve().parents[2]
-RULE_WEIGHTS = {k: v["weight"] for k, v in json.loads((ROOT / "configs/metrics/rule_drift.v1.json").read_text())["fields"].items()}
+RULE_WEIGHTS = {k: v["weight"] for k, v in json.loads((ROOT / "configs/metrics/rule_drift.v1.2.json").read_text())["fields"].items()}
 CPC = "What is the maximum fine a court can impose under section 32 of the Code of Civil Procedure after the 1999 amendment?"
 SRA = "Is specific performance of a contract still discretionary under section 11 of the Specific Relief Act after the 2018 amendment?"
 MV181 = "What was the penalty under section 181 of the Motor Vehicles Act before and after the 2019 amendment?"
@@ -79,7 +79,9 @@ class FingerprintTests(unittest.TestCase):
         after = "For the purposes of this section, expressions used here carry the meanings assigned to them in the Schedule"
         f = self.build(synthetic(before, after, f"7. Returns.—(1) Every company shall file the return. Explanation.—1[{after}]."))
         self.assertGreater(f["wording_drift"]["value"], 20)
-        self.assertEqual((f["rule_drift"]["state"], f["rule_drift"]["value"]), ("DETERMINED", 0.0))
+        # v1.2: no supported field changed, but the clause did; that is "Not scored", never a 0 claiming no rule change
+        self.assertEqual((f["rule_drift"]["state"], f["rule_drift"]["value"]), ("INSUFFICIENT_EVIDENCE", None))
+        self.assertTrue(any(r["kind"] == "disagreement" and "no supported rule field" in r["text"] for r in f["reading"]))
 
     def test_spans_and_citations_point_to_the_scored_text(self) -> None:
         result = self.ask(CPC)
@@ -119,16 +121,42 @@ class FingerprintTests(unittest.TestCase):
     def test_rule_fields_across_acts_and_operations(self) -> None:
         changed = lambda q: {r["field"]: r["operation"] for r in self.ask(q)["fingerprint"]["rule_drift"]["details"]["fields"] if r["contribution"]}  # noqa: E731
         self.assertEqual(changed(SRA), {"modality": "CHANGED"})                                   # discretion -> duty (substitution)
-        self.assertEqual(changed(CPC), {"monetary_threshold": "CHANGED"})                         # 500 -> 5000 (substitution)
+        self.assertEqual(changed(CPC), {"penalty": "CHANGED"})                                    # fine 500 -> 5000, counted once as penalty
         self.assertEqual(changed(DM31), {"deadline": "CHANGED"})                                   # annually -> every two years
         self.assertEqual(changed(ARB8)["exception"], "ADDED")                                      # proviso inserted (insertion)
-        self.assertTrue({"penalty", "monetary_threshold"} <= set(changed(MV181)))                  # penalty change
+        self.assertEqual(changed(MV181), {"penalty": "CHANGED"})                                  # the fine amount is not counted twice
+        self.assertEqual(changed("What amount must be deposited under section 173 of the Motor Vehicles Act after the 2019 amendment?"),
+                         {"threshold": "CHANGED"})                                                  # ten thousand -> one lakh (number words)
+        self.assertEqual(changed("How many nominees can a depositor make under section 45ZC of the Banking Regulation Act after the 2025 amendment?"),
+                         {"threshold": "ADDED"})                                                    # count limit: not exceeding four
 
-    def test_an_unclassified_operative_change_is_not_scored(self) -> None:
-        # rule-drift-v1.1: a change outside the supported fields gets no score (v1 showed "0 (lower bound)")
-        rule = self.ask("How many nominees can a depositor make under section 45ZC of the Banking Regulation Act after the 2025 amendment?")["fingerprint"]["rule_drift"]
-        self.assertEqual((rule["state"], rule["label"], rule["value"]), ("INSUFFICIENT_EVIDENCE", "Not scored", None))
-        self.assertEqual(rule["limit"]["kind"], "method")
+    def test_a_change_outside_the_supported_fields_is_not_scored_with_a_specific_reason(self) -> None:
+        # rule-drift-v1.2: never 0 for a real change; the reason names the changed words
+        cases = {"Compare section 170 of the Motor Vehicles Act before and after the Motor Vehicles (Amendment) Act, 2019.": "CROSS_REFERENCE_ONLY",
+                 "Compare Section 19 before and after the IT Amendment Act, 2008.": "TERM_SUBSTITUTED",
+                 "Compare section 40 of the Motor Vehicles Act before and after the Motor Vehicles (Amendment) Act, 2019.": "UNSUPPORTED_RULE_FIELD"}
+        for query, code in cases.items():
+            with self.subTest(code=code):
+                rule = self.ask(query)["fingerprint"]["rule_drift"]
+                self.assertEqual((rule["state"], rule["label"], rule["value"], rule["details"]["unscored_reason"]), ("INSUFFICIENT_EVIDENCE", "Not scored", None, code))
+                self.assertEqual(rule["limit"]["kind"], "method")
+                self.assertIn("“", rule["reason"])  # the changed words are quoted
+
+    def test_structure_changes_are_scope_not_new_duties(self) -> None:
+        # an inserted list item in a rule-making power is scope (v1.1 counted its "may" as a new permission)
+        rule = self.ask("Compare section 240 of the Insolvency Bankruptcy Code before and after the Insolvency And Bankruptcy Code (Amendment) Act, 2020.")["fingerprint"]["rule_drift"]
+        self.assertEqual({r["field"] for r in rule["details"]["fields"] if r["contribution"]}, {"scope"})
+        self.assertTrue(rule["details"]["structural_changes"][0]["value"].startswith("list item:"))
+
+    def test_a_small_edit_to_a_key_field_is_explained_not_averaged(self) -> None:
+        # real corpus: IBC s.99 "ten days" -> "twenty-one days", reconstructed from India Code's footnote (Act 6 of 2026)
+        f = self.ask("Compare section 99 of the Insolvency and Bankruptcy Code before and after the 2026 amendment.")["fingerprint"]
+        self.assertLess(f["wording_drift"]["value"], 2)
+        self.assertEqual(f["rule_drift"]["value"], 15.0)
+        self.assertEqual([r["field"] for r in f["rule_drift"]["details"]["fields"] if r["contribution"]], ["deadline"])
+        disagreement = [r for r in f["reading"] if r["kind"] == "disagreement"]
+        self.assertEqual(len(disagreement), 1)
+        self.assertIn("deadline or period", disagreement[0]["text"])
 
     def test_conflicting_signals_are_shown_side_by_side_never_averaged(self) -> None:
         f = self.ask(SRA)["fingerprint"]

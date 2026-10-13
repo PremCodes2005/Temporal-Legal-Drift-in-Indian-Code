@@ -197,3 +197,31 @@ Remote GitHub Actions has still not been observed. See [../reports/phase3/tempor
   - legal accuracy of determinations, triage labels and decisive-fact assumptions;
   - a screen-reader listening pass;
   - a live-LLM general answer.
+
+## Explanation views addendum (2026-10-13, rag-answer-v5)
+
+- **Executed:**
+  - Python: 280 tests under 3.14 and 3.11. Before the release only the expected Phase 11 checksum gate failed. `validate-contract` passed.
+  - Frontend: 32 vitest tests against real v5 responses, run 3 times.
+  - Audit cases v4: 32/32, with 0 support, pairing or citation errors. Cases v1–v3 are kept.
+  - Held-out run v2: 86 transitions, 0 invariant violations, 0 zero scores for changed clauses.
+  - Real Chrome:
+    - before (v0.14.0 worktree) and after, all views;
+    - back/forward, refresh, old and new links;
+    - field-to-words highlight;
+    - 320–480px with no page overflow;
+    - `browser-a11y-check.mjs` passed.
+  - Model timeout: a real local socket that never answered gave a labelled extractive fallback.
+- **Defects found and fixed during this work:**
+  - IBC s.99 footnote reconstruction (hyphen and line break);
+  - double counting of penalty amounts and terms;
+  - list-item and Explanation modals counted as duties;
+  - false 0/100 scores;
+  - "shall not be less than" read as a prohibition;
+  - a facts re-run used the toggle's mode instead of the analysis's;
+  - raw footnote markers in answer excerpts;
+  - an `sr-only` header that escaped its scroll container and widened the page.
+- **Not verified:**
+  - legal accuracy;
+  - a screen-reader listening pass;
+  - a live-model general answer.

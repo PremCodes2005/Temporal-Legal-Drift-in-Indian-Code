@@ -14,7 +14,7 @@ from typing import Any
 from .question import QuestionFrame
 from .versions import VERSION_CLAIMS
 
-COMPOSITION_VERSION = "answer-composition-v1"
+COMPOSITION_VERSION = "answer-composition-v2"  # v2: concise before/after, "Key change", effect only when facts were applied
 ROLE_LABELS = {
     "before_fragment": "Before — amendment fragment (only the words the amendment changed, not the full section)",
     "after_fragment": "After — amendment fragment (only the words the amendment changed, not the full section)",
@@ -29,7 +29,8 @@ def _quote(text: str, limit: int = 220) -> str:
 
 
 def _around(text: str, needle: str, width: int = 170) -> str:
-    flat = " ".join(str(text or "").split())
+    # India Code footnote markers ("1[twenty-one days]") are dropped from the short excerpt; the verbatim text stays in the evidence.
+    flat = re.sub(r"(?<!\w)\d+\[([^\]]*)\]", r"\1", " ".join(str(text or "").split()))
     index = flat.casefold().find(str(needle or "").casefold()) if needle else -1
     if index < 0:
         return _quote(flat, 2 * width)
@@ -84,8 +85,8 @@ def compose_version_answer(frame: QuestionFrame, mode: str, versions: dict[str, 
     sections = []
     if mode == "specific":
         before_text = ("— No words: this text was inserted by the amendment." if not before.strip()
-                       else _around(before_item["text"], sub["old"]) if sub else f"“{before}”")
-        after_text = _around(after_item["text"], sub["new"]) if sub else f"“{after}”"
+                       else _around(before_item["text"], sub["old"], 80) if sub else f"“{before}”")
+        after_text = _around(after_item["text"], sub["new"], 80) if sub else f"“{after}”"
         before_ids = [versions["before"]["evidence_id"]] + [i for i in items if items[i]["role"] in {"amendment_instruction", "substitution_footnote"}]
         after_ids = [versions["after"]["evidence_id"]] + [i for i in items if items[i]["role"] == "current_consolidated_text" and i != versions["after"]["evidence_id"]]
         sections += [
@@ -101,12 +102,13 @@ def compose_version_answer(frame: QuestionFrame, mode: str, versions: dict[str, 
     rule = (fingerprint or {}).get("rule_drift") or {}
     if rule.get("state") in {"DETERMINED", "PROVISIONAL"}:
         caveats.insert(0, rule["summary"])
-    sections.append({"id": "what_changed", "title": "What changed", "text": what + (" " + " ".join(caveats) if caveats else ""),
+    sections.append({"id": "what_changed", "title": "Key change", "text": what + (" " + " ".join(caveats) if caveats else ""),
                      "evidence_ids": [i for i in items if items[i]["role"] in {"amendment_instruction", "substitution_footnote"}] or list(items)[:1],
                      "kind": "evidence"})
-    effect = change["summary"] if change["state"] in {"DETERMINED", "CONDITIONAL"} else change["reason"]
-    if change["state"] == "CONDITIONAL":
-        effect += " " + change["reason"]
+    if change["state"] not in {"DETERMINED", "CONDITIONAL"}:
+        # Nothing was applied to facts: the answer stays clean and Scenario & Impact explains what is needed.
+        return {"version": COMPOSITION_VERSION, "direct_answer": opening, "sections": sections, "limitations": _limitations(versions)}
+    effect = change["summary"] + (" " + change["reason"] if change["state"] == "CONDITIONAL" else "")
     sections.append({"id": "effect", "title": "Effect on this scenario" if change.get("method") == "outcome-drift-v1" else "Effect on your question",
                      "text": effect, "evidence_ids": change.get("evidence_ids", []),
                      "kind": "inference" if change["state"] != "DETERMINED" else "evidence"})

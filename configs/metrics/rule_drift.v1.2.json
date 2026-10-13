@@ -1,0 +1,114 @@
+{
+ "schema_version": "1.0.0",
+ "contract": "rule-drift-v1.2",
+ "unit": "the operative sentence(s) of the clause that contain the amended words",
+ "fields": {
+  "modality": {
+   "label": "Duty, permission or prohibition",
+   "weight": 25,
+   "covers": [
+    "obligation (shall, must)",
+    "permission (may, discretion)",
+    "prohibition (shall not, no person shall, prohibited)"
+   ],
+   "why": "changes whether conduct is required, allowed or forbidden, the core of a legal instruction"
+  },
+  "penalty": {
+   "label": "Penalty",
+   "weight": 15,
+   "covers": [
+    "punishable with",
+    "liable to a penalty",
+    "fine",
+    "imprisonment",
+    "fine not exceeding / fine of"
+   ],
+   "why": "changes the consequence of non-compliance; an amount inside a penalty counts here only, never twice"
+  },
+  "threshold": {
+   "label": "Amount or numeric limit",
+   "weight": 15,
+   "covers": [
+    "amounts in rupees, thousand, lakh, crore with their limit (up to, at least, fixed)",
+    "numeric limits on counts (not exceeding four, at least three members)"
+   ],
+   "why": "changes when the rule bites, how much is at stake, or how many are allowed"
+  },
+  "deadline": {
+   "label": "Deadline or period",
+   "weight": 15,
+   "covers": [
+    "periods in days, months, years",
+    "frequencies (annually, once in every N years)"
+   ],
+   "why": "changes when compliance is due"
+  },
+  "exception": {
+   "label": "Exception or proviso",
+   "weight": 10,
+   "covers": [
+    "Provided that",
+    "except",
+    "unless",
+    "notwithstanding"
+   ],
+   "why": "changes who or what escapes the rule"
+  },
+  "scope": {
+   "label": "Scope (what the rule covers)",
+   "weight": 10,
+   "covers": [
+    "means",
+    "includes",
+    "applies to",
+    "a list item added to or removed from an enumeration",
+    "an Explanation added or removed"
+   ],
+   "why": "changes what or whom the rule covers"
+  },
+  "actor": {
+   "label": "Person or body named",
+   "weight": 5,
+   "covers": [
+    "a person or body (government, authority, court, officer, person, party, company, ...) named within the changed words"
+   ],
+   "why": "changes who acts, approves or is bound (low weight: the extractor is a heuristic)"
+  },
+  "action": {
+   "label": "What must be done",
+   "weight": 5,
+   "covers": [
+    "the first operative verb after the modal for a named person or body, from a fixed verb list"
+   ],
+   "why": "changes what must be done (low weight: the extractor is a heuristic)"
+  }
+ },
+ "score": "sum of the weights of fields whose operation is ADDED, REMOVED or CHANGED (0-100). Fields marked UNCERTAIN are excluded and reported; the score is then a lower bound.",
+ "not_derived_from": [
+  "text length",
+  "token overlap",
+  "an unvalidated language-model judgment",
+  "the High/Medium/Low/None materiality label"
+ ],
+ "llm_proposals": "optional; a proposed field value is used only if it validates against the schema and is a verbatim substring of the cited clause; otherwise it is discarded and the deterministic result stands",
+ "abstain_when": [
+  "no supported, same-provision amendment relationship",
+  "the clause fails the text-quality gate",
+  "the before clause is incomplete"
+ ],
+ "not_scored_reasons": {
+  "CROSS_REFERENCE_ONLY": "only a cross-reference (section, clause or sub-section number) changed",
+  "TERM_SUBSTITUTED": "a term or phrase was replaced; whether this widens or narrows the rule depends on definitions this method does not compare",
+  "UNSUPPORTED_RULE_FIELD": "the changed words are outside every supported field"
+ },
+ "zero_only_when": "the before and after clauses are identical after normalisation; any other change without a supported field is Not scored, never 0",
+ "changes_from_v1_1": [
+  "monetary_threshold renamed threshold and extended to numeric count limits (not exceeding four)",
+  "an amount inside a penalty clause is counted once, as penalty; 'fine not exceeding' and 'fine of' are penalties",
+  "number words joined by 'and' or hyphens ('three hundred and thirty', 'twenty-one') and 'consecutive/clear/working' periods are parsed",
+  "an inserted or removed list item or Explanation is a scope change; modal verbs inside it are not counted as new duties",
+  "actor = persons or bodies named within the changed words (e.g. Tribunal -> Central Government), replacing the subject heuristic",
+  "action only from a fixed operative-verb list after the modal",
+  "a non-identical change with no supported field is Not scored with a specific reason; v1.1 could report 0 for changes outside operative sentences"
+ ]
+}

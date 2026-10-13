@@ -142,3 +142,12 @@ Not achieved in the sprint:
 | Facts vs evidence | Minimum decisive facts, facts read from the question, machine-triaged materiality | `tests/unit/test_analysis_record.py`, audit cases v3 27/27 |
 | UI | Five views of one stored analysis; deep links; facts form beside the answer | `frontend/src/AnalysisWorkspace.jsx`, `analysis_workspace.test.jsx` |
 | Release | See `docs/verification.md` | — |
+
+## Explanation views and scoring sprint (2026-10-13, rag-answer-v5)
+
+| Phase | Result | Evidence |
+| --- | --- | --- |
+| Audit | v0.14.0 UI and all 86 corroborated transitions; rule-field errors found at their source | ADR 0017, `reports/fingerprint/heldout_transitions.v2.json` |
+| Scoring | rule-drift-v1.2, triage-input-v2, footnote word fix; v1/v1.1 configs and the v4 schema kept | `docs/methodology/legal_change_fingerprint.v1.2.md` |
+| UI | Six views; clean Answer view; Drift Explanation and Score Calculation with field-to-words links; back/forward | `analysis_workspace.test.jsx`, real Chrome |
+| Release | See `docs/verification.md` | — |

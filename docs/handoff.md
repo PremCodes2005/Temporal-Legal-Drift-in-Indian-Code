@@ -162,3 +162,21 @@ The legal/research gate is unchanged: UNVERIFIED.
   - a screen-reader listening pass.
 
 The legal/research gate is unchanged: UNVERIFIED.
+
+## Explanation views status (2026-10-13, rag-answer-v5)
+
+- **Views:** six views of one stored analysis: Answer, Compare Evidence, Drift Explanation, Score Calculation, Scenario & Impact, and Sources & Review. The sidebar again has Drift explanation and Score calculation.
+- **Answer view:** shows only supported values and one "Check your situation" action.
+- **Rule drift v1.2:**
+  - list items and Explanations count as scope;
+  - amounts and terms inside penalties count once;
+  - count limits, authorities named in changed words, and number words with "and" or hyphens are detected;
+  - "Not scored" carries a specific reason; 0 means identical text.
+- **Outcome drift:** asks for facts only when a fact can decide the change.
+- **Report:** `reports/analysis_workspace/report.v2.md`.
+- **Next:**
+  - a reviewed actor and action extractor;
+  - cross-reference-aware materiality triage;
+  - a screen-reader listening pass.
+
+The legal/research gate is unchanged: UNVERIFIED.

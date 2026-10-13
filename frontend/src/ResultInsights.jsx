@@ -13,14 +13,14 @@ const TEMPORAL_TEXT = {
   UNRESOLVED: "Effective date unresolved",
 };
 
-export function GenerationNotice({ method }) {
+export function GenerationNotice({ method, warning }) {
   const text = method === "grounded_composition"
     ? "Answer composed directly from the cited evidence; no language model was used."
     : String(method || "").startsWith("extractive")
     ? "Extractive evidence summary: quoted from retrieved sources, not a language-model conclusion."
     : method === "llm_grounded" ? "Language-model answer constrained to the retrieved evidence; verify it against the cited source."
       : "No answer could be generated from the available evidence.";
-  return <p className="generation-method" role="status">{text}</p>;
+  return <p className="generation-method" role="status">{text}{warning ? ` ${warning}; this answer was produced without it.` : ""}</p>;
 }
 
 export function VersionStatus({ comparison, metrics }) {

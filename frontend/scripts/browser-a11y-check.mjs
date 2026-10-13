@@ -32,17 +32,18 @@ const focusInfo = `(() => { const el = document.activeElement; if (!el || el ===
   return { tag: el.tagName, text: (el.getAttribute('aria-label') || el.innerText || el.value || el.getAttribute('href') || '').trim().slice(0, 60),
     visibleFocus: cs.outlineStyle !== 'none' && parseFloat(cs.outlineWidth) > 0 || cs.boxShadow !== 'none', size: [Math.round(r.width), Math.round(r.height)], inViewport: r.bottom > 0 && r.top < innerHeight }; })()`;
 const stops = [];
-// Tab to the analysis views, arrow to Scores & Method (ARIA tabs), then Tab into its panel to the wording explanation.
+// Tab to the analysis views, arrow to Score Calculation (ARIA tabs), then Tab into its panel to the collapsible legacy diagnostic.
 // Native date inputs style their inner focus a tick after the key event, so each stop settles briefly.
 for (let i = 0; i < 120; i++) { await key("Tab", "Tab", 9); await sleep(150); const f = await evaluate(focusInfo); if (!f) continue; stops.push(f); if (await evaluate("document.activeElement.getAttribute('role') === 'tab'")) break; }
-await key("ArrowRight", "ArrowRight", 39); await key("ArrowRight", "ArrowRight", 39); await sleep(300);
-report.arrowsReachScores = await evaluate("document.activeElement.id === 'tab-scores' && document.activeElement.getAttribute('aria-selected') === 'true'");
-for (let i = 0; i < 60; i++) { await key("Tab", "Tab", 9); await sleep(150); const f = await evaluate(focusInfo); if (!f) continue; stops.push(f); if (f.text.startsWith("How wording drift was calculated")) break; }
+for (let i = 0; i < 3; i++) await key("ArrowRight", "ArrowRight", 39);
+await sleep(300);
+report.arrowsReachScores = await evaluate("document.activeElement.id === 'tab-calculation' && document.activeElement.getAttribute('aria-selected') === 'true'");
+for (let i = 0; i < 60; i++) { await key("Tab", "Tab", 9); await sleep(150); const f = await evaluate(focusInfo); if (!f) continue; stops.push(f); if (f.text.startsWith("Legacy diagnostic")) break; }
 report.tabStops = stops.length; report.noVisibleFocus = stops.filter((s) => !s.visibleFocus); report.zeroSize = stops.filter((s) => !s.size[0] || !s.size[1]);
-report.reachedSummary = stops.at(-1)?.text?.startsWith("How wording drift was calculated") || false;
+report.reachedSummary = stops.at(-1)?.text?.startsWith("Legacy diagnostic") || false;
 report.pdfLinkReachable = stops.some((s) => s.text.startsWith("Open source PDF at page"));
 report.focusScrolledIntoView = stops.every((s) => s.inViewport);
-if (report.reachedSummary) { const was = await evaluate("document.querySelector('.fp-details').open"); await key("Enter", "Enter", 13); await sleep(200); report.enterTogglesDetails = (await evaluate("document.querySelector('.fp-details').open")) !== was; await key(" ", "Space", 32); await sleep(200); report.spaceTogglesBack = (await evaluate("document.querySelector('.fp-details').open")) === was; }
+if (report.reachedSummary) { const was = await evaluate("document.querySelector('.legacy-diagnostic').open"); await key("Enter", "Enter", 13); await sleep(200); report.enterTogglesDetails = (await evaluate("document.querySelector('.legacy-diagnostic').open")) !== was; await key(" ", "Space", 32); await sleep(200); report.spaceTogglesBack = (await evaluate("document.querySelector('.legacy-diagnostic').open")) === was; }
 report.offscreen = stops.filter((s) => !s.inViewport).map((s) => `${s.tag}:${s.text}`);
 report.stopsSample = stops.slice(0, 40).map((s) => `${s.tag}:${s.text}`);
 
@@ -65,7 +66,7 @@ await shot("desk-1280");
 report.narrow = {};
 for (const w of [320, 360, 414, 480]) {
   await load(w, 800, true);
-  for (const view of ["answer", "scores"]) {
+  for (const view of ["answer", "drift", "calculation"]) {
   await evaluate(`document.getElementById('tab-${view}').click(), true`); await sleep(300);
   report.narrow[`${w}-${view}`] = await evaluate(`(() => { const W = document.documentElement.clientWidth; const over = [...document.querySelectorAll('body *')].filter(el => { const r = el.getBoundingClientRect(); return r.width && r.right > W + 1 && getComputedStyle(el).position !== 'fixed'; });
     const leaf = over.filter(el => !over.some(o => o !== el && el.contains(o)));
@@ -81,7 +82,7 @@ console.log(JSON.stringify(report, null, 1));
 const text = nodes.filter((n) => n.role?.value === "StaticText").map((n) => n.name?.value || "").join("");
 const failures = [
   report.noVisibleFocus.length && "focus without a visible indicator", report.unnamedInteractive.length && "unnamed controls",
-  !report.reachedSummary && "score explanation not reachable by Tab", !report.arrowsReachScores && "arrow keys do not move between analysis views", !report.enterTogglesDetails && "Enter does not toggle the score explanation",
+  !report.reachedSummary && "score calculation details not reachable by Tab", !report.arrowsReachScores && "arrow keys do not move between analysis views", !report.enterTogglesDetails && "Enter does not toggle the score explanation",
   !text.includes("[removed:") && "no screen-reader cue for removed words",
   ...Object.entries(report.narrow).map(([w, v]) => v.scrollWidth > v.clientWidth && `horizontal scroll at ${w}px`),
 ].filter(Boolean);

@@ -40,7 +40,7 @@ class RagV2Tests(unittest.TestCase):
     # ---------- evidence and pairing ----------
     def test_named_act_and_section_select_the_corroborated_transition(self) -> None:
         result = self.ask("What amount must be deposited under section 173 of the Motor Vehicles Act after the 2019 amendment?")
-        self.assertEqual(result["contract_version"], "rag-answer-v4")
+        self.assertEqual(result["contract_version"], "rag-answer-v5")
         self.assertEqual(result["comparison"]["support_class"], "GRAPH_TRANSITION_FRAGMENTS")
         self.assertEqual({e["entry_id"] for e in result["evidence"]}, {"motor-vehicles-act-1988", "motor-vehicles-amendment-act-2019"})
         instruction = next(e for e in result["evidence"] if e["role"] == "amendment_instruction")
@@ -114,9 +114,13 @@ class RagV2Tests(unittest.TestCase):
         self.assertEqual((change["details"]["before"], change["details"]["after"]), (["discretion", "may"], ["shall"]))
 
     def test_what_changed_question_asks_for_a_situation_instead_of_inventing_one(self) -> None:
-        change = self.ask("Compare section 46 of the Companies Act before and after the Companies (Amendment) Act, 2015.")["determinations"]["answer_change"]
+        # A deadline change can be decided by a fact, so that fact is asked for; nothing is assumed.
+        change = self.ask("Compare section 31 of the Disaster Management Act before and after the Disaster Management (Amendment) Act, 2025.")["determinations"]["answer_change"]
         self.assertEqual((change["state"], change["label"]), ("NEEDS_FACTS", None))
         self.assertTrue(change["needs"])
+        # Who may sign (Companies s.46) cannot be decided by a user fact: no facts are requested and no answer is invented.
+        change = self.ask("Compare section 46 of the Companies Act before and after the Companies (Amendment) Act, 2015.")["determinations"]["answer_change"]
+        self.assertEqual((change["state"], change["label"], change["needs"], change["limit"]["kind"]), ("INSUFFICIENT_EVIDENCE", None, [], "method"))
 
     def test_unsupported_applicability_makes_the_answer_conditional(self) -> None:
         # Act-wide commencement exists (2015-10-23) but scenario applicability is not established.
@@ -175,12 +179,25 @@ class RagV2Tests(unittest.TestCase):
                 self.ask(IT19, scenario=bad)
 
     # ---------- answer form ----------
+    def test_machine_triage_reads_number_words(self) -> None:
+        # CPC s.32 "five hundred" -> "five thousand": the frozen rules see digits only, so triage-input-v2 converts number words first
+        mat = self.ask("What is the maximum fine a court can impose under section 32 of the Code of Civil Procedure after the 1999 amendment?")["determinations"]["materiality"]
+        self.assertEqual(mat["details"]["source"], "ON_THE_FLY_MACHINE_TRIAGE")
+        self.assertEqual((mat["details"]["scored_operands"]["before_text"].strip(), mat["details"]["scored_operands"]["after_text"].strip()), ("not exceeding 500 rupees", "not exceeding 5000 rupees"))
+        self.assertNotIn("Low", mat["label"])
+
     def test_specific_and_generic_use_the_same_evidence(self) -> None:
         specific, generic = self.ask(IT19, "specific"), self.ask(IT19, "generic")
         self.assertEqual(specific["evidence"], generic["evidence"])
         self.assertEqual(specific["metrics"]["overall_drift_percent"], generic["metrics"]["overall_drift_percent"])
-        self.assertEqual([s["id"] for s in specific["answer"]["sections"]], ["before", "after", "what_changed", "effect"])
-        self.assertEqual([s["id"] for s in generic["answer"]["sections"]], ["what_changed", "effect"])
+        # Same sources and scores in both modes; only the explanation detail differs.
+        for name in ("wording_drift", "rule_drift", "outcome_drift"):
+            self.assertEqual({k: specific["fingerprint"][name][k] for k in ("state", "value", "label", "evidence_ids")},
+                             {k: generic["fingerprint"][name][k] for k in ("state", "value", "label", "evidence_ids")})
+        self.assertEqual(specific["fingerprint"]["reading"], generic["fingerprint"]["reading"])
+        # composition v2: no "effect" section until facts are applied
+        self.assertEqual([s["id"] for s in specific["answer"]["sections"]], ["before", "after", "what_changed"])
+        self.assertEqual([s["id"] for s in generic["answer"]["sections"]], ["what_changed"])
 
     def test_every_answer_section_with_a_claim_cites_evidence(self) -> None:
         result = self.ask(IT19)

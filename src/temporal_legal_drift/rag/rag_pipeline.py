@@ -22,7 +22,7 @@ from .question import ActCatalog, QuestionFrame, parse_question
 from .retriever import HybridRetriever, RetrievedChunk
 from .versions import VERSION_CLAIMS, VersionSelector
 
-ANSWER_CONTRACT_VERSION = "rag-answer-v4"  # v4: analysis IDs, explicit limit kinds, minimum-facts request (ADR 0016)
+ANSWER_CONTRACT_VERSION = "rag-answer-v5"  # v5: fingerprint v1.2 with reading, determinations-v4, composition v2 (ADR 0017); v4: analysis IDs (ADR 0016)
 
 
 INTENT_PATTERNS = {
@@ -119,7 +119,7 @@ class RagPipeline:
                 focus = self._topic_section(query, frame)
             response = self._attach_general(self._legacy_answer(query, mode, restrict=restrict, focus_chunk=focus), frame, facts, mode, focus)
         response["scenario_request"] = scenario_request(response["determinations"], response["fingerprint"], facts, sources)
-        response["contract_version"], response["schema_version"] = ANSWER_CONTRACT_VERSION, "4.0.0"
+        response["contract_version"], response["schema_version"] = ANSWER_CONTRACT_VERSION, "5.0.0"
         response["analysis_id"] = analysis_id({
             "contract": ANSWER_CONTRACT_VERSION, "methods": [DETERMINATIONS_VERSION, FINGERPRINT_VERSION, COMPOSITION_VERSION, METRICS_CONTRACT_VERSION],
             "query": query, "mode": mode, "scenario": facts, "generation": response["answer"].get("generation_method"),
@@ -412,6 +412,10 @@ class RagPipeline:
             change = {**change, "state": outcome["state"], "label": "Changes" if outcome["label"] == "Changed" else "Does not change",
                       "summary": outcome["summary"], "reason": outcome["reason"],
                       "method": "outcome-drift-v1"}
+        elif change["state"] == "NEEDS_FACTS" and comparison is None and (outcome.get("limit") or {}).get("kind") == "method":
+            # No fact could decide this change, so do not ask for facts here either.
+            change = {**change, "state": outcome["state"], "label": None, "summary": outcome["summary"], "reason": outcome["reason"],
+                      "needs": [], "limit": outcome["limit"], "method": "outcome-drift-v1"}
         wording = fingerprint["wording_drift"]
         drift = {**textual_drift(frame, versions, metrics), "state": wording["state"], "label": wording["label"], "summary": wording["summary"],
                  "limit": wording.get("limit"),
@@ -1419,7 +1423,7 @@ def _rule_delta_proposer():
         content = _chat_completion([
             {"role": "system", "content": "Extract a legal rule delta. Return JSON only."},
             {"role": "user", "content": (
-                "Fields: modality, penalty, monetary_threshold, deadline, exception, scope, actor, action. "
+                "Fields: modality, penalty, threshold, deadline, exception, scope, actor, action. "
                 "For each field that differs between BEFORE and AFTER, return {field, before, after} where before/after are EXACT "
                 "substrings copied from the texts (or null if absent). Return {\"fields\": [...]}.\n\n"
                 f"BEFORE: {_bounded_text(pair['before'], 1800)}\n\nAFTER: {_bounded_text(pair['after'], 1800)}")},

@@ -4,6 +4,16 @@ The field lists were read from live responses of this checkout. They are enginee
 
 ## `POST /api/rag/query`  body `{"query": str, "mode": "specific" | "generic", "scenario"?: {...}}`
 
+**rag-answer-v5** (`schema_version` 5.0.0; schema `schemas/rag/rag_answer.v5.schema.json`; ADR 0017) adds the following. Every v4 field is retained; stored v4 records stay readable at `/api/analyses/<id>`.
+
+- **`fingerprint.version`:** `legal-change-fingerprint-v1.2`.
+- **`fingerprint.reading`:** `[{kind: wording | rule | disagreement | outcome, text, field?, evidence_ids}]`.
+- **`rule_drift.details.fields[]`:** adds `label` and `why`. The key `monetary_threshold` is now `threshold`, with values `amount: …` or `count: …`.
+- **`rule_drift.details`:** `structural_changes` (list items or Explanations); `unscored_reason` is `CROSS_REFERENCE_ONLY`, `TERM_SUBSTITUTED` or `UNSUPPORTED_RULE_FIELD`. `calculation` is null when the change is not scored.
+- **`determinations-v4`:** materiality `details.scored_operands` and `input_normalisation` (triage-input-v2).
+- **`answer-composition-v2`:** the `effect` section is present only when facts were applied; `what_changed` is titled "Key change".
+- **Browser addresses:** `#analysis/<id>/<answer|evidence|drift|calculation|scenario|sources>`. `#drift` and `#calculation` open the current analysis. v4 `…/scores` links open `calculation`.
+
 **rag-answer-v4** (`schema_version` 4.0.0; schema `schemas/rag/rag_answer.v4.schema.json`; ADR 0016) adds the following. Every v3, v2 and v1 field is retained.
 
 - **`analysis_id`:** `an_` plus 24 hex characters. It is a hash of the contract, method versions, query, mode, applied scenario, generation method, index identity, graph hash and active release. The response is stored once under this ID.

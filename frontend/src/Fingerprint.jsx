@@ -1,3 +1,5 @@
+import { Fragment } from "react";
+
 // Legal Change Fingerprint (legal-change-fingerprint-v1): three separate measures, shown together and never averaged.
 // Every number comes from the API response; the browser only displays it.
 
@@ -94,46 +96,29 @@ function OutcomeDetails({ details, open }) {
   </details>;
 }
 
-const SHORT = { DETERMINED: "", PROVISIONAL: "provisional", CONDITIONAL: "conditional", NEEDS_FACTS: "needs your facts",
-  INSUFFICIENT_EVIDENCE: "not available", OUT_OF_SCOPE: "not applicable" };
-
-// Compact summary for the Answer view: one line per measure, the full method lives under Scores & Method.
-export function FingerprintStrip({ fingerprint, materiality, onOpen }) {
-  if (!fingerprint) return null;
-  const rows = [
-    ["Wording", fingerprint.wording_drift, "these exact words changed"],
-    ["Rule", fingerprint.rule_drift, "this obligation, deadline, amount or actor changed"],
-    ["Outcome", fingerprint.outcome_drift, "this may or may not change the answer for your facts"],
-  ];
-  return <section className="fingerprint-strip" aria-label="Change fingerprint summary">
-    <span className="section-kicker">Change fingerprint</span>
-    <ul>{rows.map(([name, item, meaning]) => <li key={name}><strong>{name}:</strong> <span className="strip-value">{item?.label || "—"}</span>
-      {SHORT[item?.state] && <span className="strip-state">{SHORT[item.state]}</span>} <span className="strip-meaning">{meaning}</span></li>)}
-      {materiality?.label && <li><strong>Materiality:</strong> <span className="strip-value">{materiality.label}</span> <span className="strip-state">machine triage</span></li>}</ul>
-    <button type="button" className="link-button" onClick={onOpen}>How these were calculated</button>
-  </section>;
-}
-
-// The exact clauses that were scored, with the changed spans marked at their recorded offsets.
-export function ClausePair({ details }) {
-  const mark = (text, spans, side) => {
-    const out = []; let cursor = 0;
-    [...spans].sort((a, b) => a[`${side}_offsets`][0] - b[`${side}_offsets`][0]).forEach((span, index) => {
-      const [start, end] = span[`${side}_offsets`];
-      if (end <= start || start < cursor) return;
-      out.push(text.slice(cursor, start));
-      out.push(side === "before" ? <del key={index}>{text.slice(start, end)}</del> : <ins key={index}>{text.slice(start, end)}</ins>);
-      cursor = end;
+// The exact clauses that were scored: changed spans at their recorded offsets, and optionally one rule field's spans <mark>ed.
+export function ClausePair({ details, highlight }) {
+  const render = (text, side) => {
+    const ranges = (details.spans || []).map((span) => [...span[`${side}_offsets`], "diff"])
+      .concat((highlight?.[side] || []).map(([start, end]) => [start, end, "mark"])).filter(([start, end]) => end > start);
+    const cuts = [...new Set([0, text.length, ...ranges.flatMap(([start, end]) => [start, end])])].filter((n) => n >= 0 && n <= text.length).sort((x, y) => x - y);
+    const out = []; let group = null;
+    cuts.slice(0, -1).forEach((start, index) => {
+      const end = cuts[index + 1];
+      const piece = text.slice(start, end);
+      const within = (kind) => ranges.some(([a, b, k]) => k === kind && a <= start && end <= b);
+      const node = <Fragment key={start}>{within("diff") ? (side === "before" ? <del>{piece}</del> : <ins>{piece}</ins>) : piece}</Fragment>;
+      if (within("mark")) { if (!group) { group = []; out.push(<mark key={`m${start}`}>{group}</mark>); } group.push(node); }  // one continuous highlight
+      else { group = null; out.push(node); }
     });
-    out.push(text.slice(cursor));
     return out;
   };
   return <article className="panel clause-pair" aria-labelledby="clause-pair-heading">
-    <span className="section-kicker">Scored text</span><h3 id="clause-pair-heading">Whole clauses compared, changed words marked</h3>
+    <span className="section-kicker">Scored text</span><h3 id="clause-pair-heading" tabIndex={-1}>Whole clauses compared, changed words marked</h3>
+    {highlight?.label && <p className="highlight-note" role="status">Highlighted: the words behind <strong>{highlight.label}</strong>.</p>}
     <div className="compare-grid">
-      <section aria-label="Clause before"><h4>Before</h4><p className="panel-note">{details.before_kind}</p><p className="compare-text">{mark(details.before_clause, details.spans, "before")}</p></section>
-      <section aria-label="Clause after"><h4>After</h4><p className="panel-note">{details.after_kind}</p><p className="compare-text">{mark(details.after_clause, details.spans, "after")}</p></section>
+      <section aria-label="Clause before"><h4>Before</h4><p className="panel-note">{details.before_kind}</p><p className="compare-text">{render(details.before_clause, "before")}</p></section>
+      <section aria-label="Clause after"><h4>After</h4><p className="panel-note">{details.after_kind}</p><p className="compare-text">{render(details.after_clause, "after")}</p></section>
     </div>
   </article>;
 }
-

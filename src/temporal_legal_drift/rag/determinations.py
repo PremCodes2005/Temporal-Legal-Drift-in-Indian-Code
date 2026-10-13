@@ -22,7 +22,7 @@ from temporal_legal_drift.jsonio import canonical_json_bytes, load_json
 from .question import QuestionFrame
 from .versions import VERSION_CLAIMS
 
-DETERMINATIONS_VERSION = "determinations-v3"  # v3: explicit limit kinds; materiality machine triage on the fly when no frozen silver row matches
+DETERMINATIONS_VERSION = "determinations-v4"  # v4: triage input normalises number words; v3: limit kinds, on-the-fly machine triage
 MATERIALITY_ARTIFACT = "data/silver/materiality_reassessment.v2.5.json"
 LLM_MATERIALITY_ARTIFACT = "data/assessments/materiality_llm_assessments.v2.json"
 SCENARIO_FIELDS = {"reference_date", "organization_type", "industry", "jurisdiction", "activity", "facts"}
@@ -450,10 +450,13 @@ def _machine_triage(versions: dict[str, Any], silver_rows: int) -> dict[str, Any
     sub = versions.get("substitution")
     task = {"operation": versions.get("operation") or "SUBSTITUTE", "before_text": sub["old"] if sub else versions["before"]["text"],
             "after_text": sub["new"] if sub else versions["after"]["text"]}
-    rule_a, rule_b = _cue_transition_annotator(task), _operation_delta_annotator(task)
+    # triage-input-v2: number words become digits so "five hundred" -> "five thousand" is seen as a numeric change (the frozen rules see digits only).
+    numerals = lambda text: NUMBER.sub(lambda m: f"{_value(m.group(0))} " if _value(m.group(0)) is not None else m.group(0), text)  # noqa: E731
+    scored = {**task, "before_text": numerals(task["before_text"]), "after_text": numerals(task["after_text"])}
+    rule_a, rule_b = _cue_transition_annotator(scored), _operation_delta_annotator(scored)
     labels = sorted({rule_a["label"], rule_b["label"]})
     label = labels[0] if len(labels) == 1 else f"{rule_a['label']} (rule A) / {rule_b['label']} (rule B)"
-    return _d("PROVISIONAL", label=label, method="machine triage computed now: rule-cue-transition-v1 and operation-delta-v1",
+    return _d("PROVISIONAL", label=label, method="machine triage computed now: rule-cue-transition-v1 and operation-delta-v1 on number-normalised text (triage-input-v2)",
               evidence_ids=[versions["before"]["evidence_id"], versions["after"]["evidence_id"]],
               summary="Provisional machine triage of the amendment's legal significance, computed for this answer.",
               reason=("No frozen silver assessment covers this amendment"
@@ -461,5 +464,6 @@ def _machine_triage(versions: dict[str, Any], silver_rows: int) -> dict[str, Any
                       + ("Both rules agree." if len(labels) == 1 else "The rules disagree, so both labels are shown.")),
               details={"source": "ON_THE_FLY_MACHINE_TRIAGE", "frozen_silver_match": False, "is_gold": False, "labels_are_legal_truth": False,
                        "rule_a": {k: rule_a.get(k) for k in ("label", "rationale", "dimensions", "method_id")},
-                       "rule_b": {k: rule_b.get(k) for k in ("label", "rationale", "dimensions", "method_id")}, "operands": task},
+                       "rule_b": {k: rule_b.get(k) for k in ("label", "rationale", "dimensions", "method_id")}, "operands": task, "scored_operands": scored,
+                       "input_normalisation": "triage-input-v2 (number words to digits)"},
               review_status="NOT_REVIEWED_MACHINE_TRIAGE")

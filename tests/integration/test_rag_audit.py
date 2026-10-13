@@ -1,4 +1,4 @@
-"""Cross-corpus regression: the 24-case audit set v2 (12 Acts, 15 strata) against source-derived expectations."""
+"""Cross-corpus regression: audit case set v4 (32 cases, 13 Acts) against source-derived expectations."""
 
 from __future__ import annotations
 
@@ -10,14 +10,14 @@ from temporal_legal_drift.rag.audit import offline_extractive, run_audit
 from temporal_legal_drift.rag.rag_pipeline import RagPipeline
 
 ROOT = Path(__file__).resolve().parents[2]
-SCHEMA = json.loads((ROOT / "schemas/rag/rag_answer.v4.schema.json").read_text())
+SCHEMA = json.loads((ROOT / "schemas/rag/rag_answer.v5.schema.json").read_text())
 
 
 class RagAuditRegression(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         with offline_extractive():
-            cls.report = run_audit(ROOT, ROOT / "configs/rag_audit/cases.v3.json", pipeline=RagPipeline(ROOT))
+            cls.report = run_audit(ROOT, ROOT / "configs/rag_audit/cases.v4.json", pipeline=RagPipeline(ROOT))
 
     def test_no_support_pairing_or_citation_errors(self) -> None:
         summary = self.report["summary"]
@@ -49,7 +49,7 @@ class ContractTests(unittest.TestCase):
         for response in responses:
             with self.subTest(query=response["query"]):
                 self.assertLessEqual(set(SCHEMA["required"]), set(response))
-                self.assertEqual((response["schema_version"], response["contract_version"]), ("4.0.0", "rag-answer-v4"))
+                self.assertEqual((response["schema_version"], response["contract_version"]), ("5.0.0", "rag-answer-v5"))
                 self.assertRegex(response["analysis_id"], r"^an_[0-9a-f]{24}$")
                 self.assertLessEqual(set(SCHEMA["properties"]["answer"]["required"]), set(response["answer"]))
                 component = SCHEMA["$defs"]["component"]

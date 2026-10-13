@@ -1,0 +1,571 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "title": "rag-answer-v5: legal-change-fingerprint-v1.2 with a plain-language reading, determinations-v4, answer-composition-v2 (ADR 0017); all v4 fields retained",
+ "type": "object",
+ "required": [
+  "schema_version",
+  "contract_version",
+  "query",
+  "mode",
+  "question_frame",
+  "answer",
+  "determinations",
+  "evidence",
+  "citations",
+  "comparison",
+  "metrics",
+  "source_fidelity_warnings",
+  "verification",
+  "limitations",
+  "fingerprint",
+  "analysis_id",
+  "scenario_request"
+ ],
+ "properties": {
+  "schema_version": {
+   "const": "5.0.0"
+  },
+  "contract_version": {
+   "const": "rag-answer-v5"
+  },
+  "mode": {
+   "enum": [
+    "specific",
+    "generic"
+   ]
+  },
+  "scenario": {
+   "type": [
+    "object",
+    "null"
+   ],
+   "description": "Echo of the validated optional scenario: reference_date, organization_type, industry, jurisdiction, activity, facts"
+  },
+  "question_frame": {
+   "type": "object",
+   "required": [
+    "version",
+    "question_type",
+    "asks_about_versions",
+    "principal",
+    "amending",
+    "sections"
+   ],
+   "properties": {
+    "version": {
+     "const": "question-frame-v1"
+    },
+    "question_type": {
+     "enum": [
+      "quantity",
+      "modal",
+      "what_changed",
+      "general"
+     ]
+    }
+   }
+  },
+  "answer": {
+   "type": "object",
+   "required": [
+    "answer_type",
+    "direct_answer",
+    "sections",
+    "answer_limitations",
+    "generation_method"
+   ],
+   "properties": {
+    "answer_type": {
+     "enum": [
+      "comparison",
+      "version_abstention",
+      "single_document_summary",
+      "insufficient_evidence",
+      "out_of_scope"
+     ]
+    },
+    "direct_answer": {
+     "type": "string",
+     "minLength": 1
+    },
+    "sections": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "id",
+       "title",
+       "text",
+       "evidence_ids",
+       "kind"
+      ],
+      "properties": {
+       "id": {
+        "enum": [
+         "before",
+         "after",
+         "what_changed",
+         "effect",
+         "key_points",
+         "why",
+         "candidates",
+         "suggestions"
+        ]
+       },
+       "kind": {
+        "enum": [
+         "evidence",
+         "derived",
+         "inference",
+         "limitation"
+        ]
+       },
+       "evidence_ids": {
+        "type": "array",
+        "items": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    },
+    "generation_method": {
+     "type": "string"
+    }
+   }
+  },
+  "determinations": {
+   "type": "object",
+   "required": [
+    "version",
+    "textual_drift",
+    "materiality",
+    "applicability",
+    "answer_change",
+    "risk"
+   ],
+   "properties": {
+    "version": {
+     "const": "determinations-v3"
+    },
+    "textual_drift": {
+     "$ref": "#/$defs/determination",
+     "description": "DEPRECATED alias of fingerprint.wording_drift"
+    },
+    "materiality": {
+     "$ref": "#/$defs/determination"
+    },
+    "answer_change": {
+     "$ref": "#/$defs/determination"
+    },
+    "risk": {
+     "$ref": "#/$defs/determination"
+    },
+    "applicability": {
+     "$ref": "#/$defs/determination"
+    }
+   }
+  },
+  "evidence": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "required": [
+     "evidence_id",
+     "role",
+     "entry_id",
+     "page",
+     "verbatim"
+    ],
+    "properties": {
+     "role": {
+      "enum": [
+       "amendment_instruction",
+       "before_fragment",
+       "after_fragment",
+       "current_consolidated_text",
+       "substitution_footnote",
+       "reconstructed_earlier_wording",
+       "act_text_excerpt"
+      ]
+     }
+    }
+   }
+  },
+  "comparison": {
+   "type": [
+    "object",
+    "null"
+   ],
+   "description": "comparison-record-v2 for version questions; comparison-record-v1 for general questions",
+   "properties": {
+    "support_class": {
+     "enum": [
+      "GRAPH_TRANSITION_FRAGMENTS",
+      "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+      "AMBIGUOUS_CANDIDATES",
+      "WEAK_TRANSITION_ONLY",
+      "RELATION_MISMATCH",
+      "NO_SUPPORTED_VERSION",
+      "UNALIGNED_EXCERPTS",
+      "NOT_A_COMPARISON"
+     ]
+    }
+   }
+  },
+  "fingerprint": {
+   "type": "object",
+   "required": [
+    "version",
+    "wording_drift",
+    "rule_drift",
+    "outcome_drift",
+    "note",
+    "reading"
+   ],
+   "properties": {
+    "version": {
+     "const": "legal-change-fingerprint-v1.2"
+    },
+    "wording_drift": {
+     "$ref": "#/$defs/component"
+    },
+    "rule_drift": {
+     "$ref": "#/$defs/component"
+    },
+    "outcome_drift": {
+     "$ref": "#/$defs/component"
+    },
+    "reading": {
+     "type": "array",
+     "description": "Plain-language account built from the components' own details",
+     "items": {
+      "type": "object",
+      "required": [
+       "kind",
+       "text",
+       "evidence_ids"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "kind": {
+        "enum": [
+         "wording",
+         "rule",
+         "disagreement",
+         "outcome"
+        ]
+       },
+       "text": {
+        "type": "string",
+        "minLength": 1
+       },
+       "field": {
+        "type": "string"
+       },
+       "evidence_ids": {
+        "type": "array",
+        "items": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    },
+    "note": {
+     "type": "string"
+    }
+   }
+  },
+  "analysis_id": {
+   "type": "string",
+   "pattern": "^an_[0-9a-f]{24}$",
+   "description": "Stable ID; GET /api/analyses/{id} returns this exact stored response"
+  },
+  "scenario_request": {
+   "type": "object",
+   "required": [
+    "fields",
+    "facts_in_use",
+    "blocked_by_evidence",
+    "explanation"
+   ],
+   "properties": {
+    "fields": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "key",
+       "label",
+       "kind",
+       "unlocks",
+       "group",
+       "value",
+       "source"
+      ],
+      "properties": {
+       "group": {
+        "enum": [
+         "core",
+         "risk"
+        ]
+       },
+       "source": {
+        "enum": [
+         "question",
+         "form",
+         null
+        ]
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "$defs": {
+  "determination": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "state",
+    "label",
+    "summary",
+    "reason",
+    "method",
+    "evidence_ids",
+    "details",
+    "needs",
+    "review_status",
+    "legal_validation",
+    "limit"
+   ],
+   "properties": {
+    "state": {
+     "enum": [
+      "DETERMINED",
+      "PROVISIONAL",
+      "CONDITIONAL",
+      "NEEDS_FACTS",
+      "INSUFFICIENT_EVIDENCE",
+      "OUT_OF_SCOPE"
+     ]
+    },
+    "label": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "description": "Null unless the state is DETERMINED, PROVISIONAL or CONDITIONAL"
+    },
+    "summary": {
+     "type": "string",
+     "minLength": 1
+    },
+    "reason": {
+     "type": "string",
+     "minLength": 1
+    },
+    "method": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "evidence_ids": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "details": {
+     "type": "object"
+    },
+    "needs": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "key",
+       "label",
+       "kind"
+      ],
+      "properties": {
+       "kind": {
+        "enum": [
+         "date",
+         "choice",
+         "boolean",
+         "text"
+        ]
+       }
+      }
+     }
+    },
+    "review_status": {
+     "type": "string"
+    },
+    "legal_validation": {
+     "const": "UNVERIFIED"
+    },
+    "limit": {
+     "type": [
+      "object",
+      "null"
+     ],
+     "required": [
+      "kind",
+      "message",
+      "action"
+     ],
+     "properties": {
+      "kind": {
+       "enum": [
+        "evidence",
+        "facts",
+        "method",
+        "not_applicable"
+       ]
+      },
+      "action": {
+       "type": "object",
+       "properties": {
+        "type": {
+         "enum": [
+          "verify_source",
+          "add_facts",
+          "queue_review",
+          "none"
+         ]
+        }
+       }
+      }
+     },
+     "description": "evidence = the repository cannot support it (facts cannot help); facts = user facts needed; method = outside what the method can measure"
+    }
+   }
+  },
+  "component": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "state",
+    "value",
+    "label",
+    "summary",
+    "reason",
+    "next_action",
+    "method",
+    "evidence_ids",
+    "details",
+    "needs",
+    "uncertainty",
+    "legal_validation",
+    "limit"
+   ],
+   "properties": {
+    "state": {
+     "enum": [
+      "DETERMINED",
+      "PROVISIONAL",
+      "CONDITIONAL",
+      "NEEDS_FACTS",
+      "INSUFFICIENT_EVIDENCE",
+      "OUT_OF_SCOPE"
+     ]
+    },
+    "value": {
+     "type": [
+      "number",
+      "null"
+     ],
+     "description": "wording 0-100 %; rule 0-100 weighted; outcome 100 = supported answer flip, 0 = none; null = not determined (never 0)"
+    },
+    "label": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "summary": {
+     "type": "string",
+     "minLength": 1
+    },
+    "reason": {
+     "type": "string",
+     "minLength": 1
+    },
+    "next_action": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "method": {
+     "enum": [
+      "wording-drift-v1",
+      "rule-drift-v1.1",
+      "outcome-drift-v1"
+     ]
+    },
+    "evidence_ids": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "details": {
+     "type": "object"
+    },
+    "needs": {
+     "type": "array"
+    },
+    "uncertainty": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "legal_validation": {
+     "const": "UNVERIFIED"
+    },
+    "limit": {
+     "type": [
+      "object",
+      "null"
+     ],
+     "required": [
+      "kind",
+      "message",
+      "action"
+     ],
+     "properties": {
+      "kind": {
+       "enum": [
+        "evidence",
+        "facts",
+        "method",
+        "not_applicable"
+       ]
+      },
+      "action": {
+       "type": "object",
+       "properties": {
+        "type": {
+         "enum": [
+          "verify_source",
+          "add_facts",
+          "queue_review",
+          "none"
+         ]
+        }
+       }
+      }
+     },
+     "description": "evidence = the repository cannot support it (facts cannot help); facts = user facts needed; method = outside what the method can measure"
+    }
+   }
+  }
+ }
+}

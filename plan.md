@@ -2103,3 +2103,7 @@ The Legal Change Fingerprint is described in ADR 0015 and `reports/fingerprint/f
 ## Implementation status note (2026-10-13, rag-answer-v4)
 
 Stored analyses, typed limits, minimum facts, on-the-fly materiality triage and rule-drift v1.1 are described in ADR 0016 and `reports/analysis_workspace/report.v1.md`. This changes no research acceptance criterion. Legal validation remains UNVERIFIED.
+
+## Implementation status note (2026-10-13, rag-answer-v5)
+
+Separate explanation views, rule-drift v1.2, determinations-v4 and composition v2 are described in ADR 0017 and `reports/analysis_workspace/report.v2.md`. This changes no research acceptance criterion. Legal validation remains UNVERIFIED.

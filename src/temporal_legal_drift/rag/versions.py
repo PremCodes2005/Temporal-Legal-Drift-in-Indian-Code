@@ -24,8 +24,9 @@ FOOTNOTE = re.compile(r"Subs\.\s*by\s*Act\s*(\d+)\s*of\s*(\d{4}),?\s*s\.\s*(\d+)
 
 def footnote_reconstruction(text: str, section: str) -> dict[str, Any] | None:
     """Earlier wording from the consolidated text's own substitution footnote, for the named section only."""
-    current_matches = re.findall(r"\[([A-Za-z][A-Za-z ]{2,60})\]", text)
-    old_matches = re.findall(r"\bfor\s+[\"“”―‖']?([A-Za-z][A-Za-z ]{2,60}?)[\"“”―‖']?\s*\(w\.e\.f\.", text, re.I)
+    # Hyphens and line breaks occur inside substituted words ("twenty-one\ndays", "forty-five days").
+    current_matches = re.findall(r"\[([A-Za-z][A-Za-z\s-]{2,60})\]", text)
+    old_matches = re.findall(r"\bfor\s+[\"“”―‖']?([A-Za-z][A-Za-z\s-]{2,60}?)[\"“”―‖']?\s*\(w\.e\.f\.", text, re.I)
     provision = re.split(r"\s+\d+\.\s+Subs\.", text, maxsplit=1, flags=re.I)[0]
     if not re.match(rf"\s*(?:section\s+)?{re.escape(section)}\s*\.", provision, re.I):
         return None

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import CaseReviewPanel from "./CaseReviewPanel";
 import ComparisonPanel from "./ComparisonPanel";
 import { GenerationNotice, IndicatorStrip, ScoreExplanation, VersionStatus } from "./ResultInsights";
@@ -9,23 +9,27 @@ import ComplianceRiskPanel from "./ComplianceRiskPanel";
 import { DriftPanel, VerificationPanel, percent } from "./SharedPanels";
 import AnalysisWorkspace, { TABS } from "./AnalysisWorkspace";
 
-// #analysis/<id>/<tab> is the shareable address of one stored analysis; old #drift/#calculation links open its Scores view.
+// #analysis/<id>/<view> is the shareable address of one stored analysis. #drift and #calculation open those views of the
+// current analysis; v0.14 links to the former "scores" view open Score Calculation.
+const VIEW_SECTIONS = ["drift", "calculation"];
 function parseRoute(hash) {
   const parts = hash.slice(1).split("?")[0].split("/");
   if (parts[0] === "analysis" && /^an_[0-9a-f]{24}$/.test(parts[1] || "")) {
-    return { section: "assistant", analysisId: parts[1], tab: TABS.some((t) => t.id === parts[2]) ? parts[2] : "answer" };
+    const view = parts[2] === "scores" ? "calculation" : parts[2];
+    return { section: "assistant", analysisId: parts[1], tab: TABS.some((t) => t.id === view) ? view : "answer" };
   }
-  if (parts[0] === "drift" || parts[0] === "calculation") return { section: "assistant", analysisId: null, tab: "scores" };
-  return { section: parts[0], analysisId: null, tab: "answer" };
+  return { section: parts[0], analysisId: null, tab: VIEW_SECTIONS.includes(parts[0]) ? parts[0] : "answer" };
 }
 
 const sections = [
   { id: "assistant", number: "01", label: "Legal drift assistant" },
-  { id: "corpus", number: "02", label: "Document repository" },
-  { id: "method", number: "03", label: "How it works" },
-  { id: "faq", number: "04", label: "Recent changes FAQ" },
-  { id: "risk", number: "05", label: "Compliance risk" },
-  { id: "review", number: "06", label: "Case trace & review" },
+  { id: "drift", number: "02", label: "Drift explanation" },
+  { id: "calculation", number: "03", label: "Score calculation" },
+  { id: "corpus", number: "04", label: "Document repository" },
+  { id: "method", number: "05", label: "How it works" },
+  { id: "faq", number: "06", label: "Recent changes FAQ" },
+  { id: "risk", number: "07", label: "Compliance risk" },
+  { id: "review", number: "08", label: "Case trace & review" },
 ];
 
 const suggestions = [
@@ -65,29 +69,45 @@ export default function App() {
     api(`/api/analyses/${id}`).then(setLastResult).catch((error) => setAnalysisError(`The linked analysis could not be loaded: ${error.message}`));
   }, [route.analysisId, linkedQuestion]);
 
-  // In-app moves use replaceState (no hashchange); a pasted link or back/forward to an analysis or question re-opens it from the stored record.
+  const currentId = useRef(null);
+  currentId.current = lastResult?.analysis_id || null;
+  // The Drift explanation / Score calculation entries are views of the current analysis once it has loaded.
   useEffect(() => {
-    const onHash = () => { if (parseRoute(window.location.hash).analysisId || /[?&]q=/.test(window.location.hash)) window.location.reload(); };
-    window.addEventListener("hashchange", onHash);
-    return () => window.removeEventListener("hashchange", onHash);
+    if (VIEW_SECTIONS.includes(section) && lastResult?.analysis_id) { setTab(section); setSection("assistant"); }
+  }, [section, lastResult]);
+
+  // Back/forward between views of the same analysis switches the view; another analysis or a question link re-opens from the stored record.
+  useEffect(() => {
+    const onNavigate = () => {
+      const next = parseRoute(window.location.hash);
+      if (next.analysisId && next.analysisId === currentId.current) { setSection("assistant"); setTab(next.tab); return; }
+      if (next.analysisId || /[?&]q=/.test(window.location.hash)) { window.location.reload(); return; }
+      if (sections.some((item) => item.id === next.section)) setSection(next.section);
+    };
+    window.addEventListener("popstate", onNavigate);
+    window.addEventListener("hashchange", onNavigate);
+    return () => { window.removeEventListener("popstate", onNavigate); window.removeEventListener("hashchange", onNavigate); };
   }, []);
 
   const showResult = (value, nextTab = "answer") => {
     setLastResult(value);
     if (value?.analysis_id) {
       setTab(nextTab);
-      window.history.replaceState(null, "", `#analysis/${value.analysis_id}/${nextTab}`);
+      window.history.pushState(null, "", `#analysis/${value.analysis_id}/${nextTab}`);
       try { window.sessionStorage.setItem("tldrift:last-analysis", value.analysis_id); } catch { /* storage unavailable */ }
     }
   };
   const changeTab = (next) => {
     setTab(next);
-    if (lastResult?.analysis_id) window.history.replaceState(null, "", `#analysis/${lastResult.analysis_id}/${next}`);
+    if (lastResult?.analysis_id) window.history.pushState(null, "", `#analysis/${lastResult.analysis_id}/${next}`);
   };
 
   const navigate = (next) => {
-    setSection(next); setMenuOpen(false); window.history.replaceState(null, "", `#${next}`); window.scrollTo({ top: 0, behavior: "smooth" });
+    setMenuOpen(false); window.scrollTo({ top: 0, behavior: "smooth" });
+    if (VIEW_SECTIONS.includes(next) && lastResult?.analysis_id) { setSection("assistant"); changeTab(next); return; }
+    setSection(next); window.history.pushState(null, "", `#${next}`);
   };
+  const activeNav = section === "assistant" && VIEW_SECTIONS.includes(tab) ? tab : section;
 
   const askFromFaq = (question) => {
     setStarterQuery(question); setSection("assistant"); setMenuOpen(false);
@@ -98,14 +118,17 @@ export default function App() {
     <a className="skip-link" href="#main-content">Skip to main content</a>
     <aside className={`sidebar ${menuOpen ? "open" : ""}`} aria-label="Primary navigation">
       <div className="brand"><div className="brand-mark">TL</div><div><strong>Temporal Legal Drift</strong><span>Indian Code RAG assistant</span></div></div>
-      <nav className="nav-list">{sections.map((item) => <button key={item.id} type="button" aria-current={section === item.id ? "page" : undefined} className={`nav-item ${section === item.id ? "active" : ""}`} onClick={() => navigate(item.id)}><span>{item.number}</span>{item.label}</button>)}</nav>
+      <nav className="nav-list">{sections.map((item) => <button key={item.id} type="button" aria-current={activeNav === item.id ? "page" : undefined} className={`nav-item ${activeNav === item.id ? "active" : ""}`} onClick={() => navigate(item.id)}><span>{item.number}</span>{item.label}</button>)}</nav>
       <a className="official-link side-link" href="https://indiacode.gov.in/" target="_blank" rel="noreferrer">India Code official website ↗</a>
     </aside>
     <div className="workspace">
-      <header className="topbar"><button className="menu-toggle" onClick={() => setMenuOpen((open) => !open)} aria-label="Open navigation">☰</button><div><p className="eyebrow">Versioned Indian law</p><h1>{sections.find((item) => item.id === section)?.label}</h1></div></header>
+      <header className="topbar"><button className="menu-toggle" onClick={() => setMenuOpen((open) => !open)} aria-label="Open navigation">☰</button><div><p className="eyebrow">Versioned Indian law</p><h1>{sections.find((item) => item.id === activeNav)?.label}</h1></div></header>
       <main id="main-content">
         {section === "assistant" && <AssistantWorkspace status={status} error={loadError || analysisError} starterQuery={starterQuery} autoRun={Boolean(linkedQuestion)}
           result={lastResult} onResult={showResult} tab={tab} onTab={changeTab} onReview={() => navigate("review")} />}
+        {VIEW_SECTIONS.includes(section) && <section className="page-section"><div className="section-header"><span className="section-kicker">{section === "drift" ? "Drift explanation" : "Score calculation"}</span>
+          <h2>Ask a comparison question first.</h2><p>This view explains the {section === "drift" ? "changed words and legal-rule fields" : "inputs, formulas and contributions"} of the current analysis, with its cited evidence. General questions have no change scores.</p></div>
+          <button className="send-button" type="button" onClick={() => navigate("assistant")}>Open legal drift assistant <span>→</span></button></section>}
         {section === "corpus" && <CorpusBrowser corpus={corpus} error={loadError} status={status} />}
         {section === "method" && <Method />}
         {section === "faq" && <RecentChangesFaq onAsk={askFromFaq} />}
@@ -126,12 +149,15 @@ function AssistantWorkspace({ status, error: statusError, starterQuery, autoRun 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { if (autoRun && starterQuery) submit(null, starterQuery); }, []);
 
-  const submit = async (event, text = query, scenario = null, keepTab = null) => {
+  // A loaded or linked analysis shows its own question and mode, so a re-run asks exactly the same thing.
+  useEffect(() => { if (result?.query) { setQuery(result.query); if (result.mode) setMode(result.mode); } }, [result]);
+
+  const submit = async (event, text = query, scenario = null, keepTab = null, runMode = mode) => {
     event?.preventDefault(); setError("");
     if (!text.trim()) return setError("Enter a question about the indexed Indian legal documents.");
     setBusy(true);
     try {
-      const value = await api("/api/rag/query", { method: "POST", body: { query: text.trim(), mode, ...(scenario ? { scenario } : {}) } });
+      const value = await api("/api/rag/query", { method: "POST", body: { query: text.trim(), mode: runMode, ...(scenario ? { scenario } : {}) } });
       onResult(value, keepTab || "answer");
       window.setTimeout(() => document.getElementById("rag-result")?.scrollIntoView({ behavior: "smooth", block: "start" }), 0);
     } catch (requestError) { setError(requestError.message); }
@@ -163,8 +189,8 @@ function AssistantWorkspace({ status, error: statusError, starterQuery, autoRun 
     {busy && <div className="loading-panel"><span className="spinner"/><div><strong>Retrieving versioned legal evidence…</strong><p>Classifying the question, matching documents and validating the response context.</p></div></div>}
     {result && (result.analysis_id
       ? <AnalysisWorkspace analysis={result} tab={tab} onTab={onTab} busy={busy} onReview={onReview}
-          onScenario={(scenario) => { setMode(result.mode); submit(null, result.query, scenario, tab); }} />
-      : <RagResult result={result} onExplain={() => onTab?.("scores")} busy={busy} onScenario={(scenario) => submit(null, result.query, scenario)} />)}
+          onScenario={(scenario) => submit(null, result.query, scenario, tab, result.mode)} />
+      : <RagResult result={result} onExplain={() => onTab?.("calculation")} busy={busy} onScenario={(scenario) => submit(null, result.query, scenario)} />)}
   </section>;
 }
 
