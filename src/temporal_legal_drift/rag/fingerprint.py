@@ -8,6 +8,7 @@ evidence, transformation version, uncertainty and abstention reason; a missing c
 from __future__ import annotations
 
 import json
+import math
 import re
 from difflib import SequenceMatcher
 from hashlib import sha256
@@ -675,16 +676,183 @@ def reading(wording: dict[str, Any], rules: dict[str, Any], outcome: dict[str, A
     return out
 
 
+# ---------------- hybrid temporal legal drift score (TLDS) ----------------
+TLDS_VERSION = "tlds-v1"
+TLDS_CONFIG = "tlds.v1.json"
+TLDS_COMPONENTS = ("textual", "semantic", "legal_effect", "rule_structure")
+DEFAULT_EMBED_MODEL = "stable_feature_hashing-256 (retriever.embed_text; word-overlap stand-in, not a pretrained semantic model)"
+REFERENCE = re.compile(r"\b(?:sub-?)?sections?\s+\d+[A-Z]{0,3}(?:\s*\(\w{1,6}\))*|\bclauses?\s*\(\w{1,6}\)", re.I)
+
+
+def _edit_distance(a: list[str], b: list[str]) -> int:
+    """Token-level Levenshtein distance."""
+    # Amendments are local: dropping the shared prefix and suffix keeps the quadratic table small.
+    i = 0
+    while i < min(len(a), len(b)) and a[i] == b[i]:
+        i += 1
+    j = 0
+    while j < min(len(a), len(b)) - i and a[-1 - j] == b[-1 - j]:
+        j += 1
+    a, b = a[i:len(a) - j], b[i:len(b) - j]
+    previous = list(range(len(b) + 1))
+    for x in a:
+        current = [previous[0] + 1]
+        for k, y in enumerate(b, 1):
+            current.append(min(previous[k] + 1, current[k - 1] + 1, previous[k - 1] + (x != y)))
+        previous = current
+    return previous[-1]
+
+
+def textual_component(before: str, after: str) -> dict[str, Any]:
+    a, b = _normalise(before).split(), _normalise(after).split()
+    if not a and not b:
+        return {"value": None, "reason": "Both clauses are empty after normalisation; there is nothing to compare.", "method": "token-levenshtein-v1", "details": {}}
+    distance = _edit_distance(a, b)
+    value = distance / max(len(a), len(b))
+    return {"value": value, "method": "token-levenshtein-v1", "reason": "Token edits needed to turn the before clause into the after clause, per token of the longer clause.",
+            "details": {"edit_distance": distance, "before_tokens": len(a), "after_tokens": len(b),
+                        "formula": "EditDistance(pre, post) ÷ max(|pre|, |post|)", "calculation": f"{distance} ÷ {max(len(a), len(b))} = {value:.4f}"}}
+
+
+def semantic_component(before: str, after: str, embed: Callable[[str], Any], model: str) -> dict[str, Any]:
+    method = "embedding-cosine-v1"
+    try:
+        left, right = embed(_normalise(before)), embed(_normalise(after))
+    except Exception as error:  # a failed embedding is missing, never 0
+        return {"value": None, "method": method, "reason": f"The embedding failed ({type(error).__name__}).", "details": {"model": model}}
+    number = lambda x: isinstance(x, (int, float)) and not isinstance(x, bool) and math.isfinite(x)  # noqa: E731
+    if not all(isinstance(v, (list, tuple)) and v and all(number(x) for x in v) for v in (left, right)) or len(left) != len(right):
+        return {"value": None, "method": method, "reason": "An embedding is missing, non-numeric, non-finite or of a different length.", "details": {"model": model}}
+    norms = math.sqrt(sum(x * x for x in left)), math.sqrt(sum(x * x for x in right))
+    if not all(norms):
+        return {"value": None, "method": method, "reason": "An embedding is the zero vector (no tokens), so cosine is undefined.", "details": {"model": model}}
+    cosine = min(1.0, max(0.0, sum(x * y for x, y in zip(left, right)) / (norms[0] * norms[1])))
+    return {"value": 1.0 - cosine, "method": method, "reason": "1 − cosine of the two clause embeddings; a proxy for meaning, not proof of the same legal effect.",
+            "details": {"model": model, "dimensions": len(left), "cosine": cosine, "formula": "1 − cos(e_pre, e_post), cosine clipped to [0, 1]",
+                        "calculation": f"1 − {cosine:.4f} = {1.0 - cosine:.4f}"}}
+
+
+def legal_effect_component(rules: dict[str, Any]) -> dict[str, Any]:
+    method = "legal-effect-rubric-v1"
+    if rules.get("value") is None:
+        return {"value": None, "method": method, "reason": f"Rule drift did not score this change: {rules.get('reason')}", "details": {}}
+    rubric = _config(TLDS_CONFIG)["legal_effect_rubric"]
+    kinds = lambda values: {str(v).split(":")[0].strip().lower() for v in values}  # noqa: E731
+    changes = []
+    for row in rules["details"]["fields"]:
+        if not row.get("contribution"):
+            continue  # unchanged, absent or uncertain fields carry no legal-effect score
+        score, basis = rubric["by_field"][row["field"]][row["operation"]], f"{row['field']} {row['operation'].lower()}"
+        if row["field"] == "modality":
+            removed, added = kinds(row["before"]) - kinds(row["after"]), kinds(row["after"]) - kinds(row["before"])
+            if ("prohibition" in added and removed & {"obligation", "permission"}) or ("prohibition" in removed and added & {"obligation", "permission"}):
+                score, basis = rubric["modality_reversal"], "reversal between a duty or permission and a prohibition"
+        changes.append({"field": row["field"], "label": row["label"], "operation": row["operation"], "score": score, "basis": basis,
+                        "before": row["before"], "after": row["after"], "before_spans": row["before_spans"], "after_spans": row["after_spans"]})
+    value = max((c["score"] for c in changes), default=0.0)
+    top = [c for c in changes if c["score"] == value]
+    return {"value": value, "method": method, "details": {"changes": changes, "aggregation": rubric["aggregation"], "level": rubric["levels"][f"{value:.2f}"],
+                                                          "lower_bound": bool(rules["details"].get("lower_bound"))},
+            "reason": (f"{rubric['levels'][f'{value:.2f}']}: the most severe detected change is {top[0]['basis']}." if top
+                       else "The clauses are identical after normalisation.")}
+
+
+def _elements(text: str) -> set[tuple[str, str]]:
+    found = _extract(text, _sentences(text), [[0, len(text)]])  # every sentence; actors anywhere, so both sides are read alike
+    out = {(name, re.sub(r"(?<=[a-z])s$", "", _value_norm(v["value"])) if name == "actor" else _value_norm(v["value"]))
+           for name in FIELDS for v in found[name]}
+    for m in LIST_ITEM.finditer(text):  # keyed by content, so a relabelled item is the same element
+        out.add(("list item", " ".join(_normalise(re.split(r"[;:]", text[m.end():], maxsplit=1)[0]).split()[:12])))
+    out |= {("explanation", " ".join(_normalise(text[m.end():]).split()[:12])) for m in EXPLANATION.finditer(text)}
+    out |= {("reference", _normalise(m.group(0))) for m in REFERENCE.finditer(text)}
+    return out
+
+
+def rule_structure_component(before: str, after: str) -> dict[str, Any]:
+    method = "rule-element-edit-v1"
+    if _normalise(before) == _normalise(after):
+        return {"value": 0.0, "method": method, "reason": "The clauses are identical after normalisation.", "details": {}}
+    left, right = _elements(before), _elements(after)
+    union = left | right
+    if not union:
+        return {"value": None, "method": method, "reason": "The wording changed but neither clause has a rule element this method extracts.", "details": {}}
+    # A removed and an added element of the same kind are one substitution, counted once (as in edit distance).
+    substituted = sum(min(sum(k == kind for k, _ in left - right), sum(k == kind for k, _ in right - left)) for kind in {k for k, _ in union})
+    changed, total = len(left ^ right) - substituted, len(union) - substituted
+    value = changed / total
+    show = lambda items: [f"{kind}: {value}" for kind, value in sorted(items)]  # noqa: E731
+    return {"value": value, "method": method, "reason": "Share of the clause's rule elements inserted, deleted or substituted.",
+            "details": {"removed": show(left - right), "added": show(right - left), "substituted": substituted, "shared": len(left & right),
+                        "formula": "(only-before + only-after − substitutions) ÷ (all distinct elements − substitutions)",
+                        "calculation": f"({len(left - right)} + {len(right - left)} − {substituted}) ÷ ({len(union)} − {substituted}) = {value:.4f}"}}
+
+
+def _check_weights(weights: dict[str, Any]) -> None:
+    if set(weights) != set(TLDS_COMPONENTS):
+        raise ValueError(f"TLDS weights must name exactly {TLDS_COMPONENTS}")
+    if any(isinstance(w, bool) or not isinstance(w, (int, float)) or not math.isfinite(w) or w < 0 for w in weights.values()):
+        raise ValueError("TLDS weights must be finite and non-negative")
+    if not math.isclose(sum(weights.values()), 1.0, abs_tol=1e-9):
+        raise ValueError("TLDS weights must sum to 1")
+
+
+def _band(value: float, bands: list[list[Any]]) -> str:
+    return [label for lower, label in bands if round(value, 1) >= lower][-1]
+
+
+def composite(values: dict[str, float | None], weights: dict[str, float] | None = None) -> dict[str, Any]:
+    """D = 100 Σ w_i x_i when every component exists; otherwise INCOMPLETE with a separately named partial value."""
+    config = _config(TLDS_CONFIG)
+    weights = dict(weights or config["weights"])
+    _check_weights(weights)
+    for name in TLDS_COMPONENTS:
+        x = values.get(name)
+        if x is not None and (isinstance(x, bool) or not isinstance(x, (int, float)) or not 0.0 <= x <= 1.0):
+            raise ValueError(f"TLDS component {name} must be in [0, 1], got {x!r}")
+    missing = [name for name in TLDS_COMPONENTS if values.get(name) is None]
+    available = [name for name in TLDS_COMPONENTS if name not in missing]
+    terms = " + ".join(f"{weights[n]:g} × {values[n]:.4f}" for n in available)
+    out = {"weights": weights, "missing_components": missing, "formula": config["formula"], "bands": config["bands"], "bands_note": config["bands_note"]}
+    if not missing:
+        value = min(100.0, max(0.0, 100.0 * sum(weights[n] * values[n] for n in TLDS_COMPONENTS)))  # the clamp only absorbs float rounding
+        band = _band(value, config["bands"])
+        return {**out, "state": "COMPLETE", "value": value, "tldp_percent": value, "band": band, "label": f"{value:.1f}/100 · {band}",
+                "partial_value": None, "calculation": f"100 × ({terms}) = {value:.1f}"}
+    total = sum(weights[n] for n in available)
+    partial = 100.0 * sum(weights[n] * values[n] for n in available) / total if total else None
+    return {**out, "state": "INCOMPLETE", "value": None, "tldp_percent": None, "band": None, "label": "Incomplete",
+            "partial_value": partial, "partial_label": None if partial is None else f"partial {partial:.1f}/100 (without {', '.join(m.replace('_', ' ') for m in missing)}; not comparable with complete scores)",
+            "calculation": None if partial is None else f"100 × ({terms}) ÷ {total:g} = {partial:.1f}"}
+
+
+def tlds(pair: dict[str, Any] | None, rules: dict[str, Any] | None, embed: Callable[[str], Any] | None, embed_model: str = DEFAULT_EMBED_MODEL,
+         weights: dict[str, float] | None = None, unavailable: str | None = None) -> dict[str, Any]:
+    """The four components and their weighted composite for one aligned clause pair."""
+    if unavailable or pair is None or rules is None or embed is None:
+        reason = unavailable or "No aligned clause pair."
+        components = {name: {"value": None, "method": None, "reason": reason, "details": {}} for name in TLDS_COMPONENTS}
+    else:
+        components = {"textual": textual_component(pair["before"], pair["after"]),
+                      "semantic": semantic_component(pair["before"], pair["after"], embed, embed_model),
+                      "legal_effect": legal_effect_component(rules),
+                      "rule_structure": rule_structure_component(pair["before"], pair["after"])}
+    score = composite({name: c["value"] for name, c in components.items()}, weights)
+    evidence = sorted(set(pair["before_evidence"] + pair["after_evidence"])) if pair and "before_evidence" in pair else []
+    return {"version": TLDS_VERSION, **score, "components": components, "config": f"configs/metrics/{TLDS_CONFIG}",
+            "note": _config(TLDS_CONFIG)["note"], "evidence_ids": evidence, "legal_validation": "UNVERIFIED"}
+
+
 # ---------------- assembly ----------------
 def build_fingerprint(versions: dict[str, Any], scenario: dict[str, Any] | None, embed: Callable[[str], list[float]],
                       registry_comparison: dict[str, Any] | None, applicability_note: str | None,
                       proposer: Callable[[dict[str, Any]], Any] | None = None, asks_about_versions: bool = True,
-                      applies: str | None = None) -> dict[str, Any]:
+                      applies: str | None = None, embed_model: str = DEFAULT_EMBED_MODEL) -> dict[str, Any]:
     if not asks_about_versions:
         out = lambda name: _component("OUT_OF_SCOPE", method=f"{name}-v1", summary="Not a question about a change.",  # noqa: E731
                                       reason="The fingerprint compares two versions of one provision; this question asks about the law as written.")
         return {"version": FINGERPRINT_VERSION, "wording_drift": out("wording-drift"), "rule_drift": out("rule-drift"),
-                "outcome_drift": out("outcome-drift"), "reading": [], "note": NOTE}
+                "outcome_drift": out("outcome-drift"), "reading": [], "note": NOTE,
+                "tlds": {**tlds(None, None, None, unavailable="Not a question about a change."), "state": "NOT_APPLICABLE", "label": "Not applicable"}}
     pair = clause_pair(versions)
     gate = None if pair["status"] != "OK" else text_gate(versions, pair)
     if pair["status"] != "OK" or gate:
@@ -697,7 +865,7 @@ def build_fingerprint(versions: dict[str, Any], scenario: dict[str, Any] | None,
         outcome = _component("INSUFFICIENT_EVIDENCE", label="Cannot determine", method="outcome-drift-v1", summary="Cannot determine.",
                              reason=reason, next_action=action, uncertainty=["evidence_gate_failed"])
         return {"version": FINGERPRINT_VERSION, "wording_drift": blocked("wording-drift"), "rule_drift": blocked("rule-drift"),
-                "outcome_drift": outcome, "reading": [], "note": NOTE}
+                "outcome_drift": outcome, "reading": [], "note": NOTE, "tlds": tlds(None, None, None, unavailable=reason)}
     wording = wording_drift(pair, embed)
     rules = rule_drift(pair, wording["details"]["spans"], proposer)
     has_facts = bool(scenario and ((scenario.get("facts") or {}) or registry_comparison))
@@ -713,4 +881,4 @@ def build_fingerprint(versions: dict[str, Any], scenario: dict[str, Any] | None,
         # No fact could decide this change (e.g. a scope list item or an unscored change): say so instead of asking for facts.
         outcome = {**probe, "limit": {**probe["limit"], "kind": "method"} if probe["value"] is None else probe["limit"]}
     return {"version": FINGERPRINT_VERSION, "wording_drift": wording, "rule_drift": rules, "outcome_drift": outcome,
-            "reading": reading(wording, rules, outcome), "note": NOTE}
+            "reading": reading(wording, rules, outcome), "note": NOTE, "tlds": tlds(pair, rules, embed, embed_model)}

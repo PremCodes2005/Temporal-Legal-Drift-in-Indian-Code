@@ -15,7 +15,7 @@ from urllib.request import Request, urlopen
 from .compose import COMPOSITION_VERSION, compose_general_answer, compose_out_of_scope, compose_version_answer, section_answer
 from .analysis import analysis_id, facts_from_question, merge_scenario, scenario_request
 from .determinations import DETERMINATIONS_VERSION, limit_for, answer_change, applicability, materiality, risk, textual_drift, validate_scenario
-from .fingerprint import FINGERPRINT_VERSION, build_fingerprint, validate_proposal
+from .fingerprint import FINGERPRINT_VERSION, TLDS_VERSION, build_fingerprint, validate_proposal
 from .indiacode import IndiaCodeLiveRepository, source_guidance
 from .metrics import METRICS_CONTRACT_VERSION, calculate_drift_metrics
 from .question import ActCatalog, QuestionFrame, parse_question
@@ -121,7 +121,7 @@ class RagPipeline:
         response["scenario_request"] = scenario_request(response["determinations"], response["fingerprint"], facts, sources)
         response["contract_version"], response["schema_version"] = ANSWER_CONTRACT_VERSION, "5.0.0"
         response["analysis_id"] = analysis_id({
-            "contract": ANSWER_CONTRACT_VERSION, "methods": [DETERMINATIONS_VERSION, FINGERPRINT_VERSION, COMPOSITION_VERSION, METRICS_CONTRACT_VERSION],
+            "contract": ANSWER_CONTRACT_VERSION, "methods": [DETERMINATIONS_VERSION, FINGERPRINT_VERSION, TLDS_VERSION, COMPOSITION_VERSION, METRICS_CONTRACT_VERSION],
             "query": query, "mode": mode, "scenario": facts, "generation": response["answer"].get("generation_method"),
             "index": self.retriever.status().get("index_identity"), "graph": getattr(selector.consumer, "graph_sha256", None),
             "release": _active_release(self.root)})

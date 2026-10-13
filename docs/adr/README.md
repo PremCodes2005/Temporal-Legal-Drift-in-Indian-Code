@@ -21,5 +21,6 @@ These ADRs are **retrospective descriptions of decisions visible in the current 
 | [0015](0015-legal-change-fingerprint.md) | Legal Change Fingerprint: wording, rule and outcome drift (rag-answer-v3) (2026-10-13) |
 | [0016](0016-analysis-records-and-minimum-facts.md) | Stored analyses, explicit limits and minimum facts (rag-answer-v4) (2026-10-13) |
 | [0017](0017-separate-explanation-views-and-rule-drift-v1-2.md) | Separate Drift Explanation and Score Calculation views; rule-drift v1.2 (rag-answer-v5) (2026-10-13) |
+| [0018](0018-hybrid-temporal-legal-drift-score.md) | Hybrid Temporal Legal Drift Score (tlds-v1) beside the fingerprint (2026-10-13) |
 
 Audit base: commit `68030875a719aa626fb05f294880de2953084781`, 2026-10-12. Verification limits: [../verification.md](../verification.md).

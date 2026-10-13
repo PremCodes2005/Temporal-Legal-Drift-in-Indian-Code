@@ -59,6 +59,16 @@ class FingerprintTests(unittest.TestCase):
     def ask(self, query: str, mode: str = "specific", scenario: dict | None = None) -> dict:
         return self.pipeline.answer(query, mode, scenario=scenario)
 
+    def test_tlds_sits_beside_the_three_measures(self) -> None:
+        # Real corpus: CPC s.32, "five hundred" -> "five thousand" rupees. Legal effect stays visible although the composite is Low.
+        result = self.ask(CPC)
+        f, t = result["fingerprint"], result["fingerprint"]["tlds"]
+        self.assertEqual((t["version"], t["state"], t["components"]["legal_effect"]["value"]), ("tlds-v1", "COMPLETE", 0.5))
+        self.assertEqual(f["rule_drift"]["value"], 15.0)  # the v1.2 measures are unchanged
+        self.assertEqual(t["components"]["textual"]["details"]["edit_distance"], 1)
+        general = self.ask("What does the Consumer Protection Act say about mediation?")["fingerprint"]["tlds"]
+        self.assertEqual((general["state"], general["value"]), ("NOT_APPLICABLE", None))
+
     # ---------- wording drift ----------
     def test_identical_text_is_zero_everywhere(self) -> None:
         # SYNTHETIC

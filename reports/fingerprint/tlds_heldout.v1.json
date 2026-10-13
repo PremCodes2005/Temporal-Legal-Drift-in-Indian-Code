@@ -1,0 +1,1969 @@
+{
+ "schema_version": "1.0.0",
+ "method": "tlds-v1 over the 86 transitions of heldout_transitions.v2.json; offline, no model",
+ "states": {
+  "INCOMPLETE": 27,
+  "COMPLETE": 59
+ },
+ "missing_components": {
+  "legal_effect": 27,
+  "textual": 3,
+  "semantic": 3,
+  "rule_structure": 3
+ },
+ "component_medians_complete": {
+  "textual": 0.0429,
+  "semantic": 0.0074,
+  "legal_effect": 0.5,
+  "rule_structure": 0.0833
+ },
+ "legal_effect_levels": {
+  "Substantial change to an obligation, entitlement or restriction": 17,
+  "Material change to a condition, procedure or scope": 42
+ },
+ "weightings": {
+  "default": {
+   "weights": {
+    "textual": 0.2,
+    "semantic": 0.3,
+    "legal_effect": 0.4,
+    "rule_structure": 0.1
+   },
+   "median": 22.3,
+   "min": 20.2,
+   "max": 51.2,
+   "bands": {
+    "High": 1,
+    "Low": 42,
+    "Moderate": 16
+   },
+   "spearman_vs_default": 1.0,
+   "legal_effect_material_but_band_low": 42
+  },
+  "equal": {
+   "weights": {
+    "textual": 0.25,
+    "semantic": 0.25,
+    "legal_effect": 0.25,
+    "rule_structure": 0.25
+   },
+   "median": 16.5,
+   "min": 12.7,
+   "max": 49.2,
+   "bands": {
+    "Low": 53,
+    "Moderate": 6
+   },
+   "spearman_vs_default": 0.984,
+   "legal_effect_material_but_band_low": 53
+  },
+  "legal_heavy": {
+   "weights": {
+    "textual": 0.1,
+    "semantic": 0.1,
+    "legal_effect": 0.6,
+    "rule_structure": 0.2
+   },
+   "median": 32.5,
+   "min": 30.1,
+   "max": 62.2,
+   "bands": {
+    "High": 7,
+    "Moderate": 52
+   },
+   "spearman_vs_default": 0.982,
+   "legal_effect_material_but_band_low": 0
+  },
+  "wording_heavy": {
+   "weights": {
+    "textual": 0.4,
+    "semantic": 0.4,
+    "legal_effect": 0.1,
+    "rule_structure": 0.1
+   },
+   "median": 8.1,
+   "min": 5.4,
+   "max": 41.2,
+   "bands": {
+    "Low": 22,
+    "Moderate": 1,
+    "Very low": 36
+   },
+   "spearman_vs_default": 0.976,
+   "legal_effect_material_but_band_low": 58
+  }
+ },
+ "invariant_violations": [],
+ "rows": [
+  {
+   "transition_id": "transition_0073464d5eafe078ca9126de",
+   "query": "Compare section 51 of the Aadhaar Act before and after the Aadhaar And Other Laws (Amendment) Act, 2019.",
+   "state": "INCOMPLETE",
+   "missing": [
+    "legal_effect"
+   ],
+   "components": {
+    "textual": 0.01694915254237288,
+    "semantic": 0.0,
+    "legal_effect": null,
+    "rule_structure": 0.0
+   },
+   "by_weighting": {
+    "default": null,
+    "equal": null,
+    "legal_heavy": null,
+    "wording_heavy": null
+   },
+   "partial_value": 0.5649717514124295,
+   "band": null,
+   "legal_effect_level": null
+  },
+  {
+   "transition_id": "transition_0094d04dad8de8765b0811cb",
+   "query": "Compare section 47 of the Disaster Management Act before and after the Disaster Management (Amendment) Act, 2025.",
+   "state": "INCOMPLETE",
+   "missing": [
+    "legal_effect"
+   ],
+   "components": {
+    "textual": 0.07954545454545454,
+    "semantic": 0.029512678554670546,
+    "legal_effect": null,
+    "rule_structure": 0.0
+   },
+   "by_weighting": {
+    "default": null,
+    "equal": null,
+    "legal_heavy": null,
+    "wording_heavy": null
+   },
+   "partial_value": 4.12714907924868,
+   "band": null,
+   "legal_effect_level": null
+  },
+  {
+   "transition_id": "transition_00cfa74eda65b9268f4c582f",
+   "query": "Compare section 25 of the Arbitration And Conciliation Act before and after the Arbitration And Conciliation (Amendment) Act, 2015.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.15942028985507245,
+    "semantic": 0.03635583362725092,
+    "legal_effect": 0.75,
+    "rule_structure": 0.13333333333333333
+   },
+   "by_weighting": {
+    "default": 35.612414139252316,
+    "equal": 26.97773642039142,
+    "legal_heavy": 49.624427901489895,
+    "wording_heavy": 16.66437827262627
+   },
+   "partial_value": null,
+   "band": "Moderate",
+   "legal_effect_level": "Substantial change to an obligation, entitlement or restriction"
+  },
+  {
+   "transition_id": "transition_063f3f5e680afbf865143e8b",
+   "query": "Compare section 46 of the Companies Act before and after the Companies (Amendment) Act, 2015.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.092,
+    "semantic": 0.028054979781388822,
+    "legal_effect": 0.5,
+    "rule_structure": 0.13333333333333333
+   },
+   "by_weighting": {
+    "default": 24.014982726775,
+    "equal": 18.83470782786805,
+    "legal_heavy": 33.867216464480556,
+    "wording_heavy": 11.135532524588887
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_0ba0d5ac1563c6ce515cd3e8",
+   "query": "Compare section 79 of the Disaster Management Act before and after the Disaster Management (Amendment) Act, 2025.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.2188183807439825,
+    "semantic": 0.04721347735836767,
+    "legal_effect": 0.75,
+    "rule_structure": 0.23529411764705882
+   },
+   "by_weighting": {
+    "default": 38.14571311210128,
+    "equal": 31.283149393735226,
+    "legal_heavy": 52.36620093396467,
+    "wording_heavy": 20.494215500564597
+   },
+   "partial_value": null,
+   "band": "Moderate",
+   "legal_effect_level": "Substantial change to an obligation, entitlement or restriction"
+  },
+  {
+   "transition_id": "transition_0c533c5c336dc42fc2af4971",
+   "query": "Compare section 7 of the Arbitration And Conciliation Act before and after the Arbitration And Conciliation (Amendment) Act, 2015.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.02512562814070352,
+    "semantic": 0.007585648455986083,
+    "legal_effect": 0.5,
+    "rule_structure": 0.25
+   },
+   "by_weighting": {
+    "default": 23.230082016493654,
+    "equal": 19.56778191491724,
+    "legal_heavy": 35.327112765966895,
+    "wording_heavy": 8.808451063867583
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_10e21003b5d476d1a6f0bdf0",
+   "query": "Compare section 206 of the Motor Vehicles Act before and after the Motor Vehicles (Amendment) Act, 2019.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.2294736842105263,
+    "semantic": 0.02736929746365524,
+    "legal_effect": 0.75,
+    "rule_structure": 0.3157894736842105
+   },
+   "by_weighting": {
+    "default": 38.568447344962294,
+    "equal": 33.065811383959804,
+    "legal_heavy": 53.88421929042602,
+    "wording_heavy": 20.93161400380937
+   },
+   "partial_value": null,
+   "band": "Moderate",
+   "legal_effect_level": "Substantial change to an obligation, entitlement or restriction"
+  },
+  {
+   "transition_id": "transition_1357da5c97929009822f1f63",
+   "query": "Compare section 124 of the Companies Act before and after the Companies (Amendment) Act, 2015.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.020710059171597635,
+    "semantic": 0.003289443829136207,
+    "legal_effect": 0.5,
+    "rule_structure": 0.038461538461538464
+   },
+   "by_weighting": {
+    "default": 20.897499882921426,
+    "equal": 14.061526036556806,
+    "legal_heavy": 31.009225799238106,
+    "wording_heavy": 6.344595504644738
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_194a1dd269db869a6e08a08a",
+   "query": "Compare section 16 of the Competition Act before and after the Competition (Amendment) Act, 2023.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.019342359767891684,
+    "semantic": 0.0010912887076255373,
+    "legal_effect": 0.5,
+    "rule_structure": 0.0
+   },
+   "by_weighting": {
+    "default": 20.4195858565866,
+    "equal": 13.01084121188793,
+    "legal_heavy": 30.204336484755174,
+    "wording_heavy": 5.817345939020689
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_1e1b0ab0446350760161c616",
+   "query": "Compare section 5 of the Insolvency Bankruptcy Code before and after the Insolvency And Bankruptcy Code (Amendment) Act, 2020.",
+   "state": "INCOMPLETE",
+   "missing": [
+    "legal_effect"
+   ],
+   "components": {
+    "textual": 0.0031311154598825833,
+    "semantic": 0.000121303992101085,
+    "legal_effect": null,
+    "rule_structure": 0.0
+   },
+   "by_weighting": {
+    "default": null,
+    "equal": null,
+    "legal_heavy": null,
+    "wording_heavy": null
+   },
+   "partial_value": 0.11043571493447368,
+   "band": null,
+   "legal_effect_level": null
+  },
+  {
+   "transition_id": "transition_1f050d212743c312bdbcf55b",
+   "query": "Compare section 40 of the Motor Vehicles Act before and after the Motor Vehicles (Amendment) Act, 2019.",
+   "state": "INCOMPLETE",
+   "missing": [
+    "legal_effect"
+   ],
+   "components": {
+    "textual": 0.07407407407407407,
+    "semantic": 0.01801949393803426,
+    "legal_effect": null,
+    "rule_structure": 0.0
+   },
+   "by_weighting": {
+    "default": null,
+    "equal": null,
+    "legal_heavy": null,
+    "wording_heavy": null
+   },
+   "partial_value": 3.3701104993708486,
+   "band": null,
+   "legal_effect_level": null
+  },
+  {
+   "transition_id": "transition_24b6a537027bbe5485f99d91",
+   "query": "Compare section 108 of the Patents Act before and after the Patents (Amendment) Act, 2002.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.53,
+    "semantic": 0.18651078466817006,
+    "legal_effect": 0.75,
+    "rule_structure": 0.5
+   },
+   "by_weighting": {
+    "default": 51.19532354004511,
+    "equal": 49.16276961670425,
+    "legal_heavy": 62.1651078466817,
+    "wording_heavy": 41.160431386726806
+   },
+   "partial_value": null,
+   "band": "High",
+   "legal_effect_level": "Substantial change to an obligation, entitlement or restriction"
+  },
+  {
+   "transition_id": "transition_265b98e4b95cf26428de0208",
+   "query": "Compare section 50 of the Patents Act before and after the Patents (Amendment) Act, 2002.",
+   "state": "INCOMPLETE",
+   "missing": [
+    "legal_effect"
+   ],
+   "components": {
+    "textual": 0.024390243902439025,
+    "semantic": 0.007563398183635273,
+    "legal_effect": null,
+    "rule_structure": 0.1
+   },
+   "by_weighting": {
+    "default": null,
+    "equal": null,
+    "legal_heavy": null,
+    "wording_heavy": null
+   },
+   "partial_value": 2.8578447059297316,
+   "band": null,
+   "legal_effect_level": null
+  },
+  {
+   "transition_id": "transition_265e3523b4b8fa9b39d15d40",
+   "query": "Compare section 240 of the Insolvency Bankruptcy Code before and after the Insolvency And Bankruptcy Code (Amendment) Act, 2020.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.009206349206349206,
+    "semantic": 8.56115128502477e-05,
+    "legal_effect": 0.5,
+    "rule_structure": 0.005681818181818182
+   },
+   "by_weighting": {
+    "default": 20.243513511330676,
+    "equal": 12.87434447252544,
+    "legal_heavy": 30.206555970828358,
+    "wording_heavy": 5.42849661058616
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_29bb6a70095db14e40b153ae",
+   "query": "Compare section 30 of the Insolvency Bankruptcy Code before and after the Insolvency And Bankruptcy Code (Amendment) Act, 2019.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.03310696095076401,
+    "semantic": 0.0020079590168419204,
+    "legal_effect": 0.5,
+    "rule_structure": 0.0
+   },
+   "by_weighting": {
+    "default": 20.722377989520538,
+    "equal": 13.37787299919015,
+    "legal_heavy": 30.35114919967606,
+    "wording_heavy": 6.404596798704238
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_2d9369cf1ee3ed9744bc2adf",
+   "query": "Compare section 4 of the Insolvency Bankruptcy Code before and after the Insolvency And Bankruptcy Code (Amendment) Act, 2021.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.43137254901960786,
+    "semantic": 0.04318230428652303,
+    "legal_effect": 0.75,
+    "rule_structure": 0.125
+   },
+   "by_weighting": {
+    "default": 41.17292010898785,
+    "equal": 33.738871332653275,
+    "legal_heavy": 52.2455485330613,
+    "wording_heavy": 27.732194132245237
+   },
+   "partial_value": null,
+   "band": "Moderate",
+   "legal_effect_level": "Substantial change to an obligation, entitlement or restriction"
+  },
+  {
+   "transition_id": "transition_2ffd3b0b1c64152063faf51f",
+   "query": "Compare section 94 of the Motor Vehicles Act before and after the Motor Vehicles (Amendment) Act, 2019.",
+   "state": "INCOMPLETE",
+   "missing": [
+    "textual",
+    "semantic",
+    "legal_effect",
+    "rule_structure"
+   ],
+   "components": {
+    "textual": null,
+    "semantic": null,
+    "legal_effect": null,
+    "rule_structure": null
+   },
+   "by_weighting": {
+    "default": null,
+    "equal": null,
+    "legal_heavy": null,
+    "wording_heavy": null
+   },
+   "partial_value": null,
+   "band": null,
+   "legal_effect_level": null
+  },
+  {
+   "transition_id": "transition_308d35784dfd748e7ce3360d",
+   "query": "Compare section 23 of the Arbitration And Conciliation Act before and after the Arbitration And Conciliation (Amendment) Act, 2015.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.1875,
+    "semantic": 0.05194352183259077,
+    "legal_effect": 0.75,
+    "rule_structure": 0.0
+   },
+   "by_weighting": {
+    "default": 35.30830565497773,
+    "equal": 24.736088045814768,
+    "legal_heavy": 47.3944352183259,
+    "wording_heavy": 17.077740873303632
+   },
+   "partial_value": null,
+   "band": "Moderate",
+   "legal_effect_level": "Substantial change to an obligation, entitlement or restriction"
+  },
+  {
+   "transition_id": "transition_3436d5f054e401f8c8415bb1",
+   "query": "Compare section 32 of the Code Of Civil Procedure before and after the Code Of Civil Procedure (Amendment) Act, 1999.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.010638297872340425,
+    "semantic": 0.01162790650027401,
+    "legal_effect": 0.5,
+    "rule_structure": 0.1111111111111111
+   },
+   "by_weighting": {
+    "default": 21.672714263566142,
+    "equal": 15.834432887093138,
+    "legal_heavy": 32.44488426594837,
+    "wording_heavy": 7.001759286015689
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_35d89b76fb86435bfe2c4145",
+   "query": "Compare section 59 of the Motor Vehicles Act before and after the Motor Vehicles (Amendment) Act, 2019.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.15037593984962405,
+    "semantic": 0.0273100545474233,
+    "legal_effect": 0.75,
+    "rule_structure": 0.08333333333333333
+   },
+   "by_weighting": {
+    "default": 34.66015376674852,
+    "equal": 25.275483193259518,
+    "legal_heavy": 48.443526610637136,
+    "wording_heavy": 15.440773109215227
+   },
+   "partial_value": null,
+   "band": "Moderate",
+   "legal_effect_level": "Substantial change to an obligation, entitlement or restriction"
+  },
+  {
+   "transition_id": "transition_3d0e090704c564b6014f0ee6",
+   "query": "Compare section 30 of the Securities And Exchange Board Of India Act before and after the Securities Laws (Amendment) Act, 2014.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.21014492753623187,
+    "semantic": 0.03832286550372621,
+    "legal_effect": 0.5,
+    "rule_structure": 0.14285714285714285
+   },
+   "by_weighting": {
+    "default": 26.781155944407853,
+    "equal": 22.283123397427524,
+    "legal_heavy": 35.34182078754244,
+    "wording_heavy": 16.367283150169754
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_3ee5b5104b282c294163e1be",
+   "query": "Compare section 65 of the Motor Vehicles Act before and after the Motor Vehicles (Amendment) Act, 2019.",
+   "state": "INCOMPLETE",
+   "missing": [
+    "legal_effect"
+   ],
+   "components": {
+    "textual": 0.012526096033402923,
+    "semantic": 0.0015473074276844967,
+    "legal_effect": null,
+    "rule_structure": 0.03333333333333333
+   },
+   "by_weighting": {
+    "default": null,
+    "equal": null,
+    "legal_heavy": null,
+    "wording_heavy": null
+   },
+   "partial_value": 1.0504574613865445,
+   "band": null,
+   "legal_effect_level": null
+  },
+  {
+   "transition_id": "transition_44aec12a4ebe4e296281f13e",
+   "query": "Compare section 35 of the Competition Act before and after the Competition (Amendment) Act, 2023.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.06279434850863422,
+    "semantic": 0.007025960919552543,
+    "legal_effect": 0.75,
+    "rule_structure": 0.0
+   },
+   "by_weighting": {
+    "default": 31.466665797759262,
+    "equal": 20.495507735704667,
+    "legal_heavy": 45.698203094281865,
+    "wording_heavy": 10.292812377127472
+   },
+   "partial_value": null,
+   "band": "Moderate",
+   "legal_effect_level": "Substantial change to an obligation, entitlement or restriction"
+  },
+  {
+   "transition_id": "transition_45274b027bec7acb8923472a",
+   "query": "Compare section 40 of the Patents Act before and after the Patents (Amendment) Act, 2002.",
+   "state": "INCOMPLETE",
+   "missing": [
+    "legal_effect"
+   ],
+   "components": {
+    "textual": 0.22340425531914893,
+    "semantic": 0.04800582714462953,
+    "legal_effect": null,
+    "rule_structure": 0.0
+   },
+   "by_weighting": {
+    "default": null,
+    "equal": null,
+    "legal_heavy": null,
+    "wording_heavy": null
+   },
+   "partial_value": 9.847099867869774,
+   "band": null,
+   "legal_effect_level": null
+  },
+  {
+   "transition_id": "transition_454511c38fbda32a5772b8da",
+   "query": "Compare section 8 of the Arbitration And Conciliation Act before and after the Arbitration And Conciliation (Amendment) Act, 2015.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.08317214700193423,
+    "semantic": 0.017943089208142915,
+    "legal_effect": 0.75,
+    "rule_structure": 0.05714285714285714
+   },
+   "by_weighting": {
+    "default": 32.773164187711544,
+    "equal": 22.706452333823357,
+    "legal_heavy": 47.15400950495791,
+    "wording_heavy": 12.116038019831658
+   },
+   "partial_value": null,
+   "band": "Moderate",
+   "legal_effect_level": "Substantial change to an obligation, entitlement or restriction"
+  },
+  {
+   "transition_id": "transition_4617b4307c7ef729d5d06790",
+   "query": "Compare section 69 of the Disaster Management Act before and after the Disaster Management (Amendment) Act, 2025.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.12162162162162163,
+    "semantic": 0.11632820600018035,
+    "legal_effect": 0.5,
+    "rule_structure": 0.4
+   },
+   "by_weighting": {
+    "default": 29.922278612437847,
+    "equal": 28.448745690545053,
+    "legal_heavy": 40.379498276218015,
+    "wording_heavy": 18.51799310487208
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_4b8d801723f3bb4459d391ea",
+   "query": "Compare section 11B of the Securities And Exchange Board Of India Act before and after the Securities Laws (Amendment) Act, 2014.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.05170068027210884,
+    "semantic": 0.0027349450264329,
+    "legal_effect": 0.5,
+    "rule_structure": 0.022727272727272728
+   },
+   "by_weighting": {
+    "default": 21.34333468350789,
+    "equal": 14.42907245064536,
+    "legal_heavy": 30.998901707530873,
+    "wording_heavy": 7.404697739214397
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_4e25b7dafb6d04feac7422cf",
+   "query": "Compare section 180 of the Motor Vehicles Act before and after the Motor Vehicles (Amendment) Act, 2019.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.07246376811594203,
+    "semantic": 0.03901353613012759,
+    "legal_effect": 0.5,
+    "rule_structure": 0.16666666666666666
+   },
+   "by_weighting": {
+    "default": 24.286348112889335,
+    "equal": 19.453599272818405,
+    "legal_heavy": 34.448106375794026,
+    "wording_heavy": 11.125758836509453
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_4f16b8a4d1ef4340e1cf7eda",
+   "query": "Compare section 181 of the Motor Vehicles Act before and after the Motor Vehicles (Amendment) Act, 2019.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.09803921568627451,
+    "semantic": 0.03901353594924706,
+    "legal_effect": 0.5,
+    "rule_structure": 0.25
+   },
+   "by_weighting": {
+    "default": 25.631190392202903,
+    "equal": 22.17631879088804,
+    "legal_heavy": 36.37052751635522,
+    "wording_heavy": 12.982110065420862
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_524e633ce10d09fcec3f536b",
+   "query": "Compare section 15 of the Prevention Of Corruption Act before and after the Prevention Of Corruption (Amendment) Act, 2018.",
+   "state": "INCOMPLETE",
+   "missing": [
+    "legal_effect"
+   ],
+   "components": {
+    "textual": 0.0784313725490196,
+    "semantic": 0.012543052251321907,
+    "legal_effect": null,
+    "rule_structure": 0.4
+   },
+   "by_weighting": {
+    "default": null,
+    "equal": null,
+    "legal_heavy": null,
+    "wording_heavy": null
+   },
+   "partial_value": 9.908198364200084,
+   "band": null,
+   "legal_effect_level": null
+  },
+  {
+   "transition_id": "transition_52bdf414449d6836bb5c4dfd",
+   "query": "Compare section 96 of the Motor Vehicles Act before and after the Motor Vehicles (Amendment) Act, 2019.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.0265748031496063,
+    "semantic": 0.004687145939890391,
+    "legal_effect": 0.5,
+    "rule_structure": 0.07317073170731707
+   },
+   "by_weighting": {
+    "default": 21.403817758262008,
+    "equal": 15.110817019920345,
+    "legal_heavy": 31.776034125041306,
+    "wording_heavy": 6.982185280653039
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_55f576c6cf3d257aa12e317c",
+   "query": "Compare section 12 of the Insolvency Bankruptcy Code before and after the Insolvency And Bankruptcy Code (Amendment) Act, 2019.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.23382045929018788,
+    "semantic": 0.046996748433208,
+    "legal_effect": 0.75,
+    "rule_structure": 0.21739130434782608
+   },
+   "by_weighting": {
+    "default": 38.26022468227826,
+    "equal": 31.205212801780547,
+    "legal_heavy": 52.15599816419048,
+    "wording_heavy": 20.906601352414096
+   },
+   "partial_value": null,
+   "band": "Moderate",
+   "legal_effect_level": "Substantial change to an obligation, entitlement or restriction"
+  },
+  {
+   "transition_id": "transition_56025f003716d226bbc02d5a",
+   "query": "Compare section 173 of the Motor Vehicles Act before and after the Motor Vehicles (Amendment) Act, 2019.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.012658227848101266,
+    "semantic": 0.010139531216642239,
+    "legal_effect": 0.5,
+    "rule_structure": 0.08333333333333333
+   },
+   "by_weighting": {
+    "default": 21.390683826794625,
+    "equal": 15.153277309951921,
+    "legal_heavy": 31.894644257314102,
+    "wording_heavy": 6.745243695923074
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_57e2db6e4e232ddf4f5a490a",
+   "query": "Compare section 227 of the Insolvency Bankruptcy Code before and after the Insolvency And Bankruptcy Code (Amendment) Act, 2020.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.008403361344537815,
+    "semantic": 0.005747125861672697,
+    "legal_effect": 0.5,
+    "rule_structure": 0.2
+   },
+   "by_weighting": {
+    "default": 22.34048100274094,
+    "equal": 17.853762180155265,
+    "legal_heavy": 34.14150487206211,
+    "wording_heavy": 7.566019488248421
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_66eeabf41f5308ceaf8112ce",
+   "query": "Compare section 239 of the Insolvency Bankruptcy Code before and after the Insolvency And Bankruptcy Code (Amendment) Act, 2020.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.04039408866995074,
+    "semantic": 0.0012848979178625708,
+    "legal_effect": 0.5,
+    "rule_structure": 0.061855670103092786
+   },
+   "by_weighting": {
+    "default": 21.46498541196582,
+    "equal": 15.088366417272653,
+    "legal_heavy": 31.653903267939988,
+    "wording_heavy": 7.285716164543461
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_67ee8c750088efe38d075781",
+   "query": "Compare section 92 of the Motor Vehicles Act before and after the Motor Vehicles (Amendment) Act, 2019.",
+   "state": "INCOMPLETE",
+   "missing": [
+    "legal_effect"
+   ],
+   "components": {
+    "textual": 0.015486725663716814,
+    "semantic": 0.005584762763501949,
+    "legal_effect": null,
+    "rule_structure": 0.0
+   },
+   "by_weighting": {
+    "default": null,
+    "equal": null,
+    "legal_heavy": null,
+    "wording_heavy": null
+   },
+   "partial_value": 0.7954623269656579,
+   "band": null,
+   "legal_effect_level": null
+  },
+  {
+   "transition_id": "transition_6dd25e5deec2e1ffe95d703c",
+   "query": "Compare section 24 of the Wild Life Protection Act before and after the Wild Life Protection (Amendment) Act, 2022.",
+   "state": "INCOMPLETE",
+   "missing": [
+    "legal_effect"
+   ],
+   "components": {
+    "textual": 0.06432748538011696,
+    "semantic": 0.014720522864154706,
+    "legal_effect": null,
+    "rule_structure": 0.0
+   },
+   "by_weighting": {
+    "default": null,
+    "equal": null,
+    "legal_heavy": null,
+    "wording_heavy": null
+   },
+   "partial_value": 2.8802756558783007,
+   "band": null,
+   "legal_effect_level": null
+  },
+  {
+   "transition_id": "transition_74c11d6433e91fff06350daf",
+   "query": "Compare section 52 of the Biological Diversity Act before and after the Biological Diversity (Amendment) Act, 2023.",
+   "state": "INCOMPLETE",
+   "missing": [
+    "legal_effect"
+   ],
+   "components": {
+    "textual": 0.02631578947368421,
+    "semantic": 0.0033713176152810886,
+    "legal_effect": null,
+    "rule_structure": 0.0
+   },
+   "by_weighting": {
+    "default": null,
+    "equal": null,
+    "legal_heavy": null,
+    "wording_heavy": null
+   },
+   "partial_value": 1.0457588632201948,
+   "band": null,
+   "legal_effect_level": null
+  },
+  {
+   "transition_id": "transition_7b4b6a9f29a7e8d7a0849a0e",
+   "query": "Compare section 65 of the Insolvency Bankruptcy Code before and after the Insolvency And Bankruptcy Code (Amendment) Act, 2021.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.1257606490872211,
+    "semantic": 0.012888798854844619,
+    "legal_effect": 0.75,
+    "rule_structure": 0.05555555555555555
+   },
+   "by_weighting": {
+    "default": 33.45743250294532,
+    "equal": 23.60512508744053,
+    "legal_heavy": 47.49760559053177,
+    "wording_heavy": 13.601533473238186
+   },
+   "partial_value": null,
+   "band": "Moderate",
+   "legal_effect_level": "Substantial change to an obligation, entitlement or restriction"
+  },
+  {
+   "transition_id": "transition_7d8f5fd0a9ca5f5d995858a5",
+   "query": "Compare section 164 of the Companies Act before and after the Companies (Amendment) Act, 2019.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.031055900621118012,
+    "semantic": 0.004756758554500418,
+    "legal_effect": 0.5,
+    "rule_structure": 0.03125
+   },
+   "by_weighting": {
+    "default": 21.076320769057375,
+    "equal": 14.176566479390459,
+    "legal_heavy": 30.983126591756182,
+    "wording_heavy": 6.745006367024738
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_7f9a9d4487a838dca934f26a",
+   "query": "Compare section 31 of the Insolvency Bankruptcy Code before and after the Insolvency And Bankruptcy Code (Amendment) Act, 2019.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.043991416309012876,
+    "semantic": 0.003519548207062906,
+    "legal_effect": 0.5,
+    "rule_structure": 0.0
+   },
+   "by_weighting": {
+    "default": 20.985414772392147,
+    "equal": 13.687774112901895,
+    "legal_heavy": 30.475109645160757,
+    "wording_heavy": 6.900438580643032
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_811fbb701f0e0a9402fea0d8",
+   "query": "Compare section 33 of the Insolvency Bankruptcy Code before and after the Insolvency And Bankruptcy Code (Amendment) Act, 2021.",
+   "state": "INCOMPLETE",
+   "missing": [
+    "legal_effect"
+   ],
+   "components": {
+    "textual": 0.010135135135135136,
+    "semantic": 0.0005461531414576726,
+    "legal_effect": null,
+    "rule_structure": 0.023809523809523808
+   },
+   "by_weighting": {
+    "default": null,
+    "equal": null,
+    "legal_heavy": null,
+    "wording_heavy": null
+   },
+   "partial_value": 0.7619708917361183,
+   "band": null,
+   "legal_effect_level": null
+  },
+  {
+   "transition_id": "transition_85ecae9712ed6f1cd26b4929",
+   "query": "Compare section 63 of the Disaster Management Act before and after the Disaster Management (Amendment) Act, 2025.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.03529411764705882,
+    "semantic": 0.0067649438082567626,
+    "legal_effect": 0.5,
+    "rule_structure": 0.1
+   },
+   "by_weighting": {
+    "default": 21.90883066718888,
+    "equal": 16.05147653638289,
+    "legal_heavy": 32.420590614553156,
+    "wording_heavy": 7.682362458212625
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_862e4992408b12f970844a19",
+   "query": "Compare section 142 of the Patents Act before and after the Patents (Amendment) Act, 2002.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.055350553505535055,
+    "semantic": 0.01452270749683382,
+    "legal_effect": 0.5,
+    "rule_structure": 0.08333333333333333
+   },
+   "by_weighting": {
+    "default": 22.37602562834905,
+    "equal": 16.330164858392553,
+    "legal_heavy": 32.365399276690354,
+    "wording_heavy": 8.628263773428088
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_86c7edc5c490ac18e52e9a36",
+   "query": "Compare section 170 of the Motor Vehicles Act before and after the Motor Vehicles (Amendment) Act, 2019.",
+   "state": "INCOMPLETE",
+   "missing": [
+    "legal_effect"
+   ],
+   "components": {
+    "textual": 0.006134969325153374,
+    "semantic": 0.005494505437486308,
+    "legal_effect": null,
+    "rule_structure": 0.1111111111111111
+   },
+   "by_weighting": {
+    "default": null,
+    "equal": null,
+    "legal_heavy": null,
+    "wording_heavy": null
+   },
+   "partial_value": 2.33107610123128,
+   "band": null,
+   "legal_effect_level": null
+  },
+  {
+   "transition_id": "transition_86c9dac0194597b7e658880e",
+   "query": "Compare section 223 of the Companies Act before and after the Companies (Amendment) Act, 2015.",
+   "state": "INCOMPLETE",
+   "missing": [
+    "legal_effect"
+   ],
+   "components": {
+    "textual": 0.01015228426395939,
+    "semantic": 0.0029239338908088053,
+    "legal_effect": null,
+    "rule_structure": 0.08333333333333333
+   },
+   "by_weighting": {
+    "default": null,
+    "equal": null,
+    "legal_heavy": null,
+    "wording_heavy": null
+   },
+   "partial_value": 1.8734950588946424,
+   "band": null,
+   "legal_effect_level": null
+  },
+  {
+   "transition_id": "transition_8ef5d3d30aca8c1227839e06",
+   "query": "Compare section 21 of the Insolvency Bankruptcy Code before and after the Insolvency And Bankruptcy Code (Amendment) Act, 2020.",
+   "state": "INCOMPLETE",
+   "missing": [
+    "legal_effect"
+   ],
+   "components": {
+    "textual": 0.008050089445438283,
+    "semantic": 0.0004213223215280282,
+    "legal_effect": null,
+    "rule_structure": 0.0
+   },
+   "by_weighting": {
+    "default": null,
+    "equal": null,
+    "legal_heavy": null,
+    "wording_heavy": null
+   },
+   "partial_value": 0.2894024309243442,
+   "band": null,
+   "legal_effect_level": null
+  },
+  {
+   "transition_id": "transition_96504a5c50c96c2c0a1d0490",
+   "query": "Compare section 60 of the Patents Act before and after the Patents (Amendment) Act, 2002.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.013157894736842105,
+    "semantic": 0.012658738339989428,
+    "legal_effect": 0.5,
+    "rule_structure": 0.125
+   },
+   "by_weighting": {
+    "default": 21.892920044936524,
+    "equal": 16.27041582692079,
+    "legal_heavy": 32.75816633076831,
+    "wording_heavy": 7.282665323073262
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_a0b23d12b29f4f100b70b598",
+   "query": "Compare section 45ZC of the Banking Regulation Act before and after the Banking Laws (Amendment) Act, 2025.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.02287581699346405,
+    "semantic": 0.0050883774871158804,
+    "legal_effect": 0.5,
+    "rule_structure": 0.09090909090909091
+   },
+   "by_weighting": {
+    "default": 21.51925857357367,
+    "equal": 15.47183213474177,
+    "legal_heavy": 32.097823762987616,
+    "wording_heavy": 7.027658688314106
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_a1312e987b19a63d824ae552",
+   "query": "Compare section 74 of the Disaster Management Act before and after the Disaster Management (Amendment) Act, 2025.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.041666666666666664,
+    "semantic": 0.008149289903012336,
+    "legal_effect": 0.5,
+    "rule_structure": 0.08333333333333333
+   },
+   "by_weighting": {
+    "default": 21.911145363757036,
+    "equal": 15.828732247575308,
+    "legal_heavy": 32.16482623236346,
+    "wording_heavy": 7.825971596120494
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_a146c8e2e4357fc1ed34bf2b",
+   "query": "Compare section 46 of the Disaster Management Act before and after the Disaster Management (Amendment) Act, 2025.",
+   "state": "INCOMPLETE",
+   "missing": [
+    "legal_effect"
+   ],
+   "components": {
+    "textual": 0.05555555555555555,
+    "semantic": 0.027295601842818207,
+    "legal_effect": null,
+    "rule_structure": 0.0
+   },
+   "by_weighting": {
+    "default": null,
+    "equal": null,
+    "legal_heavy": null,
+    "wording_heavy": null
+   },
+   "partial_value": 3.216631943992762,
+   "band": null,
+   "legal_effect_level": null
+  },
+  {
+   "transition_id": "transition_a85dcff58c5ed023c079ec8e",
+   "query": "Compare section 72 of the Motor Vehicles Act before and after the Motor Vehicles (Amendment) Act, 2019.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.027233115468409588,
+    "semantic": 0.0014488974396621446,
+    "legal_effect": 0.75,
+    "rule_structure": 0.044444444444444446
+   },
+   "by_weighting": {
+    "default": 31.032573677002507,
+    "equal": 20.578161433812905,
+    "legal_heavy": 46.1757090179696,
+    "wording_heavy": 9.091724960767316
+   },
+   "partial_value": null,
+   "band": "Moderate",
+   "legal_effect_level": "Substantial change to an obligation, entitlement or restriction"
+  },
+  {
+   "transition_id": "transition_aafda4149f7f7ac329991380",
+   "query": "Compare section 17 of the Prevention Of Corruption Act before and after the Prevention Of Corruption (Amendment) Act, 2018.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.0012135922330097086,
+    "semantic": 0.0,
+    "legal_effect": 0.5,
+    "rule_structure": 0.04878048780487805
+   },
+   "by_weighting": {
+    "default": 20.512076722708976,
+    "equal": 13.749852000947193,
+    "legal_heavy": 30.987745678427657,
+    "wording_heavy": 5.536348567369169
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_ab372a675d360d1c29c240d6",
+   "query": "Compare section 71 of the Disaster Management Act before and after the Disaster Management (Amendment) Act, 2025.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.04285714285714286,
+    "semantic": 0.00827799008997332,
+    "legal_effect": 0.5,
+    "rule_structure": 0.09090909090909091
+   },
+   "by_weighting": {
+    "default": 22.014573468932966,
+    "equal": 16.051105596405176,
+    "legal_heavy": 32.32953314765298,
+    "wording_heavy": 7.954496226975556
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_ad063b5172135751ec80993a",
+   "query": "Compare section 2 of the Companies Act before and after the Companies (Amendment) Act, 2019.",
+   "state": "INCOMPLETE",
+   "missing": [
+    "legal_effect"
+   ],
+   "components": {
+    "textual": 0.000185459940652819,
+    "semantic": 1.1396467683666422e-05,
+    "legal_effect": null,
+    "rule_structure": 0.0
+   },
+   "by_weighting": {
+    "default": null,
+    "equal": null,
+    "legal_heavy": null,
+    "wording_heavy": null
+   },
+   "partial_value": 0.006751821405943955,
+   "band": null,
+   "legal_effect_level": null
+  },
+  {
+   "transition_id": "transition_adb4b90ca8ff4adb0d722dae",
+   "query": "Compare section 64 of the Disaster Management Act before and after the Disaster Management (Amendment) Act, 2025.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.03418803418803419,
+    "semantic": 0.007904406081664317,
+    "legal_effect": 0.5,
+    "rule_structure": 0.14285714285714285
+   },
+   "by_weighting": {
+    "default": 22.34946429478204,
+    "equal": 17.123739578171033,
+    "legal_heavy": 33.27806725983984,
+    "wording_heavy": 8.11226903935937
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_ae2ce9de88fbb922aed36deb",
+   "query": "Compare section 14 of the Companies Act before and after the Companies (Amendment) Act, 2019.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.006944444444444444,
+    "semantic": 0.0027902658725408314,
+    "legal_effect": 0.5,
+    "rule_structure": 0.0
+   },
+   "by_weighting": {
+    "default": 20.222596865065114,
+    "equal": 12.74336775792463,
+    "legal_heavy": 30.097347103169852,
+    "wording_heavy": 5.389388412679411
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_af87b1df64cf9eaf599878cf",
+   "query": "Compare section 3 of the Aadhaar Act before and after the Aadhaar And Other Laws (Amendment) Act, 2019.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.13110539845758354,
+    "semantic": 0.013782163441302564,
+    "legal_effect": 0.75,
+    "rule_structure": 0.0
+   },
+   "by_weighting": {
+    "default": 33.03557287239075,
+    "equal": 22.37218904747215,
+    "legal_heavy": 46.44887561898886,
+    "wording_heavy": 13.295502475955445
+   },
+   "partial_value": null,
+   "band": "Moderate",
+   "legal_effect_level": "Substantial change to an obligation, entitlement or restriction"
+  },
+  {
+   "transition_id": "transition_b08a6bdd1a48da15490b7ca8",
+   "query": "Compare section 114 of the Motor Vehicles Act before and after the Motor Vehicles (Amendment) Act, 2019.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.01809954751131222,
+    "semantic": 0.004898374100484215,
+    "legal_effect": 0.5,
+    "rule_structure": 0.0
+   },
+   "by_weighting": {
+    "default": 20.508942173240772,
+    "equal": 13.074948040294911,
+    "legal_heavy": 30.229979216117965,
+    "wording_heavy": 5.919916864471858
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_b0fae4030d113a3be05f8cef",
+   "query": "Compare section 32 of the Competition Act before and after the Competition (Amendment) Act, 2023.",
+   "state": "INCOMPLETE",
+   "missing": [
+    "legal_effect"
+   ],
+   "components": {
+    "textual": 0.006578947368421052,
+    "semantic": 0.0007238448912018081,
+    "legal_effect": null,
+    "rule_structure": 0.0
+   },
+   "by_weighting": {
+    "default": null,
+    "equal": null,
+    "legal_heavy": null,
+    "wording_heavy": null
+   },
+   "partial_value": 0.2554904901741255,
+   "band": null,
+   "legal_effect_level": null
+  },
+  {
+   "transition_id": "transition_b1365566e3610436e83c5554",
+   "query": "Compare section 11 of the Insolvency Bankruptcy Code before and after the Insolvency And Bankruptcy Code (Amendment) Act, 2020.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.07942973523421588,
+    "semantic": 0.004920969542958953,
+    "legal_effect": 0.5,
+    "rule_structure": 0.041666666666666664
+   },
+   "by_weighting": {
+    "default": 22.152890457639753,
+    "equal": 15.650434286096038,
+    "legal_heavy": 31.67684038110508,
+    "wording_heavy": 8.79069485775366
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_b5746e8ee623ee278f73f502",
+   "query": "Compare section 16 of the Insolvency Bankruptcy Code before and after the Insolvency And Bankruptcy Code (Amendment) Act, 2020.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.014814814814814815,
+    "semantic": 0.0015454447939602378,
+    "legal_effect": 0.5,
+    "rule_structure": 0.0625
+   },
+   "by_weighting": {
+    "default": 20.967659640115105,
+    "equal": 14.471506490219376,
+    "legal_heavy": 31.41360259608775,
+    "wording_heavy": 6.279410384351003
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_b6c7654945f71c91b0ba4998",
+   "query": "Compare section 11 of the Specific Relief Act before and after the Specific Relief (Amendment) Act, 2018.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.09722222222222222,
+    "semantic": 0.03493919024076575,
+    "legal_effect": 0.75,
+    "rule_structure": 0.5
+   },
+   "by_weighting": {
+    "default": 37.992620151667424,
+    "equal": 34.5540353115747,
+    "legal_heavy": 56.32161412462987,
+    "wording_heavy": 17.78645649851952
+   },
+   "partial_value": null,
+   "band": "Moderate",
+   "legal_effect_level": "Substantial change to an obligation, entitlement or restriction"
+  },
+  {
+   "transition_id": "transition_b6df780326a33e5bcccd256a",
+   "query": "Compare section 20 of the Disaster Management Act before and after the Disaster Management (Amendment) Act, 2025.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.09223300970873786,
+    "semantic": 0.005756918351360052,
+    "legal_effect": 0.5,
+    "rule_structure": 0.17647058823529413
+   },
+   "by_weighting": {
+    "default": 23.7820736270685,
+    "equal": 19.3615129073848,
+    "legal_heavy": 34.50931104530686,
+    "wording_heavy": 10.684303004756858
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_b74572025857a0c756b22a6d",
+   "query": "Compare section 24 of the Arbitration And Conciliation Act before and after the Arbitration And Conciliation (Amendment) Act, 2015.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.2534562211981567,
+    "semantic": 0.05442698390106604,
+    "legal_effect": 0.75,
+    "rule_structure": 0.08333333333333333
+   },
+   "by_weighting": {
+    "default": 37.535267274328454,
+    "equal": 28.530413460813904,
+    "legal_heavy": 49.74549871765889,
+    "wording_heavy": 20.648661537302242
+   },
+   "partial_value": null,
+   "band": "Moderate",
+   "legal_effect_level": "Substantial change to an obligation, entitlement or restriction"
+  },
+  {
+   "transition_id": "transition_b7dfc0d8814d97cb18a6986e",
+   "query": "Compare section 212 of the Companies Act before and after the Companies (Amendment) Act, 2015.",
+   "state": "INCOMPLETE",
+   "missing": [
+    "legal_effect"
+   ],
+   "components": {
+    "textual": 0.05583756345177665,
+    "semantic": 0.03358942986186908,
+    "legal_effect": null,
+    "rule_structure": 0.22950819672131148
+   },
+   "by_weighting": {
+    "default": null,
+    "equal": null,
+    "legal_heavy": null,
+    "wording_heavy": null
+   },
+   "partial_value": 7.365860220174535,
+   "band": null,
+   "legal_effect_level": null
+  },
+  {
+   "transition_id": "transition_b858c77cc36f49e602f9a1da",
+   "query": "Compare section 168 of the Motor Vehicles Act before and after the Motor Vehicles (Amendment) Act, 2019.",
+   "state": "INCOMPLETE",
+   "missing": [
+    "legal_effect"
+   ],
+   "components": {
+    "textual": 0.003257328990228013,
+    "semantic": 0.0016556289208049524,
+    "legal_effect": null,
+    "rule_structure": 0.058823529411764705
+   },
+   "by_weighting": {
+    "default": null,
+    "equal": null,
+    "legal_heavy": null,
+    "wording_heavy": null
+   },
+   "partial_value": 1.171751235910593,
+   "band": null,
+   "legal_effect_level": null
+  },
+  {
+   "transition_id": "transition_b99dea9161ea34d22413865a",
+   "query": "Compare section 51 of the Competition Act before and after the Competition (Amendment) Act, 2023.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.09693877551020408,
+    "semantic": 0.021357171923121032,
+    "legal_effect": 0.5,
+    "rule_structure": 0.06666666666666667
+   },
+   "by_weighting": {
+    "default": 23.24615733456438,
+    "equal": 17.124065352499795,
+    "legal_heavy": 32.51629280766659,
+    "wording_heavy": 10.398504563999673
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_ba0b2d437969a72ab73c5196",
+   "query": "Compare section 33 of the Wild Life Protection Act before and after the Wild Life Protection (Amendment) Act, 2022.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.01598173515981735,
+    "semantic": 0.002097193490415372,
+    "legal_effect": 0.5,
+    "rule_structure": 0.05
+   },
+   "by_weighting": {
+    "default": 20.88255050790881,
+    "equal": 14.201973216255817,
+    "legal_heavy": 31.180789286502325,
+    "wording_heavy": 6.223157146009309
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_bbcdcf571cfff7e5773a2423",
+   "query": "Compare section 77 of the Disaster Management Act before and after the Disaster Management (Amendment) Act, 2025.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.024096385542168676,
+    "semantic": 0.004381894051756041,
+    "legal_effect": 0.5,
+    "rule_structure": 0.2
+   },
+   "by_weighting": {
+    "default": 22.613384532396054,
+    "equal": 18.21195698984812,
+    "legal_heavy": 34.28478279593924,
+    "wording_heavy": 8.139131183756989
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_c8a34914083ce5365d724bd8",
+   "query": "Compare section 35 of the Companies Act before and after the Companies (Amendment) Act, 2019.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.008492569002123142,
+    "semantic": 0.0018484290715040652,
+    "legal_effect": 0.5,
+    "rule_structure": 0.058823529411764705
+   },
+   "by_weighting": {
+    "default": 20.813539546305233,
+    "equal": 14.229113187134798,
+    "legal_heavy": 31.279880568971564,
+    "wording_heavy": 6.001875217062736
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_cb3f1212970928e95a247625",
+   "query": "Compare section 28 of the Wild Life Protection Act before and after the Wild Life Protection (Amendment) Act, 2022.",
+   "state": "INCOMPLETE",
+   "missing": [
+    "legal_effect"
+   ],
+   "components": {
+    "textual": 0.05555555555555555,
+    "semantic": 0.011781273903165412,
+    "legal_effect": null,
+    "rule_structure": 0.09090909090909091
+   },
+   "by_weighting": {
+    "default": null,
+    "equal": null,
+    "legal_heavy": null,
+    "wording_heavy": null
+   },
+   "partial_value": 3.9560670621616376,
+   "band": null,
+   "legal_effect_level": null
+  },
+  {
+   "transition_id": "transition_cd5936e8a32f53fcc74c9a69",
+   "query": "Compare section 13 of the Right To Information Act before and after the Right To Information (Amendment) Act, 2019.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.028629856850715747,
+    "semantic": 0.003387930990304655,
+    "legal_effect": 0.5,
+    "rule_structure": 0.0
+   },
+   "by_weighting": {
+    "default": 20.674235066723455,
+    "equal": 13.30044469602551,
+    "legal_heavy": 30.320177878410203,
+    "wording_heavy": 6.280711513640816
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_ce471b622b62b6c6e77bd107",
+   "query": "Compare section 7 of the Insolvency Bankruptcy Code before and after the Insolvency And Bankruptcy Code (Amendment) Act, 2020.",
+   "state": "INCOMPLETE",
+   "missing": [
+    "textual",
+    "semantic",
+    "legal_effect",
+    "rule_structure"
+   ],
+   "components": {
+    "textual": null,
+    "semantic": null,
+    "legal_effect": null,
+    "rule_structure": null
+   },
+   "by_weighting": {
+    "default": null,
+    "equal": null,
+    "legal_heavy": null,
+    "wording_heavy": null
+   },
+   "partial_value": null,
+   "band": null,
+   "legal_effect_level": null
+  },
+  {
+   "transition_id": "transition_cff5e713bf8e7dad33229032",
+   "query": "Compare section 441 of the Companies Act before and after the Companies (Amendment) Act, 2019.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.0012165450121654502,
+    "semantic": 0.0001534330158963204,
+    "legal_effect": 0.5,
+    "rule_structure": 0.03571428571428571
+   },
+   "by_weighting": {
+    "default": 20.386076747863058,
+    "equal": 13.427106593558689,
+    "legal_heavy": 30.72798549456633,
+    "wording_heavy": 5.411941978265329
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_d3fc4b6d3f382f4c1495069c",
+   "query": "Compare section 35 of the Wild Life Protection Act before and after the Wild Life Protection (Amendment) Act, 2022.",
+   "state": "INCOMPLETE",
+   "missing": [
+    "textual",
+    "semantic",
+    "legal_effect",
+    "rule_structure"
+   ],
+   "components": {
+    "textual": null,
+    "semantic": null,
+    "legal_effect": null,
+    "rule_structure": null
+   },
+   "by_weighting": {
+    "default": null,
+    "equal": null,
+    "legal_heavy": null,
+    "wording_heavy": null
+   },
+   "partial_value": null,
+   "band": null,
+   "legal_effect_level": null
+  },
+  {
+   "transition_id": "transition_d7e64b35640a6f87019880f3",
+   "query": "Compare section 31 of the Disaster Management Act before and after the Disaster Management (Amendment) Act, 2025.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.034482758620689655,
+    "semantic": 0.004301095754181472,
+    "legal_effect": 0.5,
+    "rule_structure": 0.05555555555555555
+   },
+   "by_weighting": {
+    "default": 21.374243600594795,
+    "equal": 14.858485248260667,
+    "legal_heavy": 31.49894965485982,
+    "wording_heavy": 7.1069097305504005
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_d91ccfe2e3370c7fa69d0ddb",
+   "query": "Compare section 239 of the Insolvency Bankruptcy Code before and after the Insolvency And Bankruptcy Code (Amendment) Act, 2021.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.05517241379310345,
+    "semantic": 0.0011421913492126734,
+    "legal_effect": 0.5,
+    "rule_structure": 0.041237113402061855
+   },
+   "by_weighting": {
+    "default": 21.55008515035907,
+    "equal": 14.938792963609448,
+    "legal_heavy": 31.387888319464395,
+    "wording_heavy": 7.664955339713265
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_d9c57b824e3741c3819575c0",
+   "query": "Compare section 436 of the Companies Act before and after the Companies (Amendment) Act, 2015.",
+   "state": "INCOMPLETE",
+   "missing": [
+    "legal_effect"
+   ],
+   "components": {
+    "textual": 0.013108614232209739,
+    "semantic": 0.003272266673955304,
+    "legal_effect": null,
+    "rule_structure": 0.07692307692307693
+   },
+   "by_weighting": {
+    "default": null,
+    "equal": null,
+    "legal_heavy": null,
+    "wording_heavy": null
+   },
+   "partial_value": 1.8826184234893721,
+   "band": null,
+   "legal_effect_level": null
+  },
+  {
+   "transition_id": "transition_e51c21fea6f360949ae95951",
+   "query": "Compare section 67 of the Disaster Management Act before and after the Disaster Management (Amendment) Act, 2025.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.06097560975609756,
+    "semantic": 0.0073961785894705034,
+    "legal_effect": 0.5,
+    "rule_structure": 0.09090909090909091
+   },
+   "by_weighting": {
+    "default": 22.35048846189698,
+    "equal": 16.482021981366472,
+    "legal_heavy": 32.5018997016375,
+    "wording_heavy": 8.643962442913631
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_f72f2ae2fe1dc2180123b3a8",
+   "query": "Compare section 138 of the Motor Vehicles Act before and after the Motor Vehicles (Amendment) Act, 2019.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.18892508143322476,
+    "semantic": 0.079799753820882,
+    "legal_effect": 0.75,
+    "rule_structure": 0.17647058823529413
+   },
+   "by_weighting": {
+    "default": 37.9372001256439,
+    "equal": 29.879885587235023,
+    "legal_heavy": 51.216660117246946,
+    "wording_heavy": 20.013699292517213
+   },
+   "partial_value": null,
+   "band": "Moderate",
+   "legal_effect_level": "Substantial change to an obligation, entitlement or restriction"
+  },
+  {
+   "transition_id": "transition_f898ddbe3ba65e9a09860fdb",
+   "query": "Compare section 20 of the Transplantation Of Human Organs And Tissues Act before and after the Transplantation Of Human Organs (Amendment) Act, 2011.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.0625,
+    "semantic": 0.04615384510432141,
+    "legal_effect": 0.5,
+    "rule_structure": 0.5
+   },
+   "by_weighting": {
+    "default": 27.634615353129643,
+    "equal": 27.716346127608038,
+    "legal_heavy": 41.08653845104321,
+    "wording_heavy": 14.346153804172857
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_fbdb18e9dee4dcb49b384587",
+   "query": "Compare section 10 of the Motor Vehicles Act before and after the Motor Vehicles (Amendment) Act, 2019.",
+   "state": "INCOMPLETE",
+   "missing": [
+    "legal_effect"
+   ],
+   "components": {
+    "textual": 0.015748031496062992,
+    "semantic": 0.012029810113848183,
+    "legal_effect": null,
+    "rule_structure": 0.08333333333333333
+   },
+   "by_weighting": {
+    "default": null,
+    "equal": null,
+    "legal_heavy": null,
+    "wording_heavy": null
+   },
+   "partial_value": 2.515313777783398,
+   "band": null,
+   "legal_effect_level": null
+  },
+  {
+   "transition_id": "transition_fde9b8189177cbec1726e4c3",
+   "query": "Compare section 134 of the Companies Act before and after the Companies (Amendment) Act, 2015.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.02152317880794702,
+    "semantic": 0.0019805922726124914,
+    "legal_effect": 0.5,
+    "rule_structure": 0.037037037037037035
+   },
+   "by_weighting": {
+    "default": 20.860251714707687,
+    "equal": 14.013520202939914,
+    "legal_heavy": 30.975778451546336,
+    "wording_heavy": 6.310521213592751
+   },
+   "partial_value": null,
+   "band": "Low",
+   "legal_effect_level": "Material change to a condition, procedure or scope"
+  },
+  {
+   "transition_id": "transition_fec66cdf7825334e3bec3134",
+   "query": "Compare section 21 of the Specific Relief Act before and after the Specific Relief (Amendment) Act, 2018.",
+   "state": "INCOMPLETE",
+   "missing": [
+    "legal_effect"
+   ],
+   "components": {
+    "textual": 0.019157088122605363,
+    "semantic": 0.0018779360842542392,
+    "legal_effect": null,
+    "rule_structure": 0.0
+   },
+   "by_weighting": {
+    "default": null,
+    "equal": null,
+    "legal_heavy": null,
+    "wording_heavy": null
+   },
+   "partial_value": 0.7324664082995574,
+   "band": null,
+   "legal_effect_level": null
+  },
+  {
+   "transition_id": "transition_ff084f2238ced08c27577fc5",
+   "query": "Compare section 177 of the Companies Act before and after the Companies (Amendment) Act, 2015.",
+   "state": "COMPLETE",
+   "missing": [],
+   "components": {
+    "textual": 0.02169035153328347,
+    "semantic": 0.0014348617829783583,
+    "legal_effect": 0.75,
+    "rule_structure": 0.034482758620689655
+   },
+   "by_weighting": {
+    "default": 30.821680470361922,
+    "equal": 20.190199298423785,
+    "legal_heavy": 45.92090730557641,
+    "wording_heavy": 8.769836118857372
+   },
+   "partial_value": null,
+   "band": "Moderate",
+   "legal_effect_level": "Substantial change to an obligation, entitlement or restriction"
+  }
+ ],
+ "note": "Weight sensitivity on the same inputs; the bands are provisional and there are no expert labels, so no weighting is shown to be more correct. S uses the deterministic feature-hash stand-in. Legal validation: UNVERIFIED."
+}

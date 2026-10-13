@@ -151,3 +151,13 @@ Not achieved in the sprint:
 | Scoring | rule-drift-v1.2, triage-input-v2, footnote word fix; v1/v1.1 configs and the v4 schema kept | `docs/methodology/legal_change_fingerprint.v1.2.md` |
 | UI | Six views; clean Answer view; Drift Explanation and Score Calculation with field-to-words links; back/forward | `analysis_workspace.test.jsx`, real Chrome |
 | Release | See `docs/verification.md` | — |
+
+## Hybrid drift score (2026-10-13, tlds-v1)
+
+| Phase | Result | Evidence |
+| --- | --- | --- |
+| Audit | Three existing drift calculations; no edit-distance T, no semantic embedding, no legal-effect rubric | ADR 0018 |
+| Scoring | `fingerprint.tlds`: T, S (feature-hash stand-in), L (rubric over v1.2 fields), R (rule elements); complete / incomplete / partial | `docs/methodology/tlds.v1.md`, `tests/unit/test_tlds.py` |
+| Evaluation | 86 held-out transitions under 4 weightings | `reports/fingerprint/tlds_heldout.v1.json` |
+| UI | Combined indicator in Drift Explanation, with L shown separately | `analysis_workspace.test.jsx` |
+| Release | See `docs/verification.md` | — |

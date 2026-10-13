@@ -225,3 +225,17 @@ Remote GitHub Actions has still not been observed. See [../reports/phase3/tempor
   - legal accuracy;
   - a screen-reader listening pass;
   - a live-model general answer.
+
+## Hybrid drift score addendum (2026-10-13, tlds-v1)
+
+- **Baseline before the change (commit `14c7e6a`):** the 7 drift-related modules (fingerprint, drift scoring, rag, comparison, rag_v2, analysis record, rag audit) ran 86 tests, all passing.
+- **Executed after the change:**
+  - Python: the same modules plus `test_tlds.py` ran 101 tests, all passing. The full suite (295 tests) under 3.14 and 3.11 failed only the expected Phase 11 checksum gate before the release. `validate-contract` passed.
+  - Frontend: 34 vitest tests, run 3 times.
+  - Held-out run: `reports/fingerprint/tlds_heldout.v1.py` over 86 transitions. 0 invariant violations, and the v1.2 wording and rule values are unchanged for all 86.
+  - Real Chrome: the IBC s.99 and MV s.170 Drift Explanation sections at 1280px and 360px, with no page overflow. `browser-a11y-check.mjs` reported no unnamed controls and no overflow at 320–480px. Drift has 3 more small targets, the new section's evidence buttons.
+- **Defects found and fixed during this work:** the warning repeated the rubric level; the partial label showed a raw key; R counted a substituted element twice.
+- **Not verified:**
+  - legal validity of the rubric, weights or bands (no expert labels);
+  - a pretrained semantic embedding (S is a feature-hash stand-in);
+  - a screen-reader listening pass.

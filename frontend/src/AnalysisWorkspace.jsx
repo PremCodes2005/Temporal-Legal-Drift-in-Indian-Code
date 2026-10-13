@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { Fragment, useRef, useState } from "react";
 import ComparisonPanel from "./ComparisonPanel";
 import { DeterminationCard, DirectAnswer, EvidenceList, FactsForm } from "./Determinations";
 import { ClausePair } from "./Fingerprint";
@@ -17,7 +17,7 @@ export const TABS = [
 ];
 const VERSION_CLASSES = new Set(["GRAPH_TRANSITION_FRAGMENTS", "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION"]);
 const OPERATION = { ADDED: "added", REMOVED: "removed", CHANGED: "changed", UNCHANGED: "unchanged", ABSENT: "not present", UNCERTAIN: "uncertain" };
-const DIAGNOSTIC_NOTE = "Change diagnostics, measured separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.";
+const DIAGNOSTIC_NOTE = "Change diagnostics; wording, rule and situation change are measured separately: not legal correctness, not a confidence probability, not materiality and not risk.";
 
 const fieldLabel = (row) => row.label || row.field.replaceAll("_", " ");
 const quoted = (values) => (values?.length ? values.map((value) => `“${value}”`).join(" / ") : "—");
@@ -177,13 +177,36 @@ function DriftView({ analysis, onEvidence, onField, onTab }) {
       {structural.length > 0 && <p className="panel-note">Structure: {structural.map((item) => item.value).join("; ")}. A list item or Explanation changes what the rule covers; words inside it are not counted as new duties.</p>}
       <EvidenceButtons ids={rule?.evidence_ids} onEvidence={onEvidence} label="Cited spans" />
     </section>
-    <section className="panel" aria-labelledby="drift-outcome"><span className="section-kicker">3 · Your situation (separate)</span>
+    <CombinedScore tlds={fp.tlds} onEvidence={onEvidence} />
+    <section className="panel" aria-labelledby="drift-outcome"><span className="section-kicker">{fp.tlds && fp.tlds.state !== "NOT_APPLICABLE" ? "4" : "3"} · Your situation (separate)</span>
       <h3 id="drift-outcome">Does it change the answer for you?</h3>
       {outcome?.value != null ? <p>{outcome.summary}</p>
         : outcome?.limit?.kind === "facts" ? <p>That depends on facts about your situation; it is assessed separately. <button type="button" className="link-button" onClick={() => onTab("scenario")}>Check your situation</button></p>
           : <p>{outcome?.reason}</p>}
     </section>
   </div>;
+}
+
+const TLDS_PARTS = [["textual", "Textual drift (T)"], ["semantic", "Semantic drift (S, word-overlap stand-in)"], ["legal_effect", "Legal-effect drift (L)"], ["rule_structure", "Rule-structure drift (R)"]];
+
+// tlds-v1: the four components stay visible beside the composite; stored records without it simply omit the section.
+function CombinedScore({ tlds, onEvidence }) {
+  if (!tlds || tlds.state === "NOT_APPLICABLE") return null;
+  const legal = tlds.components?.legal_effect;
+  const hidden = tlds.value != null && legal?.value >= 0.5 && ["Very low", "Low"].includes(tlds.band);
+  return <section className="panel" aria-labelledby="drift-tlds"><span className="section-kicker">3 · Combined indicator · {tlds.version}</span>
+    <h3 id="drift-tlds">Hybrid drift score (TLDS) <span className="value-pill">{tlds.label}</span></h3>
+    {hidden && <p className="warning-note" role="note"><strong>Read legal effect on its own.</strong><span>The combined score is {tlds.band.toLowerCase()}, but legal-effect drift is {legal.value.toFixed(2)}. {legal.reason}</span></p>}
+    {tlds.value == null && <p className="limit-note"><strong>No complete score.</strong> Missing: {tlds.missing_components.join(", ").replaceAll("_", " ")}.
+      {tlds.partial_label ? ` A ${tlds.partial_label} is recorded separately.` : ""}</p>}
+    <dl className="calc-list">{TLDS_PARTS.map(([key, label]) => { const part = tlds.components?.[key] || {};
+      return <Fragment key={key}><dt>{label}</dt><dd>{part.value != null ? <strong>{part.value.toFixed(3)}</strong> : "missing"} · {part.reason}</dd></Fragment>; })}
+      {tlds.calculation && <><dt>Worked calculation</dt><dd><code>{tlds.calculation}</code></dd></>}
+      <dt>Weights</dt><dd>{TLDS_PARTS.map(([key]) => `${key.replaceAll("_", " ")} ${tlds.weights?.[key]}`).join(" · ")} (<code>{tlds.config}</code>)</dd>
+    </dl>
+    <p className="panel-note">{tlds.note} {tlds.bands_note}</p>
+    <EvidenceButtons ids={tlds.evidence_ids} onEvidence={onEvidence} label="Scored from" />
+  </section>;
 }
 
 // ---------- Score Calculation ----------

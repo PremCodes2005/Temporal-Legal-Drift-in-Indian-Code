@@ -85,7 +85,7 @@ describe("Drift Explanation and Score Calculation", () => {
     const user = userEvent.setup();
     render(<AnalysisWorkspace analysis={responses.ibc99} />);
     await open(user, "Drift Explanation");
-    expect(screen.getByRole("note").textContent).toMatch(/Only 0\.8% of the wording changed, yet the deadline or period changed/);
+    expect(screen.getAllByRole("note")[0].textContent).toMatch(/Only 0\.8% of the wording changed, yet the deadline or period changed/);
     expect(panel().textContent).toContain("“within ten days” → “within twenty-one days”");
     expect(panel().textContent).toContain("Why it matters: it changes when compliance is due.");
     expect(panel().textContent).not.toMatch(/overall|average[ds]? (?!into)/i);
@@ -198,10 +198,34 @@ describe("abstention and sources", () => {
     expect(within(card).getAllByText(/computed for this answer/).length).toBeGreaterThan(0);
   });
 
+  it("shows the combined TLDS beside its four parts, and flags a legal effect the composite would hide", async () => {
+    const user = userEvent.setup();
+    const tlds = responses.ibc99.fingerprint.tlds;
+    render(<AnalysisWorkspace analysis={responses.ibc99} />);
+    await open(user, "Drift Explanation");
+    const card = screen.getByRole("region", { name: /Hybrid drift score \(TLDS\)/ });
+    const parts = Object.values(tlds.components).map((part) => part.value);
+    for (const value of parts) expect(card.textContent).toContain(value.toFixed(3));
+    const recomputed = 100 * Object.entries(tlds.components).reduce((sum, [name, part]) => sum + tlds.weights[name] * part.value, 0);
+    expect(card.textContent).toContain(`= ${recomputed.toFixed(1)}`);
+    expect(within(card).getByRole("note").textContent).toMatch(/combined score is low, but legal-effect drift is 0\.50\. Material change/i);
+  });
+
+  it("marks the combined score incomplete when legal effect is missing, never 0", async () => {
+    const user = userEvent.setup();
+    render(<AnalysisWorkspace analysis={responses.mv170} />);
+    await open(user, "Drift Explanation");
+    const card = screen.getByRole("region", { name: /Hybrid drift score \(TLDS\)/ });
+    expect(card.textContent).toMatch(/No complete score\. Missing: legal effect/);
+    expect(card.textContent).toContain("not comparable with complete scores");
+  });
+
   it("still opens a stored v4 analysis from a v0.14 link", async () => {
     const user = userEvent.setup();
     render(<AnalysisWorkspace analysis={v4["dm31-month18"]} />);
     for (const { label } of TABS) { await open(user, label); expect(panel().textContent.length, label).toBeGreaterThan(40); }
+    await open(user, "Drift Explanation");
+    expect(screen.queryByRole("region", { name: /Hybrid drift score/ })).toBeNull();  // records without TLDS omit the section
   });
 });
 

@@ -411,7 +411,84 @@
      "legal_validation": "UNVERIFIED"
     },
     "reading": [],
-    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk."
+    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
+    "tlds": {
+     "version": "tlds-v1",
+     "weights": {
+      "textual": 0.2,
+      "semantic": 0.3,
+      "legal_effect": 0.4,
+      "rule_structure": 0.1
+     },
+     "missing_components": [
+      "textual",
+      "semantic",
+      "legal_effect",
+      "rule_structure"
+     ],
+     "formula": "D = 100 × (w_T·T + w_S·S + w_L·L + w_R·R), every component in [0, 1]",
+     "bands": [
+      [
+       0,
+       "Very low"
+      ],
+      [
+       10,
+       "Low"
+      ],
+      [
+       30,
+       "Moderate"
+      ],
+      [
+       50,
+       "High"
+      ],
+      [
+       75,
+       "Very high"
+      ]
+     ],
+     "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "state": "NOT_APPLICABLE",
+     "value": null,
+     "tldp_percent": null,
+     "band": null,
+     "label": "Not applicable",
+     "partial_value": null,
+     "partial_label": null,
+     "calculation": null,
+     "components": {
+      "textual": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      },
+      "semantic": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      },
+      "legal_effect": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      },
+      "rule_structure": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      }
+     },
+     "config": "configs/metrics/tlds.v1.json",
+     "note": "An indicator of change between two versions of one clause, not the percentage of a statute that changed, not legal correctness, not a probability, not materiality and not risk. Read legal-effect drift beside it: a small wording change can carry a large legal effect.",
+     "evidence_ids": [],
+     "legal_validation": "UNVERIFIED"
+    }
    },
    "scenario_request": {
     "fields": [],
@@ -419,7 +496,7 @@
     "blocked_by_evidence": [],
     "explanation": "No facts are needed for this question."
    },
-   "analysis_id": "an_9ae8a310961c6f205450422d"
+   "analysis_id": "an_79480d1a0c1aaa9b494adbf0"
   },
   "out-of-scope": {
    "schema_version": "5.0.0",
@@ -606,7 +683,84 @@
      "legal_validation": "UNVERIFIED"
     },
     "reading": [],
-    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk."
+    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
+    "tlds": {
+     "version": "tlds-v1",
+     "weights": {
+      "textual": 0.2,
+      "semantic": 0.3,
+      "legal_effect": 0.4,
+      "rule_structure": 0.1
+     },
+     "missing_components": [
+      "textual",
+      "semantic",
+      "legal_effect",
+      "rule_structure"
+     ],
+     "formula": "D = 100 × (w_T·T + w_S·S + w_L·L + w_R·R), every component in [0, 1]",
+     "bands": [
+      [
+       0,
+       "Very low"
+      ],
+      [
+       10,
+       "Low"
+      ],
+      [
+       30,
+       "Moderate"
+      ],
+      [
+       50,
+       "High"
+      ],
+      [
+       75,
+       "Very high"
+      ]
+     ],
+     "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "state": "NOT_APPLICABLE",
+     "value": null,
+     "tldp_percent": null,
+     "band": null,
+     "label": "Not applicable",
+     "partial_value": null,
+     "partial_label": null,
+     "calculation": null,
+     "components": {
+      "textual": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      },
+      "semantic": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      },
+      "legal_effect": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      },
+      "rule_structure": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      }
+     },
+     "config": "configs/metrics/tlds.v1.json",
+     "note": "An indicator of change between two versions of one clause, not the percentage of a statute that changed, not legal correctness, not a probability, not materiality and not risk. Read legal-effect drift beside it: a small wording change can carry a large legal effect.",
+     "evidence_ids": [],
+     "legal_validation": "UNVERIFIED"
+    }
    },
    "determinations": {
     "version": "determinations-v4",
@@ -720,7 +874,7 @@
     ],
     "explanation": "No facts are needed for this question. Facts cannot fill missing legal evidence for: which wording applies on your date, conditional compliance risk."
    },
-   "analysis_id": "an_f32fffad85869031da339c15"
+   "analysis_id": "an_25ef3c1ce24a5bca60a8568a"
   },
   "it-s19": {
    "schema_version": "5.0.0",
@@ -1295,7 +1449,104 @@
       ]
      }
     ],
-    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk."
+    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
+    "tlds": {
+     "version": "tlds-v1",
+     "weights": {
+      "textual": 0.2,
+      "semantic": 0.3,
+      "legal_effect": 0.4,
+      "rule_structure": 0.1
+     },
+     "missing_components": [
+      "legal_effect"
+     ],
+     "formula": "D = 100 × (w_T·T + w_S·S + w_L·L + w_R·R), every component in [0, 1]",
+     "bands": [
+      [
+       0,
+       "Very low"
+      ],
+      [
+       10,
+       "Low"
+      ],
+      [
+       30,
+       "Moderate"
+      ],
+      [
+       50,
+       "High"
+      ],
+      [
+       75,
+       "Very high"
+      ]
+     ],
+     "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "state": "INCOMPLETE",
+     "value": null,
+     "tldp_percent": null,
+     "band": null,
+     "label": "Incomplete",
+     "partial_value": 0.4953244225147401,
+     "partial_label": "partial 0.5/100 (without legal effect; not comparable with complete scores)",
+     "calculation": "100 × (0.2 × 0.0076 + 0.3 × 0.0048 + 0.1 × 0.0000) ÷ 0.6 = 0.5",
+     "components": {
+      "textual": {
+       "value": 0.007633587786259542,
+       "method": "token-levenshtein-v1",
+       "reason": "Token edits needed to turn the before clause into the after clause, per token of the longer clause.",
+       "details": {
+        "edit_distance": 1,
+        "before_tokens": 131,
+        "after_tokens": 131,
+        "formula": "EditDistance(pre, post) ÷ max(|pre|, |post|)",
+        "calculation": "1 ÷ 131 = 0.0076"
+       }
+      },
+      "semantic": {
+       "value": 0.0048174299261217746,
+       "method": "embedding-cosine-v1",
+       "reason": "1 − cosine of the two clause embeddings; a proxy for meaning, not proof of the same legal effect.",
+       "details": {
+        "model": "stable_feature_hashing-256 (retriever.embed_text; word-overlap stand-in, not a pretrained semantic model)",
+        "dimensions": 256,
+        "cosine": 0.9951825700738782,
+        "formula": "1 − cos(e_pre, e_post), cosine clipped to [0, 1]",
+        "calculation": "1 − 0.9952 = 0.0048"
+       }
+      },
+      "legal_effect": {
+       "value": null,
+       "method": "legal-effect-rubric-v1",
+       "reason": "Rule drift did not score this change: A term or phrase was replaced (“Digital” → “electronic”). Whether this widens or narrows the rule depends on how the terms are defined, which this method does not compare, so no rule score is given.",
+       "details": {}
+      },
+      "rule_structure": {
+       "value": 0.0,
+       "method": "rule-element-edit-v1",
+       "reason": "Share of the clause's rule elements inserted, deleted or substituted.",
+       "details": {
+        "removed": [],
+        "added": [],
+        "substituted": 0,
+        "shared": 6,
+        "formula": "(only-before + only-after − substitutions) ÷ (all distinct elements − substitutions)",
+        "calculation": "(0 + 0 − 0) ÷ (6 − 0) = 0.0000"
+       }
+      }
+     },
+     "config": "configs/metrics/tlds.v1.json",
+     "note": "An indicator of change between two versions of one clause, not the percentage of a statute that changed, not legal correctness, not a probability, not materiality and not risk. Read legal-effect drift beside it: a small wording change can carry a large legal effect.",
+     "evidence_ids": [
+      "E1",
+      "E2",
+      "E3"
+     ],
+     "legal_validation": "UNVERIFIED"
+    }
    },
    "determinations": {
     "version": "determinations-v4",
@@ -2005,7 +2256,7 @@
     "blocked_by_evidence": [],
     "explanation": "Only these facts are needed; anything you leave blank is not assumed."
    },
-   "analysis_id": "an_5582a5c4e99a9f182d7e1e3a"
+   "analysis_id": "an_a728e21336d31fb33f594f69"
   },
   "it-s19-generic": {
    "schema_version": "5.0.0",
@@ -2559,7 +2810,104 @@
       ]
      }
     ],
-    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk."
+    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
+    "tlds": {
+     "version": "tlds-v1",
+     "weights": {
+      "textual": 0.2,
+      "semantic": 0.3,
+      "legal_effect": 0.4,
+      "rule_structure": 0.1
+     },
+     "missing_components": [
+      "legal_effect"
+     ],
+     "formula": "D = 100 × (w_T·T + w_S·S + w_L·L + w_R·R), every component in [0, 1]",
+     "bands": [
+      [
+       0,
+       "Very low"
+      ],
+      [
+       10,
+       "Low"
+      ],
+      [
+       30,
+       "Moderate"
+      ],
+      [
+       50,
+       "High"
+      ],
+      [
+       75,
+       "Very high"
+      ]
+     ],
+     "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "state": "INCOMPLETE",
+     "value": null,
+     "tldp_percent": null,
+     "band": null,
+     "label": "Incomplete",
+     "partial_value": 0.4953244225147401,
+     "partial_label": "partial 0.5/100 (without legal effect; not comparable with complete scores)",
+     "calculation": "100 × (0.2 × 0.0076 + 0.3 × 0.0048 + 0.1 × 0.0000) ÷ 0.6 = 0.5",
+     "components": {
+      "textual": {
+       "value": 0.007633587786259542,
+       "method": "token-levenshtein-v1",
+       "reason": "Token edits needed to turn the before clause into the after clause, per token of the longer clause.",
+       "details": {
+        "edit_distance": 1,
+        "before_tokens": 131,
+        "after_tokens": 131,
+        "formula": "EditDistance(pre, post) ÷ max(|pre|, |post|)",
+        "calculation": "1 ÷ 131 = 0.0076"
+       }
+      },
+      "semantic": {
+       "value": 0.0048174299261217746,
+       "method": "embedding-cosine-v1",
+       "reason": "1 − cosine of the two clause embeddings; a proxy for meaning, not proof of the same legal effect.",
+       "details": {
+        "model": "stable_feature_hashing-256 (retriever.embed_text; word-overlap stand-in, not a pretrained semantic model)",
+        "dimensions": 256,
+        "cosine": 0.9951825700738782,
+        "formula": "1 − cos(e_pre, e_post), cosine clipped to [0, 1]",
+        "calculation": "1 − 0.9952 = 0.0048"
+       }
+      },
+      "legal_effect": {
+       "value": null,
+       "method": "legal-effect-rubric-v1",
+       "reason": "Rule drift did not score this change: A term or phrase was replaced (“Digital” → “electronic”). Whether this widens or narrows the rule depends on how the terms are defined, which this method does not compare, so no rule score is given.",
+       "details": {}
+      },
+      "rule_structure": {
+       "value": 0.0,
+       "method": "rule-element-edit-v1",
+       "reason": "Share of the clause's rule elements inserted, deleted or substituted.",
+       "details": {
+        "removed": [],
+        "added": [],
+        "substituted": 0,
+        "shared": 6,
+        "formula": "(only-before + only-after − substitutions) ÷ (all distinct elements − substitutions)",
+        "calculation": "(0 + 0 − 0) ÷ (6 − 0) = 0.0000"
+       }
+      }
+     },
+     "config": "configs/metrics/tlds.v1.json",
+     "note": "An indicator of change between two versions of one clause, not the percentage of a statute that changed, not legal correctness, not a probability, not materiality and not risk. Read legal-effect drift beside it: a small wording change can carry a large legal effect.",
+     "evidence_ids": [
+      "E1",
+      "E2",
+      "E3"
+     ],
+     "legal_validation": "UNVERIFIED"
+    }
    },
    "determinations": {
     "version": "determinations-v4",
@@ -3269,7 +3617,7 @@
     "blocked_by_evidence": [],
     "explanation": "Only these facts are needed; anything you leave blank is not assumed."
    },
-   "analysis_id": "an_4b18f761bfe369c5a6004d98"
+   "analysis_id": "an_00a9dcee2c7499509e664a16"
   },
   "sra": {
    "schema_version": "5.0.0",
@@ -3860,7 +4208,142 @@
       "text": "Only 5.4% of the wording changed, yet the duty, permission or prohibition changed. A small edit can change what the law requires; that is why wording and rule change are measured separately and never averaged."
      }
     ],
-    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk."
+    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
+    "tlds": {
+     "version": "tlds-v1",
+     "weights": {
+      "textual": 0.2,
+      "semantic": 0.3,
+      "legal_effect": 0.4,
+      "rule_structure": 0.1
+     },
+     "missing_components": [],
+     "formula": "D = 100 × (w_T·T + w_S·S + w_L·L + w_R·R), every component in [0, 1]",
+     "bands": [
+      [
+       0,
+       "Very low"
+      ],
+      [
+       10,
+       "Low"
+      ],
+      [
+       30,
+       "Moderate"
+      ],
+      [
+       50,
+       "High"
+      ],
+      [
+       75,
+       "Very high"
+      ]
+     ],
+     "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "state": "COMPLETE",
+     "value": 37.992620151667424,
+     "tldp_percent": 37.992620151667424,
+     "band": "Moderate",
+     "label": "38.0/100 · Moderate",
+     "partial_value": null,
+     "calculation": "100 × (0.2 × 0.0972 + 0.3 × 0.0349 + 0.4 × 0.7500 + 0.1 × 0.5000) = 38.0",
+     "components": {
+      "textual": {
+       "value": 0.09722222222222222,
+       "method": "token-levenshtein-v1",
+       "reason": "Token edits needed to turn the before clause into the after clause, per token of the longer clause.",
+       "details": {
+        "edit_distance": 7,
+        "before_tokens": 72,
+        "after_tokens": 66,
+        "formula": "EditDistance(pre, post) ÷ max(|pre|, |post|)",
+        "calculation": "7 ÷ 72 = 0.0972"
+       }
+      },
+      "semantic": {
+       "value": 0.03493919024076575,
+       "method": "embedding-cosine-v1",
+       "reason": "1 − cosine of the two clause embeddings; a proxy for meaning, not proof of the same legal effect.",
+       "details": {
+        "model": "stable_feature_hashing-256 (retriever.embed_text; word-overlap stand-in, not a pretrained semantic model)",
+        "dimensions": 256,
+        "cosine": 0.9650608097592343,
+        "formula": "1 − cos(e_pre, e_post), cosine clipped to [0, 1]",
+        "calculation": "1 − 0.9651 = 0.0349"
+       }
+      },
+      "legal_effect": {
+       "value": 0.75,
+       "method": "legal-effect-rubric-v1",
+       "details": {
+        "changes": [
+         {
+          "field": "modality",
+          "label": "Duty, permission or prohibition",
+          "operation": "CHANGED",
+          "score": 0.75,
+          "basis": "modality changed",
+          "before": [
+           "permission: may",
+           "permission: discretion"
+          ],
+          "after": [
+           "obligation: shall"
+          ],
+          "before_spans": [
+           [
+            170,
+            173
+           ],
+           [
+            182,
+            192
+           ]
+          ],
+          "after_spans": [
+           [
+            170,
+            175
+           ]
+          ]
+         }
+        ],
+        "aggregation": "maximum over detected changes: the composite reflects the most severe change once, and every change is listed with its spans",
+        "level": "Substantial change to an obligation, entitlement or restriction",
+        "lower_bound": false
+       },
+       "reason": "Substantial change to an obligation, entitlement or restriction: the most severe detected change is modality changed."
+      },
+      "rule_structure": {
+       "value": 0.5,
+       "method": "rule-element-edit-v1",
+       "reason": "Share of the clause's rule elements inserted, deleted or substituted.",
+       "details": {
+        "removed": [
+         "modality: permission discretion",
+         "modality: permission may"
+        ],
+        "added": [
+         "modality: obligation shall"
+        ],
+        "substituted": 1,
+        "shared": 2,
+        "formula": "(only-before + only-after − substitutions) ÷ (all distinct elements − substitutions)",
+        "calculation": "(2 + 1 − 1) ÷ (5 − 1) = 0.5000"
+       }
+      }
+     },
+     "config": "configs/metrics/tlds.v1.json",
+     "note": "An indicator of change between two versions of one clause, not the percentage of a statute that changed, not legal correctness, not a probability, not materiality and not risk. Read legal-effect drift beside it: a small wording change can carry a large legal effect.",
+     "evidence_ids": [
+      "E1",
+      "E2",
+      "E4"
+     ],
+     "legal_validation": "UNVERIFIED"
+    }
    },
    "determinations": {
     "version": "determinations-v4",
@@ -4403,7 +4886,7 @@
     "blocked_by_evidence": [],
     "explanation": "Only these facts are needed; anything you leave blank is not assumed."
    },
-   "analysis_id": "an_5ed0c122db46b87737b98940"
+   "analysis_id": "an_3f9659d168ab7fa85e64adca"
   },
   "dm31": {
    "schema_version": "5.0.0",
@@ -4999,7 +5482,136 @@
       "text": "Only 2.0% of the wording changed, yet the deadline or period changed. A small edit can change what the law requires; that is why wording and rule change are measured separately and never averaged."
      }
     ],
-    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk."
+    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
+    "tlds": {
+     "version": "tlds-v1",
+     "weights": {
+      "textual": 0.2,
+      "semantic": 0.3,
+      "legal_effect": 0.4,
+      "rule_structure": 0.1
+     },
+     "missing_components": [],
+     "formula": "D = 100 × (w_T·T + w_S·S + w_L·L + w_R·R), every component in [0, 1]",
+     "bands": [
+      [
+       0,
+       "Very low"
+      ],
+      [
+       10,
+       "Low"
+      ],
+      [
+       30,
+       "Moderate"
+      ],
+      [
+       50,
+       "High"
+      ],
+      [
+       75,
+       "Very high"
+      ]
+     ],
+     "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "state": "COMPLETE",
+     "value": 21.374243600594795,
+     "tldp_percent": 21.374243600594795,
+     "band": "Low",
+     "label": "21.4/100 · Low",
+     "partial_value": null,
+     "calculation": "100 × (0.2 × 0.0345 + 0.3 × 0.0043 + 0.4 × 0.5000 + 0.1 × 0.0556) = 21.4",
+     "components": {
+      "textual": {
+       "value": 0.034482758620689655,
+       "method": "token-levenshtein-v1",
+       "reason": "Token edits needed to turn the before clause into the after clause, per token of the longer clause.",
+       "details": {
+        "edit_distance": 11,
+        "before_tokens": 309,
+        "after_tokens": 319,
+        "formula": "EditDistance(pre, post) ÷ max(|pre|, |post|)",
+        "calculation": "11 ÷ 319 = 0.0345"
+       }
+      },
+      "semantic": {
+       "value": 0.004301095754181472,
+       "method": "embedding-cosine-v1",
+       "reason": "1 − cosine of the two clause embeddings; a proxy for meaning, not proof of the same legal effect.",
+       "details": {
+        "model": "stable_feature_hashing-256 (retriever.embed_text; word-overlap stand-in, not a pretrained semantic model)",
+        "dimensions": 256,
+        "cosine": 0.9956989042458185,
+        "formula": "1 − cos(e_pre, e_post), cosine clipped to [0, 1]",
+        "calculation": "1 − 0.9957 = 0.0043"
+       }
+      },
+      "legal_effect": {
+       "value": 0.5,
+       "method": "legal-effect-rubric-v1",
+       "details": {
+        "changes": [
+         {
+          "field": "deadline",
+          "label": "Deadline or period",
+          "operation": "CHANGED",
+          "score": 0.5,
+          "basis": "deadline changed",
+          "before": [
+           "annually"
+          ],
+          "after": [
+           "at least once in every two years"
+          ],
+          "before_spans": [
+           [
+            1362,
+            1370
+           ]
+          ],
+          "after_spans": [
+           [
+            1362,
+            1394
+           ]
+          ]
+         }
+        ],
+        "aggregation": "maximum over detected changes: the composite reflects the most severe change once, and every change is listed with its spans",
+        "level": "Material change to a condition, procedure or scope",
+        "lower_bound": false
+       },
+       "reason": "Material change to a condition, procedure or scope: the most severe detected change is deadline changed."
+      },
+      "rule_structure": {
+       "value": 0.05555555555555555,
+       "method": "rule-element-edit-v1",
+       "reason": "Share of the clause's rule elements inserted, deleted or substituted.",
+       "details": {
+        "removed": [
+         "deadline: annually"
+        ],
+        "added": [
+         "deadline: at least once in every two years"
+        ],
+        "substituted": 1,
+        "shared": 17,
+        "formula": "(only-before + only-after − substitutions) ÷ (all distinct elements − substitutions)",
+        "calculation": "(1 + 1 − 1) ÷ (19 − 1) = 0.0556"
+       }
+      }
+     },
+     "config": "configs/metrics/tlds.v1.json",
+     "note": "An indicator of change between two versions of one clause, not the percentage of a statute that changed, not legal correctness, not a probability, not materiality and not risk. Read legal-effect drift beside it: a small wording change can carry a large legal effect.",
+     "evidence_ids": [
+      "E1",
+      "E2",
+      "E4"
+     ],
+     "legal_validation": "UNVERIFIED"
+    }
    },
    "determinations": {
     "version": "determinations-v4",
@@ -5558,7 +6170,7 @@
     "blocked_by_evidence": [],
     "explanation": "Only these facts are needed; anything you leave blank is not assumed."
    },
-   "analysis_id": "an_8b77740bd0cec8e324aba820"
+   "analysis_id": "an_45ddf596804f3188bc6d620e"
   },
   "dm31-month18": {
    "schema_version": "5.0.0",
@@ -6195,7 +6807,136 @@
       "evidence_ids": []
      }
     ],
-    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk."
+    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
+    "tlds": {
+     "version": "tlds-v1",
+     "weights": {
+      "textual": 0.2,
+      "semantic": 0.3,
+      "legal_effect": 0.4,
+      "rule_structure": 0.1
+     },
+     "missing_components": [],
+     "formula": "D = 100 × (w_T·T + w_S·S + w_L·L + w_R·R), every component in [0, 1]",
+     "bands": [
+      [
+       0,
+       "Very low"
+      ],
+      [
+       10,
+       "Low"
+      ],
+      [
+       30,
+       "Moderate"
+      ],
+      [
+       50,
+       "High"
+      ],
+      [
+       75,
+       "Very high"
+      ]
+     ],
+     "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "state": "COMPLETE",
+     "value": 21.374243600594795,
+     "tldp_percent": 21.374243600594795,
+     "band": "Low",
+     "label": "21.4/100 · Low",
+     "partial_value": null,
+     "calculation": "100 × (0.2 × 0.0345 + 0.3 × 0.0043 + 0.4 × 0.5000 + 0.1 × 0.0556) = 21.4",
+     "components": {
+      "textual": {
+       "value": 0.034482758620689655,
+       "method": "token-levenshtein-v1",
+       "reason": "Token edits needed to turn the before clause into the after clause, per token of the longer clause.",
+       "details": {
+        "edit_distance": 11,
+        "before_tokens": 309,
+        "after_tokens": 319,
+        "formula": "EditDistance(pre, post) ÷ max(|pre|, |post|)",
+        "calculation": "11 ÷ 319 = 0.0345"
+       }
+      },
+      "semantic": {
+       "value": 0.004301095754181472,
+       "method": "embedding-cosine-v1",
+       "reason": "1 − cosine of the two clause embeddings; a proxy for meaning, not proof of the same legal effect.",
+       "details": {
+        "model": "stable_feature_hashing-256 (retriever.embed_text; word-overlap stand-in, not a pretrained semantic model)",
+        "dimensions": 256,
+        "cosine": 0.9956989042458185,
+        "formula": "1 − cos(e_pre, e_post), cosine clipped to [0, 1]",
+        "calculation": "1 − 0.9957 = 0.0043"
+       }
+      },
+      "legal_effect": {
+       "value": 0.5,
+       "method": "legal-effect-rubric-v1",
+       "details": {
+        "changes": [
+         {
+          "field": "deadline",
+          "label": "Deadline or period",
+          "operation": "CHANGED",
+          "score": 0.5,
+          "basis": "deadline changed",
+          "before": [
+           "annually"
+          ],
+          "after": [
+           "at least once in every two years"
+          ],
+          "before_spans": [
+           [
+            1362,
+            1370
+           ]
+          ],
+          "after_spans": [
+           [
+            1362,
+            1394
+           ]
+          ]
+         }
+        ],
+        "aggregation": "maximum over detected changes: the composite reflects the most severe change once, and every change is listed with its spans",
+        "level": "Material change to a condition, procedure or scope",
+        "lower_bound": false
+       },
+       "reason": "Material change to a condition, procedure or scope: the most severe detected change is deadline changed."
+      },
+      "rule_structure": {
+       "value": 0.05555555555555555,
+       "method": "rule-element-edit-v1",
+       "reason": "Share of the clause's rule elements inserted, deleted or substituted.",
+       "details": {
+        "removed": [
+         "deadline: annually"
+        ],
+        "added": [
+         "deadline: at least once in every two years"
+        ],
+        "substituted": 1,
+        "shared": 17,
+        "formula": "(only-before + only-after − substitutions) ÷ (all distinct elements − substitutions)",
+        "calculation": "(1 + 1 − 1) ÷ (19 − 1) = 0.0556"
+       }
+      }
+     },
+     "config": "configs/metrics/tlds.v1.json",
+     "note": "An indicator of change between two versions of one clause, not the percentage of a statute that changed, not legal correctness, not a probability, not materiality and not risk. Read legal-effect drift beside it: a small wording change can carry a large legal effect.",
+     "evidence_ids": [
+      "E1",
+      "E2",
+      "E4"
+     ],
+     "legal_validation": "UNVERIFIED"
+    }
    },
    "determinations": {
     "version": "determinations-v4",
@@ -6745,7 +7486,7 @@
     "blocked_by_evidence": [],
     "explanation": "Only these facts are needed; anything you leave blank is not assumed."
    },
-   "analysis_id": "an_37691b76675be0c79b821172"
+   "analysis_id": "an_8fc35e39540c3a3f0aafcc80"
   },
   "dm31-month6": {
    "schema_version": "5.0.0",
@@ -7381,7 +8122,136 @@
       "evidence_ids": []
      }
     ],
-    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk."
+    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
+    "tlds": {
+     "version": "tlds-v1",
+     "weights": {
+      "textual": 0.2,
+      "semantic": 0.3,
+      "legal_effect": 0.4,
+      "rule_structure": 0.1
+     },
+     "missing_components": [],
+     "formula": "D = 100 × (w_T·T + w_S·S + w_L·L + w_R·R), every component in [0, 1]",
+     "bands": [
+      [
+       0,
+       "Very low"
+      ],
+      [
+       10,
+       "Low"
+      ],
+      [
+       30,
+       "Moderate"
+      ],
+      [
+       50,
+       "High"
+      ],
+      [
+       75,
+       "Very high"
+      ]
+     ],
+     "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "state": "COMPLETE",
+     "value": 21.374243600594795,
+     "tldp_percent": 21.374243600594795,
+     "band": "Low",
+     "label": "21.4/100 · Low",
+     "partial_value": null,
+     "calculation": "100 × (0.2 × 0.0345 + 0.3 × 0.0043 + 0.4 × 0.5000 + 0.1 × 0.0556) = 21.4",
+     "components": {
+      "textual": {
+       "value": 0.034482758620689655,
+       "method": "token-levenshtein-v1",
+       "reason": "Token edits needed to turn the before clause into the after clause, per token of the longer clause.",
+       "details": {
+        "edit_distance": 11,
+        "before_tokens": 309,
+        "after_tokens": 319,
+        "formula": "EditDistance(pre, post) ÷ max(|pre|, |post|)",
+        "calculation": "11 ÷ 319 = 0.0345"
+       }
+      },
+      "semantic": {
+       "value": 0.004301095754181472,
+       "method": "embedding-cosine-v1",
+       "reason": "1 − cosine of the two clause embeddings; a proxy for meaning, not proof of the same legal effect.",
+       "details": {
+        "model": "stable_feature_hashing-256 (retriever.embed_text; word-overlap stand-in, not a pretrained semantic model)",
+        "dimensions": 256,
+        "cosine": 0.9956989042458185,
+        "formula": "1 − cos(e_pre, e_post), cosine clipped to [0, 1]",
+        "calculation": "1 − 0.9957 = 0.0043"
+       }
+      },
+      "legal_effect": {
+       "value": 0.5,
+       "method": "legal-effect-rubric-v1",
+       "details": {
+        "changes": [
+         {
+          "field": "deadline",
+          "label": "Deadline or period",
+          "operation": "CHANGED",
+          "score": 0.5,
+          "basis": "deadline changed",
+          "before": [
+           "annually"
+          ],
+          "after": [
+           "at least once in every two years"
+          ],
+          "before_spans": [
+           [
+            1362,
+            1370
+           ]
+          ],
+          "after_spans": [
+           [
+            1362,
+            1394
+           ]
+          ]
+         }
+        ],
+        "aggregation": "maximum over detected changes: the composite reflects the most severe change once, and every change is listed with its spans",
+        "level": "Material change to a condition, procedure or scope",
+        "lower_bound": false
+       },
+       "reason": "Material change to a condition, procedure or scope: the most severe detected change is deadline changed."
+      },
+      "rule_structure": {
+       "value": 0.05555555555555555,
+       "method": "rule-element-edit-v1",
+       "reason": "Share of the clause's rule elements inserted, deleted or substituted.",
+       "details": {
+        "removed": [
+         "deadline: annually"
+        ],
+        "added": [
+         "deadline: at least once in every two years"
+        ],
+        "substituted": 1,
+        "shared": 17,
+        "formula": "(only-before + only-after − substitutions) ÷ (all distinct elements − substitutions)",
+        "calculation": "(1 + 1 − 1) ÷ (19 − 1) = 0.0556"
+       }
+      }
+     },
+     "config": "configs/metrics/tlds.v1.json",
+     "note": "An indicator of change between two versions of one clause, not the percentage of a statute that changed, not legal correctness, not a probability, not materiality and not risk. Read legal-effect drift beside it: a small wording change can carry a large legal effect.",
+     "evidence_ids": [
+      "E1",
+      "E2",
+      "E4"
+     ],
+     "legal_validation": "UNVERIFIED"
+    }
    },
    "determinations": {
     "version": "determinations-v4",
@@ -7931,7 +8801,7 @@
     "blocked_by_evidence": [],
     "explanation": "Only these facts are needed; anything you leave blank is not assumed."
    },
-   "analysis_id": "an_a81ab10c03151c22ba94d81e"
+   "analysis_id": "an_197509c39623573c060a999a"
   },
   "ibc99": {
    "schema_version": "5.0.0",
@@ -8564,7 +9434,136 @@
       "text": "Only 0.8% of the wording changed, yet the deadline or period changed. A small edit can change what the law requires; that is why wording and rule change are measured separately and never averaged."
      }
     ],
-    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk."
+    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
+    "tlds": {
+     "version": "tlds-v1",
+     "weights": {
+      "textual": 0.2,
+      "semantic": 0.3,
+      "legal_effect": 0.4,
+      "rule_structure": 0.1
+     },
+     "missing_components": [],
+     "formula": "D = 100 × (w_T·T + w_S·S + w_L·L + w_R·R), every component in [0, 1]",
+     "bands": [
+      [
+       0,
+       "Very low"
+      ],
+      [
+       10,
+       "Low"
+      ],
+      [
+       30,
+       "Moderate"
+      ],
+      [
+       50,
+       "High"
+      ],
+      [
+       75,
+       "Very high"
+      ]
+     ],
+     "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "state": "COMPLETE",
+     "value": 20.722096863551172,
+     "tldp_percent": 20.722096863551172,
+     "band": "Low",
+     "label": "20.7/100 · Low",
+     "partial_value": null,
+     "calculation": "100 × (0.2 × 0.0058 + 0.3 × 0.0017 + 0.4 × 0.5000 + 0.1 × 0.0556) = 20.7",
+     "components": {
+      "textual": {
+       "value": 0.005847953216374269,
+       "method": "token-levenshtein-v1",
+       "reason": "Token edits needed to turn the before clause into the after clause, per token of the longer clause.",
+       "details": {
+        "edit_distance": 2,
+        "before_tokens": 341,
+        "after_tokens": 342,
+        "formula": "EditDistance(pre, post) ÷ max(|pre|, |post|)",
+        "calculation": "2 ÷ 342 = 0.0058"
+       }
+      },
+      "semantic": {
+       "value": 0.0016527414556043452,
+       "method": "embedding-cosine-v1",
+       "reason": "1 − cosine of the two clause embeddings; a proxy for meaning, not proof of the same legal effect.",
+       "details": {
+        "model": "stable_feature_hashing-256 (retriever.embed_text; word-overlap stand-in, not a pretrained semantic model)",
+        "dimensions": 256,
+        "cosine": 0.9983472585443957,
+        "formula": "1 − cos(e_pre, e_post), cosine clipped to [0, 1]",
+        "calculation": "1 − 0.9983 = 0.0017"
+       }
+      },
+      "legal_effect": {
+       "value": 0.5,
+       "method": "legal-effect-rubric-v1",
+       "details": {
+        "changes": [
+         {
+          "field": "deadline",
+          "label": "Deadline or period",
+          "operation": "CHANGED",
+          "score": 0.5,
+          "basis": "deadline changed",
+          "before": [
+           "within ten days"
+          ],
+          "after": [
+           "within twenty-one days"
+          ],
+          "before_spans": [
+           [
+            177,
+            192
+           ]
+          ],
+          "after_spans": [
+           [
+            177,
+            199
+           ]
+          ]
+         }
+        ],
+        "aggregation": "maximum over detected changes: the composite reflects the most severe change once, and every change is listed with its spans",
+        "level": "Material change to a condition, procedure or scope",
+        "lower_bound": false
+       },
+       "reason": "Material change to a condition, procedure or scope: the most severe detected change is deadline changed."
+      },
+      "rule_structure": {
+       "value": 0.05555555555555555,
+       "method": "rule-element-edit-v1",
+       "reason": "Share of the clause's rule elements inserted, deleted or substituted.",
+       "details": {
+        "removed": [
+         "deadline: within ten days"
+        ],
+        "added": [
+         "deadline: within twenty one days"
+        ],
+        "substituted": 1,
+        "shared": 17,
+        "formula": "(only-before + only-after − substitutions) ÷ (all distinct elements − substitutions)",
+        "calculation": "(1 + 1 − 1) ÷ (19 − 1) = 0.0556"
+       }
+      }
+     },
+     "config": "configs/metrics/tlds.v1.json",
+     "note": "An indicator of change between two versions of one clause, not the percentage of a statute that changed, not legal correctness, not a probability, not materiality and not risk. Read legal-effect drift beside it: a small wording change can carry a large legal effect.",
+     "evidence_ids": [
+      "E1",
+      "E2",
+      "E3"
+     ],
+     "legal_validation": "UNVERIFIED"
+    }
    },
    "determinations": {
     "version": "determinations-v4",
@@ -9087,7 +10086,7 @@
     "blocked_by_evidence": [],
     "explanation": "Only these facts are needed; anything you leave blank is not assumed."
    },
-   "analysis_id": "an_c14381f72dbdeba504430fd6"
+   "analysis_id": "an_8ce753b0d4d734c5d1328496"
   },
   "ibc99-day15": {
    "schema_version": "5.0.0",
@@ -9772,7 +10771,136 @@
       "evidence_ids": []
      }
     ],
-    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk."
+    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
+    "tlds": {
+     "version": "tlds-v1",
+     "weights": {
+      "textual": 0.2,
+      "semantic": 0.3,
+      "legal_effect": 0.4,
+      "rule_structure": 0.1
+     },
+     "missing_components": [],
+     "formula": "D = 100 × (w_T·T + w_S·S + w_L·L + w_R·R), every component in [0, 1]",
+     "bands": [
+      [
+       0,
+       "Very low"
+      ],
+      [
+       10,
+       "Low"
+      ],
+      [
+       30,
+       "Moderate"
+      ],
+      [
+       50,
+       "High"
+      ],
+      [
+       75,
+       "Very high"
+      ]
+     ],
+     "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "state": "COMPLETE",
+     "value": 20.722096863551172,
+     "tldp_percent": 20.722096863551172,
+     "band": "Low",
+     "label": "20.7/100 · Low",
+     "partial_value": null,
+     "calculation": "100 × (0.2 × 0.0058 + 0.3 × 0.0017 + 0.4 × 0.5000 + 0.1 × 0.0556) = 20.7",
+     "components": {
+      "textual": {
+       "value": 0.005847953216374269,
+       "method": "token-levenshtein-v1",
+       "reason": "Token edits needed to turn the before clause into the after clause, per token of the longer clause.",
+       "details": {
+        "edit_distance": 2,
+        "before_tokens": 341,
+        "after_tokens": 342,
+        "formula": "EditDistance(pre, post) ÷ max(|pre|, |post|)",
+        "calculation": "2 ÷ 342 = 0.0058"
+       }
+      },
+      "semantic": {
+       "value": 0.0016527414556043452,
+       "method": "embedding-cosine-v1",
+       "reason": "1 − cosine of the two clause embeddings; a proxy for meaning, not proof of the same legal effect.",
+       "details": {
+        "model": "stable_feature_hashing-256 (retriever.embed_text; word-overlap stand-in, not a pretrained semantic model)",
+        "dimensions": 256,
+        "cosine": 0.9983472585443957,
+        "formula": "1 − cos(e_pre, e_post), cosine clipped to [0, 1]",
+        "calculation": "1 − 0.9983 = 0.0017"
+       }
+      },
+      "legal_effect": {
+       "value": 0.5,
+       "method": "legal-effect-rubric-v1",
+       "details": {
+        "changes": [
+         {
+          "field": "deadline",
+          "label": "Deadline or period",
+          "operation": "CHANGED",
+          "score": 0.5,
+          "basis": "deadline changed",
+          "before": [
+           "within ten days"
+          ],
+          "after": [
+           "within twenty-one days"
+          ],
+          "before_spans": [
+           [
+            177,
+            192
+           ]
+          ],
+          "after_spans": [
+           [
+            177,
+            199
+           ]
+          ]
+         }
+        ],
+        "aggregation": "maximum over detected changes: the composite reflects the most severe change once, and every change is listed with its spans",
+        "level": "Material change to a condition, procedure or scope",
+        "lower_bound": false
+       },
+       "reason": "Material change to a condition, procedure or scope: the most severe detected change is deadline changed."
+      },
+      "rule_structure": {
+       "value": 0.05555555555555555,
+       "method": "rule-element-edit-v1",
+       "reason": "Share of the clause's rule elements inserted, deleted or substituted.",
+       "details": {
+        "removed": [
+         "deadline: within ten days"
+        ],
+        "added": [
+         "deadline: within twenty one days"
+        ],
+        "substituted": 1,
+        "shared": 17,
+        "formula": "(only-before + only-after − substitutions) ÷ (all distinct elements − substitutions)",
+        "calculation": "(1 + 1 − 1) ÷ (19 − 1) = 0.0556"
+       }
+      }
+     },
+     "config": "configs/metrics/tlds.v1.json",
+     "note": "An indicator of change between two versions of one clause, not the percentage of a statute that changed, not legal correctness, not a probability, not materiality and not risk. Read legal-effect drift beside it: a small wording change can carry a large legal effect.",
+     "evidence_ids": [
+      "E1",
+      "E2",
+      "E3"
+     ],
+     "legal_validation": "UNVERIFIED"
+    }
    },
    "determinations": {
     "version": "determinations-v4",
@@ -10286,7 +11414,7 @@
     "blocked_by_evidence": [],
     "explanation": "Only these facts are needed; anything you leave blank is not assumed."
    },
-   "analysis_id": "an_5c39e2f5727c5bdec90d56f1"
+   "analysis_id": "an_63fc91a27c908165a6c15f7c"
   },
   "ibc99-day25": {
    "schema_version": "5.0.0",
@@ -10970,7 +12098,136 @@
       "evidence_ids": []
      }
     ],
-    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk."
+    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
+    "tlds": {
+     "version": "tlds-v1",
+     "weights": {
+      "textual": 0.2,
+      "semantic": 0.3,
+      "legal_effect": 0.4,
+      "rule_structure": 0.1
+     },
+     "missing_components": [],
+     "formula": "D = 100 × (w_T·T + w_S·S + w_L·L + w_R·R), every component in [0, 1]",
+     "bands": [
+      [
+       0,
+       "Very low"
+      ],
+      [
+       10,
+       "Low"
+      ],
+      [
+       30,
+       "Moderate"
+      ],
+      [
+       50,
+       "High"
+      ],
+      [
+       75,
+       "Very high"
+      ]
+     ],
+     "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "state": "COMPLETE",
+     "value": 20.722096863551172,
+     "tldp_percent": 20.722096863551172,
+     "band": "Low",
+     "label": "20.7/100 · Low",
+     "partial_value": null,
+     "calculation": "100 × (0.2 × 0.0058 + 0.3 × 0.0017 + 0.4 × 0.5000 + 0.1 × 0.0556) = 20.7",
+     "components": {
+      "textual": {
+       "value": 0.005847953216374269,
+       "method": "token-levenshtein-v1",
+       "reason": "Token edits needed to turn the before clause into the after clause, per token of the longer clause.",
+       "details": {
+        "edit_distance": 2,
+        "before_tokens": 341,
+        "after_tokens": 342,
+        "formula": "EditDistance(pre, post) ÷ max(|pre|, |post|)",
+        "calculation": "2 ÷ 342 = 0.0058"
+       }
+      },
+      "semantic": {
+       "value": 0.0016527414556043452,
+       "method": "embedding-cosine-v1",
+       "reason": "1 − cosine of the two clause embeddings; a proxy for meaning, not proof of the same legal effect.",
+       "details": {
+        "model": "stable_feature_hashing-256 (retriever.embed_text; word-overlap stand-in, not a pretrained semantic model)",
+        "dimensions": 256,
+        "cosine": 0.9983472585443957,
+        "formula": "1 − cos(e_pre, e_post), cosine clipped to [0, 1]",
+        "calculation": "1 − 0.9983 = 0.0017"
+       }
+      },
+      "legal_effect": {
+       "value": 0.5,
+       "method": "legal-effect-rubric-v1",
+       "details": {
+        "changes": [
+         {
+          "field": "deadline",
+          "label": "Deadline or period",
+          "operation": "CHANGED",
+          "score": 0.5,
+          "basis": "deadline changed",
+          "before": [
+           "within ten days"
+          ],
+          "after": [
+           "within twenty-one days"
+          ],
+          "before_spans": [
+           [
+            177,
+            192
+           ]
+          ],
+          "after_spans": [
+           [
+            177,
+            199
+           ]
+          ]
+         }
+        ],
+        "aggregation": "maximum over detected changes: the composite reflects the most severe change once, and every change is listed with its spans",
+        "level": "Material change to a condition, procedure or scope",
+        "lower_bound": false
+       },
+       "reason": "Material change to a condition, procedure or scope: the most severe detected change is deadline changed."
+      },
+      "rule_structure": {
+       "value": 0.05555555555555555,
+       "method": "rule-element-edit-v1",
+       "reason": "Share of the clause's rule elements inserted, deleted or substituted.",
+       "details": {
+        "removed": [
+         "deadline: within ten days"
+        ],
+        "added": [
+         "deadline: within twenty one days"
+        ],
+        "substituted": 1,
+        "shared": 17,
+        "formula": "(only-before + only-after − substitutions) ÷ (all distinct elements − substitutions)",
+        "calculation": "(1 + 1 − 1) ÷ (19 − 1) = 0.0556"
+       }
+      }
+     },
+     "config": "configs/metrics/tlds.v1.json",
+     "note": "An indicator of change between two versions of one clause, not the percentage of a statute that changed, not legal correctness, not a probability, not materiality and not risk. Read legal-effect drift beside it: a small wording change can carry a large legal effect.",
+     "evidence_ids": [
+      "E1",
+      "E2",
+      "E3"
+     ],
+     "legal_validation": "UNVERIFIED"
+    }
    },
    "determinations": {
     "version": "determinations-v4",
@@ -11484,7 +12741,7 @@
     "blocked_by_evidence": [],
     "explanation": "Only these facts are needed; anything you leave blank is not assumed."
    },
-   "analysis_id": "an_09166b5829ba2be826ed96fa"
+   "analysis_id": "an_826f93943382ab9f3af3e2c3"
   },
   "mv173": {
    "schema_version": "5.0.0",
@@ -12078,7 +13335,136 @@
       "text": "Only 1.8% of the wording changed, yet the amount or numeric limit changed. A small edit can change what the law requires; that is why wording and rule change are measured separately and never averaged."
      }
     ],
-    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk."
+    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
+    "tlds": {
+     "version": "tlds-v1",
+     "weights": {
+      "textual": 0.2,
+      "semantic": 0.3,
+      "legal_effect": 0.4,
+      "rule_structure": 0.1
+     },
+     "missing_components": [],
+     "formula": "D = 100 × (w_T·T + w_S·S + w_L·L + w_R·R), every component in [0, 1]",
+     "bands": [
+      [
+       0,
+       "Very low"
+      ],
+      [
+       10,
+       "Low"
+      ],
+      [
+       30,
+       "Moderate"
+      ],
+      [
+       50,
+       "High"
+      ],
+      [
+       75,
+       "Very high"
+      ]
+     ],
+     "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "state": "COMPLETE",
+     "value": 21.390683826794625,
+     "tldp_percent": 21.390683826794625,
+     "band": "Low",
+     "label": "21.4/100 · Low",
+     "partial_value": null,
+     "calculation": "100 × (0.2 × 0.0127 + 0.3 × 0.0101 + 0.4 × 0.5000 + 0.1 × 0.0833) = 21.4",
+     "components": {
+      "textual": {
+       "value": 0.012658227848101266,
+       "method": "token-levenshtein-v1",
+       "reason": "Token edits needed to turn the before clause into the after clause, per token of the longer clause.",
+       "details": {
+        "edit_distance": 2,
+        "before_tokens": 158,
+        "after_tokens": 158,
+        "formula": "EditDistance(pre, post) ÷ max(|pre|, |post|)",
+        "calculation": "2 ÷ 158 = 0.0127"
+       }
+      },
+      "semantic": {
+       "value": 0.010139531216642239,
+       "method": "embedding-cosine-v1",
+       "reason": "1 − cosine of the two clause embeddings; a proxy for meaning, not proof of the same legal effect.",
+       "details": {
+        "model": "stable_feature_hashing-256 (retriever.embed_text; word-overlap stand-in, not a pretrained semantic model)",
+        "dimensions": 256,
+        "cosine": 0.9898604687833578,
+        "formula": "1 − cos(e_pre, e_post), cosine clipped to [0, 1]",
+        "calculation": "1 − 0.9899 = 0.0101"
+       }
+      },
+      "legal_effect": {
+       "value": 0.5,
+       "method": "legal-effect-rubric-v1",
+       "details": {
+        "changes": [
+         {
+          "field": "threshold",
+          "label": "Amount or numeric limit",
+          "operation": "CHANGED",
+          "score": 0.5,
+          "basis": "threshold changed",
+          "before": [
+           "amount: ten thousand rupees"
+          ],
+          "after": [
+           "amount: one lakh rupees"
+          ],
+          "before_spans": [
+           [
+            844,
+            863
+           ]
+          ],
+          "after_spans": [
+           [
+            844,
+            859
+           ]
+          ]
+         }
+        ],
+        "aggregation": "maximum over detected changes: the composite reflects the most severe change once, and every change is listed with its spans",
+        "level": "Material change to a condition, procedure or scope",
+        "lower_bound": false
+       },
+       "reason": "Material change to a condition, procedure or scope: the most severe detected change is threshold changed."
+      },
+      "rule_structure": {
+       "value": 0.08333333333333333,
+       "method": "rule-element-edit-v1",
+       "reason": "Share of the clause's rule elements inserted, deleted or substituted.",
+       "details": {
+        "removed": [
+         "threshold: amount ten thousand rupees"
+        ],
+        "added": [
+         "threshold: amount one lakh rupees"
+        ],
+        "substituted": 1,
+        "shared": 11,
+        "formula": "(only-before + only-after − substitutions) ÷ (all distinct elements − substitutions)",
+        "calculation": "(1 + 1 − 1) ÷ (13 − 1) = 0.0833"
+       }
+      }
+     },
+     "config": "configs/metrics/tlds.v1.json",
+     "note": "An indicator of change between two versions of one clause, not the percentage of a statute that changed, not legal correctness, not a probability, not materiality and not risk. Read legal-effect drift beside it: a small wording change can carry a large legal effect.",
+     "evidence_ids": [
+      "E1",
+      "E2",
+      "E4"
+     ],
+     "legal_validation": "UNVERIFIED"
+    }
    },
    "determinations": {
     "version": "determinations-v4",
@@ -12630,7 +14016,7 @@
     "blocked_by_evidence": [],
     "explanation": "Only these facts are needed; anything you leave blank is not assumed."
    },
-   "analysis_id": "an_5493a1dc5be917de289d9720"
+   "analysis_id": "an_0d0c5fbc3754d958032d4c3b"
   },
   "ibc240": {
    "schema_version": "5.0.0",
@@ -13198,7 +14584,127 @@
       "text": "Scope (what the rule covers) added: — → “list item: circumstances in which supply of critical goods or services may be terminated, suspended or…”. It matters because it changes what or whom the rule covers."
      }
     ],
-    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk."
+    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
+    "tlds": {
+     "version": "tlds-v1",
+     "weights": {
+      "textual": 0.2,
+      "semantic": 0.3,
+      "legal_effect": 0.4,
+      "rule_structure": 0.1
+     },
+     "missing_components": [],
+     "formula": "D = 100 × (w_T·T + w_S·S + w_L·L + w_R·R), every component in [0, 1]",
+     "bands": [
+      [
+       0,
+       "Very low"
+      ],
+      [
+       10,
+       "Low"
+      ],
+      [
+       30,
+       "Moderate"
+      ],
+      [
+       50,
+       "High"
+      ],
+      [
+       75,
+       "Very high"
+      ]
+     ],
+     "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "state": "COMPLETE",
+     "value": 20.243513511330676,
+     "tldp_percent": 20.243513511330676,
+     "band": "Low",
+     "label": "20.2/100 · Low",
+     "partial_value": null,
+     "calculation": "100 × (0.2 × 0.0092 + 0.3 × 0.0001 + 0.4 × 0.5000 + 0.1 × 0.0057) = 20.2",
+     "components": {
+      "textual": {
+       "value": 0.009206349206349206,
+       "method": "token-levenshtein-v1",
+       "reason": "Token edits needed to turn the before clause into the after clause, per token of the longer clause.",
+       "details": {
+        "edit_distance": 29,
+        "before_tokens": 3121,
+        "after_tokens": 3150,
+        "formula": "EditDistance(pre, post) ÷ max(|pre|, |post|)",
+        "calculation": "29 ÷ 3150 = 0.0092"
+       }
+      },
+      "semantic": {
+       "value": 8.56115128502477e-05,
+       "method": "embedding-cosine-v1",
+       "reason": "1 − cosine of the two clause embeddings; a proxy for meaning, not proof of the same legal effect.",
+       "details": {
+        "model": "stable_feature_hashing-256 (retriever.embed_text; word-overlap stand-in, not a pretrained semantic model)",
+        "dimensions": 256,
+        "cosine": 0.9999143884871498,
+        "formula": "1 − cos(e_pre, e_post), cosine clipped to [0, 1]",
+        "calculation": "1 − 0.9999 = 0.0001"
+       }
+      },
+      "legal_effect": {
+       "value": 0.5,
+       "method": "legal-effect-rubric-v1",
+       "details": {
+        "changes": [
+         {
+          "field": "scope",
+          "label": "Scope (what the rule covers)",
+          "operation": "ADDED",
+          "score": 0.5,
+          "basis": "scope added",
+          "before": [],
+          "after": [
+           "list item: circumstances in which supply of critical goods or services may be terminated, suspended or…"
+          ],
+          "before_spans": [],
+          "after_spans": [
+           [
+            1534,
+            1711
+           ]
+          ]
+         }
+        ],
+        "aggregation": "maximum over detected changes: the composite reflects the most severe change once, and every change is listed with its spans",
+        "level": "Material change to a condition, procedure or scope",
+        "lower_bound": false
+       },
+       "reason": "Material change to a condition, procedure or scope: the most severe detected change is scope added."
+      },
+      "rule_structure": {
+       "value": 0.005681818181818182,
+       "method": "rule-element-edit-v1",
+       "reason": "Share of the clause's rule elements inserted, deleted or substituted.",
+       "details": {
+        "removed": [],
+        "added": [
+         "list item: circumstances in which supply of critical goods or services may be terminated"
+        ],
+        "substituted": 0,
+        "shared": 175,
+        "formula": "(only-before + only-after − substitutions) ÷ (all distinct elements − substitutions)",
+        "calculation": "(0 + 1 − 0) ÷ (176 − 0) = 0.0057"
+       }
+      }
+     },
+     "config": "configs/metrics/tlds.v1.json",
+     "note": "An indicator of change between two versions of one clause, not the percentage of a statute that changed, not legal correctness, not a probability, not materiality and not risk. Read legal-effect drift beside it: a small wording change can carry a large legal effect.",
+     "evidence_ids": [
+      "E1",
+      "E2",
+      "E4"
+     ],
+     "legal_validation": "UNVERIFIED"
+    }
    },
    "determinations": {
     "version": "determinations-v4",
@@ -13708,7 +15214,7 @@
     "blocked_by_evidence": [],
     "explanation": "Only these facts are needed; anything you leave blank is not assumed."
    },
-   "analysis_id": "an_fced371781ff00cba4886e55"
+   "analysis_id": "an_68d30eee98e3b075b915d376"
   },
   "mv170": {
    "schema_version": "5.0.0",
@@ -14270,7 +15776,108 @@
       ]
      }
     ],
-    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk."
+    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
+    "tlds": {
+     "version": "tlds-v1",
+     "weights": {
+      "textual": 0.2,
+      "semantic": 0.3,
+      "legal_effect": 0.4,
+      "rule_structure": 0.1
+     },
+     "missing_components": [
+      "legal_effect"
+     ],
+     "formula": "D = 100 × (w_T·T + w_S·S + w_L·L + w_R·R), every component in [0, 1]",
+     "bands": [
+      [
+       0,
+       "Very low"
+      ],
+      [
+       10,
+       "Low"
+      ],
+      [
+       30,
+       "Moderate"
+      ],
+      [
+       50,
+       "High"
+      ],
+      [
+       75,
+       "Very high"
+      ]
+     ],
+     "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "state": "INCOMPLETE",
+     "value": null,
+     "tldp_percent": null,
+     "band": null,
+     "label": "Incomplete",
+     "partial_value": 2.33107610123128,
+     "partial_label": "partial 2.3/100 (without legal effect; not comparable with complete scores)",
+     "calculation": "100 × (0.2 × 0.0061 + 0.3 × 0.0055 + 0.1 × 0.1111) ÷ 0.6 = 2.3",
+     "components": {
+      "textual": {
+       "value": 0.006134969325153374,
+       "method": "token-levenshtein-v1",
+       "reason": "Token edits needed to turn the before clause into the after clause, per token of the longer clause.",
+       "details": {
+        "edit_distance": 1,
+        "before_tokens": 163,
+        "after_tokens": 163,
+        "formula": "EditDistance(pre, post) ÷ max(|pre|, |post|)",
+        "calculation": "1 ÷ 163 = 0.0061"
+       }
+      },
+      "semantic": {
+       "value": 0.005494505437486308,
+       "method": "embedding-cosine-v1",
+       "reason": "1 − cosine of the two clause embeddings; a proxy for meaning, not proof of the same legal effect.",
+       "details": {
+        "model": "stable_feature_hashing-256 (retriever.embed_text; word-overlap stand-in, not a pretrained semantic model)",
+        "dimensions": 256,
+        "cosine": 0.9945054945625137,
+        "formula": "1 − cos(e_pre, e_post), cosine clipped to [0, 1]",
+        "calculation": "1 − 0.9945 = 0.0055"
+       }
+      },
+      "legal_effect": {
+       "value": null,
+       "method": "legal-effect-rubric-v1",
+       "reason": "Rule drift did not score this change: Only a cross-reference changed (“149” → “150”). Which provision is referred to may matter, but no rule field (duty, deadline, amount, penalty, exception, scope or person) changed in these words.",
+       "details": {}
+      },
+      "rule_structure": {
+       "value": 0.1111111111111111,
+       "method": "rule-element-edit-v1",
+       "reason": "Share of the clause's rule elements inserted, deleted or substituted.",
+       "details": {
+        "removed": [
+         "reference: section 149"
+        ],
+        "added": [
+         "reference: section 150"
+        ],
+        "substituted": 1,
+        "shared": 8,
+        "formula": "(only-before + only-after − substitutions) ÷ (all distinct elements − substitutions)",
+        "calculation": "(1 + 1 − 1) ÷ (10 − 1) = 0.1111"
+       }
+      }
+     },
+     "config": "configs/metrics/tlds.v1.json",
+     "note": "An indicator of change between two versions of one clause, not the percentage of a statute that changed, not legal correctness, not a probability, not materiality and not risk. Read legal-effect drift beside it: a small wording change can carry a large legal effect.",
+     "evidence_ids": [
+      "E1",
+      "E2",
+      "E4"
+     ],
+     "legal_validation": "UNVERIFIED"
+    }
    },
    "determinations": {
     "version": "determinations-v4",
@@ -14798,7 +16405,7 @@
     "blocked_by_evidence": [],
     "explanation": "Only these facts are needed; anything you leave blank is not assumed."
    },
-   "analysis_id": "an_6526ea95acab98d944db2b9d"
+   "analysis_id": "an_0294fe5cc8ec1b0a3ab59a8e"
   },
   "wrong-act": {
    "schema_version": "5.0.0",
@@ -14925,7 +16532,84 @@
      "legal_validation": "UNVERIFIED"
     },
     "reading": [],
-    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk."
+    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
+    "tlds": {
+     "version": "tlds-v1",
+     "weights": {
+      "textual": 0.2,
+      "semantic": 0.3,
+      "legal_effect": 0.4,
+      "rule_structure": 0.1
+     },
+     "missing_components": [
+      "textual",
+      "semantic",
+      "legal_effect",
+      "rule_structure"
+     ],
+     "formula": "D = 100 × (w_T·T + w_S·S + w_L·L + w_R·R), every component in [0, 1]",
+     "bands": [
+      [
+       0,
+       "Very low"
+      ],
+      [
+       10,
+       "Low"
+      ],
+      [
+       30,
+       "Moderate"
+      ],
+      [
+       50,
+       "High"
+      ],
+      [
+       75,
+       "Very high"
+      ]
+     ],
+     "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "state": "INCOMPLETE",
+     "value": null,
+     "tldp_percent": null,
+     "band": null,
+     "label": "Incomplete",
+     "partial_value": null,
+     "partial_label": null,
+     "calculation": null,
+     "components": {
+      "textual": {
+       "value": null,
+       "method": null,
+       "reason": "No supported before/after versions; the answer above explains why.",
+       "details": {}
+      },
+      "semantic": {
+       "value": null,
+       "method": null,
+       "reason": "No supported before/after versions; the answer above explains why.",
+       "details": {}
+      },
+      "legal_effect": {
+       "value": null,
+       "method": null,
+       "reason": "No supported before/after versions; the answer above explains why.",
+       "details": {}
+      },
+      "rule_structure": {
+       "value": null,
+       "method": null,
+       "reason": "No supported before/after versions; the answer above explains why.",
+       "details": {}
+      }
+     },
+     "config": "configs/metrics/tlds.v1.json",
+     "note": "An indicator of change between two versions of one clause, not the percentage of a statute that changed, not legal correctness, not a probability, not materiality and not risk. Read legal-effect drift beside it: a small wording change can carry a large legal effect.",
+     "evidence_ids": [],
+     "legal_validation": "UNVERIFIED"
+    }
    },
    "determinations": {
     "version": "determinations-v4",
@@ -15190,7 +16874,7 @@
     ],
     "explanation": "No facts are needed for this question. Facts cannot fill missing legal evidence for: which wording applies on your date, whether your answer changes."
    },
-   "analysis_id": "an_1570cd021297bda6cf185ebc"
+   "analysis_id": "an_c6b04633ca96353bd4d15bc6"
   },
   "ocr": {
    "schema_version": "5.0.0",
@@ -15321,7 +17005,84 @@
      "legal_validation": "UNVERIFIED"
     },
     "reading": [],
-    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk."
+    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
+    "tlds": {
+     "version": "tlds-v1",
+     "weights": {
+      "textual": 0.2,
+      "semantic": 0.3,
+      "legal_effect": 0.4,
+      "rule_structure": 0.1
+     },
+     "missing_components": [
+      "textual",
+      "semantic",
+      "legal_effect",
+      "rule_structure"
+     ],
+     "formula": "D = 100 × (w_T·T + w_S·S + w_L·L + w_R·R), every component in [0, 1]",
+     "bands": [
+      [
+       0,
+       "Very low"
+      ],
+      [
+       10,
+       "Low"
+      ],
+      [
+       30,
+       "Moderate"
+      ],
+      [
+       50,
+       "High"
+      ],
+      [
+       75,
+       "Very high"
+      ]
+     ],
+     "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "state": "INCOMPLETE",
+     "value": null,
+     "tldp_percent": null,
+     "band": null,
+     "label": "Incomplete",
+     "partial_value": null,
+     "partial_label": null,
+     "calculation": null,
+     "components": {
+      "textual": {
+       "value": null,
+       "method": null,
+       "reason": "No supported before/after versions; the answer above explains why.",
+       "details": {}
+      },
+      "semantic": {
+       "value": null,
+       "method": null,
+       "reason": "No supported before/after versions; the answer above explains why.",
+       "details": {}
+      },
+      "legal_effect": {
+       "value": null,
+       "method": null,
+       "reason": "No supported before/after versions; the answer above explains why.",
+       "details": {}
+      },
+      "rule_structure": {
+       "value": null,
+       "method": null,
+       "reason": "No supported before/after versions; the answer above explains why.",
+       "details": {}
+      }
+     },
+     "config": "configs/metrics/tlds.v1.json",
+     "note": "An indicator of change between two versions of one clause, not the percentage of a statute that changed, not legal correctness, not a probability, not materiality and not risk. Read legal-effect drift beside it: a small wording change can carry a large legal effect.",
+     "evidence_ids": [],
+     "legal_validation": "UNVERIFIED"
+    }
    },
    "determinations": {
     "version": "determinations-v4",
@@ -15615,7 +17376,7 @@
     ],
     "explanation": "No facts are needed for this question. Facts cannot fill missing legal evidence for: which wording applies on your date, whether your answer changes."
    },
-   "analysis_id": "an_bc44ab8b5d851687bf6fde56"
+   "analysis_id": "an_8582506b62cce81af3696404"
   },
   "timeout": {
    "schema_version": "5.0.0",
@@ -16029,7 +17790,84 @@
      "legal_validation": "UNVERIFIED"
     },
     "reading": [],
-    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk."
+    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
+    "tlds": {
+     "version": "tlds-v1",
+     "weights": {
+      "textual": 0.2,
+      "semantic": 0.3,
+      "legal_effect": 0.4,
+      "rule_structure": 0.1
+     },
+     "missing_components": [
+      "textual",
+      "semantic",
+      "legal_effect",
+      "rule_structure"
+     ],
+     "formula": "D = 100 × (w_T·T + w_S·S + w_L·L + w_R·R), every component in [0, 1]",
+     "bands": [
+      [
+       0,
+       "Very low"
+      ],
+      [
+       10,
+       "Low"
+      ],
+      [
+       30,
+       "Moderate"
+      ],
+      [
+       50,
+       "High"
+      ],
+      [
+       75,
+       "Very high"
+      ]
+     ],
+     "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "state": "NOT_APPLICABLE",
+     "value": null,
+     "tldp_percent": null,
+     "band": null,
+     "label": "Not applicable",
+     "partial_value": null,
+     "partial_label": null,
+     "calculation": null,
+     "components": {
+      "textual": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      },
+      "semantic": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      },
+      "legal_effect": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      },
+      "rule_structure": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      }
+     },
+     "config": "configs/metrics/tlds.v1.json",
+     "note": "An indicator of change between two versions of one clause, not the percentage of a statute that changed, not legal correctness, not a probability, not materiality and not risk. Read legal-effect drift beside it: a small wording change can carry a large legal effect.",
+     "evidence_ids": [],
+     "legal_validation": "UNVERIFIED"
+    }
    },
    "scenario_request": {
     "fields": [],
@@ -16037,7 +17875,7 @@
     "blocked_by_evidence": [],
     "explanation": "No facts are needed for this question."
    },
-   "analysis_id": "an_836c94a50f2294ed759be1dc"
+   "analysis_id": "an_9fd1a3a581f712e9e17fa74f"
   }
  }
 }
