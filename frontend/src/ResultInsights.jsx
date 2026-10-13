@@ -14,7 +14,9 @@ const TEMPORAL_TEXT = {
 };
 
 export function GenerationNotice({ method }) {
-  const text = String(method || "").startsWith("extractive")
+  const text = method === "grounded_composition"
+    ? "Answer composed directly from the cited evidence; no language model was used."
+    : String(method || "").startsWith("extractive")
     ? "Extractive evidence summary: quoted from retrieved sources, not a language-model conclusion."
     : method === "llm_grounded" ? "Language-model answer constrained to the retrieved evidence; verify it against the cited source."
       : "No answer could be generated from the available evidence.";

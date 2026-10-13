@@ -129,3 +129,24 @@ Remote GitHub Actions has still not been observed. See [../reports/phase3/tempor
 - **Certificate renewal:** has not happened yet, so TLS after renewal is unverified.
 - **Screen readers:** no VoiceOver or NVDA listening pass was done. NVDA is Windows-only. VoiceOver AppleScript control is off on this machine, and enabling it is the user's decision. `frontend/scripts/voiceover-reading-pass.sh` is ready but has not been run.
 - **Scheduled live run:** in progress on a session-scoped hourly scheduler on a laptop (not an always-on host). Results are appended below when observed.
+
+## RAG answer integration addendum (2026-10-13)
+
+- **Executed:**
+  - Baseline and integrated audits (`reports/rag_audit/`) and the held-out pairing check over all 86 corroborated transitions (86/86).
+  - Full Python suite, 249 tests. Before the release, only the Phase 11 checksum gate failed, as expected; it was not weakened. 18 frontend tests run against real backend responses.
+  - One live qwen3:4b sample for a general question (8.6 s, `llm_grounded`), which found that model answers cited only one of the excerpts they used. Fixed: all excerpts are now cited.
+  - Real Chrome 154 checks:
+    - keyboard check: 43 stops with a visible focus ring; Enter and Space work;
+    - no horizontal overflow at 320–480px;
+    - the scenario form rerun moves Answer change and Risk from "Needs your facts" to "Conditional".
+  - Defects fixed in this check:
+    - a native date input with an invisible focus stop;
+    - a wrong generation notice;
+    - a meaningless 100% alignment score for identity-selected evidence;
+    - a raw rule ID in visible text.
+- **Not verified:**
+  - no legal review;
+  - the held-out questions use formal titles, so paraphrase robustness is not measured;
+  - the LLM path was sampled once, not evaluated;
+  - no screen-reader listening pass.

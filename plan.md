@@ -2091,3 +2091,7 @@ Until this checklist and the Phase 0 gate pass, all technical work should be tre
 ## Implementation status note (2026-10-12)
 
 The live-pipeline sprint (daily e-Gazette/India Code pipeline, drift-metrics-v3, query-specific clause comparison and UI) is recorded in `docs/implementation-plan.md` and `docs/verification.md`. This note changes no research acceptance criterion. Live e-Gazette ingestion has not yet succeeded (TLS chain issue). The legal/research gate remains UNVERIFIED.
+
+## Implementation status note (2026-10-13, rag-answer-v2)
+
+The assistant's evidence selection and its four determinations are described in ADR 0014 and `reports/rag_audit/integrated_audit.v1.md`. This changes no research acceptance criterion. Legal validation remains UNVERIFIED.

@@ -1,0 +1,1348 @@
+{
+ "schema_version": "1.0.0",
+ "case_set": "rag-audit-cases-v1",
+ "cases": [
+  {
+   "case_id": "arb-s7-specific",
+   "stratum": "supported_transition_insert_dated_silver",
+   "mode": "specific",
+   "seconds": 1.63,
+   "expected_support": "GRAPH_TRANSITION_FRAGMENTS",
+   "error": null,
+   "actual_support": "NOT_A_COMPARISON",
+   "pair_entries": [],
+   "provision_path": null,
+   "operation": null,
+   "answer_type": "single_document_summary",
+   "generation_method": "extractive_summary",
+   "has_drift_score": false,
+   "citations": [
+    {
+     "entry_id": "arbitration-and-conciliation-act-1996",
+     "page": 1,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "ABSENT",
+    "materiality": "ABSENT",
+    "answer_change": "ABSENT",
+    "risk": "ABSENT"
+   },
+   "opening_answer": "Clause-focused evidence: 1 The Arbitration and Conciliation Act, 1996 (ACT NO. 26 OF 1996) [As on the 1st June, 2026] IndiaCode",
+   "support_errors": [
+    "support_mismatch:NOT_A_COMPARISON"
+   ],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {
+    "textual_drift": {
+     "expected": "DETERMINED",
+     "actual": "ABSENT"
+    },
+    "materiality": {
+     "expected": "PROVISIONAL",
+     "actual": "ABSENT"
+    },
+    "answer_change": {
+     "expected": "DETERMINED",
+     "actual": "ABSENT"
+    },
+    "risk": {
+     "expected": "OUT_OF_SCOPE",
+     "actual": "ABSENT"
+    }
+   }
+  },
+  {
+   "case_id": "arb-s7-generic",
+   "stratum": "mode_invariance",
+   "mode": "generic",
+   "seconds": 1.05,
+   "expected_support": "GRAPH_TRANSITION_FRAGMENTS",
+   "error": null,
+   "actual_support": "NOT_A_COMPARISON",
+   "pair_entries": [],
+   "provision_path": null,
+   "operation": null,
+   "answer_type": "single_document_summary",
+   "generation_method": "extractive_summary",
+   "has_drift_score": false,
+   "citations": [
+    {
+     "entry_id": "arbitration-and-conciliation-act-1996",
+     "page": 1,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "ABSENT",
+    "materiality": "ABSENT",
+    "answer_change": "ABSENT",
+    "risk": "ABSENT"
+   },
+   "opening_answer": "1 The Arbitration and Conciliation Act, 1996 (ACT NO. 26 OF 1996) [As on the 1st June, 2026] IndiaCode",
+   "support_errors": [
+    "support_mismatch:NOT_A_COMPARISON"
+   ],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {
+    "textual_drift": {
+     "expected": "DETERMINED",
+     "actual": "ABSENT"
+    },
+    "materiality": {
+     "expected": "PROVISIONAL",
+     "actual": "ABSENT"
+    },
+    "answer_change": {
+     "expected": "DETERMINED",
+     "actual": "ABSENT"
+    },
+    "risk": {
+     "expected": "OUT_OF_SCOPE",
+     "actual": "ABSENT"
+    }
+   }
+  },
+  {
+   "case_id": "arb-s23-counterclaim",
+   "stratum": "insert_answer_change_conditional",
+   "mode": "specific",
+   "seconds": 1.04,
+   "expected_support": "GRAPH_TRANSITION_FRAGMENTS",
+   "error": null,
+   "actual_support": "NOT_A_COMPARISON",
+   "pair_entries": [],
+   "provision_path": null,
+   "operation": null,
+   "answer_type": "single_document_summary",
+   "generation_method": "extractive_summary",
+   "has_drift_score": false,
+   "citations": [
+    {
+     "entry_id": "arbitration-and-conciliation-act-1996",
+     "page": 1,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "ABSENT",
+    "materiality": "ABSENT",
+    "answer_change": "ABSENT",
+    "risk": "ABSENT"
+   },
+   "opening_answer": "Clause-focused evidence: 1 The Arbitration and Conciliation Act, 1996 (ACT NO. 26 OF 1996) [As on the 1st June, 2026] IndiaCode",
+   "support_errors": [
+    "support_mismatch:NOT_A_COMPARISON"
+   ],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {
+    "textual_drift": {
+     "expected": "DETERMINED",
+     "actual": "ABSENT"
+    },
+    "materiality": {
+     "expected": "PROVISIONAL",
+     "actual": "ABSENT"
+    },
+    "answer_change": {
+     "expected": "CONDITIONAL",
+     "actual": "ABSENT"
+    },
+    "risk": {
+     "expected": "OUT_OF_SCOPE",
+     "actual": "ABSENT"
+    }
+   }
+  },
+  {
+   "case_id": "mv-s173-deposit",
+   "stratum": "numeric_substitution_silver_undated",
+   "mode": "specific",
+   "seconds": 1.05,
+   "expected_support": "GRAPH_TRANSITION_FRAGMENTS",
+   "error": null,
+   "actual_support": "NOT_A_COMPARISON",
+   "pair_entries": [],
+   "provision_path": null,
+   "operation": null,
+   "answer_type": "single_document_summary",
+   "generation_method": "extractive_summary",
+   "has_drift_score": false,
+   "citations": [
+    {
+     "entry_id": "central-goods-services-tax-act-2017",
+     "page": 1,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "ABSENT",
+    "materiality": "ABSENT",
+    "answer_change": "ABSENT",
+    "risk": "ABSENT"
+   },
+   "opening_answer": "Clause-focused evidence: 1 The Central Goods and Services Tax Act, 2017 (ACT NO. 12 OF 2017) [As on the 11th June, 2026]",
+   "support_errors": [
+    "support_mismatch:NOT_A_COMPARISON"
+   ],
+   "pairing_errors": [],
+   "citation_errors": [
+    "citation_outside_expected_act:central-goods-services-tax-act-2017"
+   ],
+   "state_mismatch": {
+    "textual_drift": {
+     "expected": "DETERMINED",
+     "actual": "ABSENT"
+    },
+    "materiality": {
+     "expected": "PROVISIONAL",
+     "actual": "ABSENT"
+    },
+    "answer_change": {
+     "expected": "DETERMINED",
+     "actual": "ABSENT"
+    },
+    "risk": {
+     "expected": "OUT_OF_SCOPE",
+     "actual": "ABSENT"
+    }
+   }
+  },
+  {
+   "case_id": "cpc-s32-fine",
+   "stratum": "numeric_substitution_no_silver",
+   "mode": "specific",
+   "seconds": 1.04,
+   "expected_support": "GRAPH_TRANSITION_FRAGMENTS",
+   "error": null,
+   "actual_support": "NOT_A_COMPARISON",
+   "pair_entries": [],
+   "provision_path": null,
+   "operation": null,
+   "answer_type": "single_document_summary",
+   "generation_method": "extractive_summary",
+   "has_drift_score": false,
+   "citations": [
+    {
+     "entry_id": "code-of-civil-procedure-amendment-act-1999",
+     "page": 1,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "ABSENT",
+    "materiality": "ABSENT",
+    "answer_change": "ABSENT",
+    "risk": "ABSENT"
+   },
+   "opening_answer": "Clause-focused evidence: MINISTRY OF LAW, JUSTICE AND COMPANY AFFAIRS (Legislative Department) New Delhi, the 30th December, 1999 /Pausa 9, 1921 (Saka) The following Act of Parliament received the assent of the President on the 30th December, 1999, and is hereby published for general information:— THE CODE OF CIVIL PROCEDURE (AMENDMENT) ACT, 1999 No. (1) This Act may be called the Code of Civil Pr",
+   "support_errors": [
+    "support_mismatch:NOT_A_COMPARISON"
+   ],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {
+    "textual_drift": {
+     "expected": "DETERMINED",
+     "actual": "ABSENT"
+    },
+    "materiality": {
+     "expected": "INSUFFICIENT_EVIDENCE",
+     "actual": "ABSENT"
+    },
+    "answer_change": {
+     "expected": "DETERMINED",
+     "actual": "ABSENT"
+    },
+    "risk": {
+     "expected": "OUT_OF_SCOPE",
+     "actual": "ABSENT"
+    }
+   }
+  },
+  {
+   "case_id": "mv-s181-penalty",
+   "stratum": "numeric_substitution_no_silver",
+   "mode": "specific",
+   "seconds": 1.07,
+   "expected_support": "GRAPH_TRANSITION_FRAGMENTS",
+   "error": null,
+   "actual_support": "NOT_A_COMPARISON",
+   "pair_entries": [],
+   "provision_path": null,
+   "operation": null,
+   "answer_type": "single_document_summary",
+   "generation_method": "extractive_summary",
+   "has_drift_score": false,
+   "citations": [
+    {
+     "entry_id": "motor-vehicles-act-1988",
+     "page": 1,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "ABSENT",
+    "materiality": "ABSENT",
+    "answer_change": "ABSENT",
+    "risk": "ABSENT"
+   },
+   "opening_answer": "Clause-focused evidence: 1 The Motor Vehicles Act, 1988 (ACT NO. 59 OF 1988) [As on the 15th August, 2026] IndiaCode",
+   "support_errors": [
+    "support_mismatch:NOT_A_COMPARISON"
+   ],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {
+    "textual_drift": {
+     "expected": "DETERMINED",
+     "actual": "ABSENT"
+    },
+    "materiality": {
+     "expected": "INSUFFICIENT_EVIDENCE",
+     "actual": "ABSENT"
+    },
+    "answer_change": {
+     "expected": "DETERMINED",
+     "actual": "ABSENT"
+    },
+    "risk": {
+     "expected": "OUT_OF_SCOPE",
+     "actual": "ABSENT"
+    }
+   }
+  },
+  {
+   "case_id": "sra-s11-discretion",
+   "stratum": "modal_substitution_no_silver",
+   "mode": "specific",
+   "seconds": 1.04,
+   "expected_support": "GRAPH_TRANSITION_FRAGMENTS",
+   "error": null,
+   "actual_support": "NOT_A_COMPARISON",
+   "pair_entries": [],
+   "provision_path": null,
+   "operation": null,
+   "answer_type": "single_document_summary",
+   "generation_method": "extractive_summary",
+   "has_drift_score": false,
+   "citations": [
+    {
+     "entry_id": "specific-relief-act-1963",
+     "page": 1,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "ABSENT",
+    "materiality": "ABSENT",
+    "answer_change": "ABSENT",
+    "risk": "ABSENT"
+   },
+   "opening_answer": "Clause-focused evidence: 1 THE SPECIFIC RELIEF ACT, 1963 _______ ARRANGEMENT OF SECTIONS ________ PART I PRELIMINARY SECTIONS 1. Specific performance of part of contract. PART II SPECIFIC RELIEF CHAPTER I RECOVERING POSSESSION OF PROPERTY 5.",
+   "support_errors": [
+    "support_mismatch:NOT_A_COMPARISON"
+   ],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {
+    "textual_drift": {
+     "expected": "DETERMINED",
+     "actual": "ABSENT"
+    },
+    "materiality": {
+     "expected": "INSUFFICIENT_EVIDENCE",
+     "actual": "ABSENT"
+    },
+    "answer_change": {
+     "expected": "DETERMINED",
+     "actual": "ABSENT"
+    },
+    "risk": {
+     "expected": "OUT_OF_SCOPE",
+     "actual": "ABSENT"
+    }
+   }
+  },
+  {
+   "case_id": "patents-s60-period",
+   "stratum": "period_substitution_no_silver",
+   "mode": "specific",
+   "seconds": 1.05,
+   "expected_support": "GRAPH_TRANSITION_FRAGMENTS",
+   "error": null,
+   "actual_support": "NOT_A_COMPARISON",
+   "pair_entries": [],
+   "provision_path": null,
+   "operation": null,
+   "answer_type": "single_document_summary",
+   "generation_method": "extractive_summary",
+   "has_drift_score": false,
+   "citations": [
+    {
+     "entry_id": "patents-amendment-act-2002",
+     "page": 1,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "ABSENT",
+    "materiality": "ABSENT",
+    "answer_change": "ABSENT",
+    "risk": "ABSENT"
+   },
+   "opening_answer": "Clause-focused evidence: MINISTRY OF LAW, JUSTICE AND COMPANY AFFAIRS (Legislative Department) New Delhi, the 25th June, 2002/Asadha 4, 1924 (Saka) The following Act of Parliament received the assent of the President on the 25th June, 2002, and is hereby published for general information:— THE PATENTS (AMENDMENT) ACT, 2002 (No. (I) This Act may be called the Patents (Amendment) Act, 2002. 38 OF 20",
+   "support_errors": [
+    "support_mismatch:NOT_A_COMPARISON"
+   ],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {
+    "textual_drift": {
+     "expected": "DETERMINED",
+     "actual": "ABSENT"
+    },
+    "materiality": {
+     "expected": "INSUFFICIENT_EVIDENCE",
+     "actual": "ABSENT"
+    },
+    "answer_change": {
+     "expected": "DETERMINED",
+     "actual": "ABSENT"
+    },
+    "risk": {
+     "expected": "OUT_OF_SCOPE",
+     "actual": "ABSENT"
+    }
+   }
+  },
+  {
+   "case_id": "brega-s45zc-nominees",
+   "stratum": "numeric_substitution_silver",
+   "mode": "specific",
+   "seconds": 1.06,
+   "expected_support": "GRAPH_TRANSITION_FRAGMENTS",
+   "error": null,
+   "actual_support": "NOT_A_COMPARISON",
+   "pair_entries": [],
+   "provision_path": null,
+   "operation": null,
+   "answer_type": "single_document_summary",
+   "generation_method": "extractive_summary",
+   "has_drift_score": false,
+   "citations": [
+    {
+     "entry_id": "banking-regulation-act-1949",
+     "page": 1,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "ABSENT",
+    "materiality": "ABSENT",
+    "answer_change": "ABSENT",
+    "risk": "ABSENT"
+   },
+   "opening_answer": "Clause-focused evidence: 1 The Banking Regulation Act, 1949 (ACT NO. 10 OF 1949) [As on the 20th December, 2025] IndiaCode",
+   "support_errors": [
+    "support_mismatch:NOT_A_COMPARISON"
+   ],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {
+    "textual_drift": {
+     "expected": "DETERMINED",
+     "actual": "ABSENT"
+    },
+    "materiality": {
+     "expected": "PROVISIONAL",
+     "actual": "ABSENT"
+    },
+    "answer_change": {
+     "expected": "DETERMINED",
+     "actual": "ABSENT"
+    },
+    "risk": {
+     "expected": "OUT_OF_SCOPE",
+     "actual": "ABSENT"
+    }
+   }
+  },
+  {
+   "case_id": "companies-s46-compare",
+   "stratum": "comparison_silver",
+   "mode": "specific",
+   "seconds": 1.13,
+   "expected_support": "GRAPH_TRANSITION_FRAGMENTS",
+   "error": null,
+   "actual_support": "UNALIGNED_EXCERPTS",
+   "pair_entries": [
+    "it-act-2000-consolidated",
+    "it-amendment-act-2008"
+   ],
+   "provision_path": null,
+   "operation": null,
+   "answer_type": "comparison",
+   "generation_method": "extractive_fallback",
+   "has_drift_score": false,
+   "citations": [
+    {
+     "entry_id": "it-amendment-act-2008",
+     "page": 7,
+     "has_link": true
+    },
+    {
+     "entry_id": "it-act-2000-consolidated",
+     "page": 20,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 1,
+   "determinations": {
+    "textual_drift": "ABSENT",
+    "materiality": "ABSENT",
+    "answer_change": "ABSENT",
+    "risk": "ABSENT"
+   },
+   "opening_answer": "Consolidated-version evidence: 46. Power to adjudicate .–(1) For the purpose of adjudging under this Chapter whether any person has committed a contravention of any of the provisions of this Act or of any rule, regulation, 1[direction or order made thereunder which renders him liable to pay penalty or compensation,] the Central Government shall, subject to the provisions of sub -section (3), appoi",
+   "support_errors": [
+    "support_mismatch:UNALIGNED_EXCERPTS"
+   ],
+   "pairing_errors": [
+    "pair_entry_outside_expected:it-act-2000-consolidated",
+    "pair_entry_outside_expected:it-amendment-act-2008"
+   ],
+   "citation_errors": [
+    "citation_outside_expected_act:it-amendment-act-2008",
+    "citation_outside_expected_act:it-act-2000-consolidated"
+   ],
+   "state_mismatch": {
+    "textual_drift": {
+     "expected": "DETERMINED",
+     "actual": "ABSENT"
+    },
+    "materiality": {
+     "expected": "PROVISIONAL",
+     "actual": "ABSENT"
+    },
+    "answer_change": {
+     "expected": "NEEDS_FACTS",
+     "actual": "ABSENT"
+    },
+    "risk": {
+     "expected": "OUT_OF_SCOPE",
+     "actual": "ABSENT"
+    }
+   }
+  },
+  {
+   "case_id": "rti-s13-term",
+   "stratum": "substitution_no_silver",
+   "mode": "specific",
+   "seconds": 1.08,
+   "expected_support": "GRAPH_TRANSITION_FRAGMENTS",
+   "error": null,
+   "actual_support": "NOT_A_COMPARISON",
+   "pair_entries": [],
+   "provision_path": null,
+   "operation": null,
+   "answer_type": "single_document_summary",
+   "generation_method": "extractive_summary",
+   "has_drift_score": false,
+   "citations": [
+    {
+     "entry_id": "right-to-information-act-2005",
+     "page": 1,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "ABSENT",
+    "materiality": "ABSENT",
+    "answer_change": "ABSENT",
+    "risk": "ABSENT"
+   },
+   "opening_answer": "Clause-focused evidence: 1 The Right to Information Act, 2005 (ACT NO. 22 OF 2005) [As on the 18th November, 2025]",
+   "support_errors": [
+    "support_mismatch:NOT_A_COMPARISON"
+   ],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {
+    "textual_drift": {
+     "expected": "DETERMINED",
+     "actual": "ABSENT"
+    },
+    "materiality": {
+     "expected": "INSUFFICIENT_EVIDENCE",
+     "actual": "ABSENT"
+    },
+    "answer_change": {
+     "expected": "DETERMINED",
+     "actual": "ABSENT"
+    },
+    "risk": {
+     "expected": "OUT_OF_SCOPE",
+     "actual": "ABSENT"
+    }
+   }
+  },
+  {
+   "case_id": "it-s19-specific",
+   "stratum": "footnote_reconstruction",
+   "mode": "specific",
+   "seconds": 1.06,
+   "expected_support": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+   "error": null,
+   "actual_support": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+   "pair_entries": [
+    "it-act-2000-consolidated"
+   ],
+   "provision_path": "section:19",
+   "operation": "SUBSTITUTE",
+   "answer_type": "comparison",
+   "generation_method": "extractive_fallback",
+   "has_drift_score": true,
+   "citations": [
+    {
+     "entry_id": "it-amendment-act-2008",
+     "page": 2,
+     "has_link": true
+    },
+    {
+     "entry_id": "it-act-2000-consolidated",
+     "page": 13,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 1,
+   "determinations": {
+    "textual_drift": "ABSENT",
+    "materiality": "ABSENT",
+    "answer_change": "ABSENT",
+    "risk": "ABSENT"
+   },
+   "opening_answer": "Consolidated-version evidence: 19. Recognition of foreign Certifying Authorities .—(1) Subject to such conditions and restrictions as may be specified by regulations, the Controller may with the previous approval of the Central Government, and by notification in the Official Gazette, recognise any foreign Certifying Authority as a Certifying Authority for the purposes of this Act. (2) Where any Ce",
+   "support_errors": [],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {
+    "textual_drift": {
+     "expected": "DETERMINED",
+     "actual": "ABSENT"
+    },
+    "materiality": {
+     "expected": "INSUFFICIENT_EVIDENCE",
+     "actual": "ABSENT"
+    },
+    "answer_change": {
+     "expected": "NEEDS_FACTS",
+     "actual": "ABSENT"
+    },
+    "risk": {
+     "expected": "NEEDS_FACTS",
+     "actual": "ABSENT"
+    }
+   }
+  },
+  {
+   "case_id": "it-s19-generic",
+   "stratum": "footnote_reconstruction_generic",
+   "mode": "generic",
+   "seconds": 1.06,
+   "expected_support": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+   "error": null,
+   "actual_support": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+   "pair_entries": [
+    "it-act-2000-consolidated"
+   ],
+   "provision_path": "section:19",
+   "operation": "SUBSTITUTE",
+   "answer_type": "comparison",
+   "generation_method": "extractive_fallback_generic",
+   "has_drift_score": true,
+   "citations": [
+    {
+     "entry_id": "it-amendment-act-2008",
+     "page": 2,
+     "has_link": true
+    },
+    {
+     "entry_id": "it-act-2000-consolidated",
+     "page": 13,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 1,
+   "determinations": {
+    "textual_drift": "ABSENT",
+    "materiality": "ABSENT",
+    "answer_change": "ABSENT",
+    "risk": "ABSENT"
+   },
+   "opening_answer": "After the amendment, Section 19 uses the broader or revised concept “electronic signature”.",
+   "support_errors": [],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {
+    "textual_drift": {
+     "expected": "DETERMINED",
+     "actual": "ABSENT"
+    },
+    "materiality": {
+     "expected": "INSUFFICIENT_EVIDENCE",
+     "actual": "ABSENT"
+    },
+    "answer_change": {
+     "expected": "NEEDS_FACTS",
+     "actual": "ABSENT"
+    },
+    "risk": {
+     "expected": "NEEDS_FACTS",
+     "actual": "ABSENT"
+    }
+   }
+  },
+  {
+   "case_id": "it-s19-risk-match",
+   "stratum": "scenario_risk_rule_match",
+   "mode": "specific",
+   "seconds": 1.07,
+   "expected_support": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+   "error": null,
+   "actual_support": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+   "pair_entries": [
+    "it-act-2000-consolidated"
+   ],
+   "provision_path": "section:19",
+   "operation": "SUBSTITUTE",
+   "answer_type": "comparison",
+   "generation_method": "extractive_fallback",
+   "has_drift_score": true,
+   "citations": [
+    {
+     "entry_id": "it-amendment-act-2008",
+     "page": 2,
+     "has_link": true
+    },
+    {
+     "entry_id": "it-act-2000-consolidated",
+     "page": 13,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 1,
+   "determinations": {
+    "textual_drift": "ABSENT",
+    "materiality": "ABSENT",
+    "answer_change": "ABSENT",
+    "risk": "ABSENT"
+   },
+   "opening_answer": "Consolidated-version evidence: 19. Recognition of foreign Certifying Authorities .—(1) Subject to such conditions and restrictions as may be specified by regulations, the Controller may with the previous approval of the Central Government, and by notification in the Official Gazette, recognise any foreign Certifying Authority as a Certifying Authority for the purposes of this Act. (2) Where any Ce",
+   "support_errors": [],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {
+    "textual_drift": {
+     "expected": "DETERMINED",
+     "actual": "ABSENT"
+    },
+    "materiality": {
+     "expected": "INSUFFICIENT_EVIDENCE",
+     "actual": "ABSENT"
+    },
+    "answer_change": {
+     "expected": "CONDITIONAL",
+     "actual": "ABSENT"
+    },
+    "risk": {
+     "expected": "CONDITIONAL",
+     "actual": "ABSENT"
+    }
+   }
+  },
+  {
+   "case_id": "it-s19-risk-mismatch",
+   "stratum": "scenario_risk_rule_mismatch",
+   "mode": "specific",
+   "seconds": 1.06,
+   "expected_support": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+   "error": null,
+   "actual_support": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+   "pair_entries": [
+    "it-act-2000-consolidated"
+   ],
+   "provision_path": "section:19",
+   "operation": "SUBSTITUTE",
+   "answer_type": "comparison",
+   "generation_method": "extractive_fallback",
+   "has_drift_score": true,
+   "citations": [
+    {
+     "entry_id": "it-amendment-act-2008",
+     "page": 2,
+     "has_link": true
+    },
+    {
+     "entry_id": "it-act-2000-consolidated",
+     "page": 13,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 1,
+   "determinations": {
+    "textual_drift": "ABSENT",
+    "materiality": "ABSENT",
+    "answer_change": "ABSENT",
+    "risk": "ABSENT"
+   },
+   "opening_answer": "Consolidated-version evidence: 19. Recognition of foreign Certifying Authorities .—(1) Subject to such conditions and restrictions as may be specified by regulations, the Controller may with the previous approval of the Central Government, and by notification in the Official Gazette, recognise any foreign Certifying Authority as a Certifying Authority for the purposes of this Act. (2) Where any Ce",
+   "support_errors": [],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {
+    "textual_drift": {
+     "expected": "DETERMINED",
+     "actual": "ABSENT"
+    },
+    "materiality": {
+     "expected": "INSUFFICIENT_EVIDENCE",
+     "actual": "ABSENT"
+    },
+    "answer_change": {
+     "expected": "CONDITIONAL",
+     "actual": "ABSENT"
+    },
+    "risk": {
+     "expected": "INSUFFICIENT_EVIDENCE",
+     "actual": "ABSENT"
+    }
+   }
+  },
+  {
+   "case_id": "it-2008-privacy-ocr",
+   "stratum": "poor_ocr_unaligned",
+   "mode": "specific",
+   "seconds": 1.12,
+   "expected_support": "UNALIGNED_OR_ABSTAIN",
+   "error": null,
+   "actual_support": "UNALIGNED_EXCERPTS",
+   "pair_entries": [
+    "it-act-2000-consolidated",
+    "it-amendment-act-2008"
+   ],
+   "provision_path": null,
+   "operation": null,
+   "answer_type": "comparison",
+   "generation_method": "extractive_fallback",
+   "has_drift_score": false,
+   "citations": [
+    {
+     "entry_id": "it-amendment-act-2008",
+     "page": 7,
+     "has_link": true
+    },
+    {
+     "entry_id": "it-act-2000-consolidated",
+     "page": 3,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 1,
+   "determinations": {
+    "textual_drift": "ABSENT",
+    "materiality": "ABSENT",
+    "answer_change": "ABSENT",
+    "risk": "ABSENT"
+   },
+   "opening_answer": "Consolidated-version evidence: Punishment for publishing or transmitting of material containing sexually explicit act, etc., in electronic form. Punishment for publishing or transmitting of material depicting children in sexually ex plicit act, etc., in electronic form. Penalty for Breach of confidentiality and privacy.",
+   "support_errors": [],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {
+    "textual_drift": {
+     "expected": "INSUFFICIENT_EVIDENCE",
+     "actual": "ABSENT"
+    },
+    "materiality": {
+     "expected": "INSUFFICIENT_EVIDENCE",
+     "actual": "ABSENT"
+    },
+    "answer_change": {
+     "expected": "INSUFFICIENT_EVIDENCE",
+     "actual": "ABSENT"
+    },
+    "risk": {
+     "expected": "OUT_OF_SCOPE",
+     "actual": "ABSENT"
+    }
+   }
+  },
+  {
+   "case_id": "wrong-act-companies-competition",
+   "stratum": "wrong_act_rejection",
+   "mode": "specific",
+   "seconds": 1.14,
+   "expected_support": "UNALIGNED_OR_ABSTAIN",
+   "error": null,
+   "actual_support": "UNALIGNED_EXCERPTS",
+   "pair_entries": [
+    "it-act-2000-consolidated",
+    "it-amendment-act-2008"
+   ],
+   "provision_path": null,
+   "operation": null,
+   "answer_type": "comparison",
+   "generation_method": "extractive_fallback",
+   "has_drift_score": false,
+   "citations": [
+    {
+     "entry_id": "it-amendment-act-2008",
+     "page": 17,
+     "has_link": true
+    },
+    {
+     "entry_id": "it-act-2000-consolidated",
+     "page": 20,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 1,
+   "determinations": {
+    "textual_drift": "ABSENT",
+    "materiality": "ABSENT",
+    "answer_change": "ABSENT",
+    "risk": "ABSENT"
+   },
+   "opening_answer": "Consolidated-version evidence: 46. Power to adjudicate .–(1) For the purpose of adjudging under this Chapter whether any person has committed a contravention of any of the provisions of this Act or of any rule, regulation, 1[direction or order made thereunder which renders him liable to pay penalty or compensation,] the Central Government shall, subject to the provisions of sub -section (3), appoi",
+   "support_errors": [],
+   "pairing_errors": [
+    "pair_entry_outside_expected:it-act-2000-consolidated",
+    "pair_entry_outside_expected:it-amendment-act-2008"
+   ],
+   "citation_errors": [
+    "citation_outside_expected_act:it-amendment-act-2008",
+    "citation_outside_expected_act:it-act-2000-consolidated"
+   ],
+   "state_mismatch": {
+    "textual_drift": {
+     "expected": "INSUFFICIENT_EVIDENCE",
+     "actual": "ABSENT"
+    },
+    "materiality": {
+     "expected": "INSUFFICIENT_EVIDENCE",
+     "actual": "ABSENT"
+    },
+    "answer_change": {
+     "expected": "INSUFFICIENT_EVIDENCE",
+     "actual": "ABSENT"
+    },
+    "risk": {
+     "expected": "OUT_OF_SCOPE",
+     "actual": "ABSENT"
+    }
+   }
+  },
+  {
+   "case_id": "companies-s105-weak",
+   "stratum": "unsupported_transition_internal_checks_only",
+   "mode": "specific",
+   "seconds": 1.06,
+   "expected_support": "UNALIGNED_OR_ABSTAIN",
+   "error": null,
+   "actual_support": "NOT_A_COMPARISON",
+   "pair_entries": [],
+   "provision_path": null,
+   "operation": null,
+   "answer_type": "single_document_summary",
+   "generation_method": "extractive_summary",
+   "has_drift_score": false,
+   "citations": [
+    {
+     "entry_id": "trade-marks-act-1999",
+     "page": 1,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "ABSENT",
+    "materiality": "ABSENT",
+    "answer_change": "ABSENT",
+    "risk": "ABSENT"
+   },
+   "opening_answer": "Clause-focused evidence: 1 The Trade Marks Act, 1999 (ACT NO. 47 OF 1999) [As on the 1st June, 2026] IndiaCode",
+   "support_errors": [],
+   "pairing_errors": [],
+   "citation_errors": [
+    "citation_outside_expected_act:trade-marks-act-1999"
+   ],
+   "state_mismatch": {
+    "textual_drift": {
+     "expected": "INSUFFICIENT_EVIDENCE",
+     "actual": "ABSENT"
+    },
+    "materiality": {
+     "expected": "INSUFFICIENT_EVIDENCE",
+     "actual": "ABSENT"
+    },
+    "answer_change": {
+     "expected": "INSUFFICIENT_EVIDENCE",
+     "actual": "ABSENT"
+    },
+    "risk": {
+     "expected": "OUT_OF_SCOPE",
+     "actual": "ABSENT"
+    }
+   }
+  },
+  {
+   "case_id": "wildlife-s11-omission",
+   "stratum": "omission_unsupported",
+   "mode": "specific",
+   "seconds": 1.05,
+   "expected_support": "UNALIGNED_OR_ABSTAIN",
+   "error": null,
+   "actual_support": "NOT_A_COMPARISON",
+   "pair_entries": [],
+   "provision_path": null,
+   "operation": null,
+   "answer_type": "single_document_summary",
+   "generation_method": "extractive_summary",
+   "has_drift_score": false,
+   "citations": [
+    {
+     "entry_id": "wild-life-protection-amendment-act-2022",
+     "page": 1,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "ABSENT",
+    "materiality": "ABSENT",
+    "answer_change": "ABSENT",
+    "risk": "ABSENT"
+   },
+   "opening_answer": "Clause-focused evidence: (1) This Act may be called the Wild Life (Protection) Amendment Act, 2022. THE WILD LIFE (PROTECTION) AMENDMENT ACT, 2022 NO. 18 OF 2022 [19th December, 2022.] An Act further to amend the Wild Life (Protection) Act, 1972.",
+   "support_errors": [],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {
+    "textual_drift": {
+     "expected": "INSUFFICIENT_EVIDENCE",
+     "actual": "ABSENT"
+    },
+    "materiality": {
+     "expected": "INSUFFICIENT_EVIDENCE",
+     "actual": "ABSENT"
+    },
+    "answer_change": {
+     "expected": "INSUFFICIENT_EVIDENCE",
+     "actual": "ABSENT"
+    },
+    "risk": {
+     "expected": "OUT_OF_SCOPE",
+     "actual": "ABSENT"
+    }
+   }
+  },
+  {
+   "case_id": "factories-not-in-graph",
+   "stratum": "act_without_amendment_source",
+   "mode": "specific",
+   "seconds": 1.05,
+   "expected_support": "UNALIGNED_OR_ABSTAIN",
+   "error": null,
+   "actual_support": "NOT_A_COMPARISON",
+   "pair_entries": [],
+   "provision_path": null,
+   "operation": null,
+   "answer_type": "single_document_summary",
+   "generation_method": "extractive_summary",
+   "has_drift_score": false,
+   "citations": [
+    {
+     "entry_id": "insolvency-and-bankruptcy-code-amendment-act-2020",
+     "page": 1,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "ABSENT",
+    "materiality": "ABSENT",
+    "answer_change": "ABSENT",
+    "risk": "ABSENT"
+   },
+   "opening_answer": "Clause-focused evidence: 1 OF 2020 [13th March, 2020.] An Act further to amend the Insolvency and Bankruptcy Code, 2016. (1) This Act may be called the Insolvency and Bankruptcy Code (Amendment) Act, 2020. THE INSOLVENCY AND BANKRUPTCY CODE (AMENDMENT) ACT, 2020 NO.",
+   "support_errors": [],
+   "pairing_errors": [],
+   "citation_errors": [
+    "citation_outside_expected_act:insolvency-and-bankruptcy-code-amendment-act-2020"
+   ],
+   "state_mismatch": {
+    "textual_drift": {
+     "expected": "INSUFFICIENT_EVIDENCE",
+     "actual": "ABSENT"
+    },
+    "materiality": {
+     "expected": "INSUFFICIENT_EVIDENCE",
+     "actual": "ABSENT"
+    },
+    "answer_change": {
+     "expected": "INSUFFICIENT_EVIDENCE",
+     "actual": "ABSENT"
+    },
+    "risk": {
+     "expected": "OUT_OF_SCOPE",
+     "actual": "ABSENT"
+    }
+   }
+  },
+  {
+   "case_id": "cpa-mediation-general",
+   "stratum": "general_qa",
+   "mode": "specific",
+   "seconds": 1.05,
+   "expected_support": "NOT_A_COMPARISON",
+   "error": null,
+   "actual_support": "NOT_A_COMPARISON",
+   "pair_entries": [],
+   "provision_path": null,
+   "operation": null,
+   "answer_type": "single_document_summary",
+   "generation_method": "extractive_summary",
+   "has_drift_score": false,
+   "citations": [
+    {
+     "entry_id": "consumer-protection-act-2019",
+     "page": 1,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "ABSENT",
+    "materiality": "ABSENT",
+    "answer_change": "ABSENT",
+    "risk": "ABSENT"
+   },
+   "opening_answer": "Clause-focused evidence: 1 THE CONSUMER PROTECTION ACT, 2019 ____________ ARRANGEMENT OF SECTIONS Last Updated:17-9-2021 ____________ CHAPTER I PRELIMINARY SECTIONS 1. CHAPTER II CONSUMER PROTECTION COUNCILS. Central Consumer Protection Council.",
+   "support_errors": [],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {
+    "textual_drift": {
+     "expected": "OUT_OF_SCOPE",
+     "actual": "ABSENT"
+    },
+    "materiality": {
+     "expected": "OUT_OF_SCOPE",
+     "actual": "ABSENT"
+    },
+    "answer_change": {
+     "expected": "OUT_OF_SCOPE",
+     "actual": "ABSENT"
+    },
+    "risk": {
+     "expected": "OUT_OF_SCOPE",
+     "actual": "ABSENT"
+    }
+   }
+  },
+  {
+   "case_id": "thoa-punishment-general",
+   "stratum": "general_qa",
+   "mode": "generic",
+   "seconds": 1.05,
+   "expected_support": "NOT_A_COMPARISON",
+   "error": null,
+   "actual_support": "NOT_A_COMPARISON",
+   "pair_entries": [],
+   "provision_path": null,
+   "operation": null,
+   "answer_type": "single_document_summary",
+   "generation_method": "extractive_summary",
+   "has_drift_score": false,
+   "citations": [
+    {
+     "entry_id": "transplantation-of-human-organs-and-tissues-act-1994",
+     "page": 1,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "ABSENT",
+    "materiality": "ABSENT",
+    "answer_change": "ABSENT",
+    "risk": "ABSENT"
+   },
+   "opening_answer": "CHAPTER II AUTHORITY FOR THE REMOVAL OF HUMAN ORGANS OR TISSUES OR BOTH 3. 1 THE TRANSPLANTATION OF HUMAN ORGANS AND TISSUES ACT, 1994 _______ ARRANGEMENT OF SECTIONS _______ CHAPTER I PRELIMINARY SECTIONS 1.",
+   "support_errors": [],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {
+    "textual_drift": {
+     "expected": "OUT_OF_SCOPE",
+     "actual": "ABSENT"
+    },
+    "materiality": {
+     "expected": "OUT_OF_SCOPE",
+     "actual": "ABSENT"
+    },
+    "answer_change": {
+     "expected": "OUT_OF_SCOPE",
+     "actual": "ABSENT"
+    },
+    "risk": {
+     "expected": "OUT_OF_SCOPE",
+     "actual": "ABSENT"
+    }
+   }
+  },
+  {
+   "case_id": "jan-vishwas-general",
+   "stratum": "general_qa_amending_act",
+   "mode": "generic",
+   "seconds": 1.07,
+   "expected_support": "NOT_A_COMPARISON",
+   "error": null,
+   "actual_support": "NOT_A_COMPARISON",
+   "pair_entries": [],
+   "provision_path": null,
+   "operation": null,
+   "answer_type": "single_document_summary",
+   "generation_method": "extractive_summary",
+   "has_drift_score": false,
+   "citations": [
+    {
+     "entry_id": "jan-vishwas-amendment-of-provisions-act-2023",
+     "page": 1,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "ABSENT",
+    "materiality": "ABSENT",
+    "answer_change": "ABSENT",
+    "risk": "ABSENT"
+   },
+   "opening_answer": "Jan Vishwas Amendment Of Provisions Act 2023 was enacted to amend certain enactments for decriminalising and rationalising offences to further enhance trust-based governance for ease of living and doing business.",
+   "support_errors": [],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {
+    "textual_drift": {
+     "expected": "OUT_OF_SCOPE",
+     "actual": "ABSENT"
+    },
+    "materiality": {
+     "expected": "OUT_OF_SCOPE",
+     "actual": "ABSENT"
+    },
+    "answer_change": {
+     "expected": "OUT_OF_SCOPE",
+     "actual": "ABSENT"
+    },
+    "risk": {
+     "expected": "OUT_OF_SCOPE",
+     "actual": "ABSENT"
+    }
+   }
+  },
+  {
+   "case_id": "dm-s31-frequency",
+   "stratum": "frequency_substitution_no_silver",
+   "mode": "specific",
+   "seconds": 1.05,
+   "expected_support": "GRAPH_TRANSITION_FRAGMENTS",
+   "error": null,
+   "actual_support": "NOT_A_COMPARISON",
+   "pair_entries": [],
+   "provision_path": null,
+   "operation": null,
+   "answer_type": "single_document_summary",
+   "generation_method": "extractive_summary",
+   "has_drift_score": false,
+   "citations": [
+    {
+     "entry_id": "disaster-management-act-2005",
+     "page": 1,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "ABSENT",
+    "materiality": "ABSENT",
+    "answer_change": "ABSENT",
+    "risk": "ABSENT"
+   },
+   "opening_answer": "Clause-focused evidence: 1 The Disaster Management Act, 2005 (Act No. 53 of 2005) [As on the 15th May, 2026] IndiaCode",
+   "support_errors": [
+    "support_mismatch:NOT_A_COMPARISON"
+   ],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {
+    "textual_drift": {
+     "expected": "DETERMINED",
+     "actual": "ABSENT"
+    },
+    "materiality": {
+     "expected": "INSUFFICIENT_EVIDENCE",
+     "actual": "ABSENT"
+    },
+    "answer_change": {
+     "expected": "DETERMINED",
+     "actual": "ABSENT"
+    },
+    "risk": {
+     "expected": "OUT_OF_SCOPE",
+     "actual": "ABSENT"
+    }
+   }
+  }
+ ],
+ "summary": {
+  "cases": 24,
+  "errors": 0,
+  "support_errors": 12,
+  "pairing_errors": 2,
+  "citation_errors": 5,
+  "determination_state_matches": 0,
+  "determination_states": {
+   "textual_drift": {
+    "ABSENT": 24
+   },
+   "materiality": {
+    "ABSENT": 24
+   },
+   "answer_change": {
+    "ABSENT": 24
+   },
+   "risk": {
+    "ABSENT": 24
+   }
+  }
+ },
+ "interpretation": "engineering coverage and error counts against source-derived expectations; not legal accuracy",
+ "label": "baseline-before-integration (code at v0.10.0, a5c7667)"
+}

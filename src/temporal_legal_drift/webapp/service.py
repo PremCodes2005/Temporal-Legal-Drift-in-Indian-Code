@@ -128,7 +128,9 @@ class DashboardService:
         mode = value.get("mode", "specific")
         if not isinstance(mode, str):
             raise ValueError("mode must be specific or generic")
-        return self.rag.answer(query, mode)
+        if set(value) - {"query", "mode", "scenario"}:
+            raise ValueError("query accepts only query, mode and scenario")
+        return self.rag.answer(query, mode, scenario=value.get("scenario"))  # scenario is validated at the RAG boundary
 
     def rebuild_rag_index(self) -> dict[str, object]:
         return self.rag.rebuild()

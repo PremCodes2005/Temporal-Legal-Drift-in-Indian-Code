@@ -17,5 +17,6 @@ These ADRs are **retrospective descriptions of decisions visible in the current 
 | [0011](0011-always-on-monitoring-deployment-and-alerting.md) | systemd deployment of the daily job with missed-run alerting (2026-10-12) |
 | [0012](0012-text-quality-quarantine.md) | Withhold untrustworthy PDF text lines (Hindi text layer, legacy-font mojibake) (2026-10-13) |
 | [0013](0013-commencement-notification-policy.md) | Conservative commencement-notification policy with separate, unreviewed facts (2026-10-13) |
+| [0014](0014-rag-answer-v2-evidence-and-determinations.md) | Evidence-first answers with four independent determinations (rag-answer-v2) (2026-10-13) |
 
 Audit base: commit `68030875a719aa626fb05f294880de2953084781`, 2026-10-12. Verification limits: [../verification.md](../verification.md).

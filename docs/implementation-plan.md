@@ -110,3 +110,14 @@ Not achieved in the sprint:
 | Scheduled live run | see `docs/verification.md` (session scheduler, laptop) | observation log |
 | TLS after renewal | **UNVERIFIED** — not yet renewed | `docs/verification.md` |
 | VoiceOver/NVDA pass | **UNVERIFIED** — needs the user to enable VoiceOver AppleScript control | `frontend/scripts/voiceover-reading-pass.sh` |
+
+## RAG integration sprint (2026-10-13, rag-answer-v2)
+
+| Phase | Result | Evidence |
+| --- | --- | --- |
+| 1 Audit and failure taxonomy | **DONE** — 24 cases, 15 strata, RC1–RC5 | `reports/rag_audit/baseline_audit.v1.md` |
+| 2 Evidence and contract | **PASS** — question frame, version evidence, rag-answer-v2 schema | ADR 0014, `schemas/rag/rag_answer.v2.schema.json` |
+| 3 Determinations | **PASS** — 24/24 expected states; materiality only on exact silver match; risk only via registry | `tests/unit/test_rag_v2.py`, `tests/integration/test_rag_audit.py` |
+| 4 Answer generation | **PASS** — deterministic grounded composition; model answers cite every excerpt seen | `rag/compose.py` |
+| 5 Frontend | **PASS (jsdom and real Chrome)** — cards, scenario rerun, evidence list; focus and 320px checks | `frontend/src/Determinations.jsx`, `frontend/src/__tests__/answer_v2.test.jsx` |
+| 6 Validation and release | 0/0/0 errors; held-out 86/86 pairing | `reports/rag_audit/integrated_audit.v1.md` |

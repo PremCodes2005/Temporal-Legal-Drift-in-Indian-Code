@@ -49,3 +49,7 @@ The intended research scope and acceptance criteria remain in [plan.md](../plan.
 - **e-Gazette:** live discovery works over a pinned-intermediate TLS context with full verification (ADR 0010).
 - **Deployment:** the daily job is packaged as systemd timers with missed-run alerting (ADR 0011).
 - **Accessibility:** the comparison view passed real-Chrome keyboard, accessibility-tree and 320px checks.
+
+## Update (2026-10-13, rag-answer-v2)
+
+The single-prompt assistant now answers from identity-selected evidence: the Act and section from the question, with corroborated graph-v4 transitions or footnote reconstructions. It reports four independent determinations (ADR 0014), accepts optional scenario facts, and abstains with specific reasons when the evidence cannot support a conclusion.

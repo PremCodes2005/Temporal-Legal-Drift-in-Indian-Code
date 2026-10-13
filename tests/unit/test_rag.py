@@ -81,10 +81,12 @@ class RagPipelineTests(unittest.TestCase):
             "What changed in the IT Act amendment regarding data privacy?",
             "specific",
         )
-        self.assertEqual(result["retrieval"]["pair_status"], "instruction_and_consolidated_text_not_aligned")
+        # rag-answer-v2: no section is named, so nothing is paired; the answer asks for one and suggests sections.
+        self.assertEqual(result["retrieval"]["pair_status"], "no_supported_version")
+        self.assertEqual(result["version_evidence"]["reason_code"], "SECTION_NOT_IDENTIFIED")
         self.assertIsNone(result["metrics"])
-        self.assertEqual(len(result["citations"]), 2)
-        self.assertIn("no earlier version was reconstructed", result["answer"]["pre_amendment_baseline"])
+        self.assertIn("66E", [row["section"] for row in result["version_evidence"]["suggested_sections"]])
+        self.assertEqual(result["determinations"]["textual_drift"]["state"], "INSUFFICIENT_EVIDENCE")
         paired = next(item for item in result["verification"]["checks"] if item["id"] == "paired_context")
         self.assertFalse(paired["passed"])
         self.assertEqual([item["entry_id"] for item in result["source_fidelity_warnings"]], ["it-amendment-act-2008"])
@@ -92,10 +94,10 @@ class RagPipelineTests(unittest.TestCase):
 
     def test_comparison_record_states_support_roles_and_abstention_codes(self) -> None:
         unaligned = self.pipeline.answer("What changed in the IT Act amendment regarding data privacy?", "specific")["comparison"]
-        self.assertEqual(unaligned["contract_version"], "comparison-record-v1")
-        self.assertEqual(unaligned["support_class"], "UNALIGNED_EXCERPTS")
-        self.assertEqual(unaligned["before"]["role"], "amendment_instruction_excerpt")  # not "pre-amendment law"
-        self.assertTrue({"PAIR_UNALIGNED", "SCORING_UNAVAILABLE", "SOURCE_TEXT_UNRELIABLE"} <= set(unaligned["abstention_reasons"]))
+        self.assertEqual(unaligned["contract_version"], "comparison-record-v2")
+        self.assertEqual(unaligned["support_class"], "NO_SUPPORTED_VERSION")
+        self.assertIsNone(unaligned["before"])  # unaligned excerpts are never presented as a version
+        self.assertTrue({"SECTION_NOT_IDENTIFIED", "SOURCE_TEXT_UNRELIABLE"} <= set(unaligned["abstention_reasons"]))
         reconstructed = self.pipeline.answer("Compare Section 19 before and after the IT Amendment Act, 2008.", "specific")["comparison"]
         self.assertEqual(reconstructed["support_class"], "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION")
         self.assertEqual(reconstructed["before"]["role"], "reconstructed_earlier_wording")
@@ -121,10 +123,10 @@ class RagPipelineTests(unittest.TestCase):
             "Compare Section 19 before and after the IT Amendment Act, 2008 as of 1 January 2010.", "specific")["comparison"]
         after, before = comparison["after"], comparison["before"]
         self.assertEqual(after["span_basis"], "exact_source_span")
-        chunk = next(c for c in self.pipeline.retriever.ensure_index()["chunks"] if c["chunk_id"] == after["chunk_id"])
-        text = " ".join(chunk["text"].split())
-        self.assertEqual(text[after["text_offset"]["start"]:after["text_offset"]["end"]], " ".join(after["compared_text"].split()))
-        self.assertEqual(len(after["source_sha256"]), 64)
+        chunk = next(c for c in self.pipeline.retriever.ensure_index()["chunks"]
+                     if c["metadata"].get("entry_id") == after["entry_id"] and c["metadata"].get("source_anchor") == after["source_anchor"])
+        self.assertIn(" ".join(after["compared_text"].split()), " ".join(chunk["text"].split()))  # verbatim span of the cited chunk
+        self.assertEqual(len(after["text_sha256"]), 64)
         self.assertTrue(after["local_pdf_url"].endswith(f"#page={after['page']}"))
         # The reconstructed wording is derived from the consolidated footnote and cites that source, not the amending Act.
         self.assertEqual(before["span_basis"], "derived_text_not_a_verbatim_source_span")
@@ -133,15 +135,14 @@ class RagPipelineTests(unittest.TestCase):
         self.assertEqual(comparison["requested_date"], {"value": "2010-01-01", "precision": "day"})
 
     def test_ambiguous_graph_alignment_keeps_competitors_and_abstains(self) -> None:
-        from temporal_legal_drift.versioning.consumer import GraphConsumer
-
-        with patch.object(GraphConsumer, "aligned_fragments", lambda self, *a: setattr(self, "last_alignment_candidates", ["t1", "t2"]) or None):
-            result = self.pipeline.answer("What changed in the IT Act amendment regarding data privacy?", "specific")
+        # Real data: IBC section 239 has two corroborated insertions ((fa) and (fd)); neither is chosen.
+        result = self.pipeline.answer("What changed in section 239 of the Insolvency and Bankruptcy Code after the amendment?", "specific")
         comparison = result["comparison"]
         self.assertEqual(comparison["support_class"], "AMBIGUOUS_CANDIDATES")
-        self.assertEqual(comparison["competing_transition_ids"], ["t1", "t2"])
-        self.assertIn("PAIR_AMBIGUOUS", comparison["abstention_reasons"])
+        self.assertEqual(len(comparison["competing_transition_ids"]), 2)
+        self.assertIn("SEVERAL_CORROBORATED_CHANGES", comparison["abstention_reasons"])
         self.assertIsNone(result["metrics"])
+        self.assertIsNone(comparison["before"])
 
     def test_score_carries_separate_reliability_and_question_relevance(self) -> None:
         metrics = self.pipeline.answer("Compare Section 19 before and after the IT Amendment Act, 2008.", "specific")["metrics"]
@@ -160,8 +161,10 @@ class RagPipelineTests(unittest.TestCase):
             "What changed in the Arbitration and Conciliation Act section 7 regarding electronic communication?",
             "specific",
         )
-        self.assertEqual({item.get("act_name") for item in result["citations"]}, {"Arbitration And Conciliation Act 1996"})
-        self.assertIsNone(result["metrics"])
+        # The amending Act that actually amends section 7 is cited with the principal Act; nothing from the IT Act.
+        self.assertEqual({item.get("entry_id") for item in result["citations"]},
+                         {"arbitration-and-conciliation-act-1996", "arbitration-and-conciliation-amendment-act-2015"})
+        self.assertIsNone(result["metrics"])  # an insertion has no earlier wording to score
 
     def test_display_mode_does_not_change_prompt_selected_score_basis(self) -> None:
         query = "Compare Section 19 before and after the IT Amendment Act, 2008."
@@ -203,15 +206,24 @@ class RagPipelineTests(unittest.TestCase):
         self.assertIsNone(result["metrics"])
 
     def test_model_timeout_or_provider_error_yields_labelled_extractive_fallback(self) -> None:
-        query = "Compare Section 19 before and after the IT Amendment Act, 2008."
+        # General questions still use the model when configured; a failure falls back to a labelled extract.
         for error in (TimeoutError("timed out"), ValueError("bad provider payload")):
             with self.subTest(error=type(error).__name__), \
                     patch.object(rag_pipeline, "_llm_configured", return_value=True), \
-                    patch.object(rag_pipeline, "_llm_generate", side_effect=error):
-                result = self.pipeline.answer(query, "specific")
+                    patch.object(rag_pipeline, "_llm_single_document_generate", side_effect=error):
+                result = self.pipeline.answer("What does the Consumer Protection Act say about mediation?", "specific")
             self.assertEqual(result["answer"]["generation_method"], "extractive_fallback")
-            self.assertIn("Configured LLM was unavailable", result["answer"]["generation_warning"])
-            self.assertEqual(result["metrics"]["conceptual_method"], "legal_cue_proxy")  # no model judgment claimed
+            self.assertIn("unavailable", result["answer"]["generation_warning"])
+            self.assertIn("Section 37", result["answer"]["direct_answer"])  # the fallback still answers from the cited section
+
+    def test_version_comparisons_never_depend_on_the_model(self) -> None:
+        query = "Compare Section 19 before and after the IT Amendment Act, 2008."
+        with patch.object(rag_pipeline, "_llm_configured", return_value=True), \
+                patch.object(rag_pipeline, "_chat_completion", side_effect=TimeoutError("timed out")) as model:
+            result = self.pipeline.answer(query, "specific")
+        model.assert_not_called()
+        self.assertEqual(result["answer"]["generation_method"], "grounded_composition")
+        self.assertEqual(result["metrics"]["conceptual_method"], "legal_cue_proxy")  # no model judgment claimed
 
     def test_invalid_mode_is_rejected(self) -> None:
         with self.assertRaisesRegex(ValueError, "specific or generic"):

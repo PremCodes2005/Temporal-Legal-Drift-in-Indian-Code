@@ -12,9 +12,15 @@ from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
+from .compose import compose_general_answer, compose_out_of_scope, compose_version_answer, section_answer
+from .determinations import DETERMINATIONS_VERSION, answer_change, materiality, risk, textual_drift, validate_scenario
 from .indiacode import IndiaCodeLiveRepository, source_guidance
 from .metrics import calculate_drift_metrics
+from .question import ActCatalog, QuestionFrame, parse_question
 from .retriever import HybridRetriever, RetrievedChunk
+from .versions import VERSION_CLAIMS, VersionSelector
+
+ANSWER_CONTRACT_VERSION = "rag-answer-v2"
 
 
 INTENT_PATTERNS = {
@@ -55,6 +61,7 @@ class GenerationResult:
     method: str
     warning: str | None = None
     short_answer: str | None = None
+    sources: tuple[dict[str, object], ...] = ()  # every excerpt the model was given, so each can be cited
 
 
 class RagPipeline:
@@ -62,6 +69,50 @@ class RagPipeline:
         self.root = root.resolve()
         self.retriever = HybridRetriever(self.root)
         self.live_repository = IndiaCodeLiveRepository()
+        self._catalog: ActCatalog | None = None
+        self._selector: VersionSelector | None = None
+
+    def _components(self) -> tuple[ActCatalog, VersionSelector]:
+        """Act catalog and version selector, built once from the index, graph v4 and the corpus manifest."""
+        if self._catalog is None or self._selector is None:
+            from temporal_legal_drift.corpus import CorpusManifest
+            from temporal_legal_drift.versioning.consumer import GraphConsumer, IncompatibleGraphError
+
+            chunks = self.retriever.ensure_index().get("chunks", [])
+            try:
+                consumer = GraphConsumer(self.root, "v4")
+            except (IncompatibleGraphError, OSError, ValueError):
+                consumer = None  # no verified graph: only footnote evidence can support a comparison
+            self._catalog = ActCatalog.build(self.root, chunks, consumer.graph if consumer else None)
+            amenders: dict[str, list[str]] = {}
+            for amending, targets in self._catalog.relations.items():
+                for target in targets:
+                    amenders.setdefault(target, []).append(amending)
+            risks = {e.entry_id: e.known_extraction_risk for e in CorpusManifest.from_file(self.root / "configs/corpus/pilot_v1.json").entries}
+            self._selector = VersionSelector(consumer, chunks, risks, amenders)
+        return self._catalog, self._selector
+
+    def answer(self, query: str, mode: str, scenario: dict[str, object] | None = None) -> dict[str, object]:
+        query = " ".join(str(query or "").split())
+        if not query:
+            raise ValueError("query is required")
+        if len(query) > 4000:
+            raise ValueError("query exceeds 4000 characters")
+        if mode not in {"specific", "generic"}:
+            raise ValueError("mode must be specific or generic")
+        facts = validate_scenario(scenario)
+        catalog, selector = self._components()
+        frame = parse_question(query, catalog, reference_date=(facts or {}).get("reference_date"))
+        if frame.asks_about_versions:
+            return self._versioned_answer(query, mode, frame, facts, catalog, selector)
+        if frame.principal is None and frame.unresolved_act_phrases:
+            return self._out_of_scope_answer(query, mode, frame)
+        restrict = {frame.principal.entry_id} if frame.principal else None
+        focus = selector.section_chunk(frame.principal.entry_id, frame.sections[0]) if frame.principal and frame.sections else None
+        if focus is None and frame.principal and frame.focus_terms:
+            focus = self._topic_section(query, frame)
+        response = self._legacy_answer(query, mode, restrict=restrict, focus_chunk=focus)
+        return self._attach_general(response, frame, facts, mode, focus)
 
     def _graph_alignment(self, pre: RetrievedChunk, post: RetrievedChunk) -> tuple[dict[str, object] | None, list[str]]:
         from temporal_legal_drift.versioning.consumer import GraphConsumer, IncompatibleGraphError
@@ -110,20 +161,18 @@ class RagPipeline:
     def rebuild(self) -> dict[str, object]:
         return self.retriever.rebuild()
 
-    def answer(self, query: str, mode: str) -> dict[str, object]:
-        query = " ".join(str(query or "").split())
-        if not query:
-            raise ValueError("query is required")
-        if len(query) > 4000:
-            raise ValueError("query exceeds 4000 characters")
-        if mode not in {"specific", "generic"}:
-            raise ValueError("mode must be specific or generic")
-
+    def _legacy_answer(self, query: str, mode: str, *, restrict: set[str] | None = None,
+                       focus_chunk: dict[str, object] | None = None) -> dict[str, object]:
+        """General answers (rag-answer-v1 body); restricted to the Act the question names when one was resolved."""
         intent = _classify_intent(query)
-        retrieved = self.retriever.search(query, limit=40)
+        retrieved = self.retriever.search(query, limit=40, entry_ids=restrict)
+        if focus_chunk is not None:  # the named section's own text leads
+            meta = dict(focus_chunk.get("metadata", {}))
+            retrieved = [RetrievedChunk(str(focus_chunk.get("chunk_id") or f"section:{meta.get('entry_id')}"), str(focus_chunk.get("text", "")),
+                                        1.0, 1.0, 1.0, meta), *retrieved]
         live = (
             self.live_repository.search_sections(query)
-            if os.environ.get("TLD_LIVE_INDIA_CODE", "1") != "0"
+            if os.environ.get("TLD_LIVE_INDIA_CODE", "1") != "0" and restrict is None
             else None
         )
         # Merge current India Code sections with the reproducible local cache.
@@ -144,7 +193,7 @@ class RagPipeline:
             ]
             by_id = {item.chunk_id: item for item in [*retrieved, *live_chunks]}
             retrieved = sorted(by_id.values(), key=lambda item: (-item.score, item.chunk_id))[:40]
-        relation = self.retriever.relation_for_results(retrieved)
+        relation = self.retriever.relation_for_results(retrieved) if restrict is None else None
         if relation:
             related_ids = {relation["amending_entry_id"], relation["target_entry_id"]}
             related = self.retriever.search(query, limit=12, entry_ids=related_ids)
@@ -158,7 +207,8 @@ class RagPipeline:
 
         answer_type = "comparison" if pre is not None and post is not None else "single_document_summary"
         if answer_type == "single_document_summary" and post is not None:
-            post = self.retriever.overview_chunk(str(post.metadata.get("entry_id"))) or post
+            if focus_chunk is None:
+                post = self.retriever.overview_chunk(str(post.metadata.get("entry_id"))) or post
             document_chunks = self.retriever.document_chunks(str(post.metadata.get("entry_id")))
             generation = _generate_single_document(query, mode, post, document_chunks)
         else:
@@ -229,6 +279,13 @@ class RagPipeline:
             metric_document["question_relevance"] = _question_relevance(query, metric_pre_text, metric_post_text, graph_alignment)
         citations = _citations(pre, post)
         verification = _verification(query, pre, post, pair_status, generation, citations, metric_document is not None)
+        for source in generation.sources:  # model-generated answers cite every excerpt the model saw
+            if all(c.get("chunk_id") != source["chunk_id"] for c in citations):
+                meta = source["metadata"]
+                citations.append({"label": "model_context", "chunk_id": source["chunk_id"], "entry_id": meta.get("entry_id"),
+                                  "act_name": meta.get("act_name"), "version": meta.get("version"), "document_type": meta.get("document_type"),
+                                  "date": meta.get("date"), "source_anchor": meta.get("source_anchor"), "official_identifier": meta.get("official_identifier"),
+                                  "source_url": meta.get("source_url"), "official_portal_url": meta.get("official_portal_url"), "filename": meta.get("filename")})
         answer_markdown = _answer_markdown(generation, citations, guidance, answer_type)
         return {
             "schema_version": "1.0.0",
@@ -276,6 +333,162 @@ class RagPipeline:
                 "Confirm the complete provision, commencement and applicability on India Code before relying on the answer.",
             ],
         }
+
+    # ---------------- rag-answer-v2 ----------------
+    def _topic_section(self, query: str, frame: QuestionFrame) -> dict[str, object] | None:
+        """The section of the named Act whose heading names the question's topic; else the best-ranked section text."""
+        _, selector = self._components()
+        for row in selector.suggest_sections(frame.principal.entry_id, frame.focus_terms, limit=3):
+            if row["heading"] and any(term in re.findall(r"[a-z0-9]+", row["heading"].casefold()) for term in frame.focus_terms):
+                chunk = selector.section_chunk(frame.principal.entry_id, row["section"])
+                if chunk:
+                    return {**chunk, "section": row["section"]}
+        for item in self.retriever.search(query, limit=20, entry_ids={frame.principal.entry_id}):
+            text = item.text.casefold()
+            if item.metadata.get("source_kind") == "provision_version" and "arrangement of sections" not in text \
+                    and any(term in re.findall(r"[a-z0-9]+", text) for term in frame.focus_terms):
+                return {"chunk_id": item.chunk_id, "text": item.text, "metadata": item.metadata}
+        return None
+
+    def _versioned_answer(self, query: str, mode: str, frame: QuestionFrame, scenario: dict[str, object] | None,
+                          catalog: ActCatalog, selector: VersionSelector) -> dict[str, object]:
+        versions = selector.select(frame)
+        if versions["reason_code"] == "SECTION_NOT_IDENTIFIED" and frame.principal:
+            versions["suggested_sections"] = selector.suggest_sections(frame.principal.entry_id, frame.focus_terms)
+        supported = versions["support_class"] in VERSION_CLAIMS
+        metrics = None
+        if supported and str(versions["before"]["text"]).strip():
+            items = {item["evidence_id"]: item for item in versions["evidence"]}
+            pre_text, post_text = items[versions["before"]["evidence_id"]]["text"], items[versions["after"]["evidence_id"]]["text"]
+            metrics = calculate_drift_metrics(
+                pre_text, post_text, pre_vector=self.retriever.embed_text(pre_text), post_vector=self.retriever.embed_text(post_text),
+                conceptual_method="legal_cue_proxy", retrieval_scores=(1.0, 1.0), metadata_coverage=1.0)
+            # Alignment quality is a retrieval-similarity measure; this evidence was chosen by identity, so it does not apply.
+            metrics["evidence_alignment_quality_percent"] = metrics["alignment_accuracy_percent"] = None
+            metrics.setdefault("unavailable_reasons", {})["evidence_alignment_quality"] = (
+                "evidence was selected by Act and section identity, not by similarity, so retrieval alignment quality does not apply")
+            metrics["score_basis"] = {
+                "selection": "provision_identity_from_question", "query": query, "selection_method": versions["support_class"].lower(),
+                "presentation_mode_independent": True, "pre_excerpt": _bounded_text(pre_text, 1200), "post_excerpt": _bounded_text(post_text, 1200),
+                "pre_source_anchor": _anchor(items[versions["before"]["evidence_id"]]), "post_source_anchor": _anchor(items[versions["after"]["evidence_id"]]),
+                "user_supplied_before_after_text": False, "graph_alignment": None,
+                "note": "Selected by Act and section identity, not by similarity; the alignment-quality figure reflects that."}
+            temporal = ({"status": "EFFECTIVE_DATE_EVIDENCED", "date": versions["effective_date"], "basis": "Act-wide commencement in graph v4"}
+                        if versions.get("effective_date") else
+                        {"status": "FOOTNOTE_STATED_DATE_UNVERIFIED", "date": versions.get("footnote_stated_date"), "basis": "date printed in the footnote"}
+                        if versions.get("footnote_stated_date") else {"status": "UNRESOLVED", "date": None, "basis": "no supported effective date"})
+            metrics["reliability"] = {"evidence_coverage": "BOTH_SIDES", "pairing": versions["support_class"], "temporal_certainty": temporal,
+                                      "retrieval_relevance": None, "relation_verification": versions.get("relation_verification"),
+                                      "note": "Reliability indicators are reported separately; they are not drift and not accuracy."}
+            metrics["question_relevance"] = {"status": "MATCHES_REQUESTED_SECTION", "requested_section": frame.sections[0],
+                                             "compared_section": frame.sections[0], "answers_scenario_question": False,
+                                             "explanation": "The score measures how the selected clause's wording moved; whether your answer changes is reported separately."}
+        drift = textual_drift(frame, versions, metrics)
+        mat = materiality(self.root, frame, versions)
+        risk_result, comparison = risk(self.root, frame, versions, scenario)
+        change = answer_change(frame, versions, scenario, comparison)
+        determinations = {"version": DETERMINATIONS_VERSION, "textual_drift": drift, "materiality": mat, "answer_change": change, "risk": risk_result}
+        names = {entry: f"{info['name']}" + ("" if info["kind"] == "principal" or not info["year"] or info["year"] in info["name"] else f" {info['year']}")
+                 for entry, info in catalog.entries.items()}
+        names = {entry: name.replace(" Act ", " (Amendment) Act ", 1) if catalog.entries[entry]["kind"] == "amending" and "Amendment" not in name else name
+                 for entry, name in names.items()}
+        composed = compose_version_answer(frame, mode, versions, determinations, names)
+        citations = [{"label": item["role"], "evidence_id": item["evidence_id"], "chunk_id": None, "entry_id": item["entry_id"],
+                      "act_name": item["act_name"], "version": item["scope"], "document_type": None, "date": None,
+                      "source_anchor": _anchor(item), "page": item["page"], "line": item["line"], "pdf_url": item["pdf_url"],
+                      "official_identifier": None, "source_url": item["official_url"], "official_portal_url": item["official_url"],
+                      "verbatim": item["verbatim"], "text_reliability": item["text_reliability"]} for item in versions["evidence"]]
+        fidelity = [{"entry_id": item["entry_id"], "warning": "source text unreadable or unreliable",
+                     "detail": "The cited document has a known unreliable text layer; treat its wording as unverified."}
+                    for item in versions["evidence"] if item["text_reliability"] == "UNRELIABLE_TEXT_LAYER"]
+        if not supported and frame.principal:  # the amendments asked about may themselves be unreadable
+            for amending in sorted(a for a, targets in catalog.relations.items() if frame.principal.entry_id in targets):
+                if selector.risk.get(amending) and (not frame.amending or frame.amending.entry_id == amending):
+                    fidelity.append({"entry_id": amending, "warning": "source text unreadable or unreliable", "detail": str(selector.risk[amending])})
+        before_section = next((sec for sec in composed["sections"] if sec["id"] == "before"), None)
+        after_section = next((sec for sec in composed["sections"] if sec["id"] == "after"), None)
+        guidance = source_guidance(query)
+        return {
+            "schema_version": "2.0.0", "contract_version": ANSWER_CONTRACT_VERSION, "query": query, "mode": mode,
+            "intent": "diff_analysis", "question_frame": frame.to_dict(), "scenario": scenario,
+            "answer": {
+                "answer_type": "comparison" if supported else "version_abstention",
+                "direct_answer": composed["direct_answer"], "sections": composed["sections"], "answer_limitations": composed["limitations"],
+                "short_answer": composed["direct_answer"],
+                "pre_amendment_baseline": before_section["text"] if before_section else "",
+                "post_amendment_revision": after_section["text"] if after_section else "",
+                "key_differences": [sec["text"] for sec in composed["sections"] if sec["id"] in {"what_changed", "effect", "why"}],
+                "markdown": _v2_markdown(composed), "generation_method": "grounded_composition", "generation_warning": None,
+            },
+            "metrics": metrics,
+            "determinations": determinations,
+            "evidence": versions["evidence"],
+            "version_evidence": {k: v for k, v in versions.items() if k != "evidence"},
+            "source_fidelity_warnings": fidelity,
+            "comparison": _v2_comparison_record(query, mode, frame, versions, metrics, determinations, fidelity),
+            "retrieval": {"pair_status": versions["support_class"].lower(), "candidate_count": len(versions.get("candidates") or []),
+                          "relation": {"amending_entry_id": versions.get("amending_entry"), "target_entry_id": frame.principal.entry_id if frame.principal else None},
+                          "pre": None, "post": None, "selection": "act_and_section_identity",
+                          "live_indiacode": {"attempted": False, "candidate_count": 0, "amendment_count": 0, "amendments": [], "error": None,
+                                             "role": "not used for version comparisons; India Code remains the authoritative source"}},
+            "citations": citations,
+            "verification": _v2_verification(frame, versions, citations),
+            "source_guidance": guidance,
+            "repository": self.status(),
+            "limitations": composed["limitations"],
+        }
+
+    def _out_of_scope_answer(self, query: str, mode: str, frame: QuestionFrame) -> dict[str, object]:
+        composed = compose_out_of_scope(frame)
+        out = {"state": "OUT_OF_SCOPE", "label": None, "summary": "Not in the corpus.", "method": None, "evidence_ids": [],
+               "reason": "Nothing to assess: the Act is outside the local corpus.",
+               "details": {}, "needs": [], "review_status": "UNREVIEWED", "legal_validation": "UNVERIFIED"}
+        response = _insufficient_response(query, mode, _classify_intent(query), source_guidance(query), self.status())
+        response["answer"].update({"answer_type": "out_of_scope", "direct_answer": composed["direct_answer"], "sections": [],
+                                   "answer_limitations": composed["limitations"], "short_answer": composed["direct_answer"]})
+        response.update({"schema_version": "2.0.0", "contract_version": ANSWER_CONTRACT_VERSION, "question_frame": frame.to_dict(),
+                         "scenario": None, "evidence": [], "comparison": None, "source_fidelity_warnings": [],
+                         "determinations": {"version": DETERMINATIONS_VERSION, **{k: dict(out) for k in ("textual_drift", "materiality", "answer_change", "risk")}}})
+        return response
+
+    def _attach_general(self, response: dict[str, object], frame: QuestionFrame, scenario: dict[str, object] | None, mode: str,
+                        focus: dict[str, object] | None = None) -> dict[str, object]:
+        answer = response["answer"]
+        evidence = []
+        for number, citation in enumerate(response.get("citations") or [], start=1):
+            page = re.search(r"page:(\d+)", str(citation.get("source_anchor") or ""))
+            filename = citation.get("filename")
+            for chunk in (response.get("retrieval") or {}).get("pre"), (response.get("retrieval") or {}).get("post"):
+                if chunk and chunk.get("chunk_id") == citation.get("chunk_id"):
+                    filename = (chunk.get("metadata") or {}).get("filename")
+            evidence.append({"evidence_id": f"E{number}", "role": "act_text_excerpt", "entry_id": citation.get("entry_id"),
+                             "act_name": citation.get("act_name"), "page": int(page.group(1)) if page else None,
+                             "pdf_url": f"/corpus/{filename}#page={page.group(1)}" if filename and page else None,
+                             "official_url": citation.get("source_url") or citation.get("official_portal_url"), "verbatim": True})
+            citation["evidence_id"] = f"E{number}"
+            citation["page"] = int(page.group(1)) if page else None
+            citation["pdf_url"] = evidence[-1]["pdf_url"]
+        general = {"state": "OUT_OF_SCOPE", "label": None, "evidence_ids": [], "details": {}, "needs": [], "method": None,
+                   "review_status": "UNREVIEWED", "legal_validation": "UNVERIFIED"}
+        reasons = {"textual_drift": "This question does not ask how a provision changed, so no versions are compared.",
+                   "materiality": "Materiality is assessed for a specific amendment; none was asked about.",
+                   "answer_change": "The question is about the law as written, not a change over time.",
+                   "risk": "Risk is assessed only for a named provision with a modelled obligation and your facts."}
+        determinations = {"version": DETERMINATIONS_VERSION, **{k: {**general, "summary": "Not applicable to this question.", "reason": v} for k, v in reasons.items()}}
+        if answer.get("answer_type") == "insufficient_evidence":
+            composed = {"direct_answer": answer.get("short_answer"), "sections": [], "limitations": ["No local evidence supported the query."]}
+        else:
+            opening = str(answer.get("short_answer") or answer.get("post_amendment_revision") or "")
+            if focus is not None and str(answer.get("generation_method", "")).startswith("extractive"):
+                primary = (focus.get("metadata") or {}).get("primary_sections") or [None]
+                opening = section_answer(str(focus.get("text", "")), frame.focus_terms, mode, str((focus.get("metadata") or {}).get("act_name") or ""),
+                                         str(focus.get("section") or (frame.sections[0] if frame.sections else primary[0]) or "") or None) or opening
+            composed = compose_general_answer(frame, mode, opening, [str(p) for p in answer.get("key_differences") or []],
+                                              [e["evidence_id"] for e in evidence])
+        answer.update({"direct_answer": composed["direct_answer"], "sections": composed["sections"], "answer_limitations": composed["limitations"]})
+        response.update({"schema_version": "2.0.0", "contract_version": ANSWER_CONTRACT_VERSION, "question_frame": frame.to_dict(),
+                         "scenario": scenario, "evidence": evidence, "determinations": determinations})
+        return response
 
 
 def _classify_intent(query: str) -> str:
@@ -591,6 +804,7 @@ def _llm_single_document_generate(
         None,
         "llm_grounded",
         short_answer=short_answer,
+        sources=tuple({"chunk_id": item.chunk_id, "text": item.text, "metadata": item.metadata} for item in ranked[:5]),
     )
 
 
@@ -1091,3 +1305,70 @@ def _evidence_prompt_block(label: str, item: RetrievedChunk | None) -> str:
 def _bounded_text(value: object, maximum: int = 1200) -> str:
     text = " ".join(str(value or "").split())
     return text if len(text) <= maximum else text[: maximum - 1].rstrip() + "…"
+
+
+def _anchor(item: dict[str, object]) -> str | None:
+    if not item.get("page"):
+        return None
+    return f"pdf:page:{item['page']}" + (f":line:{item['line']}" if item.get("line") else "")
+
+
+def _v2_markdown(composed: dict[str, object]) -> str:
+    lines = [str(composed["direct_answer"]), ""]
+    for section in composed["sections"]:
+        lines += [f"## {section['title']}", str(section["text"]) + (f" [{', '.join(section['evidence_ids'])}]" if section["evidence_ids"] else ""), ""]
+    return "\n".join(lines).strip()
+
+
+V2_ROLES = {"before_fragment", "after_fragment", "reconstructed_earlier_wording", "current_consolidated_text"}
+
+
+def _v2_comparison_record(query: str, mode: str, frame: QuestionFrame, versions: dict[str, object], metrics: dict[str, object] | None,
+                          determinations: dict[str, object], fidelity: list[dict[str, str]]) -> dict[str, object]:
+    supported = versions["support_class"] in VERSION_CLAIMS
+    items = {item["evidence_id"]: item for item in versions["evidence"]}
+
+    def side(reference: dict[str, object] | None) -> dict[str, object] | None:
+        if not reference:
+            return None
+        item = items[reference["evidence_id"]]
+        return {"role": item["role"], "evidence_id": item["evidence_id"], "source_id": None, "source_sha256": item["source_sha256"],
+                "text_sha256": item["text_sha256"], "document_version": item["scope"], "chunk_id": None, "text_offset": None,
+                "span_basis": "exact_source_span" if item["verbatim"] else "derived_text_not_a_verbatim_source_span",
+                "local_pdf_url": item["pdf_url"], "entry_id": item["entry_id"], "act_name": item["act_name"], "source_url": item["official_url"],
+                "source_anchor": _anchor(item), "page": item["page"], "line": item["line"],
+                "page_region_highlight": "unavailable: no verified PDF text coordinates", "compared_text": item["text"]}
+
+    reasons = [] if supported else [versions["reason_code"]]
+    if supported and metrics is None:
+        reasons.append("SCORING_UNAVAILABLE")
+    if fidelity:
+        reasons.append("SOURCE_TEXT_UNRELIABLE")
+    return {
+        "contract_version": "comparison-record-v2", "query_id": "q_" + sha256(f"{query}\n{mode}".encode()).hexdigest()[:16],
+        "support_class": versions["support_class"], "support_reason": versions["reason"],
+        "before": side(versions.get("before")) if supported else None, "after": side(versions.get("after")) if supported else None,
+        "graph_transition_id": versions.get("transition_id"), "amendment_event_id": versions.get("amendment_event_id"),
+        "operation": versions.get("operation"), "provision_path": versions.get("provision_path"),
+        "competing_transition_ids": [c["transition_id"] for c in versions.get("candidates") or [] if "transition_id" in c],
+        "requested_date": _requested_date(query), "reliability": (metrics or {}).get("reliability"),
+        "question_relevance": (metrics or {}).get("question_relevance"), "supported_effective_date": versions.get("effective_date"),
+        "changed_spans": (metrics or {}).get("changed_spans", []), "scoring_contract_version": (metrics or {}).get("metrics_contract_version"),
+        "materiality_status": determinations["materiality"]["state"], "applicability_status": "NOT_DETERMINED_REQUIRES_SCENARIO_FACTS_AND_REVIEW",
+        "consequence_status": determinations["risk"]["state"], "abstention_reasons": reasons, "legal_validation": "UNVERIFIED",
+        "relation_verification": versions.get("relation_verification"),
+    }
+
+
+def _v2_verification(frame: QuestionFrame, versions: dict[str, object], citations: list[dict[str, object]]) -> dict[str, object]:
+    supported = versions["support_class"] in VERSION_CLAIMS
+    checks = [
+        {"id": "act_identified", "label": "Act identified from the question", "passed": frame.principal is not None},
+        {"id": "provision_identified", "label": "Provision identified", "passed": bool(frame.sections)},
+        {"id": "relation_verified", "label": "Amending Act linked to this Act", "passed": supported and versions.get("relation_verification") in {"GRAPH_SOURCE_LINKED", "ACT_NUMBER_TEXT_VERIFIED"}},
+        {"id": "paired_context", "label": "Supported before/after versions of the same provision", "passed": supported},
+        {"id": "citation_anchors", "label": "Page-level evidence attached", "passed": bool(citations) and all(c.get("page") for c in citations)},
+    ]
+    return {"passed": all(c["passed"] for c in checks), "checks": checks, "pair_status": versions["support_class"].lower(),
+            "note": "A failed check means the answer is partial; the reason is shown with the answer."}
+

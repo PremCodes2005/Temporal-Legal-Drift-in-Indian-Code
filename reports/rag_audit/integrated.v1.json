@@ -1,0 +1,1129 @@
+{
+ "schema_version": "1.0.0",
+ "case_set": "rag-audit-cases-v1",
+ "cases": [
+  {
+   "case_id": "arb-s7-specific",
+   "stratum": "supported_transition_insert_dated_silver",
+   "mode": "specific",
+   "seconds": 0.56,
+   "expected_support": "GRAPH_TRANSITION_FRAGMENTS",
+   "error": null,
+   "actual_support": "GRAPH_TRANSITION_FRAGMENTS",
+   "pair_entries": [
+    "arbitration-and-conciliation-amendment-act-2015"
+   ],
+   "provision_path": "section:7",
+   "operation": "INSERT",
+   "answer_type": "comparison",
+   "generation_method": "grounded_composition",
+   "has_drift_score": false,
+   "citations": [
+    {
+     "entry_id": "arbitration-and-conciliation-amendment-act-2015",
+     "page": 2,
+     "has_link": true
+    },
+    {
+     "entry_id": "arbitration-and-conciliation-amendment-act-2015",
+     "page": 2,
+     "has_link": true
+    },
+    {
+     "entry_id": "arbitration-and-conciliation-amendment-act-2015",
+     "page": 2,
+     "has_link": true
+    },
+    {
+     "entry_id": "arbitration-and-conciliation-act-1996",
+     "page": 9,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "OUT_OF_SCOPE",
+    "materiality": "PROVISIONAL",
+    "answer_change": "NEEDS_FACTS",
+    "risk": "OUT_OF_SCOPE"
+   },
+   "opening_answer": "The Arbitration And Conciliation (Amendment) Act 2015 inserted new words into section 7 of the Arbitration And Conciliation Act 1996: “including communication through electronic means”. The amending Act came into force on 2015-10-23 (Act-wide).",
+   "support_errors": [],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {},
+   "outcome_category": "partial_needs_facts"
+  },
+  {
+   "case_id": "arb-s7-generic",
+   "stratum": "mode_invariance",
+   "mode": "generic",
+   "seconds": 0.01,
+   "expected_support": "GRAPH_TRANSITION_FRAGMENTS",
+   "error": null,
+   "actual_support": "GRAPH_TRANSITION_FRAGMENTS",
+   "pair_entries": [
+    "arbitration-and-conciliation-amendment-act-2015"
+   ],
+   "provision_path": "section:7",
+   "operation": "INSERT",
+   "answer_type": "comparison",
+   "generation_method": "grounded_composition",
+   "has_drift_score": false,
+   "citations": [
+    {
+     "entry_id": "arbitration-and-conciliation-amendment-act-2015",
+     "page": 2,
+     "has_link": true
+    },
+    {
+     "entry_id": "arbitration-and-conciliation-amendment-act-2015",
+     "page": 2,
+     "has_link": true
+    },
+    {
+     "entry_id": "arbitration-and-conciliation-amendment-act-2015",
+     "page": 2,
+     "has_link": true
+    },
+    {
+     "entry_id": "arbitration-and-conciliation-act-1996",
+     "page": 9,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "OUT_OF_SCOPE",
+    "materiality": "PROVISIONAL",
+    "answer_change": "NEEDS_FACTS",
+    "risk": "OUT_OF_SCOPE"
+   },
+   "opening_answer": "The Arbitration And Conciliation (Amendment) Act 2015 inserted new words into section 7 of the Arbitration And Conciliation Act 1996: “including communication through electronic means”. The amending Act came into force on 2015-10-23 (Act-wide).",
+   "support_errors": [],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {},
+   "outcome_category": "partial_needs_facts"
+  },
+  {
+   "case_id": "arb-s23-counterclaim",
+   "stratum": "insert_answer_change_conditional",
+   "mode": "specific",
+   "seconds": 0.01,
+   "expected_support": "GRAPH_TRANSITION_FRAGMENTS",
+   "error": null,
+   "actual_support": "GRAPH_TRANSITION_FRAGMENTS",
+   "pair_entries": [
+    "arbitration-and-conciliation-amendment-act-2015"
+   ],
+   "provision_path": "section:23",
+   "operation": "INSERT",
+   "answer_type": "comparison",
+   "generation_method": "grounded_composition",
+   "has_drift_score": false,
+   "citations": [
+    {
+     "entry_id": "arbitration-and-conciliation-amendment-act-2015",
+     "page": 6,
+     "has_link": true
+    },
+    {
+     "entry_id": "arbitration-and-conciliation-amendment-act-2015",
+     "page": 6,
+     "has_link": true
+    },
+    {
+     "entry_id": "arbitration-and-conciliation-amendment-act-2015",
+     "page": 6,
+     "has_link": true
+    },
+    {
+     "entry_id": "arbitration-and-conciliation-act-1996",
+     "page": 17,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "OUT_OF_SCOPE",
+    "materiality": "PROVISIONAL",
+    "answer_change": "CONDITIONAL",
+    "risk": "OUT_OF_SCOPE"
+   },
+   "opening_answer": "The Arbitration And Conciliation (Amendment) Act 2015 inserted new words into section 23 of the Arbitration And Conciliation Act 1996: “(2A) The respondent, in support of his case, may also submit a counterclaim or plead a set-off, which shall be adjudicated upon by the arbitral tribunal, if such counterclaim or set-off falls within the scope of the arb…”. So the answer to your question changes (s",
+   "support_errors": [],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {},
+   "outcome_category": "conditional"
+  },
+  {
+   "case_id": "mv-s173-deposit",
+   "stratum": "numeric_substitution_silver_undated",
+   "mode": "specific",
+   "seconds": 0.01,
+   "expected_support": "GRAPH_TRANSITION_FRAGMENTS",
+   "error": null,
+   "actual_support": "GRAPH_TRANSITION_FRAGMENTS",
+   "pair_entries": [
+    "motor-vehicles-amendment-act-2019"
+   ],
+   "provision_path": "section:173",
+   "operation": "SUBSTITUTE",
+   "answer_type": "comparison",
+   "generation_method": "grounded_composition",
+   "has_drift_score": true,
+   "citations": [
+    {
+     "entry_id": "motor-vehicles-amendment-act-2019",
+     "page": 32,
+     "has_link": true
+    },
+    {
+     "entry_id": "motor-vehicles-amendment-act-2019",
+     "page": 32,
+     "has_link": true
+    },
+    {
+     "entry_id": "motor-vehicles-amendment-act-2019",
+     "page": 32,
+     "has_link": true
+    },
+    {
+     "entry_id": "motor-vehicles-act-1988",
+     "page": 99,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "DETERMINED",
+    "materiality": "PROVISIONAL",
+    "answer_change": "DETERMINED",
+    "risk": "OUT_OF_SCOPE"
+   },
+   "opening_answer": "The Motor Vehicles (Amendment) Act 2019 changed section 173 of the Motor Vehicles Act 1988: “ten thousand” was replaced by “one lakh”. So the answer to your question changes.",
+   "support_errors": [],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {},
+   "outcome_category": "provisional"
+  },
+  {
+   "case_id": "cpc-s32-fine",
+   "stratum": "numeric_substitution_no_silver",
+   "mode": "specific",
+   "seconds": 0.01,
+   "expected_support": "GRAPH_TRANSITION_FRAGMENTS",
+   "error": null,
+   "actual_support": "GRAPH_TRANSITION_FRAGMENTS",
+   "pair_entries": [
+    "code-of-civil-procedure-amendment-act-1999"
+   ],
+   "provision_path": "section:32",
+   "operation": "SUBSTITUTE",
+   "answer_type": "comparison",
+   "generation_method": "grounded_composition",
+   "has_drift_score": true,
+   "citations": [
+    {
+     "entry_id": "code-of-civil-procedure-amendment-act-1999",
+     "page": 2,
+     "has_link": true
+    },
+    {
+     "entry_id": "code-of-civil-procedure-amendment-act-1999",
+     "page": 2,
+     "has_link": true
+    },
+    {
+     "entry_id": "code-of-civil-procedure-amendment-act-1999",
+     "page": 2,
+     "has_link": true
+    },
+    {
+     "entry_id": "code-of-civil-procedure-1908",
+     "page": 44,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "DETERMINED",
+    "materiality": "INSUFFICIENT_EVIDENCE",
+    "answer_change": "DETERMINED",
+    "risk": "OUT_OF_SCOPE"
+   },
+   "opening_answer": "The Code Of Civil Procedure (Amendment) Act 1999 changed section 32 of the Code Of Civil Procedure 1908: “not exceeding five hundred rupees” was replaced by “not exceeding five thousand rupees”. So the answer to your question changes.",
+   "support_errors": [],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {},
+   "outcome_category": "supported"
+  },
+  {
+   "case_id": "mv-s181-penalty",
+   "stratum": "numeric_substitution_no_silver",
+   "mode": "specific",
+   "seconds": 0.01,
+   "expected_support": "GRAPH_TRANSITION_FRAGMENTS",
+   "error": null,
+   "actual_support": "GRAPH_TRANSITION_FRAGMENTS",
+   "pair_entries": [
+    "motor-vehicles-amendment-act-2019"
+   ],
+   "provision_path": "section:181",
+   "operation": "SUBSTITUTE",
+   "answer_type": "comparison",
+   "generation_method": "grounded_composition",
+   "has_drift_score": true,
+   "citations": [
+    {
+     "entry_id": "motor-vehicles-amendment-act-2019",
+     "page": 33,
+     "has_link": true
+    },
+    {
+     "entry_id": "motor-vehicles-amendment-act-2019",
+     "page": 33,
+     "has_link": true
+    },
+    {
+     "entry_id": "motor-vehicles-amendment-act-2019",
+     "page": 33,
+     "has_link": true
+    },
+    {
+     "entry_id": "motor-vehicles-act-1988",
+     "page": 101,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "DETERMINED",
+    "materiality": "INSUFFICIENT_EVIDENCE",
+    "answer_change": "DETERMINED",
+    "risk": "OUT_OF_SCOPE"
+   },
+   "opening_answer": "The Motor Vehicles (Amendment) Act 2019 changed section 181 of the Motor Vehicles Act 1988: “which may extend to five hundred rupees” was replaced by “of five thousand rupees”. So the answer to your question changes.",
+   "support_errors": [],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {},
+   "outcome_category": "supported"
+  },
+  {
+   "case_id": "sra-s11-discretion",
+   "stratum": "modal_substitution_no_silver",
+   "mode": "specific",
+   "seconds": 0.01,
+   "expected_support": "GRAPH_TRANSITION_FRAGMENTS",
+   "error": null,
+   "actual_support": "GRAPH_TRANSITION_FRAGMENTS",
+   "pair_entries": [
+    "specific-relief-amendment-act-2018"
+   ],
+   "provision_path": "section:11",
+   "operation": "SUBSTITUTE",
+   "answer_type": "comparison",
+   "generation_method": "grounded_composition",
+   "has_drift_score": true,
+   "citations": [
+    {
+     "entry_id": "specific-relief-amendment-act-2018",
+     "page": 2,
+     "has_link": true
+    },
+    {
+     "entry_id": "specific-relief-amendment-act-2018",
+     "page": 2,
+     "has_link": true
+    },
+    {
+     "entry_id": "specific-relief-amendment-act-2018",
+     "page": 2,
+     "has_link": true
+    },
+    {
+     "entry_id": "specific-relief-act-1963",
+     "page": 6,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "DETERMINED",
+    "materiality": "INSUFFICIENT_EVIDENCE",
+    "answer_change": "DETERMINED",
+    "risk": "OUT_OF_SCOPE"
+   },
+   "opening_answer": "The Specific Relief (Amendment) Act 2018 changed section 11 of the Specific Relief Act 1963: “contract may, in the discretion of the court” was replaced by “contract shall”. So the answer to your question changes.",
+   "support_errors": [],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {},
+   "outcome_category": "supported"
+  },
+  {
+   "case_id": "patents-s60-period",
+   "stratum": "period_substitution_no_silver",
+   "mode": "specific",
+   "seconds": 0.01,
+   "expected_support": "GRAPH_TRANSITION_FRAGMENTS",
+   "error": null,
+   "actual_support": "GRAPH_TRANSITION_FRAGMENTS",
+   "pair_entries": [
+    "patents-amendment-act-2002"
+   ],
+   "provision_path": "section:60",
+   "operation": "SUBSTITUTE",
+   "answer_type": "comparison",
+   "generation_method": "grounded_composition",
+   "has_drift_score": true,
+   "citations": [
+    {
+     "entry_id": "patents-amendment-act-2002",
+     "page": 10,
+     "has_link": true
+    },
+    {
+     "entry_id": "patents-amendment-act-2002",
+     "page": 10,
+     "has_link": true
+    },
+    {
+     "entry_id": "patents-amendment-act-2002",
+     "page": 10,
+     "has_link": true
+    },
+    {
+     "entry_id": "patents-act-1970",
+     "page": 35,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "DETERMINED",
+    "materiality": "INSUFFICIENT_EVIDENCE",
+    "answer_change": "DETERMINED",
+    "risk": "OUT_OF_SCOPE"
+   },
+   "opening_answer": "The Patents (Amendment) Act 2002 changed section 60 of the Patents Act 1970: “one year” was replaced by “eighteen months”. So the answer to your question changes.",
+   "support_errors": [],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {},
+   "outcome_category": "supported"
+  },
+  {
+   "case_id": "brega-s45zc-nominees",
+   "stratum": "numeric_substitution_silver",
+   "mode": "specific",
+   "seconds": 0.01,
+   "expected_support": "GRAPH_TRANSITION_FRAGMENTS",
+   "error": null,
+   "actual_support": "GRAPH_TRANSITION_FRAGMENTS",
+   "pair_entries": [
+    "banking-laws-amendment-act-2025"
+   ],
+   "provision_path": "section:45ZC",
+   "operation": "SUBSTITUTE",
+   "answer_type": "comparison",
+   "generation_method": "grounded_composition",
+   "has_drift_score": true,
+   "citations": [
+    {
+     "entry_id": "banking-laws-amendment-act-2025",
+     "page": 4,
+     "has_link": true
+    },
+    {
+     "entry_id": "banking-laws-amendment-act-2025",
+     "page": 4,
+     "has_link": true
+    },
+    {
+     "entry_id": "banking-laws-amendment-act-2025",
+     "page": 4,
+     "has_link": true
+    },
+    {
+     "entry_id": "banking-regulation-act-1949",
+     "page": 72,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "DETERMINED",
+    "materiality": "PROVISIONAL",
+    "answer_change": "DETERMINED",
+    "risk": "OUT_OF_SCOPE"
+   },
+   "opening_answer": "The Banking Laws (Amendment) Act 2025 changed section 45ZC of the Banking Regulation Act 1949: “one person” was replaced by “one or more persons not exceeding four, successively,”. So the answer to your question changes.",
+   "support_errors": [],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {},
+   "outcome_category": "provisional"
+  },
+  {
+   "case_id": "companies-s46-compare",
+   "stratum": "comparison_silver",
+   "mode": "specific",
+   "seconds": 0.01,
+   "expected_support": "GRAPH_TRANSITION_FRAGMENTS",
+   "error": null,
+   "actual_support": "GRAPH_TRANSITION_FRAGMENTS",
+   "pair_entries": [
+    "companies-amendment-act-2015"
+   ],
+   "provision_path": "section:46",
+   "operation": "SUBSTITUTE",
+   "answer_type": "comparison",
+   "generation_method": "grounded_composition",
+   "has_drift_score": true,
+   "citations": [
+    {
+     "entry_id": "companies-amendment-act-2015",
+     "page": 2,
+     "has_link": true
+    },
+    {
+     "entry_id": "companies-amendment-act-2015",
+     "page": 2,
+     "has_link": true
+    },
+    {
+     "entry_id": "companies-amendment-act-2015",
+     "page": 2,
+     "has_link": true
+    },
+    {
+     "entry_id": "companies-act-2013",
+     "page": 47,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "DETERMINED",
+    "materiality": "PROVISIONAL",
+    "answer_change": "NEEDS_FACTS",
+    "risk": "OUT_OF_SCOPE"
+   },
+   "opening_answer": "The Companies (Amendment) Act 2015 changed section 46 of the Companies Act 2013: “issued under the common seal of the company” was replaced by “issued under the common seal, if any, of the company or signed by two directors or by a director and the Company Secretary, wherever the company has appointed a Company Secretary”.",
+   "support_errors": [],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {},
+   "outcome_category": "partial_needs_facts"
+  },
+  {
+   "case_id": "rti-s13-term",
+   "stratum": "substitution_no_silver",
+   "mode": "specific",
+   "seconds": 0.01,
+   "expected_support": "GRAPH_TRANSITION_FRAGMENTS",
+   "error": null,
+   "actual_support": "GRAPH_TRANSITION_FRAGMENTS",
+   "pair_entries": [
+    "right-to-information-amendment-act-2019"
+   ],
+   "provision_path": "section:13",
+   "operation": "SUBSTITUTE",
+   "answer_type": "comparison",
+   "generation_method": "grounded_composition",
+   "has_drift_score": true,
+   "citations": [
+    {
+     "entry_id": "right-to-information-amendment-act-2019",
+     "page": 1,
+     "has_link": true
+    },
+    {
+     "entry_id": "right-to-information-amendment-act-2019",
+     "page": 1,
+     "has_link": true
+    },
+    {
+     "entry_id": "right-to-information-amendment-act-2019",
+     "page": 1,
+     "has_link": true
+    },
+    {
+     "entry_id": "right-to-information-act-2005",
+     "page": 13,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "DETERMINED",
+    "materiality": "INSUFFICIENT_EVIDENCE",
+    "answer_change": "DETERMINED",
+    "risk": "OUT_OF_SCOPE"
+   },
+   "opening_answer": "The Right To Information (Amendment) Act 2019 changed section 13 of the Right To Information Act 2005: “for a term of five years from the date on which he enters upon his office” was replaced by “for such term as may be prescribed by the Central Government”. So the answer to your question changes.",
+   "support_errors": [],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {},
+   "outcome_category": "supported"
+  },
+  {
+   "case_id": "it-s19-specific",
+   "stratum": "footnote_reconstruction",
+   "mode": "specific",
+   "seconds": 0.01,
+   "expected_support": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+   "error": null,
+   "actual_support": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+   "pair_entries": [
+    "it-act-2000-consolidated"
+   ],
+   "provision_path": "section:19",
+   "operation": "SUBSTITUTE",
+   "answer_type": "comparison",
+   "generation_method": "grounded_composition",
+   "has_drift_score": true,
+   "citations": [
+    {
+     "entry_id": "it-act-2000-consolidated",
+     "page": 13,
+     "has_link": true
+    },
+    {
+     "entry_id": "it-act-2000-consolidated",
+     "page": 13,
+     "has_link": true
+    },
+    {
+     "entry_id": "it-act-2000-consolidated",
+     "page": 13,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "DETERMINED",
+    "materiality": "INSUFFICIENT_EVIDENCE",
+    "answer_change": "NEEDS_FACTS",
+    "risk": "NEEDS_FACTS"
+   },
+   "opening_answer": "The IT (Amendment) Act 2008 changed section 19 of the IT Act 2000: “Digital Signature” was replaced by “electronic signature”. The footnote states effect from 27-10-2009 (not verified as commencement).",
+   "support_errors": [],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {},
+   "outcome_category": "partial_needs_facts"
+  },
+  {
+   "case_id": "it-s19-generic",
+   "stratum": "footnote_reconstruction_generic",
+   "mode": "generic",
+   "seconds": 0.01,
+   "expected_support": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+   "error": null,
+   "actual_support": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+   "pair_entries": [
+    "it-act-2000-consolidated"
+   ],
+   "provision_path": "section:19",
+   "operation": "SUBSTITUTE",
+   "answer_type": "comparison",
+   "generation_method": "grounded_composition",
+   "has_drift_score": true,
+   "citations": [
+    {
+     "entry_id": "it-act-2000-consolidated",
+     "page": 13,
+     "has_link": true
+    },
+    {
+     "entry_id": "it-act-2000-consolidated",
+     "page": 13,
+     "has_link": true
+    },
+    {
+     "entry_id": "it-act-2000-consolidated",
+     "page": 13,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "DETERMINED",
+    "materiality": "INSUFFICIENT_EVIDENCE",
+    "answer_change": "NEEDS_FACTS",
+    "risk": "NEEDS_FACTS"
+   },
+   "opening_answer": "The IT (Amendment) Act 2008 changed section 19 of the IT Act 2000: “Digital Signature” was replaced by “electronic signature”. The footnote states effect from 27-10-2009 (not verified as commencement).",
+   "support_errors": [],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {},
+   "outcome_category": "partial_needs_facts"
+  },
+  {
+   "case_id": "it-s19-risk-match",
+   "stratum": "scenario_risk_rule_match",
+   "mode": "specific",
+   "seconds": 0.03,
+   "expected_support": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+   "error": null,
+   "actual_support": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+   "pair_entries": [
+    "it-act-2000-consolidated"
+   ],
+   "provision_path": "section:19",
+   "operation": "SUBSTITUTE",
+   "answer_type": "comparison",
+   "generation_method": "grounded_composition",
+   "has_drift_score": true,
+   "citations": [
+    {
+     "entry_id": "it-act-2000-consolidated",
+     "page": 13,
+     "has_link": true
+    },
+    {
+     "entry_id": "it-act-2000-consolidated",
+     "page": 13,
+     "has_link": true
+    },
+    {
+     "entry_id": "it-act-2000-consolidated",
+     "page": 13,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "DETERMINED",
+    "materiality": "INSUFFICIENT_EVIDENCE",
+    "answer_change": "CONDITIONAL",
+    "risk": "CONDITIONAL"
+   },
+   "opening_answer": "The IT (Amendment) Act 2008 changed section 19 of the IT Act 2000: “Digital Signature” was replaced by “electronic signature”. The footnote states effect from 27-10-2009 (not verified as commencement).",
+   "support_errors": [],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {},
+   "outcome_category": "conditional"
+  },
+  {
+   "case_id": "it-s19-risk-mismatch",
+   "stratum": "scenario_risk_rule_mismatch",
+   "mode": "specific",
+   "seconds": 0.03,
+   "expected_support": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+   "error": null,
+   "actual_support": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+   "pair_entries": [
+    "it-act-2000-consolidated"
+   ],
+   "provision_path": "section:19",
+   "operation": "SUBSTITUTE",
+   "answer_type": "comparison",
+   "generation_method": "grounded_composition",
+   "has_drift_score": true,
+   "citations": [
+    {
+     "entry_id": "it-act-2000-consolidated",
+     "page": 13,
+     "has_link": true
+    },
+    {
+     "entry_id": "it-act-2000-consolidated",
+     "page": 13,
+     "has_link": true
+    },
+    {
+     "entry_id": "it-act-2000-consolidated",
+     "page": 13,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "DETERMINED",
+    "materiality": "INSUFFICIENT_EVIDENCE",
+    "answer_change": "NEEDS_FACTS",
+    "risk": "INSUFFICIENT_EVIDENCE"
+   },
+   "opening_answer": "The IT (Amendment) Act 2008 changed section 19 of the IT Act 2000: “Digital Signature” was replaced by “electronic signature”. The footnote states effect from 27-10-2009 (not verified as commencement).",
+   "support_errors": [],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {},
+   "outcome_category": "partial_needs_facts"
+  },
+  {
+   "case_id": "it-2008-privacy-ocr",
+   "stratum": "poor_ocr_unaligned",
+   "mode": "specific",
+   "seconds": 0.01,
+   "expected_support": "UNALIGNED_OR_ABSTAIN",
+   "error": null,
+   "actual_support": "NO_SUPPORTED_VERSION",
+   "pair_entries": [],
+   "provision_path": null,
+   "operation": null,
+   "answer_type": "version_abstention",
+   "generation_method": "grounded_composition",
+   "has_drift_score": false,
+   "citations": [],
+   "fidelity_warnings": 1,
+   "determinations": {
+    "textual_drift": "INSUFFICIENT_EVIDENCE",
+    "materiality": "INSUFFICIENT_EVIDENCE",
+    "answer_change": "INSUFFICIENT_EVIDENCE",
+    "risk": "OUT_OF_SCOPE"
+   },
+   "opening_answer": "Please name the section you mean. Name a section of the IT Act 2000 to compare its versions; whole Acts are not compared. Sections that mention your topic: 29, 72, 66E, 2, 3.",
+   "support_errors": [],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {},
+   "outcome_category": "justified_abstention"
+  },
+  {
+   "case_id": "wrong-act-companies-competition",
+   "stratum": "wrong_act_rejection",
+   "mode": "specific",
+   "seconds": 0.01,
+   "expected_support": "UNALIGNED_OR_ABSTAIN",
+   "error": null,
+   "actual_support": "RELATION_MISMATCH",
+   "pair_entries": [],
+   "provision_path": null,
+   "operation": null,
+   "answer_type": "version_abstention",
+   "generation_method": "grounded_composition",
+   "has_drift_score": false,
+   "citations": [],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "INSUFFICIENT_EVIDENCE",
+    "materiality": "INSUFFICIENT_EVIDENCE",
+    "answer_change": "INSUFFICIENT_EVIDENCE",
+    "risk": "OUT_OF_SCOPE"
+   },
+   "opening_answer": "I can't compare versions of section 46 of the Companies Act 2013 using that amendment: Competition Act 2023 is not recorded as amending the Companies Act 2013.",
+   "support_errors": [],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {},
+   "outcome_category": "justified_abstention"
+  },
+  {
+   "case_id": "companies-s105-footnote",
+   "stratum": "footnote_reconstruction_partial_answer_change_vs_text",
+   "mode": "specific",
+   "seconds": 0.01,
+   "expected_support": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+   "error": null,
+   "actual_support": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+   "pair_entries": [
+    "companies-act-2013"
+   ],
+   "provision_path": "section:105",
+   "operation": "SUBSTITUTE",
+   "answer_type": "comparison",
+   "generation_method": "grounded_composition",
+   "has_drift_score": true,
+   "citations": [
+    {
+     "entry_id": "companies-act-2013",
+     "page": 75,
+     "has_link": true
+    },
+    {
+     "entry_id": "companies-act-2013",
+     "page": 75,
+     "has_link": true
+    },
+    {
+     "entry_id": "companies-act-2013",
+     "page": 75,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "DETERMINED",
+    "materiality": "INSUFFICIENT_EVIDENCE",
+    "answer_change": "DETERMINED",
+    "risk": "OUT_OF_SCOPE"
+   },
+   "opening_answer": "The Companies (Amendment) Act 2019 changed section 105 of the Companies Act 2013: “punishable with fine which may extend to five thousand rupees” was replaced by “liable to a penalty of five thousands rupees”. So the answer to your question changes. The footnote states effect from 2-11-2018 (not verified as commencement).",
+   "support_errors": [],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {},
+   "outcome_category": "supported"
+  },
+  {
+   "case_id": "wildlife-s11-omission",
+   "stratum": "omission_unsupported",
+   "mode": "specific",
+   "seconds": 0.01,
+   "expected_support": "UNALIGNED_OR_ABSTAIN",
+   "error": null,
+   "actual_support": "WEAK_TRANSITION_ONLY",
+   "pair_entries": [],
+   "provision_path": null,
+   "operation": null,
+   "answer_type": "version_abstention",
+   "generation_method": "grounded_composition",
+   "has_drift_score": false,
+   "citations": [],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "INSUFFICIENT_EVIDENCE",
+    "materiality": "INSUFFICIENT_EVIDENCE",
+    "answer_change": "INSUFFICIENT_EVIDENCE",
+    "risk": "OUT_OF_SCOPE"
+   },
+   "opening_answer": "I can't give a reliable before/after for section 11 of the Wild Life Protection Act 1972. A machine-extracted change to section 11 exists but was not corroborated against a second source (MACHINE_INTERNAL_CHECKS_ONLY); it is not presented as a version.",
+   "support_errors": [],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {},
+   "outcome_category": "justified_abstention"
+  },
+  {
+   "case_id": "factories-not-in-graph",
+   "stratum": "act_without_amendment_source",
+   "mode": "specific",
+   "seconds": 0.01,
+   "expected_support": "UNALIGNED_OR_ABSTAIN",
+   "error": null,
+   "actual_support": "NO_SUPPORTED_VERSION",
+   "pair_entries": [],
+   "provision_path": null,
+   "operation": null,
+   "answer_type": "version_abstention",
+   "generation_method": "grounded_composition",
+   "has_drift_score": false,
+   "citations": [],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "INSUFFICIENT_EVIDENCE",
+    "materiality": "INSUFFICIENT_EVIDENCE",
+    "answer_change": "INSUFFICIENT_EVIDENCE",
+    "risk": "OUT_OF_SCOPE"
+   },
+   "opening_answer": "I can't compare versions of section 2 of the Factories Act 1948: The corpus records no amendment of section 2 of the Factories Act 1948, and its consolidated text shows no substitution footnote for it.",
+   "support_errors": [],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {},
+   "outcome_category": "justified_abstention"
+  },
+  {
+   "case_id": "cpa-mediation-general",
+   "stratum": "general_qa",
+   "mode": "specific",
+   "seconds": 0.03,
+   "expected_support": "NOT_A_COMPARISON",
+   "error": null,
+   "actual_support": "NOT_A_COMPARISON",
+   "pair_entries": [],
+   "provision_path": null,
+   "operation": null,
+   "answer_type": "single_document_summary",
+   "generation_method": "extractive_summary",
+   "has_drift_score": false,
+   "citations": [
+    {
+     "entry_id": "consumer-protection-act-2019",
+     "page": 19,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "OUT_OF_SCOPE",
+    "materiality": "OUT_OF_SCOPE",
+    "answer_change": "OUT_OF_SCOPE",
+    "risk": "OUT_OF_SCOPE"
+   },
+   "opening_answer": "Section 37 (Reference to mediation) of the Consumer Protection Act 2019 says: “(1) At the first hearing of the complaint after its admission, or at any later stage, if it appears to the District Commission that there exists elements of a settlement which may be acceptable to the parties, except in such cases as may be prescribed, it may direct the parties to give in writing, within five days, cons",
+   "support_errors": [],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {},
+   "outcome_category": "general_answer"
+  },
+  {
+   "case_id": "thoa-punishment-general",
+   "stratum": "general_qa",
+   "mode": "generic",
+   "seconds": 0.02,
+   "expected_support": "NOT_A_COMPARISON",
+   "error": null,
+   "actual_support": "NOT_A_COMPARISON",
+   "pair_entries": [],
+   "provision_path": null,
+   "operation": null,
+   "answer_type": "single_document_summary",
+   "generation_method": "extractive_summary",
+   "has_drift_score": false,
+   "citations": [
+    {
+     "entry_id": "transplantation-of-human-organs-and-tissues-act-1994",
+     "page": 12,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "OUT_OF_SCOPE",
+    "materiality": "OUT_OF_SCOPE",
+    "answer_change": "OUT_OF_SCOPE",
+    "risk": "OUT_OF_SCOPE"
+   },
+   "opening_answer": "Section 18 (Punishment for removal of human organ without authority) of the Transplantation Of Human Organs And Tissues Act 1994 says: “(1) Any person who renders his services to or at any hospital and who, for purposes of transplantation, conducts, associates with, or helps in any manner in, the removal of any human organ without authority, shall be punish…",
+   "support_errors": [],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {},
+   "outcome_category": "general_answer"
+  },
+  {
+   "case_id": "jan-vishwas-general",
+   "stratum": "general_qa_amending_act",
+   "mode": "generic",
+   "seconds": 0.03,
+   "expected_support": "NOT_A_COMPARISON",
+   "error": null,
+   "actual_support": "NOT_A_COMPARISON",
+   "pair_entries": [],
+   "provision_path": null,
+   "operation": null,
+   "answer_type": "single_document_summary",
+   "generation_method": "extractive_summary",
+   "has_drift_score": false,
+   "citations": [
+    {
+     "entry_id": "jan-vishwas-amendment-of-provisions-act-2023",
+     "page": 1,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "OUT_OF_SCOPE",
+    "materiality": "OUT_OF_SCOPE",
+    "answer_change": "OUT_OF_SCOPE",
+    "risk": "OUT_OF_SCOPE"
+   },
+   "opening_answer": "Jan Vishwas Amendment Of Provisions Act 2023 was enacted to amend certain enactments for decriminalising and rationalising offences to further enhance trust-based governance for ease of living and doing business.",
+   "support_errors": [],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {},
+   "outcome_category": "general_answer"
+  },
+  {
+   "case_id": "dm-s31-frequency",
+   "stratum": "frequency_substitution_no_silver",
+   "mode": "specific",
+   "seconds": 0.01,
+   "expected_support": "GRAPH_TRANSITION_FRAGMENTS",
+   "error": null,
+   "actual_support": "GRAPH_TRANSITION_FRAGMENTS",
+   "pair_entries": [
+    "disaster-management-amendment-act-2025"
+   ],
+   "provision_path": "section:31",
+   "operation": "SUBSTITUTE",
+   "answer_type": "comparison",
+   "generation_method": "grounded_composition",
+   "has_drift_score": true,
+   "citations": [
+    {
+     "entry_id": "disaster-management-amendment-act-2025",
+     "page": 9,
+     "has_link": true
+    },
+    {
+     "entry_id": "disaster-management-amendment-act-2025",
+     "page": 9,
+     "has_link": true
+    },
+    {
+     "entry_id": "disaster-management-amendment-act-2025",
+     "page": 9,
+     "has_link": true
+    },
+    {
+     "entry_id": "disaster-management-act-2005",
+     "page": 21,
+     "has_link": true
+    }
+   ],
+   "fidelity_warnings": 0,
+   "determinations": {
+    "textual_drift": "DETERMINED",
+    "materiality": "INSUFFICIENT_EVIDENCE",
+    "answer_change": "DETERMINED",
+    "risk": "OUT_OF_SCOPE"
+   },
+   "opening_answer": "The Disaster Management (Amendment) Act 2025 changed section 31 of the Disaster Management Act 2005: “annually” was replaced by “at least once in every two years or earlier as necessary”. So the answer to your question changes.",
+   "support_errors": [],
+   "pairing_errors": [],
+   "citation_errors": [],
+   "state_mismatch": {},
+   "outcome_category": "supported"
+  }
+ ],
+ "summary": {
+  "cases": 24,
+  "errors": 0,
+  "support_errors": 0,
+  "pairing_errors": 0,
+  "citation_errors": 0,
+  "determination_state_matches": 24,
+  "determination_states": {
+   "textual_drift": {
+    "OUT_OF_SCOPE": 6,
+    "DETERMINED": 14,
+    "INSUFFICIENT_EVIDENCE": 4
+   },
+   "materiality": {
+    "PROVISIONAL": 6,
+    "INSUFFICIENT_EVIDENCE": 15,
+    "OUT_OF_SCOPE": 3
+   },
+   "answer_change": {
+    "NEEDS_FACTS": 6,
+    "CONDITIONAL": 2,
+    "DETERMINED": 9,
+    "INSUFFICIENT_EVIDENCE": 4,
+    "OUT_OF_SCOPE": 3
+   },
+   "risk": {
+    "OUT_OF_SCOPE": 20,
+    "NEEDS_FACTS": 2,
+    "CONDITIONAL": 1,
+    "INSUFFICIENT_EVIDENCE": 1
+   }
+  }
+ },
+ "interpretation": "engineering coverage and error counts against source-derived expectations; not legal accuracy",
+ "label": "integrated rag-answer-v2 (2026-10-13)",
+ "coverage": {
+  "partial_needs_facts": 6,
+  "conditional": 2,
+  "provisional": 2,
+  "supported": 7,
+  "justified_abstention": 4,
+  "general_answer": 3
+ }
+}

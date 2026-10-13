@@ -32,7 +32,8 @@ const focusInfo = `(() => { const el = document.activeElement; if (!el || el ===
   return { tag: el.tagName, text: (el.getAttribute('aria-label') || el.innerText || el.value || el.getAttribute('href') || '').trim().slice(0, 60),
     visibleFocus: cs.outlineStyle !== 'none' && parseFloat(cs.outlineWidth) > 0 || cs.boxShadow !== 'none', size: [Math.round(r.width), Math.round(r.height)], inViewport: r.bottom > 0 && r.top < innerHeight }; })()`;
 const stops = [];
-for (let i = 0; i < 120; i++) { await key("Tab", "Tab", 9); const f = await evaluate(focusInfo); if (!f) continue; stops.push(f); if (f.text.startsWith("How this score was calculated")) break; }
+// Native date inputs style their inner focus a tick after the key event, so each stop settles briefly.
+for (let i = 0; i < 120; i++) { await key("Tab", "Tab", 9); await sleep(150); const f = await evaluate(focusInfo); if (!f) continue; stops.push(f); if (f.text.startsWith("How this score was calculated")) break; }
 report.tabStops = stops.length; report.noVisibleFocus = stops.filter((s) => !s.visibleFocus); report.zeroSize = stops.filter((s) => !s.size[0] || !s.size[1]);
 report.reachedSummary = stops.at(-1)?.text?.startsWith("How this score was calculated") || false;
 report.pdfLinkReachable = stops.some((s) => s.text.startsWith("Open source PDF at page"));

@@ -2,7 +2,26 @@
 
 The field lists were read from live responses of this checkout. They are engineering contracts only; no field is a legal conclusion.
 
-## `POST /api/rag/query`  body `{"query": str, "mode": "specific" | "generic"}`
+## `POST /api/rag/query`  body `{"query": str, "mode": "specific" | "generic", "scenario"?: {...}}`
+
+**rag-answer-v2** (`schema_version` 2.0.0, `contract_version` "rag-answer-v2"; schema `schemas/rag/rag_answer.v2.schema.json`; ADR 0014). Every v1 field below is retained, so v1 consumers keep working.
+
+- **Optional `scenario`:** `reference_date` (YYYY-MM-DD), `organization_type`, `industry`, `jurisdiction`, `activity` (short text), and `facts` (at most 30 snake_case names with scalar values). Unknown fields are rejected.
+- **Added top-level fields:**
+  - `question_frame`: the resolved Act, amending Act, sections, question type and unresolved Act names;
+  - `scenario`: the validated echo;
+  - `evidence`: a list of `{evidence_id, role, entry_id, act_name, text, page, line, verbatim, scope, source_sha256, text_sha256, pdf_url, official_url, text_reliability}`;
+  - `version_evidence`: support class, reason code, transition or footnote details, candidates and suggested sections;
+  - `determinations`: `{version: "determinations-v1", textual_drift, materiality, answer_change, risk}`.
+- **Each determination:** `{state, label, summary, reason, method, evidence_ids, details, needs, review_status, legal_validation: "UNVERIFIED"}`.
+  - `state` is one of DETERMINED, PROVISIONAL, CONDITIONAL, NEEDS_FACTS, INSUFFICIENT_EVIDENCE or OUT_OF_SCOPE.
+  - `label` is null unless the state is DETERMINED, PROVISIONAL or CONDITIONAL.
+  - `needs` lists the minimum facts required: `{key, label, kind: date | choice | boolean | text, options?}`.
+- **`answer` additions:** `direct_answer`, then `sections` as `[{id: before | after | what_changed | effect | key_points | candidates | suggestions, title, label?, text, evidence_ids, kind: evidence | derived | inference | limitation}]`, plus `answer_limitations`.
+  - `generation_method` is `grounded_composition` for version questions, which never use a model.
+- **`comparison`:** `comparison-record-v2` for version questions. It adds `support_reason` and `relation_verification`, and its classes include RELATION_MISMATCH, WEAK_TRANSITION_ONLY and NO_SUPPORTED_VERSION; `before`/`after` are null unless versions are supported. General questions keep comparison-record-v1.
+
+### rag-answer-v1 fields (retained)
 
 Top level: `schema_version, query, intent, mode, answer, citations, comparison, metrics, retrieval, verification, source_fidelity_warnings, source_guidance, limitations, repository`.
 

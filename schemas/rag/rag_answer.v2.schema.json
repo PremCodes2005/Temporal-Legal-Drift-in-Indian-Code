@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "rag-answer-v2: POST /api/rag/query response (additions to v1; all v1 fields are retained)",
+  "type": "object",
+  "required": ["schema_version", "contract_version", "query", "mode", "question_frame", "answer", "determinations", "evidence", "citations", "comparison", "metrics", "source_fidelity_warnings", "verification", "limitations"],
+  "properties": {
+    "schema_version": {"const": "2.0.0"},
+    "contract_version": {"const": "rag-answer-v2"},
+    "mode": {"enum": ["specific", "generic"]},
+    "scenario": {"type": ["object", "null"], "description": "Echo of the validated optional scenario: reference_date, organization_type, industry, jurisdiction, activity, facts"},
+    "question_frame": {"type": "object", "required": ["version", "question_type", "asks_about_versions", "principal", "amending", "sections"],
+      "properties": {"version": {"const": "question-frame-v1"}, "question_type": {"enum": ["quantity", "modal", "what_changed", "general"]}}},
+    "answer": {"type": "object", "required": ["answer_type", "direct_answer", "sections", "answer_limitations", "generation_method"],
+      "properties": {
+        "answer_type": {"enum": ["comparison", "version_abstention", "single_document_summary", "insufficient_evidence", "out_of_scope"]},
+        "direct_answer": {"type": "string", "minLength": 1},
+        "sections": {"type": "array", "items": {"type": "object", "required": ["id", "title", "text", "evidence_ids", "kind"],
+          "properties": {"id": {"enum": ["before", "after", "what_changed", "effect", "key_points", "why", "candidates", "suggestions"]},
+                         "kind": {"enum": ["evidence", "derived", "inference", "limitation"]}, "evidence_ids": {"type": "array", "items": {"type": "string"}}}}},
+        "generation_method": {"type": "string"}}},
+    "determinations": {"type": "object", "required": ["version", "textual_drift", "materiality", "answer_change", "risk"],
+      "properties": {"version": {"const": "determinations-v1"},
+        "textual_drift": {"$ref": "#/$defs/determination"}, "materiality": {"$ref": "#/$defs/determination"},
+        "answer_change": {"$ref": "#/$defs/determination"}, "risk": {"$ref": "#/$defs/determination"}}},
+    "evidence": {"type": "array", "items": {"type": "object", "required": ["evidence_id", "role", "entry_id", "page", "verbatim"],
+      "properties": {"role": {"enum": ["amendment_instruction", "before_fragment", "after_fragment", "current_consolidated_text", "substitution_footnote", "reconstructed_earlier_wording", "act_text_excerpt"]}}}},
+    "comparison": {"type": ["object", "null"], "description": "comparison-record-v2 for version questions; comparison-record-v1 for general questions",
+      "properties": {"support_class": {"enum": ["GRAPH_TRANSITION_FRAGMENTS", "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION", "AMBIGUOUS_CANDIDATES", "WEAK_TRANSITION_ONLY", "RELATION_MISMATCH", "NO_SUPPORTED_VERSION", "UNALIGNED_EXCERPTS", "NOT_A_COMPARISON"]}}}
+  },
+  "$defs": {
+    "determination": {"type": "object", "additionalProperties": false,
+      "required": ["state", "label", "summary", "reason", "method", "evidence_ids", "details", "needs", "review_status", "legal_validation"],
+      "properties": {
+        "state": {"enum": ["DETERMINED", "PROVISIONAL", "CONDITIONAL", "NEEDS_FACTS", "INSUFFICIENT_EVIDENCE", "OUT_OF_SCOPE"]},
+        "label": {"type": ["string", "null"], "description": "Null unless the state is DETERMINED, PROVISIONAL or CONDITIONAL"},
+        "summary": {"type": "string", "minLength": 1}, "reason": {"type": "string", "minLength": 1},
+        "method": {"type": ["string", "null"]}, "evidence_ids": {"type": "array", "items": {"type": "string"}},
+        "details": {"type": "object"},
+        "needs": {"type": "array", "items": {"type": "object", "required": ["key", "label", "kind"],
+          "properties": {"kind": {"enum": ["date", "choice", "boolean", "text"]}}}},
+        "review_status": {"type": "string"}, "legal_validation": {"const": "UNVERIFIED"}}}
+  }
+}

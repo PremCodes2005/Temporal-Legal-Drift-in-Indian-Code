@@ -109,3 +109,19 @@ The legal/research gate is unchanged: UNVERIFIED.
   - deployment on an always-on host.
 
 The legal/research gate is unchanged: UNVERIFIED.
+
+## RAG answer integration status (2026-10-13, rag-answer-v2)
+
+- **Answers:** the assistant resolves the Act and section, selects corroborated or footnote-documented version evidence, and answers first in plain language with evidence-linked sections.
+- **Four determinations:** reported independently, with states and reasons (ADR 0014).
+- **Audit:**
+  - 24-case cross-corpus set: 0 support, pairing and citation errors (baseline 12/2/5);
+  - held-out pairing check: 86/86 transitions correct.
+- **Scenario facts:** can be added in the UI to rerun a question. Risk exists only where the obligation registry has rules (IT s.19 demonstrations).
+- **Next:**
+  - paraphrase robustness (aliases);
+  - multi-section questions;
+  - a qualified review of materiality and commencement facts;
+  - more obligation rules.
+
+The legal/research gate is unchanged: UNVERIFIED.

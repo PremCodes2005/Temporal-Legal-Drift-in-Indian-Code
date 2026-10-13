@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import CaseReviewPanel from "./CaseReviewPanel";
 import ComparisonPanel from "./ComparisonPanel";
 import { GenerationNotice, IndicatorStrip, ScoreExplanation, VersionStatus } from "./ResultInsights";
+import { DeterminationCards, DirectAnswer, EvidenceList, ScenarioForm } from "./Determinations";
 import SourceHealth from "./SourceHealth";
 import ComplianceRiskPanel from "./ComplianceRiskPanel";
 
@@ -91,12 +92,12 @@ function AssistantWorkspace({ status, error: statusError, starterQuery, autoRun 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { if (autoRun && starterQuery) submit(null, starterQuery); }, []);
 
-  const submit = async (event, text = query) => {
+  const submit = async (event, text = query, scenario = null) => {
     event?.preventDefault(); setError(""); onResult(null);
     if (!text.trim()) return setError("Enter a question about the indexed Indian legal documents.");
     setBusy(true);
     try {
-      const value = await api("/api/rag/query", { method: "POST", body: { query: text.trim(), mode } });
+      const value = await api("/api/rag/query", { method: "POST", body: { query: text.trim(), mode, ...(scenario ? { scenario } : {}) } });
       onResult(value);
       window.setTimeout(() => document.getElementById("rag-result")?.scrollIntoView({ behavior: "smooth", block: "start" }), 0);
     } catch (requestError) { setError(requestError.message); }
@@ -125,7 +126,7 @@ function AssistantWorkspace({ status, error: statusError, starterQuery, autoRun 
       {error && <div className="form-error" role="alert"><strong>Analysis could not be completed.</strong><span>{error}</span></div>}
     </div>
     {busy && <div className="loading-panel"><span className="spinner"/><div><strong>Retrieving versioned legal evidence…</strong><p>Classifying the question, matching documents and validating the response context.</p></div></div>}
-    {result && <RagResult result={result} onExplain={onExplain} />}
+    {result && <RagResult result={result} onExplain={onExplain} busy={busy} onScenario={(scenario) => submit(null, result.query, scenario)} />}
   </section>;
 }
 
@@ -137,7 +138,8 @@ function RepositoryStatus({ status, error }) {
   </div>;
 }
 
-export function RagResult({ result, onExplain }) {
+export function RagResult({ result, onExplain, onScenario = () => {}, busy = false }) {
+  if (result.contract_version === "rag-answer-v2") return <RagResultV2 result={result} onExplain={onExplain} onScenario={onScenario} busy={busy} />;
   const answer = result.answer;
   const metrics = result.metrics;
   const isSummary = answer.answer_type === "single_document_summary";
@@ -165,6 +167,30 @@ export function RagResult({ result, onExplain }) {
     {answer.generation_warning && <div className="warning-note">{answer.generation_warning}. The displayed response uses the evidence-only fallback.</div>}
     <article className="source-guidance"><div><span className="section-kicker">Authoritative source</span><h3>Verify the complete legal text</h3><p>{result.source_guidance.message}</p></div><a href={result.source_guidance.url} target="_blank" rel="noreferrer">{result.source_guidance.label} ↗</a></article>
     <p className="research-note">Scores describe retrieved-text movement and evidence alignment; they are not probabilities or legal advice.</p>
+  </section>;
+}
+
+const VERSION_CLASSES = new Set(["GRAPH_TRANSITION_FRAGMENTS", "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION"]);
+
+// rag-answer-v2: answer first, then the four separate determinations, facts, clause cards and sources.
+function RagResultV2({ result, onExplain, onScenario, busy }) {
+  const { answer, metrics, comparison, determinations } = result;
+  const supported = VERSION_CLASSES.has(comparison?.support_class);
+  return <section id="rag-result" className="results">
+    <div className="result-heading"><div><span className="section-kicker">Grounded response</span><h2>{result.question_frame?.asks_about_versions ? "Version comparison" : "Answer"}</h2></div><div className="mode-badge">{titleCase(result.mode)} mode</div></div>
+    <GenerationNotice method={answer.generation_method} />
+    {supported && <VersionStatus comparison={comparison} metrics={metrics} />}
+    <DirectAnswer answer={answer} />
+    {result.scenario && <p className="panel-note">Using your facts: {Object.entries({ ...result.scenario, ...(result.scenario.facts || {}) }).filter(([key, value]) => key !== "facts" && value !== null && value !== "").map(([key, value]) => `${key.replaceAll("_", " ")}: ${value === true ? "yes" : value === false ? "no" : String(value).replaceAll("_", " ")}`).join("; ")}.</p>}
+    <DeterminationCards determinations={determinations} />
+    <ScenarioForm key={JSON.stringify(result.scenario || {}) + result.query} determinations={determinations} scenario={result.scenario} onSubmit={onScenario} busy={busy} />
+    {supported && <ComparisonPanel comparison={comparison} />}
+    {metrics && <><DriftPanel metrics={metrics} /><ScoreExplanation metrics={metrics} /><button className="explain-drift-button" type="button" onClick={onExplain}>Explain these scores with PDF evidence <span>→</span></button></>}
+    <EvidenceList evidence={result.evidence} />
+    <div className="result-columns"><VerificationPanel verification={result.verification} /></div>
+    {(result.source_fidelity_warnings || []).map((item) => <div className="warning-note" role="alert" key={item.entry_id}><strong>Source text unreliable: {item.entry_id}</strong><span>{item.detail} Treat quoted wording from this source as unverified.</span></div>)}
+    {answer.generation_warning && <div className="warning-note">{answer.generation_warning}. The displayed response uses the evidence-only fallback.</div>}
+    {result.source_guidance && <article className="source-guidance"><div><span className="section-kicker">Authoritative source</span><h3>Verify the complete legal text</h3><p>{result.source_guidance.message}</p></div><a href={result.source_guidance.url} target="_blank" rel="noreferrer">{result.source_guidance.label} ↗</a></article>}
   </section>;
 }
 
