@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-// rag-answer-v5 analysis workspace against real backend responses (fixtures/rag_answer_v5.json, generated offline;
+// rag-answer-v5 analysis workspace and the standalone #drift / #calculation pages against real backend responses (fixtures/rag_answer_v5.json, generated offline;
 // "timeout" used a real local socket that never answered). One v4 record checks that v0.14 links still open.
 import { readFileSync } from "node:fs";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -7,6 +7,7 @@ import { cleanup, render, screen, waitFor, within } from "@testing-library/react
 import userEvent from "@testing-library/user-event";
 import App from "../App";
 import AnalysisWorkspace, { TABS } from "../AnalysisWorkspace";
+import { DriftExplanationPage, ScoreCalculationPage } from "../ExplanationPages";
 
 const { responses } = JSON.parse(readFileSync("src/__tests__/fixtures/rag_answer_v5.json", "utf8"));
 const v4 = JSON.parse(readFileSync("src/__tests__/fixtures/rag_answer_v4.json", "utf8")).responses;
@@ -50,105 +51,131 @@ describe("a clean Answer tab", () => {
   });
 });
 
-describe("Drift Explanation and Score Calculation", () => {
-  it("keep one analysis's evidence and numbers across all six views", async () => {
-    const user = userEvent.setup();
-    const analysis = responses["ibc99-day15"];
-    render(<AnalysisWorkspace analysis={analysis} />);
-    const seen = {};
-    for (const { label } of [...TABS, ...TABS]) {
-      await open(user, label);
-      const text = panel().textContent;
-      expect(text.length, label).toBeGreaterThan(80);
-      if (seen[label]) expect(text).toBe(seen[label]);   // revisiting a view shows exactly the same content
-      seen[label] = text;
-    }
-    await open(user, "Compare Evidence");
-    expect(screen.getByRole("region", { name: "Clause after" }).querySelector(".compare-text").textContent).toBe(analysis.fingerprint.wording_drift.details.after_clause);
-  });
+describe("standalone Drift explanation and Score calculation pages", () => {
+  const handlers = () => ({ onEvidence: vi.fn(), onField: vi.fn(), onAssistant: vi.fn(), onCalculation: vi.fn() });
+  const drift = (analysis, props = {}) => render(<DriftExplanationPage analysis={analysis} {...handlers()} {...props} />);
+  const calc = (analysis, props = {}) => render(<ScoreCalculationPage analysis={analysis} {...handlers()} {...props} />);
+  const page = () => document.querySelector(".page-section");
 
-  it("is never blank when the Answer tab displays a score", async () => {
-    const user = userEvent.setup();
-    for (const [key, analysis] of Object.entries(responses)) {
-      render(<AnalysisWorkspace analysis={analysis} />);
-      const labels = scored(analysis).map((item) => item.label);
-      for (const view of ["Drift Explanation", "Score Calculation"]) {
-        await open(user, view);
-        for (const label of labels) expect(panel().textContent, `${key} ${view}`).toContain(label);
-        if (!labels.length) expect(within(panel()).getByRole("status").textContent, key).toMatch(/No change to explain|could not be measured/);
-      }
-      cleanup();
-    }
-  });
-
-  it("explains a small wording edit that changes a deadline, without averaging", async () => {
-    const user = userEvent.setup();
+  it("are not tabs of the workspace any more", () => {
     render(<AnalysisWorkspace analysis={responses.ibc99} />);
-    await open(user, "Drift Explanation");
-    expect(screen.getAllByRole("note")[0].textContent).toMatch(/Only 0\.8% of the wording changed, yet the deadline or period changed/);
-    expect(panel().textContent).toContain("“within ten days” → “within twenty-one days”");
-    expect(panel().textContent).toContain("Why it matters: it changes when compliance is due.");
-    expect(panel().textContent).not.toMatch(/overall|average[ds]? (?!into)/i);
+    expect(screen.getAllByRole("tab").map((tab) => tab.textContent)).toEqual(["Answer", "Compare Evidence", "Scenario & Impact", "Sources & Review"]);
   });
 
-  it("shows every rule-field contribution, and the total is reproducible from the shown weights", async () => {
+  it("show every score the Answer tab shows, or say why there is none", () => {
+    for (const [key, analysis] of Object.entries(responses)) {
+      for (const show of [drift, calc]) {
+        show(analysis);
+        const labels = scored(analysis).map((item) => item.label);
+        for (const label of labels) expect(page().textContent, `${key}`).toContain(label);
+        if (!labels.length) expect(within(page()).getByRole("status").textContent, key).toMatch(/No change to explain|could not be measured/);
+        cleanup();
+      }
+    }
+  });
+
+  it("Drift explanation: guide, component breakdown, clauses side by side with their sources, and detected changes", () => {
+    const analysis = responses.ibc99;
+    drift(analysis);
+    const guide = screen.getByLabelText("How to read the combined indicator");
+    expect([...guide.querySelectorAll("strong")].map((el) => el.textContent)).toEqual(["Low", "Moderate", "High"]);
+    expect(guide.textContent).toContain("0–29.9 · Very low and Low");
+    const breakdown = screen.getByRole("article", { name: /combined drift/ });
+    for (const label of ["Wording drift", "Rule drift", "Legal-effect drift", "Combined indicator (TLDS)"]) expect(breakdown.textContent).toContain(label);
+    expect(breakdown.textContent).toContain(analysis.fingerprint.tlds.value.toFixed(1));
+    expect(within(breakdown).getAllByRole("note")[0].textContent).toMatch(/combined score is low, but legal-effect drift is 0\.50/);
+    expect(breakdown.textContent).toMatch(/Only 0\.8% of the wording changed, yet the deadline or period changed/);
+    const before = screen.getByRole("region", { name: "Clause before" }), after = screen.getByRole("region", { name: "Clause after" });
+    expect(after.querySelector(".compare-text").textContent).toBe(analysis.fingerprint.wording_drift.details.after_clause);
+    expect(before.textContent).toMatch(/Insolvency Bankruptcy Code 2016 · page 98, line 11 · earlier wording reconstructed from the footnote · Derived, not verbatim/);
+    expect(after.textContent).toMatch(/page 98, line 11 · current consolidated text · verbatim/);
+    expect(within(after).getByRole("link", { name: /PDF p\. 98/ }).getAttribute("href")).toBe("/corpus/insolvency-bankruptcy-code-2016.pdf#page=98");
+    const changes = screen.getByRole("article", { name: "How the two clauses differ" });
+    expect(changes.textContent).toContain("“within ten days” → “within twenty-one days”");
+    expect(changes.textContent).toContain("Why it matters: it changes when compliance is due.");
+    expect(document.getElementById("evidence-E1")).toBeTruthy();  // clickable source list on the page
+  });
+
+  it("Drift explanation: a rule field's words are highlighted in the clauses", async () => {
     const user = userEvent.setup();
+    const onField = vi.fn();
+    const { rerender } = drift(responses.ibc99, { onField });
+    await user.click(screen.getByRole("button", { name: "Show these words in the clause" }));
+    const row = onField.mock.calls[0][0];
+    expect(row.field).toBe("deadline");
+    rerender(<DriftExplanationPage analysis={responses.ibc99} {...handlers()} highlight={{ label: "Deadline or period", before: row.before_spans, after: row.after_spans }} />);
+    expect([...document.querySelectorAll(".clause-pair mark")].map((m) => m.textContent)).toEqual(["within ten days", "within twenty-one days"]);
+  });
+
+  it("Score calculation: inputs, formulas, rule contributions and the worked combined calculation, all from the stored analysis", () => {
     for (const key of ["ibc99", "sra", "mv173", "ibc240", "dm31"]) {
-      const rule = responses[key].fingerprint.rule_drift;
-      render(<AnalysisWorkspace analysis={responses[key]} />);
-      await open(user, "Score Calculation");
-      const rows = within(screen.getByRole("table", { name: /Each rule field/ })).getAllByRole("row").slice(1, -1);
-      const added = rows.map((row) => Number(row.cells[5].textContent));
+      const analysis = responses[key];
+      const rule = analysis.fingerprint.rule_drift, tlds = analysis.fingerprint.tlds;
+      calc(analysis);
+      const rows = within(screen.getByRole("table", { name: /Each rule field/ })).getAllByRole("row").slice(1);
       expect(rows).toHaveLength(8);
-      expect(added.reduce((a, b) => a + b, 0), key).toBe(rule.value);
+      expect(rows.map((row) => Number(row.cells[5].textContent)).reduce((a, b) => a + b, 0), key).toBe(rule.value);
       for (const row of rule.details.fields) expect(row.contribution).toBe(["ADDED", "REMOVED", "CHANGED"].includes(row.operation) ? weights[row.field] : 0);
-      expect(panel().textContent).toContain(rule.details.calculation);
+      expect(page().textContent).toContain(rule.details.calculation);
+      expect(page().textContent).toContain(analysis.fingerprint.wording_drift.details.calculation);
+      const card = screen.getByRole("article", { name: /Why the combined score is/ });
+      expect(card.textContent).toContain(tlds.calculation);
+      const recomputed = 100 * Object.entries(tlds.components).reduce((sum, [name, part]) => sum + tlds.weights[name] * part.value, 0);
+      expect(tlds.calculation.endsWith(`= ${recomputed.toFixed(1)}`), key).toBe(true);  // the shown sum reproduces from the shown parts
+      expect(page().textContent).toContain(analysis.fingerprint.wording_drift.details.clause_sha256.before.slice(0, 16));
+      expect(page().textContent).not.toMatch(/pretrained semantic embedding|legal accuracy/i);
       cleanup();
     }
   });
 
-  it("links each number to the cited words in Compare Evidence", async () => {
+  it("Score calculation: each input links to its source", async () => {
     const user = userEvent.setup();
-    const analysis = responses.ibc99;
-    render(<AnalysisWorkspace analysis={analysis} />);
-    await open(user, "Score Calculation");
+    const onEvidence = vi.fn(), onField = vi.fn();
+    calc(responses.ibc99, { onEvidence, onField });
+    await user.click(within(screen.getByRole("article", { name: "Compared before clause" })).getByRole("button", { name: "Show evidence E3" }));
+    expect(onEvidence).toHaveBeenCalledWith("E3");
     await user.click(screen.getByRole("button", { name: "Show the words for Deadline or period" }));
-    expect(screen.getByRole("tab", { name: "Compare Evidence" }).getAttribute("aria-selected")).toBe("true");
-    const marks = [...document.querySelectorAll(".clause-pair mark")].map((m) => m.textContent);
-    expect(marks).toEqual(["within ten days", "within twenty-one days"]);
-    await open(user, "Score Calculation");
-    const first = analysis.fingerprint.rule_drift.evidence_ids[0];
-    await user.click(within(screen.getByRole("region", { name: /Rule drift =/ })).getByRole("button", { name: `Show evidence ${first}` }));
-    await waitFor(() => expect(document.activeElement.id).toBe(`evidence-${first}`));
+    expect(onField.mock.calls[0][0].field).toBe("deadline");
   });
 
-  it("gives the specific reason instead of a number when a change cannot be scored", async () => {
-    const user = userEvent.setup();
-    render(<AnalysisWorkspace analysis={responses.mv170} />);
-    await open(user, "Score Calculation");
-    const card = screen.getByRole("region", { name: /Rule drift =/ });
-    expect(within(card).getByText(/No score is shown\./).parentElement.textContent).toMatch(/Only a cross-reference changed \(“149” → “150”\)/);
-    expect(card.querySelector("tfoot")).toBeNull();
+  it("Score calculation: no number when a change cannot be scored, and the combined score is marked incomplete, never 0", () => {
+    calc(responses.mv170);
+    expect(page().textContent).toMatch(/Only a cross-reference changed \(“149” → “150”\)/);
+    const card = screen.getByRole("article", { name: /Why there is no combined score/ });
+    expect(card.textContent).toMatch(/Incomplete\. Missing: legal effect\. A missing component is never counted as 0/);
+    expect(card.textContent).toContain("Partial, not comparable with complete scores");
   });
 
-  it("uses the same sources and scores in Generic and Specific mode", async () => {
-    const user = userEvent.setup();
+  it("Score calculation: Generic and Specific mode give the same numbers", () => {
     const views = [];
     for (const key of ["it-s19", "it-s19-generic"]) {
-      render(<AnalysisWorkspace analysis={responses[key]} />);
-      await open(user, "Score Calculation");
-      views.push(panel().textContent.replace(/stored analysis an_[0-9a-f]+/, ""));
+      calc(responses[key]);
+      views.push(page().textContent.replace(/analysis an_[0-9a-f]+/, "").replace(/Question:.*?\?|Question:[^.]*\./, ""));
       cleanup();
     }
     expect(views[0]).toBe(views[1]);
   });
 
-  it("labels hypothetical boundary values as not the user's facts", async () => {
-    const user = userEvent.setup();
-    render(<AnalysisWorkspace analysis={responses["ibc99-day25"]} />);
-    await open(user, "Score Calculation");
-    expect(panel().textContent).toContain("Hypothetical boundary values (not your facts)");
-    expect(panel().textContent).toContain("elapsed_days = 25");
+  it("Score calculation: hypothetical boundary values are labelled as not the user's facts, and the legacy score is collapsed", () => {
+    calc(responses["ibc99-day25"]);
+    expect(page().textContent).toContain("Hypothetical boundary values (not your facts)");
+    const legacy = document.querySelector("details.legacy-diagnostic");
+    expect(legacy.open).toBe(false);
+    expect(legacy.querySelector("summary").textContent).toMatch(/superseded, not the combined indicator/);
+  });
+
+  it("explain unsupported pairing instead of showing a number", () => {
+    drift(responses["wrong-act"]);
+    expect(within(page()).getByRole("status").textContent).toMatch(/could not be measured.*Nothing is scored, so no number is shown/);
+  });
+
+  it("open a stored v4 analysis (no combined indicator) without a guide or empty sections", () => {
+    drift(v4["dm31-month18"]);
+    expect(screen.queryByLabelText("How to read the combined indicator")).toBeNull();
+    expect(page().textContent).toContain(v4["dm31-month18"].fingerprint.rule_drift.label);
+    cleanup();
+    calc(v4["dm31-month18"]);
+    expect(screen.queryByRole("article", { name: /combined score/ })).toBeNull();
   });
 });
 
@@ -177,17 +204,20 @@ describe("Scenario & Impact", () => {
 });
 
 describe("abstention and sources", () => {
-  it("explains unsupported pairing and unreadable text where the detail belongs", async () => {
+  it("explains unreadable text where the detail belongs", async () => {
     const user = userEvent.setup();
-    render(<AnalysisWorkspace analysis={responses["wrong-act"]} />);
-    await open(user, "Drift Explanation");
-    expect(within(panel()).getByRole("status").textContent).toMatch(/could not be measured.*Nothing is scored, so no number is shown/);
-    cleanup();
     render(<AnalysisWorkspace analysis={responses.ocr} />);
     await open(user, "Sources & Review");
     expect(screen.getByText(/Source text unreliable: it-amendment-act-2008/)).toBeTruthy();
     expect(screen.getByText(/Legal validation: UNVERIFIED/)).toBeTruthy();
   });
+
+  it("still opens a stored v4 analysis from a v0.14 link", async () => {
+    const user = userEvent.setup();
+    render(<AnalysisWorkspace analysis={v4["dm31-month18"]} />);
+    for (const { label } of TABS) { await open(user, label); expect(panel().textContent.length, label).toBeGreaterThan(40); }
+  });
+
 
   it("marks materiality as provisional machine triage, not gold", async () => {
     const user = userEvent.setup();
@@ -198,35 +228,8 @@ describe("abstention and sources", () => {
     expect(within(card).getAllByText(/computed for this answer/).length).toBeGreaterThan(0);
   });
 
-  it("shows the combined TLDS beside its four parts, and flags a legal effect the composite would hide", async () => {
-    const user = userEvent.setup();
-    const tlds = responses.ibc99.fingerprint.tlds;
-    render(<AnalysisWorkspace analysis={responses.ibc99} />);
-    await open(user, "Drift Explanation");
-    const card = screen.getByRole("region", { name: /Hybrid drift score \(TLDS\)/ });
-    const parts = Object.values(tlds.components).map((part) => part.value);
-    for (const value of parts) expect(card.textContent).toContain(value.toFixed(3));
-    const recomputed = 100 * Object.entries(tlds.components).reduce((sum, [name, part]) => sum + tlds.weights[name] * part.value, 0);
-    expect(card.textContent).toContain(`= ${recomputed.toFixed(1)}`);
-    expect(within(card).getByRole("note").textContent).toMatch(/combined score is low, but legal-effect drift is 0\.50\. Material change/i);
-  });
 
-  it("marks the combined score incomplete when legal effect is missing, never 0", async () => {
-    const user = userEvent.setup();
-    render(<AnalysisWorkspace analysis={responses.mv170} />);
-    await open(user, "Drift Explanation");
-    const card = screen.getByRole("region", { name: /Hybrid drift score \(TLDS\)/ });
-    expect(card.textContent).toMatch(/No complete score\. Missing: legal effect/);
-    expect(card.textContent).toContain("not comparable with complete scores");
-  });
 
-  it("still opens a stored v4 analysis from a v0.14 link", async () => {
-    const user = userEvent.setup();
-    render(<AnalysisWorkspace analysis={v4["dm31-month18"]} />);
-    for (const { label } of TABS) { await open(user, label); expect(panel().textContent.length, label).toBeGreaterThan(40); }
-    await open(user, "Drift Explanation");
-    expect(screen.queryByRole("region", { name: /Hybrid drift score/ })).toBeNull();  // records without TLDS omit the section
-  });
 });
 
 describe("links, history and keyboard", () => {
@@ -238,16 +241,50 @@ describe("links, history and keyboard", () => {
     }));
   });
 
-  it("opens a shared link on its view, including old 'scores' links", async () => {
+  const loaded = (analysis) => waitFor(() => expect(screen.getByText(new RegExp(`analysis ${analysis.analysis_id}`))).toBeTruthy());
+
+  it("opens #drift/<id> and #calculation/<id> as standalone pages of that analysis, after a refresh too", async () => {
     const analysis = responses["ibc99-day15"];
-    window.history.replaceState(null, "", `#analysis/${analysis.analysis_id}/scores`);
-    render(<App />);
-    await waitFor(() => expect(screen.getByRole("tab", { name: "Score Calculation" }).getAttribute("aria-selected")).toBe("true"));
-    expect(fetch).toHaveBeenCalledWith(`/api/analyses/${analysis.analysis_id}`, expect.anything());
-    await waitFor(() => expect(screen.getByLabelText("Legal research question").value).toBe(analysis.query));  // the question is shown again
+    for (const page of ["drift", "calculation"]) {
+      window.history.replaceState(null, "", `#${page}/${analysis.analysis_id}`);
+      render(<App />);
+      await loaded(analysis);
+      expect(fetch).toHaveBeenCalledWith(`/api/analyses/${analysis.analysis_id}`, expect.anything());
+      expect(screen.queryByRole("tablist")).toBeNull();
+      expect(within(screen.getByRole("navigation")).getByRole("button", { name: page === "drift" ? /Drift explanation/ : /Score calculation/ }).getAttribute("aria-current")).toBe("page");
+      cleanup();
+    }
   });
 
-  it("restores the separate Drift explanation and Score calculation navigation", async () => {
+  it("remembers an analysis opened from a link, so a later plain #calculation reopens it", async () => {
+    const analysis = responses.sra;
+    window.history.replaceState(null, "", `#drift/${analysis.analysis_id}`);
+    render(<App />);
+    await loaded(analysis);
+    cleanup();
+    window.history.replaceState(null, "", "#calculation");
+    render(<App />);
+    await loaded(analysis);
+    expect(screen.getByRole("heading", { name: "How these percentages were calculated" })).toBeTruthy();
+  });
+
+  it("plain #drift opens the current analysis; old 'scores' and tab links open the pages", async () => {
+    const analysis = responses.dm31;
+    window.sessionStorage.setItem("tldrift:last-analysis", analysis.analysis_id);
+    window.history.replaceState(null, "", "#drift");
+    render(<App />);
+    await loaded(analysis);
+    expect(screen.getByRole("heading", { name: "What the drift score means" })).toBeTruthy();
+    cleanup();
+    for (const [hash, heading] of [["scores", "How these percentages were calculated"], ["drift", "What the drift score means"]]) {
+      window.history.replaceState(null, "", `#analysis/${analysis.analysis_id}/${hash}`);
+      render(<App />);
+      await waitFor(() => expect(screen.getByRole("heading", { name: heading })).toBeTruthy());
+      cleanup();
+    }
+  });
+
+  it("switches between the assistant and both pages without losing the analysis, and back/forward retraces it", async () => {
     const user = userEvent.setup();
     const analysis = responses.ibc99;
     window.history.replaceState(null, "", `#analysis/${analysis.analysis_id}/answer`);
@@ -255,25 +292,36 @@ describe("links, history and keyboard", () => {
     await waitFor(() => screen.getByRole("tab", { name: "Answer" }));
     const nav = screen.getByRole("navigation");
     await user.click(within(nav).getByRole("button", { name: /Drift explanation/ }));
-    expect(screen.getByRole("tab", { name: "Drift Explanation" }).getAttribute("aria-selected")).toBe("true");
-    expect(within(nav).getByRole("button", { name: /Drift explanation/ }).getAttribute("aria-current")).toBe("page");
-    expect(window.location.hash).toBe(`#analysis/${analysis.analysis_id}/drift`);
+    expect(window.location.hash).toBe(`#drift/${analysis.analysis_id}`);
+    await loaded(analysis);
     await user.click(within(nav).getByRole("button", { name: /Score calculation/ }));
-    expect(window.location.hash).toBe(`#analysis/${analysis.analysis_id}/calculation`);
+    expect(window.location.hash).toBe(`#calculation/${analysis.analysis_id}`);
+    expect(screen.getByRole("heading", { name: "How these percentages were calculated" })).toBeTruthy();
+    window.history.back();
+    await waitFor(() => expect(screen.getByRole("heading", { name: "What the drift score means" })).toBeTruthy());
+    window.history.back();
+    await waitFor(() => expect(screen.getByRole("tab", { name: "Answer" }).getAttribute("aria-selected")).toBe("true"));
+    window.history.forward();
+    await waitFor(() => expect(screen.getByRole("heading", { name: "What the drift score means" })).toBeTruthy());
+    await user.click(within(nav).getByRole("button", { name: /Legal drift assistant/ }));
+    expect(window.location.hash).toBe(`#analysis/${analysis.analysis_id}/answer`);
+    expect(screen.getByLabelText("Legal research question").value).toBe(analysis.query);
   });
 
-  it("moves back and forward between views of the same analysis", async () => {
+  it("links from the answer to the pages, and from a page's evidence and rule fields back to the cited words", async () => {
     const user = userEvent.setup();
-    const analysis = responses.dm31;
+    const analysis = responses.ibc99;
     window.history.replaceState(null, "", `#analysis/${analysis.analysis_id}/answer`);
     render(<App />);
-    await waitFor(() => screen.getByRole("tab", { name: "Compare Evidence" }));
-    await open(user, "Compare Evidence");
-    await open(user, "Score Calculation");
-    window.history.back();
-    await waitFor(() => expect(screen.getByRole("tab", { name: "Compare Evidence" }).getAttribute("aria-selected")).toBe("true"));
-    window.history.forward();
-    await waitFor(() => expect(screen.getByRole("tab", { name: "Score Calculation" }).getAttribute("aria-selected")).toBe("true"));
+    await waitFor(() => screen.getByRole("tab", { name: "Answer" }));
+    await user.click(screen.getByRole("button", { name: "Score calculation →" }));
+    expect(window.location.hash).toBe(`#calculation/${analysis.analysis_id}`);
+    await user.click(screen.getByRole("button", { name: "Show the words for Deadline or period" }));
+    await waitFor(() => expect(document.activeElement.id).toBe("clause-pair-heading"));
+    expect(window.location.hash).toBe(`#drift/${analysis.analysis_id}`);
+    expect([...document.querySelectorAll(".clause-pair mark")].map((m) => m.textContent)).toEqual(["within ten days", "within twenty-one days"]);
+    await user.click(within(screen.getByRole("region", { name: "Clause after" })).getByRole("button", { name: "Show evidence E1" }));
+    await waitFor(() => expect(document.activeElement.id).toBe("evidence-E1"));
   });
 
   it("shows a helpful page for the score views before any analysis exists", async () => {
@@ -283,13 +331,13 @@ describe("links, history and keyboard", () => {
     expect(screen.getByText("Ask a comparison question first.")).toBeTruthy();
   });
 
-  it("moves between six views with the arrow keys and labels every panel", async () => {
+  it("moves between the four views with the arrow keys and labels every panel", async () => {
     const user = userEvent.setup();
     render(<AnalysisWorkspace analysis={responses.sra} />);
     screen.getByRole("tab", { name: "Answer" }).focus();
     await user.keyboard("{ArrowRight}{ArrowRight}");
-    expect(document.activeElement.textContent).toBe("Drift Explanation");
-    expect(screen.getByRole("tabpanel").getAttribute("aria-labelledby")).toBe("tab-drift");
+    expect(document.activeElement.textContent).toBe("Scenario & Impact");
+    expect(screen.getByRole("tabpanel").getAttribute("aria-labelledby")).toBe("tab-scenario");
     await user.keyboard("{End}");
     expect(document.activeElement.textContent).toBe("Sources & Review");
   });

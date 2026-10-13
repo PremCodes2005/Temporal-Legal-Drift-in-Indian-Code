@@ -22,5 +22,6 @@ These ADRs are **retrospective descriptions of decisions visible in the current 
 | [0016](0016-analysis-records-and-minimum-facts.md) | Stored analyses, explicit limits and minimum facts (rag-answer-v4) (2026-10-13) |
 | [0017](0017-separate-explanation-views-and-rule-drift-v1-2.md) | Separate Drift Explanation and Score Calculation views; rule-drift v1.2 (rag-answer-v5) (2026-10-13) |
 | [0018](0018-hybrid-temporal-legal-drift-score.md) | Hybrid Temporal Legal Drift Score (tlds-v1) beside the fingerprint (2026-10-13) |
+| [0019](0019-standalone-drift-and-calculation-pages.md) | Standalone Drift explanation and Score calculation pages (2026-10-13) |
 
 Audit base: commit `68030875a719aa626fb05f294880de2953084781`, 2026-10-12. Verification limits: [../verification.md](../verification.md).

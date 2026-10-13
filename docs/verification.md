@@ -239,3 +239,23 @@ Remote GitHub Actions has still not been observed. See [../reports/phase3/tempor
   - legal validity of the rubric, weights or bands (no expert labels);
   - a pretrained semantic embedding (S is a feature-hash stand-in);
   - a screen-reader listening pass.
+
+## Standalone explanation pages addendum (2026-10-13)
+
+- **Executed:**
+  - Frontend: 37 vitest tests, run 3 times.
+  - Python: the full suite (295 tests) under 3.14 failed only the expected Phase 11 checksum gate before the release. `validate-contract` passed. The backend is unchanged.
+  - Real Chrome against the running app:
+    - IT s.19, IBC s.99, a general question and an unsupported comparison on both pages;
+    - direct `#drift/<id>` and `#calculation/<id>` links, refresh, plain `#drift`, back/forward;
+    - switching back to the assistant;
+    - a rule-field link to highlighted words, and an evidence link to the focused source;
+    - 360px with no overflow.
+  - `browser-a11y-check.mjs` (updated for the sidebar pages) passed at 320–480px.
+- **Defects found and fixed during this work:**
+  - a long `<code>` path widened the calculation page by 3px at 320px;
+  - a plain `#drift` reopened the last *asked* analysis instead of the last *shown* one.
+- **Not verified:**
+  - a screen-reader listening pass;
+  - legal accuracy.
+  - The backend's own sentences still say "the answer above" and "never averaged". These are fingerprint-v1.2 contract text, left unchanged.

@@ -8,18 +8,23 @@ import SourceHealth from "./SourceHealth";
 import ComplianceRiskPanel from "./ComplianceRiskPanel";
 import { DriftPanel, VerificationPanel, percent } from "./SharedPanels";
 import AnalysisWorkspace, { TABS } from "./AnalysisWorkspace";
+import { DriftExplanationPage, ScoreCalculationPage } from "./ExplanationPages";
 
-// #analysis/<id>/<view> is the shareable address of one stored analysis. #drift and #calculation open those views of the
-// current analysis; v0.14 links to the former "scores" view open Score Calculation.
-const VIEW_SECTIONS = ["drift", "calculation"];
+// Addresses: #analysis/<id>/<view> (assistant), #drift/<id> and #calculation/<id> (standalone pages of that analysis).
+// Plain #drift or #calculation open the current analysis. v0.14/v0.15 links (#analysis/<id>/drift|calculation|scores) open the pages.
+const PAGES = ["drift", "calculation"];
+const ANALYSIS_ID = /^an_[0-9a-f]{24}$/;
 function parseRoute(hash) {
   const parts = hash.slice(1).split("?")[0].split("/");
-  if (parts[0] === "analysis" && /^an_[0-9a-f]{24}$/.test(parts[1] || "")) {
+  const id = ANALYSIS_ID.test(parts[1] || "") ? parts[1] : null;
+  if (parts[0] === "analysis" && id) {
     const view = parts[2] === "scores" ? "calculation" : parts[2];
-    return { section: "assistant", analysisId: parts[1], tab: TABS.some((t) => t.id === view) ? view : "answer" };
+    if (PAGES.includes(view)) return { section: view, analysisId: id, tab: "answer" };
+    return { section: "assistant", analysisId: id, tab: TABS.some((t) => t.id === view) ? view : "answer" };
   }
-  return { section: parts[0], analysisId: null, tab: VIEW_SECTIONS.includes(parts[0]) ? parts[0] : "answer" };
+  return { section: parts[0] || "assistant", analysisId: PAGES.includes(parts[0]) ? id : null, tab: "answer" };
 }
+const pageHash = (page, id, tab) => (PAGES.includes(page) ? `#${page}${id ? `/${id}` : ""}` : id ? `#analysis/${id}/${tab}` : `#${page}`);
 
 const sections = [
   { id: "assistant", number: "01", label: "Legal drift assistant" },
@@ -47,6 +52,8 @@ export default function App() {
   const [section, setSection] = useState(() => sections.some((item) => item.id === route.section) ? route.section : "assistant");
   const [tab, setTab] = useState(route.tab);
   const [analysisError, setAnalysisError] = useState("");
+  const [loadingAnalysis, setLoadingAnalysis] = useState(false);
+  const [highlight, setHighlight] = useState(null);
   const initialRunId = /^run_[0-9a-f]{24}$/.test(initialHash[1] || "") ? initialHash[1] : null;
   const [menuOpen, setMenuOpen] = useState(false);
   const [corpus, setCorpus] = useState(null);
@@ -65,24 +72,25 @@ export default function App() {
   useEffect(() => {
     let id = route.analysisId;
     if (!id && !linkedQuestion) { try { id = window.sessionStorage.getItem("tldrift:last-analysis"); } catch { id = null; } }
-    if (!id || !/^an_[0-9a-f]{24}$/.test(id)) return;
-    api(`/api/analyses/${id}`).then(setLastResult).catch((error) => setAnalysisError(`The linked analysis could not be loaded: ${error.message}`));
+    if (!id || !ANALYSIS_ID.test(id)) return;
+    setLoadingAnalysis(true);
+    api(`/api/analyses/${id}`).then(setLastResult).catch((error) => setAnalysisError(`The linked analysis could not be loaded: ${error.message}`))
+      .finally(() => setLoadingAnalysis(false));
   }, [route.analysisId, linkedQuestion]);
 
   const currentId = useRef(null);
   currentId.current = lastResult?.analysis_id || null;
-  // The Drift explanation / Score calculation entries are views of the current analysis once it has loaded.
+  // Plain #drift / #calculation reopen the analysis last shown, whether asked here or opened from a link.
   useEffect(() => {
-    if (VIEW_SECTIONS.includes(section) && lastResult?.analysis_id) { setTab(section); setSection("assistant"); }
-  }, [section, lastResult]);
+    if (lastResult?.analysis_id) try { window.sessionStorage.setItem("tldrift:last-analysis", lastResult.analysis_id); } catch { /* storage unavailable */ }
+  }, [lastResult]);
 
-  // Back/forward between views of the same analysis switches the view; another analysis or a question link re-opens from the stored record.
+  // Back/forward between pages of the same analysis switches the page; another analysis or a question link re-opens from the stored record.
   useEffect(() => {
     const onNavigate = () => {
       const next = parseRoute(window.location.hash);
-      if (next.analysisId && next.analysisId === currentId.current) { setSection("assistant"); setTab(next.tab); return; }
-      if (next.analysisId || /[?&]q=/.test(window.location.hash)) { window.location.reload(); return; }
-      if (sections.some((item) => item.id === next.section)) setSection(next.section);
+      if (next.analysisId && next.analysisId !== currentId.current || /[?&]q=/.test(window.location.hash)) { window.location.reload(); return; }
+      if (sections.some((item) => item.id === next.section)) { setSection(next.section); setTab(next.tab); }
     };
     window.addEventListener("popstate", onNavigate);
     window.addEventListener("hashchange", onNavigate);
@@ -90,11 +98,10 @@ export default function App() {
   }, []);
 
   const showResult = (value, nextTab = "answer") => {
-    setLastResult(value);
+    setLastResult(value); setHighlight(null); setSection("assistant");
     if (value?.analysis_id) {
       setTab(nextTab);
       window.history.pushState(null, "", `#analysis/${value.analysis_id}/${nextTab}`);
-      try { window.sessionStorage.setItem("tldrift:last-analysis", value.analysis_id); } catch { /* storage unavailable */ }
     }
   };
   const changeTab = (next) => {
@@ -102,12 +109,24 @@ export default function App() {
     if (lastResult?.analysis_id) window.history.pushState(null, "", `#analysis/${lastResult.analysis_id}/${next}`);
   };
 
-  const navigate = (next) => {
+  const navigate = (next, nextTab = tab) => {
     setMenuOpen(false); window.scrollTo({ top: 0, behavior: "smooth" });
-    if (VIEW_SECTIONS.includes(next) && lastResult?.analysis_id) { setSection("assistant"); changeTab(next); return; }
-    setSection(next); window.history.pushState(null, "", `#${next}`);
+    setSection(next); setTab(nextTab);
+    window.history.pushState(null, "", pageHash(next, ["assistant", ...PAGES].includes(next) ? lastResult?.analysis_id : null, nextTab));
   };
-  const activeNav = section === "assistant" && VIEW_SECTIONS.includes(tab) ? tab : section;
+  // Evidence and rule-field links from either page open the Drift explanation page at the cited item.
+  const openEvidence = (id) => {
+    if (section !== "drift") navigate("drift");
+    window.setTimeout(() => document.getElementById(`evidence-${id}`)?.focus(), 0);
+  };
+  const openField = (row) => {
+    setHighlight({ label: row.label || row.field.replaceAll("_", " "), before: row.before_spans || [], after: row.after_spans || [] });
+    if (section !== "drift") navigate("drift");
+    window.setTimeout(() => document.getElementById("clause-pair-heading")?.focus(), 0);
+  };
+  const toAssistant = (nextTab = "answer") => navigate("assistant", nextTab);
+  const activeNav = section;
+  const pageProps = { analysis: lastResult, onEvidence: openEvidence, onField: openField, onAssistant: toAssistant };
 
   const askFromFaq = (question) => {
     setStarterQuery(question); setSection("assistant"); setMenuOpen(false);
@@ -125,10 +144,14 @@ export default function App() {
       <header className="topbar"><button className="menu-toggle" onClick={() => setMenuOpen((open) => !open)} aria-label="Open navigation">☰</button><div><p className="eyebrow">Versioned Indian law</p><h1>{sections.find((item) => item.id === activeNav)?.label}</h1></div></header>
       <main id="main-content">
         {section === "assistant" && <AssistantWorkspace status={status} error={loadError || analysisError} starterQuery={starterQuery} autoRun={Boolean(linkedQuestion)}
-          result={lastResult} onResult={showResult} tab={tab} onTab={changeTab} onReview={() => navigate("review")} />}
-        {VIEW_SECTIONS.includes(section) && <section className="page-section"><div className="section-header"><span className="section-kicker">{section === "drift" ? "Drift explanation" : "Score calculation"}</span>
-          <h2>Ask a comparison question first.</h2><p>This view explains the {section === "drift" ? "changed words and legal-rule fields" : "inputs, formulas and contributions"} of the current analysis, with its cited evidence. General questions have no change scores.</p></div>
-          <button className="send-button" type="button" onClick={() => navigate("assistant")}>Open legal drift assistant <span>→</span></button></section>}
+          result={lastResult} onResult={showResult} tab={tab} onTab={changeTab} onPage={navigate} onReview={() => navigate("review")} />}
+        {PAGES.includes(section) && (lastResult?.analysis_id
+          ? section === "drift" ? <DriftExplanationPage {...pageProps} highlight={highlight} onCalculation={() => navigate("calculation")} /> : <ScoreCalculationPage {...pageProps} />
+          : <section className="page-section"><div className="section-header"><span className="section-kicker">{section === "drift" ? "Drift explanation" : "Score calculation"}</span>
+            <h2>{loadingAnalysis ? "Loading the analysis…" : "Ask a comparison question first."}</h2>
+            <p>{analysisError || (section === "drift" ? "This page explains what the drift scores of the current analysis mean, with the before and after clauses and their sources."
+              : "This page shows the exact inputs, formulas and worked calculation of the current analysis.")} General questions have no change scores.</p></div>
+            <button className="send-button" type="button" onClick={() => navigate("assistant")}>Open legal drift assistant <span>→</span></button></section>)}
         {section === "corpus" && <CorpusBrowser corpus={corpus} error={loadError} status={status} />}
         {section === "method" && <Method />}
         {section === "faq" && <RecentChangesFaq onAsk={askFromFaq} />}
@@ -139,7 +162,7 @@ export default function App() {
   </div>;
 }
 
-function AssistantWorkspace({ status, error: statusError, starterQuery, autoRun = false, result, onResult, tab, onTab, onReview }) {
+function AssistantWorkspace({ status, error: statusError, starterQuery, autoRun = false, result, onResult, tab, onTab, onPage, onReview }) {
   const [query, setQuery] = useState(starterQuery || "");
   const [mode, setMode] = useState("specific");
   const [busy, setBusy] = useState(false);
@@ -188,9 +211,9 @@ function AssistantWorkspace({ status, error: statusError, starterQuery, autoRun 
     </div>
     {busy && <div className="loading-panel"><span className="spinner"/><div><strong>Retrieving versioned legal evidence…</strong><p>Classifying the question, matching documents and validating the response context.</p></div></div>}
     {result && (result.analysis_id
-      ? <AnalysisWorkspace analysis={result} tab={tab} onTab={onTab} busy={busy} onReview={onReview}
+      ? <AnalysisWorkspace analysis={result} tab={tab} onTab={onTab} onPage={onPage} busy={busy} onReview={onReview}
           onScenario={(scenario) => submit(null, result.query, scenario, tab, result.mode)} />
-      : <RagResult result={result} onExplain={() => onTab?.("calculation")} busy={busy} onScenario={(scenario) => submit(null, result.query, scenario)} />)}
+      : <RagResult result={result} onExplain={() => onPage?.("calculation")} busy={busy} onScenario={(scenario) => submit(null, result.query, scenario)} />)}
   </section>;
 }
 

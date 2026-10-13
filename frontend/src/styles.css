@@ -81,3 +81,14 @@
 #clause-pair-heading:focus{outline:3px solid var(--primary);outline-offset:3px}
 .table-scroll{position:relative;overflow-x:auto}.table-scroll:focus-visible{outline:3px solid var(--primary);outline-offset:2px}
 @media (max-width:620px){.calc-list{grid-template-columns:1fr}.table-scroll .fp-table{min-width:600px}.change-glance ul{gap:10px 18px}.answer-links{flex-direction:column;gap:8px}}
+/* Standalone Drift explanation and Score calculation pages (v0.13.0 layout, readable type sizes) */
+.drift-page>*+*,.calculation-page>*+*{margin-top:17px}.page-intro p{margin:6px 0 0}.page-intro{margin-bottom:8px}
+.side-source{margin:10px 0 0;color:var(--muted);font-size:12px;overflow-wrap:anywhere}.side-source .link-button{margin-left:2px}
+.clause-text{max-height:220px;overflow:auto;margin:12px 0;padding:12px 14px;border-left:3px solid #bdd8e2;background:#f8fbfc;color:var(--ink);font:13px/1.6 Georgia,serif;overflow-wrap:anywhere}
+.drift-score-grid span,.contribution-grid span{font-size:12px}.drift-score-grid p,.level-guide p{font-size:13px}.level-guide b{font-size:12px}.level-pill{font-size:10px}
+.contribution-grid small{display:block;margin-top:4px;color:var(--muted);font-size:11px}.drift-score-grid>div,.contribution-grid>div{min-width:0;overflow-wrap:anywhere}
+.difference-evidence ul,.difference-evidence p{font-size:13px}.difference-evidence p{color:var(--muted)}.calculation-card p{font-size:13px}
+.calculation-row{grid-template-columns:minmax(0,1fr) auto}.calculation-row span,.calculation-row code{font-size:12px;overflow-wrap:anywhere}.calculation-row>b{font-size:20px}
+.calculation-card .table-scroll{margin-top:14px}.legacy-diagnostic summary{cursor:pointer;font-weight:700}
+@media (max-width:480px){.drift-score-grid{grid-template-columns:1fr}.calculation-row{grid-template-columns:1fr}.drift-breakdown,.difference-evidence,.calculation-card,.calculation-sources article{padding:16px}}
+.calculation-page code,.drift-page code{white-space:normal;overflow-wrap:anywhere}

@@ -32,23 +32,28 @@ const focusInfo = `(() => { const el = document.activeElement; if (!el || el ===
   return { tag: el.tagName, text: (el.getAttribute('aria-label') || el.innerText || el.value || el.getAttribute('href') || '').trim().slice(0, 60),
     visibleFocus: cs.outlineStyle !== 'none' && parseFloat(cs.outlineWidth) > 0 || cs.boxShadow !== 'none', size: [Math.round(r.width), Math.round(r.height)], inViewport: r.bottom > 0 && r.top < innerHeight }; })()`;
 const stops = [];
-// Tab to the analysis views, arrow to Score Calculation (ARIA tabs), then Tab into its panel to the collapsible legacy diagnostic.
+// Tab to the analysis views and arrow across them (ARIA tabs); then open the standalone Score calculation page from the sidebar
+// and Tab through it to the collapsible legacy diagnostic.
 // Native date inputs style their inner focus a tick after the key event, so each stop settles briefly.
 for (let i = 0; i < 120; i++) { await key("Tab", "Tab", 9); await sleep(150); const f = await evaluate(focusInfo); if (!f) continue; stops.push(f); if (await evaluate("document.activeElement.getAttribute('role') === 'tab'")) break; }
 for (let i = 0; i < 3; i++) await key("ArrowRight", "ArrowRight", 39);
 await sleep(300);
-report.arrowsReachScores = await evaluate("document.activeElement.id === 'tab-calculation' && document.activeElement.getAttribute('aria-selected') === 'true'");
+report.arrowsReachScores = await evaluate("document.activeElement.id === 'tab-sources' && document.activeElement.getAttribute('aria-selected') === 'true'");
+const openPage = (label) => evaluate(`[...document.querySelectorAll('.nav-item')].find((b) => b.textContent.includes(${JSON.stringify(label)})).click(), true`);
+await openPage("Score calculation"); await sleep(500);
+report.calculationHash = await evaluate("location.hash");
+await evaluate("(() => { const m = document.getElementById('main-content'); m.setAttribute('tabindex', '-1'); m.focus(); return true; })()");
 for (let i = 0; i < 60; i++) { await key("Tab", "Tab", 9); await sleep(150); const f = await evaluate(focusInfo); if (!f) continue; stops.push(f); if (f.text.startsWith("Legacy diagnostic")) break; }
 report.tabStops = stops.length; report.noVisibleFocus = stops.filter((s) => !s.visibleFocus); report.zeroSize = stops.filter((s) => !s.size[0] || !s.size[1]);
 report.reachedSummary = stops.at(-1)?.text?.startsWith("Legacy diagnostic") || false;
-report.pdfLinkReachable = stops.some((s) => s.text.startsWith("Open source PDF at page"));
+report.pdfLinkReachable = stops.some((s) => /^(PDF p\.|Open source PDF at page)/.test(s.text));
 report.focusScrolledIntoView = stops.every((s) => s.inViewport);
 if (report.reachedSummary) { const was = await evaluate("document.querySelector('.legacy-diagnostic').open"); await key("Enter", "Enter", 13); await sleep(200); report.enterTogglesDetails = (await evaluate("document.querySelector('.legacy-diagnostic').open")) !== was; await key(" ", "Space", 32); await sleep(200); report.spaceTogglesBack = (await evaluate("document.querySelector('.legacy-diagnostic').open")) === was; }
 report.offscreen = stops.filter((s) => !s.inViewport).map((s) => `${s.tag}:${s.text}`);
 report.stopsSample = stops.slice(0, 40).map((s) => `${s.tag}:${s.text}`);
 
-// 2. Accessibility tree as exposed to assistive technology (Compare & Evidence view, where the before/after text lives).
-await evaluate("document.getElementById('tab-evidence').click(), true"); await sleep(400);
+// 2. Accessibility tree as exposed to assistive technology (Drift explanation page, where the before/after text lives).
+await openPage("Drift explanation"); await sleep(400);
 const { nodes } = await send("Accessibility.getFullAXTree");
 const named = (n) => (n.name?.value || "").trim();
 const interactive = new Set(["button", "link", "textbox", "combobox", "checkbox", "radio", "tab", "menuitem", "DisclosureTriangle", "switch"]);
@@ -67,7 +72,7 @@ report.narrow = {};
 for (const w of [320, 360, 414, 480]) {
   await load(w, 800, true);
   for (const view of ["answer", "drift", "calculation"]) {
-  await evaluate(`document.getElementById('tab-${view}').click(), true`); await sleep(300);
+  if (view !== "answer") { await openPage(view === "drift" ? "Drift explanation" : "Score calculation"); await sleep(400); }
   report.narrow[`${w}-${view}`] = await evaluate(`(() => { const W = document.documentElement.clientWidth; const over = [...document.querySelectorAll('body *')].filter(el => { const r = el.getBoundingClientRect(); return r.width && r.right > W + 1 && getComputedStyle(el).position !== 'fixed'; });
     const leaf = over.filter(el => !over.some(o => o !== el && el.contains(o)));
     return { scrollWidth: document.documentElement.scrollWidth, clientWidth: W, overflowing: leaf.slice(0, 8).map(el => el.tagName + '.' + (el.className || '').toString().split(' ')[0] + ':' + Math.round(el.getBoundingClientRect().right)),
@@ -82,7 +87,7 @@ console.log(JSON.stringify(report, null, 1));
 const text = nodes.filter((n) => n.role?.value === "StaticText").map((n) => n.name?.value || "").join("");
 const failures = [
   report.noVisibleFocus.length && "focus without a visible indicator", report.unnamedInteractive.length && "unnamed controls",
-  !report.reachedSummary && "score calculation details not reachable by Tab", !report.arrowsReachScores && "arrow keys do not move between analysis views", !report.enterTogglesDetails && "Enter does not toggle the score explanation",
+  !report.reachedSummary && "score calculation details not reachable by Tab", !report.arrowsReachScores && "arrow keys do not move between analysis views", !/^#calculation\/an_/.test(report.calculationHash) && "sidebar does not open the calculation page of this analysis", !report.enterTogglesDetails && "Enter does not toggle the score explanation",
   !text.includes("[removed:") && "no screen-reader cue for removed words",
   ...Object.entries(report.narrow).map(([w, v]) => v.scrollWidth > v.clientWidth && `horizontal scroll at ${w}px`),
 ].filter(Boolean);

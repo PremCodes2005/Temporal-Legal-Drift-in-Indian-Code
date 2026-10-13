@@ -161,3 +161,10 @@ Not achieved in the sprint:
 | Evaluation | 86 held-out transitions under 4 weightings | `reports/fingerprint/tlds_heldout.v1.json` |
 | UI | Combined indicator in Drift Explanation, with L shown separately | `analysis_workspace.test.jsx` |
 | Release | See `docs/verification.md` | — |
+
+## Standalone explanation pages (2026-10-13)
+
+| Phase | Result | Evidence |
+| --- | --- | --- |
+| UI | `#drift` and `#calculation` are sidebar pages again (v0.13.0 layout); workspace has four tabs; scoring unchanged | ADR 0019, `frontend/src/ExplanationPages.jsx`, `analysis_workspace.test.jsx` |
+| Release | See `docs/verification.md` | — |

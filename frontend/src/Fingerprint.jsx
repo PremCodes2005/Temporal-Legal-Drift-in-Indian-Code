@@ -97,7 +97,7 @@ function OutcomeDetails({ details, open }) {
 }
 
 // The exact clauses that were scored: changed spans at their recorded offsets, and optionally one rule field's spans <mark>ed.
-export function ClausePair({ details, highlight }) {
+export function ClausePair({ details, highlight, sources }) {
   const render = (text, side) => {
     const ranges = (details.spans || []).map((span) => [...span[`${side}_offsets`], "diff"])
       .concat((highlight?.[side] || []).map(([start, end]) => [start, end, "mark"])).filter(([start, end]) => end > start);
@@ -117,8 +117,8 @@ export function ClausePair({ details, highlight }) {
     <span className="section-kicker">Scored text</span><h3 id="clause-pair-heading" tabIndex={-1}>Whole clauses compared, changed words marked</h3>
     {highlight?.label && <p className="highlight-note" role="status">Highlighted: the words behind <strong>{highlight.label}</strong>.</p>}
     <div className="compare-grid">
-      <section aria-label="Clause before"><h4>Before</h4><p className="panel-note">{details.before_kind}</p><p className="compare-text">{render(details.before_clause, "before")}</p></section>
-      <section aria-label="Clause after"><h4>After</h4><p className="panel-note">{details.after_kind}</p><p className="compare-text">{render(details.after_clause, "after")}</p></section>
+      <section aria-label="Clause before"><h4>Before</h4><p className="panel-note">{details.before_kind}</p><p className="compare-text">{render(details.before_clause, "before")}</p>{sources?.before}</section>
+      <section aria-label="Clause after"><h4>After</h4><p className="panel-note">{details.after_kind}</p><p className="compare-text">{render(details.after_clause, "after")}</p>{sources?.after}</section>
     </div>
   </article>;
 }
