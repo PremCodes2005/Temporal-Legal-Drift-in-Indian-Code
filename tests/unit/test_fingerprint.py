@@ -124,10 +124,11 @@ class FingerprintTests(unittest.TestCase):
         self.assertEqual(changed(ARB8)["exception"], "ADDED")                                      # proviso inserted (insertion)
         self.assertTrue({"penalty", "monetary_threshold"} <= set(changed(MV181)))                  # penalty change
 
-    def test_an_unclassified_operative_change_is_a_lower_bound_not_zero(self) -> None:
+    def test_an_unclassified_operative_change_is_not_scored(self) -> None:
+        # rule-drift-v1.1: a change outside the supported fields gets no score (v1 showed "0 (lower bound)")
         rule = self.ask("How many nominees can a depositor make under section 45ZC of the Banking Regulation Act after the 2025 amendment?")["fingerprint"]["rule_drift"]
-        self.assertEqual((rule["state"], rule["label"]), ("PROVISIONAL", "0/100 (lower bound)"))
-        self.assertIn("field_uncertain:unclassified_change", rule["uncertainty"])
+        self.assertEqual((rule["state"], rule["label"], rule["value"]), ("INSUFFICIENT_EVIDENCE", "Not scored", None))
+        self.assertEqual(rule["limit"]["kind"], "method")
 
     def test_conflicting_signals_are_shown_side_by_side_never_averaged(self) -> None:
         f = self.ask(SRA)["fingerprint"]

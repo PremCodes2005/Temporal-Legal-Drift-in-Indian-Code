@@ -1,0 +1,789 @@
+{
+ "schema_version": "1.0.0",
+ "case_set": "rag-audit-cases-v3",
+ "created": "2026-10-13",
+ "expectation_basis": "Expected support comes from graph v4 (temporal_graph_checkpoint.v4), data/silver/materiality_reassessment.v2.5.json and data/risk/obligation_registry.v1.json, never from the assistant's answers. Expected determination states are the conservative ceiling those artifacts allow; they are engineering expectations, not legal truth. v2 adds expected Legal Change Fingerprint states (docs/methodology/legal_change_fingerprint.v1.md) and the separate applicability determination; v1 is kept unchanged. v3 (rag-answer-v4): materiality is provisional machine triage for every supported amendment (frozen silver where it exists, otherwise computed now with the same two versioned rules); rule drift is not scored when the changed words fall outside the supported fields (rule-drift-v1.1); facts stated in the question are applied. v1 and v2 are kept unchanged.",
+ "states": [
+  "DETERMINED",
+  "PROVISIONAL",
+  "CONDITIONAL",
+  "NEEDS_FACTS",
+  "INSUFFICIENT_EVIDENCE",
+  "OUT_OF_SCOPE"
+ ],
+ "cases": [
+  {
+   "case_id": "arb-s7-specific",
+   "stratum": "supported_transition_insert_dated_silver",
+   "mode": "specific",
+   "query": "How did section 7 of the Arbitration and Conciliation Act change after the 2015 amendment regarding electronic communication?",
+   "expected": {
+    "support": "GRAPH_TRANSITION_FRAGMENTS",
+    "act": "arbitration-and-conciliation-act-1996",
+    "provision": "section:7",
+    "operation": "INSERT",
+    "amending": "arbitration-and-conciliation-amendment-act-2015",
+    "silver_pair_id": "mat_1037bf61be63655a13f6f7af",
+    "states": {
+     "textual_drift": "DETERMINED",
+     "materiality": "PROVISIONAL",
+     "answer_change": "NEEDS_FACTS",
+     "risk": "OUT_OF_SCOPE",
+     "applicability": "NEEDS_FACTS"
+    },
+    "fingerprint": {
+     "wording_drift": "DETERMINED",
+     "rule_drift": "DETERMINED",
+     "outcome_drift": "NEEDS_FACTS"
+    }
+   },
+   "basis": "strong transition; effective 2015-10-23 (Act-wide); exact silver row | drift: insertion has no earlier wording; drift-metrics-v3 (configs/metrics/drift_score.v3.json) computes no score when a side is missing. | answer change: a 'how did it change' question is answered by the change itself; consistent with companies-s46-compare."
+  },
+  {
+   "case_id": "arb-s7-generic",
+   "stratum": "mode_invariance",
+   "mode": "generic",
+   "query": "How did section 7 of the Arbitration and Conciliation Act change after the 2015 amendment regarding electronic communication?",
+   "expected": {
+    "support": "GRAPH_TRANSITION_FRAGMENTS",
+    "act": "arbitration-and-conciliation-act-1996",
+    "provision": "section:7",
+    "operation": "INSERT",
+    "amending": "arbitration-and-conciliation-amendment-act-2015",
+    "silver_pair_id": "mat_1037bf61be63655a13f6f7af",
+    "states": {
+     "textual_drift": "DETERMINED",
+     "materiality": "PROVISIONAL",
+     "answer_change": "NEEDS_FACTS",
+     "risk": "OUT_OF_SCOPE",
+     "applicability": "NEEDS_FACTS"
+    },
+    "fingerprint": {
+     "wording_drift": "DETERMINED",
+     "rule_drift": "DETERMINED",
+     "outcome_drift": "NEEDS_FACTS"
+    }
+   },
+   "basis": "same evidence as arb-s7-specific; only presentation may differ | drift: insertion has no earlier wording; drift-metrics-v3 (configs/metrics/drift_score.v3.json) computes no score when a side is missing. | answer change: a 'how did it change' question is answered by the change itself; consistent with companies-s46-compare."
+  },
+  {
+   "case_id": "arb-s23-counterclaim",
+   "stratum": "insert_answer_change_conditional",
+   "mode": "specific",
+   "query": "Can a respondent submit a counterclaim in the statement of defence under section 23 of the Arbitration and Conciliation Act after the 2015 amendment?",
+   "expected": {
+    "support": "GRAPH_TRANSITION_FRAGMENTS",
+    "act": "arbitration-and-conciliation-act-1996",
+    "provision": "section:23",
+    "operation": "INSERT",
+    "amending": "arbitration-and-conciliation-amendment-act-2015",
+    "silver_pair_id": "mat_06d03c5ce4d0d00dc77ebdaa",
+    "states": {
+     "textual_drift": "DETERMINED",
+     "materiality": "PROVISIONAL",
+     "answer_change": "CONDITIONAL",
+     "risk": "OUT_OF_SCOPE",
+     "applicability": "NEEDS_FACTS"
+    },
+    "fingerprint": {
+     "wording_drift": "DETERMINED",
+     "rule_drift": "DETERMINED",
+     "outcome_drift": "NEEDS_FACTS"
+    }
+   },
+   "basis": "inserted sub-section (2A); the fragment shows the words were absent before, which does not prove the earlier law forbade counterclaims | drift: insertion has no earlier wording; drift-metrics-v3 (configs/metrics/drift_score.v3.json) computes no score when a side is missing."
+  },
+  {
+   "case_id": "mv-s173-deposit",
+   "stratum": "numeric_substitution_silver_undated",
+   "mode": "specific",
+   "query": "What amount must be deposited under section 173 of the Motor Vehicles Act after the 2019 amendment?",
+   "expected": {
+    "support": "GRAPH_TRANSITION_FRAGMENTS",
+    "act": "motor-vehicles-act-1988",
+    "provision": "section:173",
+    "operation": "SUBSTITUTE",
+    "amending": "motor-vehicles-amendment-act-2019",
+    "silver_pair_id": "mat_f110320fba1c8f219054c648",
+    "states": {
+     "textual_drift": "DETERMINED",
+     "materiality": "PROVISIONAL",
+     "answer_change": "DETERMINED",
+     "risk": "OUT_OF_SCOPE",
+     "applicability": "NEEDS_FACTS"
+    },
+    "fingerprint": {
+     "wording_drift": "DETERMINED",
+     "rule_drift": "DETERMINED",
+     "outcome_drift": "NEEDS_FACTS"
+    }
+   },
+   "basis": "ten thousand -> one lakh; no effective date in the graph"
+  },
+  {
+   "case_id": "cpc-s32-fine",
+   "stratum": "numeric_substitution_no_silver",
+   "mode": "specific",
+   "query": "What is the maximum fine a court can impose under section 32 of the Code of Civil Procedure after the 1999 amendment?",
+   "expected": {
+    "support": "GRAPH_TRANSITION_FRAGMENTS",
+    "act": "code-of-civil-procedure-1908",
+    "provision": "section:32",
+    "operation": "SUBSTITUTE",
+    "amending": "code-of-civil-procedure-amendment-act-1999",
+    "silver_pair_id": null,
+    "states": {
+     "textual_drift": "DETERMINED",
+     "materiality": "PROVISIONAL",
+     "answer_change": "DETERMINED",
+     "risk": "OUT_OF_SCOPE",
+     "applicability": "NEEDS_FACTS"
+    },
+    "fingerprint": {
+     "wording_drift": "DETERMINED",
+     "rule_drift": "DETERMINED",
+     "outcome_drift": "NEEDS_FACTS"
+    }
+   },
+   "basis": "five hundred -> five thousand rupees; no silver row"
+  },
+  {
+   "case_id": "mv-s181-penalty",
+   "stratum": "numeric_substitution_no_silver",
+   "mode": "specific",
+   "query": "What was the penalty under section 181 of the Motor Vehicles Act before and after the 2019 amendment?",
+   "expected": {
+    "support": "GRAPH_TRANSITION_FRAGMENTS",
+    "act": "motor-vehicles-act-1988",
+    "provision": "section:181",
+    "operation": "SUBSTITUTE",
+    "amending": "motor-vehicles-amendment-act-2019",
+    "silver_pair_id": null,
+    "states": {
+     "textual_drift": "DETERMINED",
+     "materiality": "PROVISIONAL",
+     "answer_change": "DETERMINED",
+     "risk": "OUT_OF_SCOPE",
+     "applicability": "NEEDS_FACTS"
+    },
+    "fingerprint": {
+     "wording_drift": "DETERMINED",
+     "rule_drift": "DETERMINED",
+     "outcome_drift": "NEEDS_FACTS"
+    }
+   },
+   "basis": "may extend to five hundred rupees -> of five thousand rupees"
+  },
+  {
+   "case_id": "sra-s11-discretion",
+   "stratum": "modal_substitution_no_silver",
+   "mode": "specific",
+   "query": "Is specific performance of a contract still discretionary under section 11 of the Specific Relief Act after the 2018 amendment?",
+   "expected": {
+    "support": "GRAPH_TRANSITION_FRAGMENTS",
+    "act": "specific-relief-act-1963",
+    "provision": "section:11",
+    "operation": "SUBSTITUTE",
+    "amending": "specific-relief-amendment-act-2018",
+    "silver_pair_id": null,
+    "states": {
+     "textual_drift": "DETERMINED",
+     "materiality": "PROVISIONAL",
+     "answer_change": "DETERMINED",
+     "risk": "OUT_OF_SCOPE",
+     "applicability": "NEEDS_FACTS"
+    },
+    "fingerprint": {
+     "wording_drift": "DETERMINED",
+     "rule_drift": "DETERMINED",
+     "outcome_drift": "NEEDS_FACTS"
+    }
+   },
+   "basis": "may, in the discretion of the court -> shall"
+  },
+  {
+   "case_id": "patents-s60-period",
+   "stratum": "period_substitution_no_silver",
+   "mode": "specific",
+   "query": "What time period applies under section 60 of the Patents Act after the 2002 amendment?",
+   "expected": {
+    "support": "GRAPH_TRANSITION_FRAGMENTS",
+    "act": "patents-act-1970",
+    "provision": "section:60",
+    "operation": "SUBSTITUTE",
+    "amending": "patents-amendment-act-2002",
+    "silver_pair_id": null,
+    "states": {
+     "textual_drift": "DETERMINED",
+     "materiality": "PROVISIONAL",
+     "answer_change": "DETERMINED",
+     "risk": "OUT_OF_SCOPE",
+     "applicability": "NEEDS_FACTS"
+    },
+    "fingerprint": {
+     "wording_drift": "DETERMINED",
+     "rule_drift": "DETERMINED",
+     "outcome_drift": "NEEDS_FACTS"
+    }
+   },
+   "basis": "one year -> eighteen months"
+  },
+  {
+   "case_id": "brega-s45zc-nominees",
+   "stratum": "numeric_substitution_silver",
+   "mode": "specific",
+   "query": "How many nominees can a depositor make under section 45ZC of the Banking Regulation Act after the 2025 amendment?",
+   "expected": {
+    "support": "GRAPH_TRANSITION_FRAGMENTS",
+    "act": "banking-regulation-act-1949",
+    "provision": "section:45ZC",
+    "operation": "SUBSTITUTE",
+    "amending": "banking-laws-amendment-act-2025",
+    "silver_pair_id": "mat_ca8210674f56599734ad7a8e",
+    "states": {
+     "textual_drift": "DETERMINED",
+     "materiality": "PROVISIONAL",
+     "answer_change": "DETERMINED",
+     "risk": "OUT_OF_SCOPE",
+     "applicability": "NEEDS_FACTS"
+    },
+    "fingerprint": {
+     "wording_drift": "DETERMINED",
+     "rule_drift": "INSUFFICIENT_EVIDENCE",
+     "outcome_drift": "NEEDS_FACTS"
+    }
+   },
+   "basis": "one person -> one or more persons not exceeding four | rule drift: the changed words (a count of nominees / who may sign) fall outside the eight supported fields, so the score is a flagged lower bound (rule_drift.v1). | rule-drift-v1.1: the changed words are not a supported rule field (a renamed term, a count, or who may sign), so no rule score is shown."
+  },
+  {
+   "case_id": "companies-s46-compare",
+   "stratum": "comparison_silver",
+   "mode": "specific",
+   "query": "Compare section 46 of the Companies Act before and after the Companies (Amendment) Act, 2015.",
+   "expected": {
+    "support": "GRAPH_TRANSITION_FRAGMENTS",
+    "act": "companies-act-2013",
+    "provision": "section:46",
+    "operation": "SUBSTITUTE",
+    "amending": "companies-amendment-act-2015",
+    "silver_pair_id": "mat_fdb2b87808bcb525a732632e",
+    "states": {
+     "textual_drift": "DETERMINED",
+     "materiality": "PROVISIONAL",
+     "answer_change": "NEEDS_FACTS",
+     "risk": "OUT_OF_SCOPE",
+     "applicability": "NEEDS_FACTS"
+    },
+    "fingerprint": {
+     "wording_drift": "DETERMINED",
+     "rule_drift": "INSUFFICIENT_EVIDENCE",
+     "outcome_drift": "NEEDS_FACTS"
+    }
+   },
+   "basis": "pure comparison question: the change itself is the answer; a situation is needed to say whether an answer changes | rule drift: the changed words (a count of nominees / who may sign) fall outside the eight supported fields, so the score is a flagged lower bound (rule_drift.v1). | rule-drift-v1.1: the changed words are not a supported rule field (a renamed term, a count, or who may sign), so no rule score is shown."
+  },
+  {
+   "case_id": "rti-s13-term",
+   "stratum": "substitution_no_silver",
+   "mode": "specific",
+   "query": "What is the term of office of the Chief Information Commissioner under section 13 of the Right to Information Act after the 2019 amendment?",
+   "expected": {
+    "support": "GRAPH_TRANSITION_FRAGMENTS",
+    "act": "right-to-information-act-2005",
+    "provision": "section:13",
+    "operation": "SUBSTITUTE",
+    "amending": "right-to-information-amendment-act-2019",
+    "silver_pair_id": null,
+    "states": {
+     "textual_drift": "DETERMINED",
+     "materiality": "PROVISIONAL",
+     "answer_change": "DETERMINED",
+     "risk": "OUT_OF_SCOPE",
+     "applicability": "NEEDS_FACTS"
+    },
+    "fingerprint": {
+     "wording_drift": "DETERMINED",
+     "rule_drift": "DETERMINED",
+     "outcome_drift": "NEEDS_FACTS"
+    }
+   },
+   "basis": "five years -> such term as may be prescribed by the Central Government"
+  },
+  {
+   "case_id": "it-s19-specific",
+   "stratum": "footnote_reconstruction",
+   "mode": "specific",
+   "query": "Compare Section 19 before and after the IT Amendment Act, 2008.",
+   "expected": {
+    "support": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+    "act": "it-act-2000-consolidated",
+    "provision": "section:19",
+    "operation": "SUBSTITUTE",
+    "amending": "it-amendment-act-2008",
+    "silver_pair_id": null,
+    "states": {
+     "textual_drift": "DETERMINED",
+     "materiality": "PROVISIONAL",
+     "answer_change": "NEEDS_FACTS",
+     "risk": "NEEDS_FACTS",
+     "applicability": "NEEDS_FACTS"
+    },
+    "fingerprint": {
+     "wording_drift": "DETERMINED",
+     "rule_drift": "INSUFFICIENT_EVIDENCE",
+     "outcome_drift": "NEEDS_FACTS"
+    }
+   },
+   "basis": "India Code footnote substitution 'Digital' -> 'electronic'; no silver row; risk rules exist for section 19 but need scenario facts | rule-drift-v1.1: the changed words are not a supported rule field (a renamed term, a count, or who may sign), so no rule score is shown."
+  },
+  {
+   "case_id": "it-s19-generic",
+   "stratum": "footnote_reconstruction_generic",
+   "mode": "generic",
+   "query": "Compare Section 19 before and after the IT Amendment Act, 2008.",
+   "expected": {
+    "support": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+    "act": "it-act-2000-consolidated",
+    "provision": "section:19",
+    "operation": "SUBSTITUTE",
+    "amending": "it-amendment-act-2008",
+    "silver_pair_id": null,
+    "states": {
+     "textual_drift": "DETERMINED",
+     "materiality": "PROVISIONAL",
+     "answer_change": "NEEDS_FACTS",
+     "risk": "NEEDS_FACTS",
+     "applicability": "NEEDS_FACTS"
+    },
+    "fingerprint": {
+     "wording_drift": "DETERMINED",
+     "rule_drift": "INSUFFICIENT_EVIDENCE",
+     "outcome_drift": "NEEDS_FACTS"
+    }
+   },
+   "basis": "same evidence as it-s19-specific | rule-drift-v1.1: the changed words are not a supported rule field (a renamed term, a count, or who may sign), so no rule score is shown."
+  },
+  {
+   "case_id": "it-s19-risk-match",
+   "stratum": "scenario_risk_rule_match",
+   "mode": "specific",
+   "query": "Compare Section 19 before and after the IT Amendment Act, 2008.",
+   "scenario": {
+    "reference_date": "2009-10-27",
+    "organization_type": "foreign_certifying_authority",
+    "industry": "trust_services",
+    "jurisdiction": "IN",
+    "activity": "certificate_recognition",
+    "facts": {
+     "gazette_notification": true,
+     "government_approval": true,
+     "recognition_in_force": true,
+     "regulatory_conditions_met": true,
+     "is_notified_electronic_signature": false,
+     "is_digital_signature": true
+    }
+   },
+   "expected": {
+    "support": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+    "act": "it-act-2000-consolidated",
+    "provision": "section:19",
+    "operation": "SUBSTITUTE",
+    "amending": "it-amendment-act-2008",
+    "silver_pair_id": null,
+    "states": {
+     "textual_drift": "DETERMINED",
+     "materiality": "PROVISIONAL",
+     "answer_change": "CONDITIONAL",
+     "risk": "CONDITIONAL",
+     "applicability": "CONDITIONAL"
+    },
+    "fingerprint": {
+     "wording_drift": "DETERMINED",
+     "rule_drift": "INSUFFICIENT_EVIDENCE",
+     "outcome_drift": "CONDITIONAL"
+    }
+   },
+   "basis": "registry rules it19-pre/post: same facts evaluated under each version; a digital-signature certificate that is not a notified electronic signature meets the earlier wording but not the later one. Applicability ASSUMED_FOR_DEMONSTRATION, so results are conditional. | rule-drift-v1.1: the changed words are not a supported rule field (a renamed term, a count, or who may sign), so no rule score is shown."
+  },
+  {
+   "case_id": "it-s19-risk-mismatch",
+   "stratum": "scenario_risk_rule_mismatch",
+   "mode": "specific",
+   "query": "Compare Section 19 before and after the IT Amendment Act, 2008.",
+   "scenario": {
+    "reference_date": "2015-06-01",
+    "organization_type": "foreign_certifying_authority",
+    "industry": "trust_services",
+    "jurisdiction": "IN",
+    "activity": "certificate_recognition",
+    "facts": {
+     "is_notified_electronic_signature": true
+    }
+   },
+   "expected": {
+    "support": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+    "act": "it-act-2000-consolidated",
+    "provision": "section:19",
+    "operation": "SUBSTITUTE",
+    "amending": "it-amendment-act-2008",
+    "silver_pair_id": null,
+    "states": {
+     "textual_drift": "DETERMINED",
+     "materiality": "PROVISIONAL",
+     "answer_change": "NEEDS_FACTS",
+     "risk": "INSUFFICIENT_EVIDENCE",
+     "applicability": "CONDITIONAL"
+    },
+    "fingerprint": {
+     "wording_drift": "DETERMINED",
+     "rule_drift": "INSUFFICIENT_EVIDENCE",
+     "outcome_drift": "NEEDS_FACTS"
+    }
+   },
+   "basis": "no registry rule covers reference date 2015-06-01 | answer change needs is_digital_signature to evaluate the earlier version; only the later version's fact was supplied. | rule-drift-v1.1: the changed words are not a supported rule field (a renamed term, a count, or who may sign), so no rule score is shown."
+  },
+  {
+   "case_id": "it-2008-privacy-ocr",
+   "stratum": "poor_ocr_unaligned",
+   "mode": "specific",
+   "query": "What changed in the IT Act amendment regarding data privacy?",
+   "expected": {
+    "support": "UNALIGNED_OR_ABSTAIN",
+    "act": "it-act-2000-consolidated",
+    "provision": null,
+    "operation": null,
+    "amending": "it-amendment-act-2008",
+    "silver_pair_id": null,
+    "states": {
+     "textual_drift": "INSUFFICIENT_EVIDENCE",
+     "materiality": "INSUFFICIENT_EVIDENCE",
+     "answer_change": "INSUFFICIENT_EVIDENCE",
+     "risk": "OUT_OF_SCOPE",
+     "applicability": "INSUFFICIENT_EVIDENCE"
+    },
+    "fingerprint": {
+     "wording_drift": "INSUFFICIENT_EVIDENCE",
+     "rule_drift": "INSUFFICIENT_EVIDENCE",
+     "outcome_drift": "INSUFFICIENT_EVIDENCE"
+    }
+   },
+   "basis": "IT Amendment Act 2008 has a known unreliable text layer; no provision named"
+  },
+  {
+   "case_id": "wrong-act-companies-competition",
+   "stratum": "wrong_act_rejection",
+   "mode": "specific",
+   "query": "Compare section 46 of the Companies Act before and after the Competition (Amendment) Act, 2023.",
+   "expected": {
+    "support": "UNALIGNED_OR_ABSTAIN",
+    "act": "companies-act-2013",
+    "provision": "section:46",
+    "operation": null,
+    "amending": null,
+    "silver_pair_id": null,
+    "states": {
+     "textual_drift": "INSUFFICIENT_EVIDENCE",
+     "materiality": "INSUFFICIENT_EVIDENCE",
+     "answer_change": "INSUFFICIENT_EVIDENCE",
+     "risk": "OUT_OF_SCOPE",
+     "applicability": "INSUFFICIENT_EVIDENCE"
+    },
+    "fingerprint": {
+     "wording_drift": "INSUFFICIENT_EVIDENCE",
+     "rule_drift": "INSUFFICIENT_EVIDENCE",
+     "outcome_drift": "INSUFFICIENT_EVIDENCE"
+    }
+   },
+   "basis": "the Competition (Amendment) Act 2023 does not amend the Companies Act; no transition links them"
+  },
+  {
+   "case_id": "companies-s105-footnote",
+   "stratum": "footnote_reconstruction_partial_answer_change_vs_text",
+   "mode": "specific",
+   "query": "What penalty applies under section 105 of the Companies Act after the amendment?",
+   "expected": {
+    "support": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+    "act": "companies-act-2013",
+    "provision": "section:105",
+    "operation": "SUBSTITUTE",
+    "amending": "companies-amendment-act-2019",
+    "silver_pair_id": null,
+    "states": {
+     "textual_drift": "DETERMINED",
+     "materiality": "PROVISIONAL",
+     "answer_change": "DETERMINED",
+     "risk": "OUT_OF_SCOPE",
+     "applicability": "NEEDS_FACTS"
+    },
+    "fingerprint": {
+     "wording_drift": "DETERMINED",
+     "rule_drift": "DETERMINED",
+     "outcome_drift": "NEEDS_FACTS"
+    }
+   },
+   "basis": "Corrected after source inspection (2026-10-13): consolidated Companies Act s.105(3) footnote 1 reads 'Subs. by Act 22 of 2019, s. 17, for “punishable with fine which may extend to five thousand rupees” (w.e.f. 2-11-2018)'. The graph transition is internal-checks-only, but the footnote is independent support. Footnotes 2-3 (Act 29 of 2020) cannot be reconstructed. Amount unchanged; fine becomes a penalty."
+  },
+  {
+   "case_id": "wildlife-s11-omission",
+   "stratum": "omission_unsupported",
+   "mode": "specific",
+   "query": "What was omitted from section 11 of the Wild Life (Protection) Act by the 2022 amendment?",
+   "expected": {
+    "support": "UNALIGNED_OR_ABSTAIN",
+    "act": "wild-life-protection-act-1972",
+    "provision": "section:11",
+    "operation": null,
+    "amending": "wild-life-protection-amendment-act-2022",
+    "silver_pair_id": null,
+    "states": {
+     "textual_drift": "INSUFFICIENT_EVIDENCE",
+     "materiality": "INSUFFICIENT_EVIDENCE",
+     "answer_change": "INSUFFICIENT_EVIDENCE",
+     "risk": "OUT_OF_SCOPE",
+     "applicability": "INSUFFICIENT_EVIDENCE"
+    },
+    "fingerprint": {
+     "wording_drift": "INSUFFICIENT_EVIDENCE",
+     "rule_drift": "INSUFFICIENT_EVIDENCE",
+     "outcome_drift": "INSUFFICIENT_EVIDENCE"
+    }
+   },
+   "basis": "OMIT transition is MACHINE_INTERNAL_CHECKS_ONLY"
+  },
+  {
+   "case_id": "factories-not-in-graph",
+   "stratum": "act_without_amendment_source",
+   "mode": "specific",
+   "query": "Compare section 2 of the Factories Act before and after the 2016 amendment.",
+   "expected": {
+    "support": "UNALIGNED_OR_ABSTAIN",
+    "act": "factories-act-1948",
+    "provision": "section:2",
+    "operation": null,
+    "amending": null,
+    "silver_pair_id": null,
+    "states": {
+     "textual_drift": "INSUFFICIENT_EVIDENCE",
+     "materiality": "INSUFFICIENT_EVIDENCE",
+     "answer_change": "INSUFFICIENT_EVIDENCE",
+     "risk": "OUT_OF_SCOPE",
+     "applicability": "INSUFFICIENT_EVIDENCE"
+    },
+    "fingerprint": {
+     "wording_drift": "INSUFFICIENT_EVIDENCE",
+     "rule_drift": "INSUFFICIENT_EVIDENCE",
+     "outcome_drift": "INSUFFICIENT_EVIDENCE"
+    }
+   },
+   "basis": "no Factories amending Act in the corpus"
+  },
+  {
+   "case_id": "cpa-mediation-general",
+   "stratum": "general_qa",
+   "mode": "specific",
+   "query": "What does the Consumer Protection Act say about mediation?",
+   "expected": {
+    "support": "NOT_A_COMPARISON",
+    "act": "consumer-protection-act-2019",
+    "provision": null,
+    "operation": null,
+    "amending": null,
+    "silver_pair_id": null,
+    "states": {
+     "textual_drift": "OUT_OF_SCOPE",
+     "materiality": "OUT_OF_SCOPE",
+     "answer_change": "OUT_OF_SCOPE",
+     "risk": "OUT_OF_SCOPE",
+     "applicability": "OUT_OF_SCOPE"
+    },
+    "fingerprint": {
+     "wording_drift": "OUT_OF_SCOPE",
+     "rule_drift": "OUT_OF_SCOPE",
+     "outcome_drift": "OUT_OF_SCOPE"
+    }
+   },
+   "basis": "general question about one Act"
+  },
+  {
+   "case_id": "thoa-punishment-general",
+   "stratum": "general_qa",
+   "mode": "generic",
+   "query": "What is the punishment for removal of human organs without authority under the Transplantation of Human Organs Act?",
+   "expected": {
+    "support": "NOT_A_COMPARISON",
+    "act": "transplantation-of-human-organs-and-tissues-act-1994",
+    "provision": null,
+    "operation": null,
+    "amending": null,
+    "silver_pair_id": null,
+    "states": {
+     "textual_drift": "OUT_OF_SCOPE",
+     "materiality": "OUT_OF_SCOPE",
+     "answer_change": "OUT_OF_SCOPE",
+     "risk": "OUT_OF_SCOPE",
+     "applicability": "OUT_OF_SCOPE"
+    },
+    "fingerprint": {
+     "wording_drift": "OUT_OF_SCOPE",
+     "rule_drift": "OUT_OF_SCOPE",
+     "outcome_drift": "OUT_OF_SCOPE"
+    }
+   },
+   "basis": "general question; no comparison requested"
+  },
+  {
+   "case_id": "jan-vishwas-general",
+   "stratum": "general_qa_amending_act",
+   "mode": "generic",
+   "query": "What happened in the Jan Vishwas Act?",
+   "expected": {
+    "support": "NOT_A_COMPARISON",
+    "act": null,
+    "provision": null,
+    "operation": null,
+    "amending": null,
+    "silver_pair_id": null,
+    "states": {
+     "textual_drift": "OUT_OF_SCOPE",
+     "materiality": "OUT_OF_SCOPE",
+     "answer_change": "OUT_OF_SCOPE",
+     "risk": "OUT_OF_SCOPE",
+     "applicability": "OUT_OF_SCOPE"
+    },
+    "fingerprint": {
+     "wording_drift": "OUT_OF_SCOPE",
+     "rule_drift": "OUT_OF_SCOPE",
+     "outcome_drift": "OUT_OF_SCOPE"
+    }
+   },
+   "basis": "overview of a multi-Act amending instrument"
+  },
+  {
+   "case_id": "dm-s31-frequency",
+   "stratum": "frequency_substitution_no_silver",
+   "mode": "specific",
+   "query": "How often must the district disaster management plan be reviewed under section 31 of the Disaster Management Act after the 2025 amendment?",
+   "expected": {
+    "support": "GRAPH_TRANSITION_FRAGMENTS",
+    "act": "disaster-management-act-2005",
+    "provision": "section:31",
+    "operation": "SUBSTITUTE",
+    "amending": "disaster-management-amendment-act-2025",
+    "silver_pair_id": null,
+    "states": {
+     "textual_drift": "DETERMINED",
+     "materiality": "PROVISIONAL",
+     "answer_change": "DETERMINED",
+     "risk": "OUT_OF_SCOPE",
+     "applicability": "NEEDS_FACTS"
+    },
+    "fingerprint": {
+     "wording_drift": "DETERMINED",
+     "rule_drift": "DETERMINED",
+     "outcome_drift": "NEEDS_FACTS"
+    }
+   },
+   "basis": "annually -> at least once in every two years or earlier"
+  },
+  {
+   "case_id": "dm-s31-month6-unchanged",
+   "stratum": "numeric_period_scenario_no_flip",
+   "mode": "specific",
+   "query": "How often must the district disaster management plan be reviewed under section 31 of the Disaster Management Act after the 2025 amendment?",
+   "expected": {
+    "support": "GRAPH_TRANSITION_FRAGMENTS",
+    "act": "disaster-management-act-2005",
+    "provision": "section:31",
+    "operation": "SUBSTITUTE",
+    "amending": "disaster-management-amendment-act-2025",
+    "silver_pair_id": null,
+    "states": {
+     "textual_drift": "DETERMINED",
+     "materiality": "PROVISIONAL",
+     "answer_change": "CONDITIONAL",
+     "risk": "OUT_OF_SCOPE",
+     "applicability": "NEEDS_FACTS"
+    },
+    "fingerprint": {
+     "wording_drift": "DETERMINED",
+     "rule_drift": "DETERMINED",
+     "outcome_drift": "CONDITIONAL"
+    },
+    "fingerprint_labels": {
+     "outcome_drift": "Unchanged"
+    }
+   },
+   "basis": "annually (12 months) -> at least once in every two years (24 months): a review 6 months ago is in time under both.",
+   "scenario": {
+    "facts": {
+     "elapsed_months": 6
+    }
+   }
+  },
+  {
+   "case_id": "dm-s31-month18-changed",
+   "stratum": "numeric_period_scenario_flip",
+   "mode": "specific",
+   "query": "How often must the district disaster management plan be reviewed under section 31 of the Disaster Management Act after the 2025 amendment?",
+   "expected": {
+    "support": "GRAPH_TRANSITION_FRAGMENTS",
+    "act": "disaster-management-act-2005",
+    "provision": "section:31",
+    "operation": "SUBSTITUTE",
+    "amending": "disaster-management-amendment-act-2025",
+    "silver_pair_id": null,
+    "states": {
+     "textual_drift": "DETERMINED",
+     "materiality": "PROVISIONAL",
+     "answer_change": "CONDITIONAL",
+     "risk": "OUT_OF_SCOPE",
+     "applicability": "NEEDS_FACTS"
+    },
+    "fingerprint": {
+     "wording_drift": "DETERMINED",
+     "rule_drift": "DETERMINED",
+     "outcome_drift": "CONDITIONAL"
+    },
+    "fingerprint_labels": {
+     "outcome_drift": "Changed"
+    }
+   },
+   "basis": "18 months is late under 'annually' but in time under 'every two years': the answer flips.",
+   "scenario": {
+    "facts": {
+     "elapsed_months": 18
+    }
+   }
+  },
+  {
+   "case_id": "dm-s31-fact-in-question",
+   "stratum": "fact_stated_in_question",
+   "mode": "specific",
+   "query": "After 18 months without a review, is the district disaster management plan overdue under section 31 of the Disaster Management Act after the 2025 amendment?",
+   "expected": {
+    "support": "GRAPH_TRANSITION_FRAGMENTS",
+    "act": "disaster-management-act-2005",
+    "provision": "section:31",
+    "operation": "SUBSTITUTE",
+    "amending": "disaster-management-amendment-act-2025",
+    "silver_pair_id": null,
+    "states": {
+     "textual_drift": "DETERMINED",
+     "materiality": "PROVISIONAL",
+     "answer_change": "CONDITIONAL",
+     "risk": "OUT_OF_SCOPE",
+     "applicability": "NEEDS_FACTS"
+    },
+    "fingerprint": {
+     "wording_drift": "DETERMINED",
+     "rule_drift": "DETERMINED",
+     "outcome_drift": "CONDITIONAL"
+    },
+    "fingerprint_labels": {
+     "outcome_drift": "Changed"
+    }
+   },
+   "basis": "The 18 months are read from the question itself; the same flip as dm-s31-month18-changed."
+  }
+ ]
+}

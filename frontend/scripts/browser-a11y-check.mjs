@@ -22,7 +22,7 @@ const report = {};
 async function load(width, height = 900, mobile = false) {
   await send("Emulation.setDeviceMetricsOverride", { width, height, deviceScaleFactor: 1, mobile });
   await send("Page.navigate", { url: URL_ });
-  for (let i = 0; i < 120; i++) { await sleep(500); if (await evaluate("!!document.querySelector('.comparison-panel')")) break; }
+  for (let i = 0; i < 120; i++) { await sleep(500); if (await evaluate("!!document.querySelector('[role=tablist]')")) break; }
   await sleep(500);
 }
 
@@ -32,17 +32,22 @@ const focusInfo = `(() => { const el = document.activeElement; if (!el || el ===
   return { tag: el.tagName, text: (el.getAttribute('aria-label') || el.innerText || el.value || el.getAttribute('href') || '').trim().slice(0, 60),
     visibleFocus: cs.outlineStyle !== 'none' && parseFloat(cs.outlineWidth) > 0 || cs.boxShadow !== 'none', size: [Math.round(r.width), Math.round(r.height)], inViewport: r.bottom > 0 && r.top < innerHeight }; })()`;
 const stops = [];
+// Tab to the analysis views, arrow to Scores & Method (ARIA tabs), then Tab into its panel to the wording explanation.
 // Native date inputs style their inner focus a tick after the key event, so each stop settles briefly.
-for (let i = 0; i < 120; i++) { await key("Tab", "Tab", 9); await sleep(150); const f = await evaluate(focusInfo); if (!f) continue; stops.push(f); if (f.text.startsWith("How wording drift was calculated")) break; }
+for (let i = 0; i < 120; i++) { await key("Tab", "Tab", 9); await sleep(150); const f = await evaluate(focusInfo); if (!f) continue; stops.push(f); if (await evaluate("document.activeElement.getAttribute('role') === 'tab'")) break; }
+await key("ArrowRight", "ArrowRight", 39); await key("ArrowRight", "ArrowRight", 39); await sleep(300);
+report.arrowsReachScores = await evaluate("document.activeElement.id === 'tab-scores' && document.activeElement.getAttribute('aria-selected') === 'true'");
+for (let i = 0; i < 60; i++) { await key("Tab", "Tab", 9); await sleep(150); const f = await evaluate(focusInfo); if (!f) continue; stops.push(f); if (f.text.startsWith("How wording drift was calculated")) break; }
 report.tabStops = stops.length; report.noVisibleFocus = stops.filter((s) => !s.visibleFocus); report.zeroSize = stops.filter((s) => !s.size[0] || !s.size[1]);
 report.reachedSummary = stops.at(-1)?.text?.startsWith("How wording drift was calculated") || false;
 report.pdfLinkReachable = stops.some((s) => s.text.startsWith("Open source PDF at page"));
 report.focusScrolledIntoView = stops.every((s) => s.inViewport);
-if (report.reachedSummary) { await key("Enter", "Enter", 13); await sleep(200); report.enterOpensDetails = await evaluate("document.querySelector('.fp-details').open"); await key(" ", "Space", 32); await sleep(200); report.spaceClosesDetails = !(await evaluate("document.querySelector('.fp-details').open")); }
+if (report.reachedSummary) { const was = await evaluate("document.querySelector('.fp-details').open"); await key("Enter", "Enter", 13); await sleep(200); report.enterTogglesDetails = (await evaluate("document.querySelector('.fp-details').open")) !== was; await key(" ", "Space", 32); await sleep(200); report.spaceTogglesBack = (await evaluate("document.querySelector('.fp-details').open")) === was; }
 report.offscreen = stops.filter((s) => !s.inViewport).map((s) => `${s.tag}:${s.text}`);
 report.stopsSample = stops.slice(0, 40).map((s) => `${s.tag}:${s.text}`);
 
-// 2. Accessibility tree as exposed to assistive technology.
+// 2. Accessibility tree as exposed to assistive technology (Compare & Evidence view, where the before/after text lives).
+await evaluate("document.getElementById('tab-evidence').click(), true"); await sleep(400);
 const { nodes } = await send("Accessibility.getFullAXTree");
 const named = (n) => (n.name?.value || "").trim();
 const interactive = new Set(["button", "link", "textbox", "combobox", "checkbox", "radio", "tab", "menuitem", "DisclosureTriangle", "switch"]);
@@ -60,13 +65,15 @@ await shot("desk-1280");
 report.narrow = {};
 for (const w of [320, 360, 414, 480]) {
   await load(w, 800, true);
-  await evaluate("document.querySelector('.fp-details') && (document.querySelector('.fp-details').open = true)"); await sleep(300);
-  report.narrow[w] = await evaluate(`(() => { const W = document.documentElement.clientWidth; const over = [...document.querySelectorAll('body *')].filter(el => { const r = el.getBoundingClientRect(); return r.width && r.right > W + 1 && getComputedStyle(el).position !== 'fixed'; });
+  for (const view of ["answer", "scores"]) {
+  await evaluate(`document.getElementById('tab-${view}').click(), true`); await sleep(300);
+  report.narrow[`${w}-${view}`] = await evaluate(`(() => { const W = document.documentElement.clientWidth; const over = [...document.querySelectorAll('body *')].filter(el => { const r = el.getBoundingClientRect(); return r.width && r.right > W + 1 && getComputedStyle(el).position !== 'fixed'; });
     const leaf = over.filter(el => !over.some(o => o !== el && el.contains(o)));
     return { scrollWidth: document.documentElement.scrollWidth, clientWidth: W, overflowing: leaf.slice(0, 8).map(el => el.tagName + '.' + (el.className || '').toString().split(' ')[0] + ':' + Math.round(el.getBoundingClientRect().right)),
       tinyText: [...document.querySelectorAll('body *')].filter(el => el.childNodes.length && [...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim()) && parseFloat(getComputedStyle(el).fontSize) < 10).length,
       smallTargets: [...document.querySelectorAll('a,button,summary')].filter(el => { const r = el.getBoundingClientRect(); return r.width && r.height < 24; }).length }; })()`);
-  await shot(`w${w}`);
+  await shot(`w${w}-${view}`);
+  }
 }
 writeFileSync(`${OUT}/report.json`, JSON.stringify(report, null, 1));
 await fetch(`${process.env.CDP_URL || "http://127.0.0.1:9333"}/json/close/${target.id}`); ws.close();
@@ -74,7 +81,7 @@ console.log(JSON.stringify(report, null, 1));
 const text = nodes.filter((n) => n.role?.value === "StaticText").map((n) => n.name?.value || "").join("");
 const failures = [
   report.noVisibleFocus.length && "focus without a visible indicator", report.unnamedInteractive.length && "unnamed controls",
-  !report.reachedSummary && "score explanation not reachable by Tab", !report.enterOpensDetails && "Enter does not open the score explanation",
+  !report.reachedSummary && "score explanation not reachable by Tab", !report.arrowsReachScores && "arrow keys do not move between analysis views", !report.enterTogglesDetails && "Enter does not toggle the score explanation",
   !text.includes("[removed:") && "no screen-reader cue for removed words",
   ...Object.entries(report.narrow).map(([w, v]) => v.scrollWidth > v.clientWidth && `horizontal scroll at ${w}px`),
 ].filter(Boolean);

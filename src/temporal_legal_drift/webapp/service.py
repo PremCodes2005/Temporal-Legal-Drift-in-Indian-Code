@@ -130,7 +130,15 @@ class DashboardService:
             raise ValueError("mode must be specific or generic")
         if set(value) - {"query", "mode", "scenario"}:
             raise ValueError("query accepts only query, mode and scenario")
-        return self.rag.answer(query, mode, scenario=value.get("scenario"))  # scenario is validated at the RAG boundary
+        from temporal_legal_drift.rag.analysis import store
+
+        # Stored once per analysis ID so every view and shared link shows the same result.
+        return store(self.root, self.rag.answer(query, mode, scenario=value.get("scenario")))  # scenario is validated at the RAG boundary
+
+    def get_analysis(self, identifier: str) -> dict[str, object]:
+        from temporal_legal_drift.rag.analysis import load
+
+        return load(self.root, identifier)
 
     def rebuild_rag_index(self) -> dict[str, object]:
         return self.rag.rebuild()

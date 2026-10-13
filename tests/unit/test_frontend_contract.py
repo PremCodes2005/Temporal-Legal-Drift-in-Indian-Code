@@ -7,7 +7,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-APP = "".join((ROOT / "frontend/src" / name).read_text(encoding="utf-8") for name in ("App.jsx", "ResultInsights.jsx", "SourceHealth.jsx"))
+APP = "".join((ROOT / "frontend/src" / name).read_text(encoding="utf-8") for name in ("App.jsx", "SharedPanels.jsx", "AnalysisWorkspace.jsx", "ResultInsights.jsx", "SourceHealth.jsx"))
 
 
 class FrontendContractTests(unittest.TestCase):

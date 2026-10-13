@@ -71,6 +71,14 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
                 except KeyError:
                     self._json(HTTPStatus.NOT_FOUND, {"error": "Run not found"})
                 return
+            if path.startswith("/api/analyses/"):
+                try:
+                    self._json(HTTPStatus.OK, self.dashboard_service.get_analysis(path.removeprefix("/api/analyses/")))
+                except ValueError as error:
+                    self._json(HTTPStatus.BAD_REQUEST, {"error": str(error)})
+                except KeyError:
+                    self._json(HTTPStatus.NOT_FOUND, {"error": "Analysis not found"})
+                return
             if path.startswith("/corpus/"):
                 self._serve_file(self.project_root / "data/corpus/pdfs", path.removeprefix("/corpus/"))
                 return

@@ -17,7 +17,7 @@ from typing import Any, Callable
 from .metrics import calculate_drift_metrics
 from .versions import VERSION_CLAIMS
 
-FINGERPRINT_VERSION = "legal-change-fingerprint-v1"
+FINGERPRINT_VERSION = "legal-change-fingerprint-v1.1"  # rule-drift-v1.1; explicit limit kinds
 CONFIG_DIR = Path(__file__).resolve().parents[3] / "configs/metrics"
 MARKER = re.compile(r"(\d+)\[([^\]]{1,800})\]")
 FOOTNOTES = re.compile(r"\s+\d+\.\s+(?:Subs|Ins|Omitted|Added)\.", re.I)
@@ -38,10 +38,13 @@ def _config(name: str) -> dict[str, Any]:
 
 def _component(state: str, *, value: float | None = None, label: str | None = None, summary: str, reason: str,
                next_action: str | None = None, method: str, evidence_ids: list[str] | None = None, details: dict[str, Any] | None = None,
-               needs: list[dict[str, Any]] | None = None, uncertainty: list[str] | None = None) -> dict[str, Any]:
+               needs: list[dict[str, Any]] | None = None, uncertainty: list[str] | None = None, limit_kind: str | None = None) -> dict[str, Any]:
+    from .determinations import limit_for
+
+    kind = limit_kind or ("method" if "unclassified_change" in (uncertainty or []) else None)
     return {"state": state, "value": value, "label": label, "summary": summary, "reason": reason, "next_action": next_action,
             "method": method, "evidence_ids": evidence_ids or [], "details": details or {}, "needs": needs or [],
-            "uncertainty": uncertainty or [], "legal_validation": "UNVERIFIED"}
+            "uncertainty": uncertainty or [], "limit": limit_for(state, reason, kind), "legal_validation": "UNVERIFIED"}
 
 
 # ---------------- clauses ----------------
@@ -189,6 +192,12 @@ PROHIBITION = re.compile(r"\bshall not\b|\bmust not\b|\bno\s+(?:\w+\s+){0,3}shal
 OBLIGATION = re.compile(r"\b(?:shall|must)\b(?!\s+not)", re.I)
 # "as may be decided" and "may be prescribed" delegate or describe; they do not grant a permission.
 PERMISSION = re.compile(r"(?<!\bas\s)\bmay\b(?!\s+(?:be\s+(?:prescribed|notified|specified|decided|determined|made|required|necessary)|extend|not))|\bdiscretion\b", re.I)
+# An actor is a person or body that can act; a certificate, a sum or an offence is not (rule-drift-v1.1).
+ACTOR_HEAD = re.compile(r"\b(?:Central Government|State Government|Government|Commission|Court|court|Tribunal|tribunal|Authority|authority|Board|Committee|"
+                        r"Controller|Registrar|Officer|officer|Magistrate|Collector|Commissioner|Inspector|Police|police|Director|director|Chairperson|"
+                        r"Secretary|Member|member|person|party|parties|applicant|respondent|claimant|employer|employee|company|depositor|licensee|owner|"
+                        r"driver|auditor|liquidator|creditor|debtor|arbitrator|mediator|trustee|bank|Bank|Council|Minister|insurer|assessee)s?\b")
+LEAD_IN = re.compile(r"^\s*(?:\d+\s+)?(?:Provided\s+(?:further\s+|also\s+)?that\s+|it is hereby (?:declared|clarified) that\s+|and\s+|or\s+)", re.I)
 FIELDS = ("modality", "penalty", "monetary_threshold", "deadline", "exception", "scope", "actor", "action")
 
 
@@ -240,13 +249,22 @@ def _extract(text: str, sentences: list[tuple[int, int]]) -> dict[str, list[dict
         for m in SCOPE.finditer(sentence):
             add("scope", m.group(0).strip(" ,"), s0 + m.start(), s0 + m.end())
         modal = re.search(r"\b(?:shall|must|may)\b", sentence)
+        actor_found = False
         if modal:
             head = sentence[:modal.start()]
             cut = max(head.rfind(","), head.rfind("—"), head.rfind(")"))
-            actor = head[cut + 1:].strip()
-            if 1 <= len(actor.split()) <= 14:
-                start = s0 + head.index(actor, cut + 1)
-                add("actor", actor, start, start + len(actor))
+            phrase = head[cut + 1:]
+            lead = LEAD_IN.match(phrase)
+            subject = phrase[lead.end():] if lead else phrase
+            # The head noun decides: "the Certificate issued by such Certifying Authority" is a certificate, not an authority.
+            head_np = re.split(r"\b(?:issued|made|granted|appointed|referred|authorised|seizing|by|under|of|which|who|whose|for|in respect)\b", subject, maxsplit=1)[0]
+            matches = list(ACTOR_HEAD.finditer(head_np))
+            match = matches[-1] if matches else None
+            if match and 1 <= len(subject.split()) <= 14 and not re.match(r"\s*(?:nothing|no\s|it\b|such rules|all sums|offence)", subject, re.I):
+                value = head_np[:match.end()].strip()  # the noun phrase up to its person or body head
+                start = s0 + cut + 1 + (lead.end() if lead else 0) + subject.index(value)
+                add("actor", value, start, start + len(value))
+                actor_found = True
             rest_start = modal.end()
             rest = sentence[rest_start:]
             parenthetical = re.match(r"\s*,[^,]{1,120},", rest)  # "may, in the discretion of the court, be enforced"
@@ -254,7 +272,7 @@ def _extract(text: str, sentences: list[tuple[int, int]]) -> dict[str, list[dict
                 rest_start += parenthetical.end()
                 rest = sentence[rest_start:]
             verb = re.match(r"[\s,]*(?:(?:also|further|thereafter|then)\s+)?((?:not\s+)?(?:be\s+|have\s+)?[A-Za-z][A-Za-z’'-]*)", rest)
-            if verb:
+            if verb and actor_found:  # an action is only meaningful for a person or body that can act
                 begin = s0 + rest_start + verb.start(1)
                 add("action", verb.group(1), begin, begin + len(verb.group(1)))
     return found
@@ -275,7 +293,7 @@ def aligned_operative(before: str, after: str) -> tuple[list[tuple[int, int]], l
 def rule_delta(pair: dict[str, Any], spans: list[dict[str, Any]]) -> dict[str, Any]:
     before_sentences, after_sentences = aligned_operative(pair["before"], pair["after"])
     before, after = _extract(pair["before"], before_sentences), _extract(pair["after"], after_sentences)
-    weights = {name: spec["weight"] for name, spec in _config("rule_drift.v1.json")["fields"].items()}
+    weights = {name: spec["weight"] for name, spec in _config("rule_drift.v1.1.json")["fields"].items()}
     rows, uncertain = [], []
     for name in FIELDS:
         left = {_value_norm(v["value"]) for v in before[name]}
@@ -324,7 +342,7 @@ def validate_proposal(proposal: Any, pair: dict[str, Any]) -> list[dict[str, Any
 
 
 def rule_drift(pair: dict[str, Any], spans: list[dict[str, Any]], proposer: Callable[[dict[str, Any]], Any] | None = None) -> dict[str, Any]:
-    method = "rule-drift-v1"
+    method = "rule-drift-v1.1"
     delta = rule_delta(pair, spans)
     llm = {"status": "NOT_USED"}
     if proposer is not None:
@@ -343,13 +361,19 @@ def rule_drift(pair: dict[str, Any], spans: list[dict[str, Any]], proposer: Call
             llm = {"status": "FAILED_DETERMINISTIC_RESULT_USED", "error": type(error).__name__}
     score = sum(row["contribution"] for row in delta["fields"])
     changed = [row["field"] for row in delta["fields"] if row["contribution"]]
-    details = {**delta, "weights_config": "configs/metrics/rule_drift.v1.json", "llm_proposal": llm,
+    details = {**delta, "weights_config": "configs/metrics/rule_drift.v1.1.json", "llm_proposal": llm,
                "formula": "sum of weights of fields that were added, removed or changed",
                "calculation": " + ".join(f"{row['field']} {row['weight']}" for row in delta["fields"] if row["contribution"]) + f" = {score}" if changed else "0 (no rule field changed)",
                "lower_bound": bool(delta["uncertain_fields"])}
     if not changed and "unclassified_change" in delta["uncertain_fields"]:
-        summary = "The operative wording changed in a way none of the supported rule fields captures, so 0 is only a lower bound."
-    elif not changed:
+        # No supported field explains the change: no score is shown (a 0 or a guessed field would mislead).
+        return _component("INSUFFICIENT_EVIDENCE", method=method, label="Not scored", evidence_ids=sorted(set(pair["before_evidence"] + pair["after_evidence"])),
+                          details={**details, "unscored_reason": "UNSUPPORTED_RULE_FIELD"}, uncertainty=["unclassified_change"],
+                          summary="These exact words changed, but the change is not one of the rule fields this method can extract.",
+                          reason="Supported fields: duty, permission, prohibition, deadline, amount, penalty, exception, scope, a named person or body, "
+                                 "and what they must do. A change outside these (for example a renamed term or a count) is not scored.",
+                          next_action="Read the changed words under Compare & Evidence; queue the change for review if it matters.")
+    elif not changed:  # noqa: SIM114
         summary = "No rule field changed: the edit does not alter who must do what, when, or with what consequence."
     else:
         summary = "Changed rule fields: " + ", ".join(f.replace("_", " ") for f in changed) + "."
@@ -461,8 +485,10 @@ def outcome_drift(delta_component: dict[str, Any] | None, scenario: dict[str, An
     if registry_comparison and registry_comparison.get("state") == "COMPARED":
         first, last = registry_comparison["outcomes"][0], registry_comparison["outcomes"][-1]
         meets = lambda o: "does not meet the modelled rule" if o["risk_flag"] else "meets the modelled rule"  # noqa: E731
-        evaluated.append({"field": "obligation_registry", "decisive_fact": "your facts under each version's modelled rule",
-                          "before_answer": meets(first), "after_answer": meets(last)})
+        decisive = ", ".join(sorted({o.get("decisive_fact") or "" for o in registry_comparison["outcomes"]} - {""})) or "your facts"
+        evaluated.append({"field": "obligation_registry", "decisive_fact": decisive.replace("_", " ") + " under each version's modelled rule",
+                          "before_answer": meets(first), "after_answer": meets(last), "assumes": registry_comparison.get("assumes")})
+
     elif registry_comparison and registry_comparison.get("state") == "NEEDS_FACTS":
         for item in registry_comparison["needs"]:
             if all(n["key"] != item["key"] for n in needs):
@@ -471,11 +497,19 @@ def outcome_drift(delta_component: dict[str, Any] | None, scenario: dict[str, An
         row["changed"] = row["before_answer"] != row["after_answer"]
     flips = [row for row in evaluated if row["changed"]]
     controlled = _controlled(rows)
-    details = {"evaluated": evaluated, "not_evaluable": not_evaluable, "controlled_scenarios": controlled,
+    assumptions = [row["assumes"] for row in evaluated if row.get("assumes")]
+    details = {"evaluated": evaluated, "not_evaluable": not_evaluable, "controlled_scenarios": controlled, "assumptions": assumptions,
                "compat_percent_definition": "100 = a supported answer flip for your facts; 0 = no supported flip; null = cannot determine",
                "applicability": applicability_note}
     condition = (" Which version governs your date is reported separately under applicability." if applicability_note else "")
-    if not changed and not evaluated:
+    unscored = delta_component["details"].get("unscored_reason") == "UNSUPPORTED_RULE_FIELD"
+    if not changed and not evaluated and not needs and unscored:
+        # "Not scored" is not "no change": the changed words exist but are outside the supported fields.
+        return _component("INSUFFICIENT_EVIDENCE", label="Cannot determine", method=method, details={**details, "compat_percent": None},
+                          summary="Cannot tell whether your answer changes.", limit_kind="method",
+                          reason="The change is not one of the supported rule fields, so it cannot be applied to your facts.",
+                          next_action="Read the changed words under Compare & Evidence.")
+    if not changed and not evaluated and not needs:
         return _component("DETERMINED", value=0.0, label="Unchanged", method=method, details={**details, "compat_percent": 0},
                           summary="No rule field changed, so no scenario answer can flip.", reason="The rule delta is empty." + condition)
     if flips:
@@ -484,7 +518,8 @@ def outcome_drift(delta_component: dict[str, Any] | None, scenario: dict[str, An
                  + "; ".join(r[f"{applies}_answer"] for r in flips) + "." if applies else "")
         return _component("CONDITIONAL", value=100.0, label="Changed", method=method, details={**details, "compat_percent": 100, "applies": applies},
                           summary=f"Your answer changes. {decisive}.{yours}",
-                          reason="Your facts were applied to the before and after rules; at least one supported answer flips." + condition)
+                          reason="Your facts were applied to the before and after rules; at least one supported answer flips."
+                                 + (" Assumes " + "; ".join(assumptions) + "." if assumptions else "") + condition)
     if needs or not_evaluable:
         missing = ", ".join(n["label"] for n in needs) if needs else "; ".join(not_evaluable)
         return _component("NEEDS_FACTS" if needs else "INSUFFICIENT_EVIDENCE", label="Cannot determine", method=method,
@@ -560,6 +595,6 @@ def build_fingerprint(versions: dict[str, Any], scenario: dict[str, Any] | None,
         summary="Add your situation to see whether your answer changes.",
         reason="Outcome drift applies your facts to both rules; no facts were given.",
         next_action="Add the facts asked for below and re-run.",
-        needs=outcome_drift(rules, {"facts": {}}, None, None)["needs"], details={"compat_percent": None})
+        needs=outcome_drift(rules, {"facts": {}}, registry_comparison, None)["needs"], details={"compat_percent": None}, limit_kind="facts")
     return {"version": FINGERPRINT_VERSION, "wording_drift": wording, "rule_drift": rules, "outcome_drift": outcome,
             "note": "Three separate measures; never averaged. Neither wording nor rule drift sets risk."}

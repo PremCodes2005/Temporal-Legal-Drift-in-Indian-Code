@@ -12,16 +12,17 @@ from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
-from .compose import compose_general_answer, compose_out_of_scope, compose_version_answer, section_answer
-from .determinations import DETERMINATIONS_VERSION, answer_change, applicability, materiality, risk, textual_drift, validate_scenario
-from .fingerprint import build_fingerprint, validate_proposal
+from .compose import COMPOSITION_VERSION, compose_general_answer, compose_out_of_scope, compose_version_answer, section_answer
+from .analysis import analysis_id, facts_from_question, merge_scenario, scenario_request
+from .determinations import DETERMINATIONS_VERSION, limit_for, answer_change, applicability, materiality, risk, textual_drift, validate_scenario
+from .fingerprint import FINGERPRINT_VERSION, build_fingerprint, validate_proposal
 from .indiacode import IndiaCodeLiveRepository, source_guidance
-from .metrics import calculate_drift_metrics
+from .metrics import METRICS_CONTRACT_VERSION, calculate_drift_metrics
 from .question import ActCatalog, QuestionFrame, parse_question
 from .retriever import HybridRetriever, RetrievedChunk
 from .versions import VERSION_CLAIMS, VersionSelector
 
-ANSWER_CONTRACT_VERSION = "rag-answer-v3"  # v3 adds the Legal Change Fingerprint (ADR 0015)
+ANSWER_CONTRACT_VERSION = "rag-answer-v4"  # v4: analysis IDs, explicit limit kinds, minimum-facts request (ADR 0016)
 
 
 INTENT_PATTERNS = {
@@ -101,19 +102,30 @@ class RagPipeline:
             raise ValueError("query exceeds 4000 characters")
         if mode not in {"specific", "generic"}:
             raise ValueError("mode must be specific or generic")
-        facts = validate_scenario(scenario)
+        stated = validate_scenario(scenario)
         catalog, selector = self._components()
-        frame = parse_question(query, catalog, reference_date=(facts or {}).get("reference_date"))
+        frame = parse_question(query, catalog, reference_date=(stated or {}).get("reference_date"))
+        # Facts already written in the question are used; anything entered in the form overrides them.
+        facts, sources = merge_scenario(stated or {}, facts_from_question(query), frame.reference_date)
+        facts = validate_scenario(facts) if facts else None
         if frame.asks_about_versions:
-            return self._versioned_answer(query, mode, frame, facts, catalog, selector)
-        if frame.principal is None and frame.unresolved_act_phrases:
-            return self._out_of_scope_answer(query, mode, frame)
-        restrict = {frame.principal.entry_id} if frame.principal else None
-        focus = selector.section_chunk(frame.principal.entry_id, frame.sections[0]) if frame.principal and frame.sections else None
-        if focus is None and frame.principal and frame.focus_terms:
-            focus = self._topic_section(query, frame)
-        response = self._legacy_answer(query, mode, restrict=restrict, focus_chunk=focus)
-        return self._attach_general(response, frame, facts, mode, focus)
+            response = self._versioned_answer(query, mode, frame, facts, catalog, selector)
+        elif frame.principal is None and frame.unresolved_act_phrases:
+            response = self._out_of_scope_answer(query, mode, frame)
+        else:
+            restrict = {frame.principal.entry_id} if frame.principal else None
+            focus = selector.section_chunk(frame.principal.entry_id, frame.sections[0]) if frame.principal and frame.sections else None
+            if focus is None and frame.principal and frame.focus_terms:
+                focus = self._topic_section(query, frame)
+            response = self._attach_general(self._legacy_answer(query, mode, restrict=restrict, focus_chunk=focus), frame, facts, mode, focus)
+        response["scenario_request"] = scenario_request(response["determinations"], response["fingerprint"], facts, sources)
+        response["contract_version"], response["schema_version"] = ANSWER_CONTRACT_VERSION, "4.0.0"
+        response["analysis_id"] = analysis_id({
+            "contract": ANSWER_CONTRACT_VERSION, "methods": [DETERMINATIONS_VERSION, FINGERPRINT_VERSION, COMPOSITION_VERSION, METRICS_CONTRACT_VERSION],
+            "query": query, "mode": mode, "scenario": facts, "generation": response["answer"].get("generation_method"),
+            "index": self.retriever.status().get("index_identity"), "graph": getattr(selector.consumer, "graph_sha256", None),
+            "release": _active_release(self.root)})
+        return response
 
     def _graph_alignment(self, pre: RetrievedChunk, post: RetrievedChunk) -> tuple[dict[str, object] | None, list[str]]:
         from temporal_legal_drift.versioning.consumer import GraphConsumer, IncompatibleGraphError
@@ -402,6 +414,7 @@ class RagPipeline:
                       "method": "outcome-drift-v1"}
         wording = fingerprint["wording_drift"]
         drift = {**textual_drift(frame, versions, metrics), "state": wording["state"], "label": wording["label"], "summary": wording["summary"],
+                 "limit": wording.get("limit"),
                  "reason": wording["reason"], "method": "alias of fingerprint.wording_drift (textual_drift is deprecated in determinations-v2)",
                  "evidence_ids": wording["evidence_ids"], "details": {"deprecated": True, "use": "fingerprint.wording_drift"}}
         determinations = {"version": DETERMINATIONS_VERSION, "textual_drift": drift, "materiality": mat, "applicability": timing,
@@ -461,6 +474,7 @@ class RagPipeline:
         composed = compose_out_of_scope(frame)
         out = {"state": "OUT_OF_SCOPE", "label": None, "summary": "Not in the corpus.", "method": None, "evidence_ids": [],
                "reason": "Nothing to assess: the Act is outside the local corpus.",
+               "limit": limit_for("INSUFFICIENT_EVIDENCE", "The Act is not in the local corpus; check India Code.", "evidence"),
                "details": {}, "needs": [], "review_status": "UNREVIEWED", "legal_validation": "UNVERIFIED"}
         response = _insufficient_response(query, mode, _classify_intent(query), source_guidance(query), self.status())
         response["answer"].update({"answer_type": "out_of_scope", "direct_answer": composed["direct_answer"], "sections": [],
@@ -495,7 +509,8 @@ class RagPipeline:
                    "materiality": "Materiality is assessed for a specific amendment; none was asked about.",
                    "answer_change": "The question is about the law as written, not a change over time.",
                    "risk": "Risk is assessed only for a named provision with a modelled obligation and your facts."}
-        determinations = {"version": DETERMINATIONS_VERSION, **{k: {**general, "summary": "Not applicable to this question.", "reason": v} for k, v in reasons.items()}}
+        determinations = {"version": DETERMINATIONS_VERSION, **{k: {**general, "summary": "Not applicable to this question.", "reason": v,
+                                                                       "limit": limit_for("OUT_OF_SCOPE", v)} for k, v in reasons.items()}}
         if answer.get("answer_type") == "insufficient_evidence":
             composed = {"direct_answer": answer.get("short_answer"), "sections": [], "limitations": ["No local evidence supported the query."]}
         else:
@@ -1412,4 +1427,9 @@ def _rule_delta_proposer():
         return json.loads(content)
 
     return propose
+
+
+def _active_release(root: Path) -> str | None:
+    path = root / "data/releases/active_release.json"
+    return json.loads(path.read_text()).get("manifest_sha256") if path.is_file() else None
 

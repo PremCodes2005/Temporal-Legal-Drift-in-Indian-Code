@@ -132,3 +132,13 @@ Not achieved in the sprint:
 | Scenario evaluation | Outcome drift with controlled sets; facts requested when missing | `tests/unit/test_fingerprint.py` |
 | UI | Fingerprint cards and panels; UI values equal the API's in real Chrome; 320px fits | `frontend/src/Fingerprint.jsx`, `fingerprint.test.jsx` |
 | Release | See `docs/verification.md` | — |
+
+## Analysis workspace sprint (2026-10-13, rag-answer-v4)
+
+| Phase | Result | Evidence |
+| --- | --- | --- |
+| Audit | v0.13.0 UI and API traced: explanation pages lost the evidence on navigation; 7 cards; the IT s.19 "actor" 5/100 was a qualifier misread | `reports/analysis_workspace/report.v1.md` |
+| Backend contract | rag-answer-v4: stored analysis IDs, typed limits, `scenario_request`, determinations-v3, rule-drift-v1.1; v2/v3 schemas kept | ADR 0016, `schemas/rag/rag_answer.v4.schema.json` |
+| Facts vs evidence | Minimum decisive facts, facts read from the question, machine-triaged materiality | `tests/unit/test_analysis_record.py`, audit cases v3 27/27 |
+| UI | Five views of one stored analysis; deep links; facts form beside the answer | `frontend/src/AnalysisWorkspace.jsx`, `analysis_workspace.test.jsx` |
+| Release | See `docs/verification.md` | — |

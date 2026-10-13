@@ -25,7 +25,7 @@ const ROLE_TEXT = {
   act_text_excerpt: "Act text excerpt (verbatim)",
 };
 
-export function DirectAnswer({ answer }) {
+export function DirectAnswer({ answer, onEvidence, showLimits = true }) {
   return <article className="answer-card v2" aria-labelledby="direct-answer-heading">
     <span className="section-kicker" id="direct-answer-heading">Answer</span>
     <p className="direct-answer">{answer.direct_answer}</p>
@@ -33,9 +33,11 @@ export function DirectAnswer({ answer }) {
       <h3>{section.title}{KIND_TEXT[section.kind] && <span className="kind-badge">{KIND_TEXT[section.kind]}</span>}</h3>
       {section.label && <p className="part-label">{section.label}</p>}
       <p>{section.text}</p>
-      {section.evidence_ids?.length > 0 && <p className="evidence-chips">Evidence: {section.evidence_ids.map((id) => <a key={id} href={`#evidence-${id}`} aria-label={`Evidence ${id}`}>{id}</a>)}</p>}
+      {section.evidence_ids?.length > 0 && <p className="evidence-chips">Evidence: {section.evidence_ids.map((id) => onEvidence
+        ? <button key={id} type="button" onClick={() => onEvidence(id)} aria-label={`Show evidence ${id}`}>{id}</button>
+        : <a key={id} href={`#evidence-${id}`} aria-label={`Evidence ${id}`}>{id}</a>)}</p>}
     </section>)}
-    {answer.answer_limitations?.length > 0 && <ul className="answer-limits">{answer.answer_limitations.map((item) => <li key={item}>{item}</li>)}</ul>}
+    {showLimits && answer.answer_limitations?.length > 0 && <ul className="answer-limits">{answer.answer_limitations.map((item) => <li key={item}>{item}</li>)}</ul>}
   </article>;
 }
 
@@ -46,7 +48,9 @@ export function DeterminationCards({ determinations }) {
   </section>;
 }
 
-function DeterminationCard({ name, title, value }) {
+const LIMIT_TEXT = { facts: "Needs your facts", evidence: "Missing legal evidence (your facts cannot fill this)", method: "Outside what this method measures" };
+
+export function DeterminationCard({ name, title, value, onEvidence }) {
   if (!value) return null;
   const details = value.details || {};
   return <article className={`determination state-${value.state.toLowerCase()}`}>
@@ -54,12 +58,18 @@ function DeterminationCard({ name, title, value }) {
     <strong className="determination-value">{value.label || "—"}</strong>
     <p>{value.summary}</p>
     <p className="determination-reason">{value.reason}</p>
+    {value.limit && LIMIT_TEXT[value.limit.kind] && <p className={`limit-tag limit-${value.limit.kind}`}><strong>{LIMIT_TEXT[value.limit.kind]}.</strong> {value.limit.action?.label}</p>}
+    {value.details?.evaluated?.length > 0 && <table className="fp-table"><caption>Your facts under each version</caption>
+      <thead><tr><th scope="col">Rule field</th><th scope="col">Decisive fact</th><th scope="col">Before</th><th scope="col">After</th></tr></thead>
+      <tbody>{value.details.evaluated.map((row, index) => <tr key={index}><th scope="row">{row.field.replaceAll("_", " ")}</th><td>{row.decisive_fact}</td><td>{row.before_answer}</td><td>{row.after_answer}</td></tr>)}</tbody></table>}
     {(value.method || value.evidence_ids?.length > 0 || Object.keys(details).length > 0) && <details>
       <summary>Method and evidence</summary>
       <dl>
         {value.method && <><dt>Method</dt><dd>{value.method}</dd></>}
-        <dt>Review status</dt><dd>{value.review_status.replaceAll("_", " ").toLowerCase()}; legal validation unverified</dd>
-        {value.evidence_ids?.length > 0 && <><dt>Evidence</dt><dd>{value.evidence_ids.map((id) => <a key={id} href={`#evidence-${id}`}>{id} </a>)}</dd></>}
+        <dt>Review status</dt><dd>{(value.review_status || "unreviewed").replaceAll("_", " ").toLowerCase()}; legal validation unverified</dd>
+        {value.evidence_ids?.length > 0 && <><dt>Evidence</dt><dd>{value.evidence_ids.map((id) => onEvidence
+          ? <button key={id} type="button" className="link-button" onClick={() => onEvidence(id)}>{id}</button> : <a key={id} href={`#evidence-${id}`}>{id} </a>)}</dd></>}
+        {details.source && <><dt>Assessment source</dt><dd>{{ FROZEN_SILVER_SET: "Frozen silver set (versioned machine triage, not gold)", ON_THE_FLY_MACHINE_TRIAGE: "Machine triage computed for this answer (not in the frozen set, not gold)" }[details.source] || details.source}</dd></>}
         {details.rule_a && <><dt>Rule A</dt><dd>{details.rule_a.label || "abstains"} — {details.rule_a.rationale}</dd></>}
         {details.rule_b && <><dt>Rule B</dt><dd>{details.rule_b.label || "abstains"} — {details.rule_b.rationale}</dd></>}
         {details.llm_assessment && <><dt>LLM assessment</dt><dd>{details.llm_assessment.label || "none"} ({details.llm_assessment.model}) — {details.llm_assessment.rationale}</dd></>}
@@ -139,4 +149,54 @@ export function EvidenceList({ evidence }) {
       {item.text_reliability === "UNRELIABLE_TEXT_LAYER" && <span className="evidence-warning">Unreliable text layer: check the PDF.</span>}
     </li>)}</ol>
   </article>;
+}
+
+// Minimum facts (rag-answer-v4 scenario_request): only what unlocks something blocked by missing facts.
+export function FactsForm({ request, onSubmit, busy, compact = false }) {
+  const fields = (request?.fields || []).filter((row) => !compact || row.group === "core");
+  const initial = Object.fromEntries((request?.fields || []).map((row) => [row.key, row.value ?? ""]));
+  const [draft, setDraft] = useState(initial);
+  if (!fields.length) {
+    return request?.blocked_by_evidence?.length ? <p className="panel-note limit-evidence">{request.explanation}</p> : null;
+  }
+  const submit = (event) => {
+    event.preventDefault();
+    const scenario = { facts: {} };
+    for (const row of request.fields) {
+      const value = draft[row.key];
+      if (value === "" || value === undefined || value === null) continue;
+      const typed = row.kind === "number" ? Number(value) : row.kind === "boolean" ? value === true || value === "yes" : value;
+      if (row.kind === "number" && Number.isNaN(typed)) continue;
+      if (row.key.startsWith("facts.")) scenario.facts[row.key.slice(6)] = typed; else scenario[row.key] = typed;
+    }
+    onSubmit(scenario);
+  };
+  const field = (row) => {
+    const id = `fact-${compact ? "c-" : ""}${row.key.replace(".", "-")}`;
+    const value = draft[row.key];
+    const set = (v) => setDraft((current) => ({ ...current, [row.key]: v }));
+    const hint = <small id={`${id}-hint`}>Unlocks {row.unlocks.join(" and ")}{row.source === "question" ? " · read from your question" : ""}
+      {row.kind === "date" && row.options?.length ? ` · modelled dates: ${row.options.join(", ")}` : ""}</small>;
+    let control;
+    if (row.kind === "boolean") {
+      control = <select id={id} aria-describedby={`${id}-hint`} value={value === true ? "yes" : value === false ? "no" : value || ""} onChange={(e) => set(e.target.value)}>
+        <option value="">Unknown</option><option value="yes">Yes</option><option value="no">No</option></select>;
+    } else if (row.kind === "choice") {
+      control = <select id={id} aria-describedby={`${id}-hint`} value={value || ""} onChange={(e) => set(e.target.value)}>
+        <option value="">Unknown</option>{row.options.map((o) => <option key={o} value={o}>{o.replaceAll("_", " ")}</option>)}</select>;
+    } else {
+      control = <input id={id} type="text" aria-describedby={`${id}-hint`} inputMode={row.kind === "number" ? "decimal" : "numeric"}
+        placeholder={row.kind === "date" ? "YYYY-MM-DD" : row.kind === "number" ? "a number" : undefined} value={value ?? ""} onChange={(e) => set(e.target.value)} />;
+    }
+    return <label key={row.key} htmlFor={id}>{row.label}{control}{hint}</label>;
+  };
+  const core = fields.filter((row) => row.group === "core"), risk = fields.filter((row) => row.group === "risk");
+  return <form className={`facts-form ${compact ? "compact" : ""}`} onSubmit={submit} aria-labelledby={compact ? "facts-heading-c" : "facts-heading"}>
+    <h3 id={compact ? "facts-heading-c" : "facts-heading"}>Your situation</h3>
+    <p className="panel-note">{request.explanation}</p>
+    <div className="scenario-grid">{core.map(field)}</div>
+    {risk.length > 0 && <details className="risk-facts"><summary>Also assess conditional risk (optional, {risk.length} facts)</summary>
+      <div className="scenario-grid">{risk.map(field)}</div></details>}
+    <button className="send-button" type="submit" disabled={busy}>{busy ? "Re-running…" : "Re-run with these facts"}</button>
+  </form>;
 }

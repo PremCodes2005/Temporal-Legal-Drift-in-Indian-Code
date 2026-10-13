@@ -57,3 +57,7 @@ The single-prompt assistant now answers from identity-selected evidence: the Act
 ## Update (2026-10-13, rag-answer-v3)
 
 Version comparisons return a Legal Change Fingerprint (ADR 0015): wording, rule and outcome drift, reported separately, plus a separate applicability determination. The legacy overall drift is retained as a labelled diagnostic.
+
+## Update (2026-10-13, rag-answer-v4)
+
+Each answer is a stored analysis with a stable ID, shown in five views: Answer, Compare & Evidence, Scores & Method, Scenario & Impact, and Sources & Review (ADR 0016). Limits are typed as evidence, facts or method. A short form asks only for the decisive facts. Materiality is machine-triaged on the fly when no silver row exists. Rule drift v1.1 no longer scores unsupported fields.

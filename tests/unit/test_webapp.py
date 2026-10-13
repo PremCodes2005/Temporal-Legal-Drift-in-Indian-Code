@@ -64,7 +64,7 @@ class DashboardServiceTests(unittest.TestCase):
             "TLD_RAG_PROVIDER": "openai_compatible",
             "TLD_RAG_API_KEY": "",
             "OPENAI_API_KEY": "",
-        }):
+        }), patch("temporal_legal_drift.rag.analysis.store", side_effect=lambda root, response: response):  # never write runtime records into the repository
             service = DashboardService(ROOT)
             result = service.query_rag(
                 {

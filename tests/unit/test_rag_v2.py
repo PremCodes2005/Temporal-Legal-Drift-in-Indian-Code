@@ -40,7 +40,7 @@ class RagV2Tests(unittest.TestCase):
     # ---------- evidence and pairing ----------
     def test_named_act_and_section_select_the_corroborated_transition(self) -> None:
         result = self.ask("What amount must be deposited under section 173 of the Motor Vehicles Act after the 2019 amendment?")
-        self.assertEqual(result["contract_version"], "rag-answer-v3")
+        self.assertEqual(result["contract_version"], "rag-answer-v4")
         self.assertEqual(result["comparison"]["support_class"], "GRAPH_TRANSITION_FRAGMENTS")
         self.assertEqual({e["entry_id"] for e in result["evidence"]}, {"motor-vehicles-act-1988", "motor-vehicles-amendment-act-2019"})
         instruction = next(e for e in result["evidence"] if e["role"] == "amendment_instruction")
@@ -84,10 +84,15 @@ class RagV2Tests(unittest.TestCase):
         self.assertNotIn("gold", (materiality["summary"] + materiality["reason"]).lower())
         self.assertEqual(materiality["review_status"], "NOT_REVIEWED_BY_QUALIFIED_EXPERT")
 
-    def test_unmatched_amendment_keeps_materiality_unassessed_with_reason(self) -> None:
+    def test_unmatched_amendment_gets_machine_triage_marked_as_computed_now(self) -> None:
         materiality = self.ask("What is the maximum fine a court can impose under section 32 of the Code of Civil Procedure after the 1999 amendment?")["determinations"]["materiality"]
-        self.assertEqual((materiality["state"], materiality["label"]), ("INSUFFICIENT_EVIDENCE", None))
-        self.assertIn("No exact match", materiality["reason"])
+        self.assertEqual(materiality["state"], "PROVISIONAL")
+        self.assertEqual((materiality["details"]["source"], materiality["details"]["frozen_silver_match"], materiality["details"]["is_gold"]),
+                         ("ON_THE_FLY_MACHINE_TRIAGE", False, False))
+        self.assertIn("No frozen silver assessment", materiality["reason"])
+        # Without supported versions there is nothing to triage.
+        self.assertEqual(self.ask("Compare section 46 of the Companies Act before and after the Competition (Amendment) Act, 2023.")
+                         ["determinations"]["materiality"]["limit"]["kind"], "evidence")
 
     # ---------- answer change ----------
     def test_answer_changes_for_a_numeric_question(self) -> None:

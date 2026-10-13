@@ -6,16 +6,26 @@ import { DeterminationCards, DirectAnswer, EvidenceList, ScenarioForm } from "./
 import { LegalChangeFingerprint } from "./Fingerprint";
 import SourceHealth from "./SourceHealth";
 import ComplianceRiskPanel from "./ComplianceRiskPanel";
+import { DriftPanel, VerificationPanel, percent } from "./SharedPanels";
+import AnalysisWorkspace, { TABS } from "./AnalysisWorkspace";
+
+// #analysis/<id>/<tab> is the shareable address of one stored analysis; old #drift/#calculation links open its Scores view.
+function parseRoute(hash) {
+  const parts = hash.slice(1).split("?")[0].split("/");
+  if (parts[0] === "analysis" && /^an_[0-9a-f]{24}$/.test(parts[1] || "")) {
+    return { section: "assistant", analysisId: parts[1], tab: TABS.some((t) => t.id === parts[2]) ? parts[2] : "answer" };
+  }
+  if (parts[0] === "drift" || parts[0] === "calculation") return { section: "assistant", analysisId: null, tab: "scores" };
+  return { section: parts[0], analysisId: null, tab: "answer" };
+}
 
 const sections = [
   { id: "assistant", number: "01", label: "Legal drift assistant" },
   { id: "corpus", number: "02", label: "Document repository" },
-  { id: "drift", number: "03", label: "Drift explanation" },
-  { id: "calculation", number: "04", label: "Score calculation" },
-  { id: "method", number: "05", label: "How it works" },
-  { id: "faq", number: "06", label: "Recent changes FAQ" },
-  { id: "risk", number: "07", label: "Compliance risk" },
-  { id: "review", number: "08", label: "Case trace & review" },
+  { id: "method", number: "03", label: "How it works" },
+  { id: "faq", number: "04", label: "Recent changes FAQ" },
+  { id: "risk", number: "05", label: "Compliance risk" },
+  { id: "review", number: "06", label: "Case trace & review" },
 ];
 
 const suggestions = [
@@ -27,19 +37,20 @@ const suggestions = [
 export default function App() {
   // Deep links: #review or #review/run_<id> (validated) so a case can be shared with a reviewer.
   const initialHash = window.location.hash.slice(1).split("?")[0].split("/");
+  const route = useMemo(() => parseRoute(window.location.hash), []);
   // Shareable question link: #assistant?q=<question> asks once on load.
   const linkedQuestion = new URLSearchParams(window.location.hash.split("?")[1] || "").get("q")?.slice(0, 4000) || "";
-  const [section, setSection] = useState(() => sections.some((item) => item.id === initialHash[0]) ? initialHash[0] : "assistant");
+  const [section, setSection] = useState(() => sections.some((item) => item.id === route.section) ? route.section : "assistant");
+  const [tab, setTab] = useState(route.tab);
+  const [analysisError, setAnalysisError] = useState("");
   const initialRunId = /^run_[0-9a-f]{24}$/.test(initialHash[1] || "") ? initialHash[1] : null;
   const [menuOpen, setMenuOpen] = useState(false);
   const [corpus, setCorpus] = useState(null);
   const [status, setStatus] = useState(null);
   const [loadError, setLoadError] = useState("");
   const [starterQuery, setStarterQuery] = useState(linkedQuestion);
-  const [lastResult, setLastResult] = useState(() => {
-    try { return JSON.parse(window.sessionStorage.getItem("tldrift:last-result")) || null; }
-    catch { return null; }
-  });
+  // The single source of truth for every view: the stored analysis, fetched by ID.
+  const [lastResult, setLastResult] = useState(null);
 
   useEffect(() => {
     Promise.all([api("/api/corpus"), api("/api/rag/status")])
@@ -48,8 +59,31 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (lastResult) window.sessionStorage.setItem("tldrift:last-result", JSON.stringify(lastResult));
-  }, [lastResult]);
+    let id = route.analysisId;
+    if (!id && !linkedQuestion) { try { id = window.sessionStorage.getItem("tldrift:last-analysis"); } catch { id = null; } }
+    if (!id || !/^an_[0-9a-f]{24}$/.test(id)) return;
+    api(`/api/analyses/${id}`).then(setLastResult).catch((error) => setAnalysisError(`The linked analysis could not be loaded: ${error.message}`));
+  }, [route.analysisId, linkedQuestion]);
+
+  // In-app moves use replaceState (no hashchange); a pasted link or back/forward to an analysis or question re-opens it from the stored record.
+  useEffect(() => {
+    const onHash = () => { if (parseRoute(window.location.hash).analysisId || /[?&]q=/.test(window.location.hash)) window.location.reload(); };
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, []);
+
+  const showResult = (value, nextTab = "answer") => {
+    setLastResult(value);
+    if (value?.analysis_id) {
+      setTab(nextTab);
+      window.history.replaceState(null, "", `#analysis/${value.analysis_id}/${nextTab}`);
+      try { window.sessionStorage.setItem("tldrift:last-analysis", value.analysis_id); } catch { /* storage unavailable */ }
+    }
+  };
+  const changeTab = (next) => {
+    setTab(next);
+    if (lastResult?.analysis_id) window.history.replaceState(null, "", `#analysis/${lastResult.analysis_id}/${next}`);
+  };
 
   const navigate = (next) => {
     setSection(next); setMenuOpen(false); window.history.replaceState(null, "", `#${next}`); window.scrollTo({ top: 0, behavior: "smooth" });
@@ -70,10 +104,9 @@ export default function App() {
     <div className="workspace">
       <header className="topbar"><button className="menu-toggle" onClick={() => setMenuOpen((open) => !open)} aria-label="Open navigation">☰</button><div><p className="eyebrow">Versioned Indian law</p><h1>{sections.find((item) => item.id === section)?.label}</h1></div></header>
       <main id="main-content">
-        {section === "assistant" && <AssistantWorkspace status={status} error={loadError} starterQuery={starterQuery} autoRun={Boolean(linkedQuestion)} result={lastResult} onResult={setLastResult} onExplain={() => navigate("drift")} />}
+        {section === "assistant" && <AssistantWorkspace status={status} error={loadError || analysisError} starterQuery={starterQuery} autoRun={Boolean(linkedQuestion)}
+          result={lastResult} onResult={showResult} tab={tab} onTab={changeTab} onReview={() => navigate("review")} />}
         {section === "corpus" && <CorpusBrowser corpus={corpus} error={loadError} status={status} />}
-        {section === "drift" && <DriftExplanation result={lastResult} onAnalyse={() => navigate("assistant")} />}
-        {section === "calculation" && <ScoreCalculation result={lastResult} onAnalyse={() => navigate("assistant")} />}
         {section === "method" && <Method />}
         {section === "faq" && <RecentChangesFaq onAsk={askFromFaq} />}
         {section === "risk" && <ComplianceRiskPanel request={api} />}
@@ -83,7 +116,7 @@ export default function App() {
   </div>;
 }
 
-function AssistantWorkspace({ status, error: statusError, starterQuery, autoRun = false, result, onResult, onExplain }) {
+function AssistantWorkspace({ status, error: statusError, starterQuery, autoRun = false, result, onResult, tab, onTab, onReview }) {
   const [query, setQuery] = useState(starterQuery || "");
   const [mode, setMode] = useState("specific");
   const [busy, setBusy] = useState(false);
@@ -93,25 +126,26 @@ function AssistantWorkspace({ status, error: statusError, starterQuery, autoRun 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { if (autoRun && starterQuery) submit(null, starterQuery); }, []);
 
-  const submit = async (event, text = query, scenario = null) => {
-    event?.preventDefault(); setError(""); onResult(null);
+  const submit = async (event, text = query, scenario = null, keepTab = null) => {
+    event?.preventDefault(); setError("");
     if (!text.trim()) return setError("Enter a question about the indexed Indian legal documents.");
     setBusy(true);
     try {
       const value = await api("/api/rag/query", { method: "POST", body: { query: text.trim(), mode, ...(scenario ? { scenario } : {}) } });
-      onResult(value);
+      onResult(value, keepTab || "answer");
       window.setTimeout(() => document.getElementById("rag-result")?.scrollIntoView({ behavior: "smooth", block: "start" }), 0);
     } catch (requestError) { setError(requestError.message); }
     finally { setBusy(false); }
   };
 
+  const compact = Boolean(result);
   return <section className="page-section">
-    <div className="hero">
-      <span className="section-kicker">Single-prompt legal research</span>
+    <div className={`hero ${compact ? "compact" : ""}`}>
+      {!compact && <><span className="section-kicker">Single-prompt legal research</span>
       <h2>Ask what changed in Indian law.</h2>
       <p>The assistant checks the live India Code repository and uses the local evidence cache for reproducible amendment comparisons and traceable source anchors.</p>
       <RepositoryStatus status={status} error={statusError} />
-      <SourceHealth request={api} />
+      <SourceHealth request={api} /></>}
       <form className="prompt-panel" onSubmit={submit}>
         <label htmlFor="legal-query" className="sr-only">Legal research question</label>
         <textarea id="legal-query" rows="4" maxLength="4000" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Ask a question, for example: What changed in the IT Act amendment regarding data privacy?" />
@@ -123,11 +157,14 @@ function AssistantWorkspace({ status, error: statusError, starterQuery, autoRun 
           <button className="send-button" type="submit" disabled={busy || !query.trim()}>{busy ? "Searching…" : "Analyse"}<span aria-hidden="true">→</span></button>
         </div>
       </form>
-      <div className="suggestions"><span>Try asking</span>{suggestions.map((item) => <button key={item} type="button" onClick={() => setQuery(item)}>{item}</button>)}</div>
+      {!compact && <div className="suggestions"><span>Try asking</span>{suggestions.map((item) => <button key={item} type="button" onClick={() => setQuery(item)}>{item}</button>)}</div>}
       {error && <div className="form-error" role="alert"><strong>Analysis could not be completed.</strong><span>{error}</span></div>}
     </div>
     {busy && <div className="loading-panel"><span className="spinner"/><div><strong>Retrieving versioned legal evidence…</strong><p>Classifying the question, matching documents and validating the response context.</p></div></div>}
-    {result && <RagResult result={result} onExplain={onExplain} busy={busy} onScenario={(scenario) => submit(null, result.query, scenario)} />}
+    {result && (result.analysis_id
+      ? <AnalysisWorkspace analysis={result} tab={tab} onTab={onTab} busy={busy} onReview={onReview}
+          onScenario={(scenario) => { setMode(result.mode); submit(null, result.query, scenario, tab); }} />
+      : <RagResult result={result} onExplain={() => onTab?.("scores")} busy={busy} onScenario={(scenario) => submit(null, result.query, scenario)} />)}
   </section>;
 }
 
@@ -140,6 +177,7 @@ function RepositoryStatus({ status, error }) {
 }
 
 export function RagResult({ result, onExplain, onScenario = () => {}, busy = false }) {
+  if (result.analysis_id) return <AnalysisWorkspace analysis={result} onScenario={onScenario} busy={busy} />;
   if (/^rag-answer-v[23]$/.test(result.contract_version || "")) return <RagResultV2 result={result} onExplain={onExplain} onScenario={onScenario} busy={busy} />;
   const answer = result.answer;
   const metrics = result.metrics;
@@ -197,95 +235,7 @@ function RagResultV2({ result, onExplain, onScenario, busy }) {
   </section>;
 }
 
-// Unavailable values are shown as such, never as zero.
-function percent(value) { return value == null ? "Unavailable" : `${value}%`; }
-
 function AnswerSection({ label, text, tone }) { return <section className={`answer-section ${tone}`}><div className="answer-label"><span>{tone === "before" ? "B" : tone === "after" ? "A" : "S"}</span><strong>{label}</strong></div><p>{text}</p></section>; }
-
-function DriftPanel({ metrics, legacy = false }) {
-  const rows = [
-    { label: "Vector drift (feature-hash)", value: metrics.semantic_drift_percent, tone: "blue", help: "Cosine distance between deterministic 256-dimension token-hash vectors; not a trained meaning model." },
-    { label: "Lexical / textual shift", value: metrics.lexical_drift_percent, tone: "green", help: "Token and sequence changes in the paired excerpts." },
-    { label: "Conceptual / legal intent shift", value: metrics.conceptual_drift_percent, tone: "purple", help: metrics.conceptual_method === "llm_judge" ? "Evidence-bound LLM judgment of operative legal change." : "Deterministic legal-cue proxy; no LLM judgment was available." },
-    { label: "Evidence-alignment quality", value: metrics.evidence_alignment_quality_percent ?? metrics.alignment_accuracy_percent, tone: "gold", help: "Retrieval confidence, metadata coverage and paired-evidence completeness. Not answer accuracy or a probability." },
-  ];
-  return <article className="analytics-panel"><div className="analytics-heading"><div><span className="section-kicker">Drift score breakdown</span><h3>How far the retrieved versions moved</h3></div><div className="overall-score"><strong>{percent(metrics.overall_drift_percent)}</strong><span>{legacy ? "legacy overall (diagnostic)" : "weighted RMS drift"}</span></div></div><div className="metric-bars">{rows.map((row) => <div className="metric-row" key={row.label}><div><strong>{row.label}</strong><span>{row.help}</span></div><div className="bar-line"><div className={`bar-fill ${row.tone}`} style={{ width: `${row.value == null ? 0 : Math.max(0, Math.min(100, row.value))}%` }} /></div><b>{percent(row.value)}</b></div>)}</div>{Object.values(metrics.unavailable_reasons || {}).map((reason) => <p className="panel-note" key={reason}>Unavailable: {reason}.</p>)}{metrics.component_disagreement && <p className="panel-note">The component scores strongly disagree. Review each score and its cited evidence separately; the overall score must not be interpreted as ordinary averaging.</p>}</article>;
-}
-
-function DriftExplanation({ result, onAnalyse }) {
-  if (!result?.metrics) return <section className="page-section"><div className="section-header"><span className="section-kicker">Score interpretation</span><h2>Run a comparison to explain its drift.</h2><p>This tab uses the latest supported pre/post result. General questions and single-document answers do not produce drift scores.</p></div><button className="send-button" type="button" onClick={onAnalyse}>Open legal drift assistant <span>→</span></button></section>;
-
-  const { metrics, retrieval, citations } = result;
-  const levels = metrics.levels || {};
-  const scoreRows = [
-    ["Vector drift (feature-hash)", metrics.semantic_drift_percent, levels.semantic, "How far the deterministic token-hash vectors moved; this is not a trained semantic encoder."],
-    ["Lexical shift", metrics.lexical_drift_percent, levels.lexical, "How much the words and token sequence changed."],
-    ["Conceptual drift", metrics.conceptual_drift_percent, levels.conceptual, "How much the detected legal cues, numbers or model-assessed intent changed."],
-    ["Overall drift", metrics.overall_drift_percent, levels.overall, "Weighted root-mean-square result: 40% vector, 30% lexical and 30% conceptual. A strong signal is not cancelled by a weak one."],
-  ];
-  const preCitation = citations?.find((item) => item.label === "pre");
-  const postCitation = citations?.find((item) => item.label === "post");
-  return <section className="page-section drift-page">
-    <div className="section-header"><span className="section-kicker">Latest comparison</span><h2>What the drift score means</h2><p>The classifications below describe movement between the two retrieved excerpts. They do not independently prove legal materiality or correctness.</p></div>
-    <div className="level-guide">
-      <article className="low"><strong>Low</strong><b>0–33.3%</b><p>The excerpts are mostly stable, with limited textual or conceptual movement.</p></article>
-      <article className="medium"><strong>Medium</strong><b>33.4–66.6%</b><p>A noticeable change exists and the cited clauses should be reviewed carefully.</p></article>
-      <article className="high"><strong>High</strong><b>66.7–100%</b><p>Substantial movement was detected; this still requires legal and applicability review.</p></article>
-    </div>
-    <article className="drift-breakdown"><span className="section-kicker">Calculated classification</span><h3>{metrics.overall_drift_percent == null ? "Overall drift unavailable" : `${levels.overall || driftLevel(metrics.overall_drift_percent)} overall drift`}</h3><div className="drift-score-grid">{scoreRows.map(([label, value, level, detail]) => <div key={label}><span>{label}</span><strong>{percent(value)}</strong>{value != null && <b className={`level-pill ${(level || driftLevel(value)).toLowerCase()}`}>{level || driftLevel(value)}</b>}<p>{detail}</p></div>)}</div></article>
-    <div className="evidence-comparison">
-      <EvidenceExcerpt title="Before-side PDF evidence" citation={preCitation} chunk={retrieval.pre} />
-      <div className="comparison-arrow" aria-hidden="true">→</div>
-      <EvidenceExcerpt title="After-side PDF evidence" citation={postCitation} chunk={retrieval.post} />
-    </div>
-    <article className="difference-evidence"><span className="section-kicker">Detected change</span><h3>How the cited excerpts differ</h3><ul>{result.answer.key_differences.map((item, index) => <li key={index}>{item}</li>)}</ul><p>Open the cited source to inspect the complete provision, amendment operation, commencement and applicability.</p></article>
-  </section>;
-}
-
-function EvidenceExcerpt({ title, citation, chunk }) {
-  return <article className="evidence-excerpt"><span className="section-kicker">{title}</span><h3>{citation?.act_name || chunk?.metadata?.act_name || "Evidence unavailable"}</h3><div className="evidence-meta">{citation?.version || chunk?.metadata?.version || "Unknown version"} · {citation?.source_anchor || chunk?.metadata?.source_anchor || "No anchor"}</div><blockquote>{excerpt(chunk?.text)}</blockquote>{(citation?.source_url || citation?.official_portal_url) && <a href={citation.source_url || citation.official_portal_url} target="_blank" rel="noreferrer">Open cited source ↗</a>}</article>;
-}
-
-function ScoreCalculation({ result, onAnalyse }) {
-  if (!result?.metrics) return <section className="page-section"><div className="section-header"><span className="section-kicker">Reproducible calculation</span><h2>Run a pre/post comparison first.</h2><p>This tab explains the percentages from the latest response and identifies the exact retrieved PDF pages used.</p></div><button className="send-button" type="button" onClick={onAnalyse}>Open legal drift assistant <span>→</span></button></section>;
-
-  const { metrics, retrieval, citations, answer, query } = result;
-  const hasServerTrace = Boolean(metrics.calculation_trace);
-  // Never recompute scores in the browser: a saved result without the server trace is re-run instead.
-  if (!hasServerTrace || metrics.overall_drift_percent == null) return <section className="page-section"><div className="section-header"><span className="section-kicker">Reproducible calculation</span><h2>{hasServerTrace ? "The overall score is unavailable for this result." : "This saved result has no calculation trace."}</h2><p>{hasServerTrace ? Object.values(metrics.unavailable_reasons || {}).join("; ") : "Ask the question again to get a trace computed by the server."}</p></div><button className="send-button" type="button" onClick={onAnalyse}>Open legal drift assistant <span>→</span></button></section>;
-  const trace = metrics.calculation_trace;
-  const basis = metrics.score_basis || {};
-  const preCitation = citations?.find((item) => item.label === "pre");
-  const postCitation = citations?.find((item) => item.label === "post");
-  const contribution = trace.overall.weighted_square_contributions;
-  const rows = [
-    ["Vector drift (feature-hash)", `${trace.semantic.cosine_similarity_percent}% similarity`, trace.semantic.formula, metrics.semantic_drift_percent],
-    ["Lexical drift", `${trace.lexical.jaccard_similarity_percent}% Jaccard · ${trace.lexical.sequence_similarity_percent}% sequence`, trace.lexical.formula, metrics.lexical_drift_percent],
-    ["Conceptual drift", titleCase(trace.conceptual.method), trace.conceptual.formula, metrics.conceptual_drift_percent],
-    ["Evidence alignment", `${trace.alignment.average_retrieval_confidence_percent}% retrieval · ${trace.alignment.paired_evidence_completeness_percent}% evidence · ${trace.alignment.metadata_coverage_percent}% metadata`, trace.alignment.formula, metrics.evidence_alignment_quality_percent ?? metrics.alignment_accuracy_percent],
-  ];
-  return <section className="page-section calculation-page">
-    <div className="section-header"><span className="section-kicker">Latest response audit</span><h2>How these percentages were calculated</h2><p>You supplied only this prompt: “{query}”. The backend automatically found the relevant versions and selected comparable evidence. No before/after passage was entered by the user.</p></div>
-    {!hasServerTrace && <div className="calculation-warning">This result came from an older running backend. The final percentages and formulas are shown, but detailed token, cue and similarity inputs require restarting the backend and running the question again.</div>}
-    <div className="calculation-sources">
-      <CalculationSource label="Automatically selected before evidence" citation={preCitation} chunk={retrieval.pre} scoringExcerpt={basis.pre_excerpt} />
-      <CalculationSource label="Automatically selected after evidence" citation={postCitation} chunk={retrieval.post} scoringExcerpt={basis.post_excerpt} />
-    </div>
-    <article className="calculation-card"><span className="section-kicker">Automatic score basis</span><h3>Prompt → retrieval → {titleCase(basis.selection_method || "query relevant evidence")}</h3><p className="panel-note">The scoring basis is fixed across Generic and Specific display modes. Those modes change answer detail, not the selected evidence or percentages.</p></article>
-    <article className="calculation-card"><span className="section-kicker">Backend values and formulas</span><div className="calculation-rows">{rows.map(([name, inputs, formula, score]) => <div className="calculation-row" key={name}><div><strong>{name}</strong><span>{inputs}</span><code>{formula}</code></div><b>{score}%</b></div>)}</div></article>
-    <article className="calculation-card"><span className="section-kicker">Overall weighted-RMS calculation</span><h3>Why the final score is {metrics.overall_drift_percent}%</h3><p className="formula-display">{trace.overall.formula}</p><div className="contribution-grid"><div><span>Vector contribution</span><strong>{contribution.semantic}</strong></div><div><span>Lexical contribution</span><strong>{contribution.lexical}</strong></div><div><span>Conceptual contribution</span><strong>{contribution.conceptual}</strong></div><div><span>Sum before square root</span><strong>{trace.overall.sum_of_weighted_squares}</strong></div></div>{metrics.component_disagreement && <p className="calculation-warning">The component scores differ substantially. Weighted RMS prevents a strong change signal from being cancelled by a weak one.</p>}</article>
-    <article className="calculation-card"><span className="section-kicker">Connection to the response</span><h3>Detected changes supported by those pages</h3><ul>{answer.key_differences.map((item, index) => <li key={index}>{item}</li>)}</ul><div className="cue-grid"><div><strong>Before legal cues</strong><span>{trace.conceptual.pre_legal_cues.join(", ") || "None detected"}</span><small>Numbers: {trace.conceptual.pre_numbers.join(", ") || "none"}</small></div><div><strong>After legal cues</strong><span>{trace.conceptual.post_legal_cues.join(", ") || "None detected"}</span><small>Numbers: {trace.conceptual.post_numbers.join(", ") || "none"}</small></div></div></article>
-    <p className="research-note">These calculations measure retrieved-text movement and evidence alignment. They are not probabilities, legal correctness scores or legal advice.</p>
-  </section>;
-}
-
-function CalculationSource({ label, citation, chunk, scoringExcerpt }) {
-  const anchor = citation?.source_anchor || chunk?.metadata?.source_anchor || "No page anchor";
-  const sourceUrl = citation?.source_url || citation?.official_portal_url;
-  return <article><span className="section-kicker">{label}</span><h3>{citation?.act_name || chunk?.metadata?.act_name || "Evidence unavailable"}</h3><strong>{anchor}</strong><p>{excerpt(scoringExcerpt || chunk?.text, 520)}</p>{sourceUrl && <a href={sourceUrl} target="_blank" rel="noreferrer">Open cited PDF page source ↗</a>}</article>;
-}
-
-function VerificationPanel({ verification }) { return <article className="panel compact"><span className="section-kicker">Objective verification</span><h3>{verification.passed ? "Alignment checks passed" : "Review required"}</h3><div className="check-list">{verification.checks.map((check) => <div key={check.id} className={check.passed ? "pass" : "fail"}><span>{check.passed ? "✓" : "!"}</span>{check.label}</div>)}</div><p className="panel-note">{verification.note}</p></article>; }
 
 function EvidencePanel({ citations, retrieval }) {
   const amendments = retrieval.live_indiacode?.amendments || [];
@@ -329,5 +279,3 @@ function RecentChangesFaq({ onAsk }) {
 async function api(path, options = {}) { const init = { method: options.method || "GET", headers: { Accept: "application/json" } }; if (options.body !== undefined) { init.headers["Content-Type"] = "application/json"; init.body = JSON.stringify(options.body); } const response = await fetch(path, init); let value; try { value = await response.json(); } catch { throw new Error(`Server returned ${response.status}`); } if (!response.ok) throw new Error(value.error || `Request failed with ${response.status}`); return value; }
 function titleCase(value) { return String(value || "").replaceAll("_", " ").replaceAll("-", " ").split(/\s+/).map((item) => item.charAt(0).toUpperCase() + item.slice(1)).join(" "); }
 function formatNumber(value) { return Number(value || 0).toLocaleString("en-IN"); }
-function driftLevel(value) { const score = Number(value || 0); return score <= 33.3 ? "Low" : score <= 66.6 ? "Medium" : "High"; }
-function excerpt(value, maximum = 900) { const text = String(value || "No excerpt was returned.").replace(/\s+/g, " ").trim(); return text.length <= maximum ? text : `${text.slice(0, maximum - 1).trim()}…`; }

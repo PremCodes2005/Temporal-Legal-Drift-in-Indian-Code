@@ -175,3 +175,25 @@ Remote GitHub Actions has still not been observed. See [../reports/phase3/tempor
   - the rule extractor's precision beyond a 6-item spot check;
   - the LLM proposer against a live model (only a timeout and validation are tested);
   - a screen-reader listening pass.
+
+## Analysis workspace addendum (2026-10-13, rag-answer-v4)
+
+- **Executed:**
+  - Python: 277 tests under 3.14 and 3.11. Before the release only the expected Phase 11 checksum gate failed. `validate-contract` passed.
+  - Frontend: 24 vitest tests against real v4 backend responses.
+  - Audit cases v3: 27/27, with 0 support, pairing or citation errors. Cases v1 and v2 are kept.
+  - Real Chrome:
+    - the five views for IT s.19 and DM s.31;
+    - refresh and pasted deep links;
+    - a facts re-run (DM s.31, 18 months → outcome "Changed (conditional)");
+    - arrow, Home and End keys;
+    - no horizontal scroll at 320–480px;
+    - `browser-a11y-check.mjs` passed: named controls, visible focus, Enter and Space toggle the explanation.
+- **Defects found by the real-browser run and fixed:**
+  - a pasted analysis or question link in an open tab was ignored;
+  - a write-once record from older method code was served under the same ID (the ID now includes method versions and the generation method);
+  - a unit test wrote runtime records into the repository.
+- **Not verified:**
+  - legal accuracy of determinations, triage labels and decisive-fact assumptions;
+  - a screen-reader listening pass;
+  - a live-LLM general answer.

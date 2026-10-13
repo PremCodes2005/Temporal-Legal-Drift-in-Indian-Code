@@ -22,18 +22,32 @@ from temporal_legal_drift.jsonio import canonical_json_bytes, load_json
 from .question import QuestionFrame
 from .versions import VERSION_CLAIMS
 
-DETERMINATIONS_VERSION = "determinations-v2"  # v2 adds applicability; textual_drift mirrors fingerprint.wording_drift
+DETERMINATIONS_VERSION = "determinations-v3"  # v3: explicit limit kinds; materiality machine triage on the fly when no frozen silver row matches
 MATERIALITY_ARTIFACT = "data/silver/materiality_reassessment.v2.5.json"
 LLM_MATERIALITY_ARTIFACT = "data/assessments/materiality_llm_assessments.v2.json"
 SCENARIO_FIELDS = {"reference_date", "organization_type", "industry", "jurisdiction", "activity", "facts"}
 
 
+LIMIT_ACTIONS = {
+    "facts": {"type": "add_facts", "label": "Add the facts asked for in Scenario & Impact"},
+    "evidence": {"type": "verify_source", "label": "Check the official source on India Code; your facts cannot fill this gap"},
+    "method": {"type": "queue_review", "label": "Read the changed words and queue them for expert review"},
+    "not_applicable": {"type": "none", "label": "Nothing to do for this question"},
+}
+
+
+def limit_for(state: str, reason: str, kind: str | None = None) -> dict[str, Any] | None:
+    """What is missing and the one action that helps: legal evidence, user facts, a method limit, or nothing applies."""
+    kind = kind or {"NEEDS_FACTS": "facts", "INSUFFICIENT_EVIDENCE": "evidence", "OUT_OF_SCOPE": "not_applicable"}.get(state)
+    return {"kind": kind, "message": reason, "action": LIMIT_ACTIONS[kind]} if kind else None
+
+
 def _d(state: str, *, label: str | None = None, summary: str, reason: str, method: str | None = None,
        evidence_ids: list[str] | None = None, details: dict[str, Any] | None = None, needs: list[dict[str, Any]] | None = None,
-       review_status: str = "UNREVIEWED") -> dict[str, Any]:
+       review_status: str = "UNREVIEWED", limit_kind: str | None = None) -> dict[str, Any]:
     return {"state": state, "label": label, "summary": summary, "reason": reason, "method": method,
             "evidence_ids": evidence_ids or [], "details": details or {}, "needs": needs or [], "review_status": review_status,
-            "legal_validation": "UNVERIFIED"}
+            "limit": limit_for(state, reason, limit_kind), "legal_validation": "UNVERIFIED"}
 
 
 def validate_scenario(value: Any) -> dict[str, Any] | None:
@@ -92,21 +106,15 @@ def materiality(root: Path, frame: QuestionFrame, versions: dict[str, Any]) -> d
         return _d("OUT_OF_SCOPE", summary="Not a comparison question.", reason="Materiality is assessed for a specific amendment; none was asked about.")
     if versions["support_class"] not in VERSION_CLAIMS:
         return _d("INSUFFICIENT_EVIDENCE", summary="No supported change to assess.", reason="No supported before/after versions; the answer above explains why.", details={"upstream_reason": versions["reason"]})
-    if versions["support_class"] != "GRAPH_TRANSITION_FRAGMENTS":
-        return _d("INSUFFICIENT_EVIDENCE", summary="No versioned assessment for this amendment.",
-                  reason="The versioned materiality set covers 50 graph-linked amendments; this footnote-based change is not one of them, "
-                         "and no label is computed on the fly.")
-    instruction = next(item for item in versions["evidence"] if item["role"] == "amendment_instruction")
-    rows = [row for row in load_json(root / MATERIALITY_ARTIFACT)["rows"]
+    instruction = next((item for item in versions["evidence"] if item["role"] == "amendment_instruction"), None)
+    rows = [] if instruction is None else [row for row in load_json(root / MATERIALITY_ARTIFACT)["rows"]
             if row["source_sha256"] == instruction["source_sha256"]
             and row["extraction_v2"].get("target_provision") == versions["provision_path"]
             and row["extraction_v2"].get("operation") == versions["operation"]
             and _norm(row["v2"].get("after_text")) == _norm(versions["after"]["text"])
             and _norm(row["v2"].get("before_text")) == _norm(versions["before"]["text"])]
     if len(rows) != 1:
-        return _d("INSUFFICIENT_EVIDENCE", summary="No versioned assessment for this amendment.",
-                  reason=f"No exact match in the versioned materiality set ({len(rows)} rows share this source, provision, operation and wording); "
-                         "no label is computed on the fly.")
+        return _machine_triage(versions, len(rows))
     row = rows[0]
     rule_a, rule_b = row["v2"]["rule_a"], row["v2"]["rule_b"]
     labels = [(name, rule["label"]) for name, rule in (("Rule A (cue transition)", rule_a), ("Rule B (operation and cues)", rule_b))
@@ -123,7 +131,8 @@ def materiality(root: Path, frame: QuestionFrame, versions: dict[str, Any]) -> d
                   reason="Both versioned rules abstained for this amendment: " + (rule_a.get("rationale") or rule_b.get("rationale") or "review required") + ".")
     distinct = sorted({label for _, label in labels})
     label = distinct[0] if len(distinct) == 1 else " / ".join(f"{label} ({name.split(' (')[0]})" for name, label in labels)
-    return _d("PROVISIONAL", label=label, method="materiality-silver-v2.5 (rule-based machine triage)", details=details,
+    details["source"] = "FROZEN_SILVER_SET"
+    return _d("PROVISIONAL", label=label, method="materiality-silver-v2.5 (frozen rule-based machine triage)", details=details,
               evidence_ids=[instruction["evidence_id"], versions["before"]["evidence_id"], versions["after"]["evidence_id"]],
               summary="Provisional machine triage of legal significance; not an expert judgment.",
               reason=("Exact match to a case in the versioned materiality set; " +
@@ -292,18 +301,13 @@ def risk(root: Path, frame: QuestionFrame, versions: dict[str, Any], scenario: d
     if not scenario or missing:
         return (_d("NEEDS_FACTS", summary="Add your situation to assess risk.", method="compliance-risk-baseline-v1", needs=missing or needs,
                    reason="A versioned obligation rule exists for this provision, but risk needs your facts: " + ", ".join(n["label"] for n in (missing or needs)) + "."),
-                {"state": "NEEDS_FACTS", "needs": missing or needs, "reason": "Your facts are needed to evaluate both versions."})
+                _decisive_comparison(rules, scenario))
     request = {"scenario_id": "rag_" + sha256(canonical_json_bytes({"q": frame.query, "s": scenario})).hexdigest()[:16],
                "organization_type": scenario["organization_type"], "industry": scenario["industry"], "jurisdiction": scenario["jurisdiction"],
                "facts": scenario["facts"], "reference_date": scenario["reference_date"], "applicable_provision": provision,
                "activity": scenario["activity"], "exposure": {"description": None, "amount": None}}
     result = service.assess(request)
-    comparison = _compare_versions(service, request, rules)
-    if comparison is None and len(rules) > 1:
-        lacking = [need for need in _risk_needs(rules) if need["key"].startswith("facts.") and not _has(scenario, need["key"])]
-        if lacking:
-            comparison = {"state": "NEEDS_FACTS", "needs": lacking,
-                          "reason": "To compare both versions for your situation, also answer: " + ", ".join(n["label"] for n in lacking) + "."}
+    comparison = _compare_versions(service, request, rules) or _decisive_comparison(rules, scenario)
     uncertainty = result.get("uncertainty") or []
     stipulated = "historical_applicability_stipulated_for_demonstration" in uncertainty
     if result["status"] == "PROVISIONAL_ASSESSMENT":
@@ -351,6 +355,34 @@ def _has(scenario: dict[str, Any] | None, key: str) -> bool:
     if key.startswith("facts."):
         return key[6:] in (scenario.get("facts") or {})
     return scenario.get(key) is not None
+
+
+def _decisive_comparison(rules: list[dict[str, Any]], scenario: dict[str, Any] | None) -> dict[str, Any] | None:
+    """Compare the versions on the facts their rules differ on; what both rules share is stated as an assumption.
+
+    The minimum facts for "does the answer change between versions" are the decisive ones; the shared scope and
+    conditions decide risk (asked for separately), not the difference between the versions.
+    """
+    if len(rules) < 2 or any(r["kind"] == "deadline" for r in rules):
+        return None
+    if any(r["scope"] != rules[0]["scope"] or r["conditions"] != rules[0]["conditions"] for r in rules):
+        return None
+    facts = (scenario or {}).get("facts") or {}
+    decisive = sorted({r["fact_key"] for r in rules})
+    missing = [k for k in decisive if not isinstance(facts.get(k), type(next(r["required_value"] for r in rules if r["fact_key"] == k)))]
+    if missing:
+        return {"state": "NEEDS_FACTS", "needs": [{"key": f"facts.{k}", "label": k.replace("_", " ").capitalize(), "kind": "boolean"} for k in missing],
+                "reason": "Only the facts on which the two versions' rules differ are needed to compare them."}
+    outcomes = []
+    for rule in sorted(rules, key=lambda r: r["reference_dates"][0]):
+        meets = facts[rule["fact_key"]] == rule["required_value"]
+        meets = not meets if rule["kind"] == "prohibition" else meets
+        outcomes.append({"rule_id": rule["rule_id"], "provision_version": rule["provision_version"], "date": rule["reference_dates"][0],
+                         "status": "DECISIVE_FACT_COMPARISON", "risk_flag": not meets, "risk_level": None, "decisive_fact": rule["fact_key"]})
+    describe = lambda o: "meets the rule" if o["risk_flag"] is False else "does not meet the rule"  # noqa: E731
+    return {"state": "COMPARED", "changed": outcomes[0]["risk_flag"] != outcomes[-1]["risk_flag"], "outcomes": outcomes,
+            "assumes": "your organisation, activity and the shared conditions match the modelled rule (they are identical for both versions)",
+            "summary": f"Under the earlier wording your situation {describe(outcomes[0])}; under the later wording it {describe(outcomes[-1])}."}
 
 
 def _compare_versions(service: Any, request: dict[str, Any], rules: list[dict[str, Any]]) -> dict[str, Any] | None:
@@ -403,3 +435,31 @@ def applicability(frame: QuestionFrame, versions: dict[str, Any], scenario: dict
     return _d("CONDITIONAL", label=f"{applies.capitalize()}-amendment wording", details=details,
               summary=f"On {reference} the {applies}-amendment wording would apply if the commencement date ({commencement['date']}) governs your situation.",
               reason=f"Commencement basis: {commencement['basis']}. Scenario applicability is not verified.")
+
+
+def _machine_triage(versions: dict[str, Any], silver_rows: int) -> dict[str, Any]:
+    """Materiality of the amendment itself, computed now with the same two versioned rules as the silver set.
+
+    It needs no scenario facts. It is provisional machine triage: not a frozen silver row and never legal gold.
+    """
+    from temporal_legal_drift.materiality.silver import _cue_transition_annotator, _operation_delta_annotator
+
+    if any(item.get("text_reliability") == "UNRELIABLE_TEXT_LAYER" for item in versions["evidence"]):
+        return _d("INSUFFICIENT_EVIDENCE", summary="Not assessed: unreliable source text.",
+                  reason="A cited source has an unreliable text layer, so its wording is not triaged.")
+    sub = versions.get("substitution")
+    task = {"operation": versions.get("operation") or "SUBSTITUTE", "before_text": sub["old"] if sub else versions["before"]["text"],
+            "after_text": sub["new"] if sub else versions["after"]["text"]}
+    rule_a, rule_b = _cue_transition_annotator(task), _operation_delta_annotator(task)
+    labels = sorted({rule_a["label"], rule_b["label"]})
+    label = labels[0] if len(labels) == 1 else f"{rule_a['label']} (rule A) / {rule_b['label']} (rule B)"
+    return _d("PROVISIONAL", label=label, method="machine triage computed now: rule-cue-transition-v1 and operation-delta-v1",
+              evidence_ids=[versions["before"]["evidence_id"], versions["after"]["evidence_id"]],
+              summary="Provisional machine triage of the amendment's legal significance, computed for this answer.",
+              reason=("No frozen silver assessment covers this amendment"
+                      + (f" ({silver_rows} near-matching rows)" if silver_rows else "") + ", so the same two versioned rules were applied now. "
+                      + ("Both rules agree." if len(labels) == 1 else "The rules disagree, so both labels are shown.")),
+              details={"source": "ON_THE_FLY_MACHINE_TRIAGE", "frozen_silver_match": False, "is_gold": False, "labels_are_legal_truth": False,
+                       "rule_a": {k: rule_a.get(k) for k in ("label", "rationale", "dimensions", "method_id")},
+                       "rule_b": {k: rule_b.get(k) for k in ("label", "rationale", "dimensions", "method_id")}, "operands": task},
+              review_status="NOT_REVIEWED_MACHINE_TRIAGE")

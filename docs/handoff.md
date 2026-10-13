@@ -145,3 +145,20 @@ The legal/research gate is unchanged: UNVERIFIED.
   - more outcome-evaluable fields.
 
 The legal/research gate is unchanged: UNVERIFIED.
+
+## Analysis workspace status (2026-10-13, rag-answer-v4)
+
+- **Stored analyses (ADR 0016):**
+  - Each answer is stored once under a stable `analysis_id` and served by `GET /api/analyses/<id>`.
+  - The UI has five views of that record (Answer, Compare & Evidence, Scores & Method, Scenario & Impact, Sources & Review), addressed by `#analysis/<id>/<view>`.
+  - Runtime records live in `data/runtime/analyses/` (gitignored).
+- **Typed limits:** evidence, facts or method. `scenario_request` asks only for the decisive facts; facts in the question are applied and attributed.
+- **Materiality:** machine-triaged on the fly (PROVISIONAL, never gold) when no frozen silver row matches.
+- **Rule drift v1.1:** unsupported changes are "Not scored". The IT s.19 "actor 5/100" was a qualifier misread and is gone.
+- **Report:** `reports/analysis_workspace/report.v1.md` (before/after screenshots, 27-case table).
+- **Next:**
+  - number words in materiality rule A;
+  - a reviewed actor lexicon;
+  - a screen-reader listening pass.
+
+The legal/research gate is unchanged: UNVERIFIED.

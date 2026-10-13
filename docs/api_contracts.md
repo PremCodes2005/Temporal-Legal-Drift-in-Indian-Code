@@ -4,6 +4,18 @@ The field lists were read from live responses of this checkout. They are enginee
 
 ## `POST /api/rag/query`  body `{"query": str, "mode": "specific" | "generic", "scenario"?: {...}}`
 
+**rag-answer-v4** (`schema_version` 4.0.0; schema `schemas/rag/rag_answer.v4.schema.json`; ADR 0016) adds the following. Every v3, v2 and v1 field is retained.
+
+- **`analysis_id`:** `an_` plus 24 hex characters. It is a hash of the contract, method versions, query, mode, applied scenario, generation method, index identity, graph hash and active release. The response is stored once under this ID.
+- **`limit`** on every determination and fingerprint component: `{kind: evidence | facts | method | not_applicable, reason, action: {type: verify_source | add_facts | queue_review | none, label}}`.
+- **`scenario_request`:** `{fields[{key, label, kind, options, unlocks[], group: core | risk, value, source: question | form | null}], facts_in_use, blocked_by_evidence[], explanation}`. It holds only the facts that unlock a component whose limit kind is `facts`.
+- **`determinations-v3`:** `materiality.details.source` is `FROZEN_SILVER_SET` or `ON_THE_FLY_MACHINE_TRIAGE` (with `rule_a`, `rule_b` and `review_status`).
+- **`legal-change-fingerprint-v1.1`:** an unsupported rule change gives `rule_drift.value = null`, `label "Not scored"` and `details.unscored_reason`. Registry outcome rows may carry `assumes`.
+
+## `GET /api/analyses/<analysis_id>`
+
+Returns the stored rag-answer-v4 response, unchanged. An ID that does not match `an_[0-9a-f]{24}` gives 400; an unknown ID gives 404. Shareable browser address: `#analysis/<id>/<answer|evidence|scores|scenario|sources>`.
+
 **rag-answer-v3** (`schema_version` 3.0.0; schema `schemas/rag/rag_answer.v3.schema.json`; ADR 0015) adds the following. Every v2 and v1 field is retained.
 
 - **`fingerprint`:** `{version: "legal-change-fingerprint-v1", wording_drift, rule_drift, outcome_drift, note}`.

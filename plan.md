@@ -2099,3 +2099,7 @@ The assistant's evidence selection and its four determinations are described in 
 ## Implementation status note (2026-10-13, rag-answer-v3)
 
 The Legal Change Fingerprint is described in ADR 0015 and `reports/fingerprint/fingerprint_report.v1.md`. This changes no research acceptance criterion. Legal validation remains UNVERIFIED.
+
+## Implementation status note (2026-10-13, rag-answer-v4)
+
+Stored analyses, typed limits, minimum facts, on-the-fly materiality triage and rule-drift v1.1 are described in ADR 0016 and `reports/analysis_workspace/report.v1.md`. This changes no research acceptance criterion. Legal validation remains UNVERIFIED.

@@ -112,6 +112,10 @@ def evaluate_case(case: dict[str, Any], response: dict[str, Any] | None, error: 
                       for name in expected["states"] if row["determinations"][name] != expected["states"][name]}
     state_mismatch.update({f"fingerprint.{name}": {"expected": state, "actual": row["fingerprint"][name]}
                            for name, state in (expected.get("fingerprint") or {}).items() if row["fingerprint"][name] != state})
+    for name, label in (expected.get("fingerprint_labels") or {}).items():
+        actual = ((response.get("fingerprint") or {}).get(name) or {}).get("label")
+        if actual != label:
+            state_mismatch[f"fingerprint.{name}.label"] = {"expected": label, "actual": actual}
     row.update({"support_errors": errors, "pairing_errors": pairing_errors, "citation_errors": citation_errors,
                 "state_mismatch": state_mismatch})
     return row
