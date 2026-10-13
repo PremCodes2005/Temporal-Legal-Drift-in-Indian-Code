@@ -171,7 +171,8 @@ def section_answer(text: str, terms: list[str], mode: str, act_name: str | None,
     chosen = [s for s in ranked[: 2 if mode == "specific" else 1] if any(t in s.casefold() for t in terms)] or sentences[:1]
     ordered = [s for s in sentences if s in chosen]
     quote = _quote(" ".join(ordered), 520 if mode == "specific" else 300)
-    title = f" ({re.sub(r'\d+\[|\]', '', head.group(1)).strip(' .—-')})" if head else ""
+    heading = re.sub(r"\d+\[|\]", "", head.group(1)).strip(" .—-") if head else ""  # outside the f-string: Python 3.11
+    title = f" ({heading})" if heading else ""
     return f"Section {number}{title} of the {act_name or 'Act'} says: “{quote}”"
 
 

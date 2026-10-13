@@ -150,3 +150,5 @@ Remote GitHub Actions has still not been observed. See [../reports/phase3/tempor
   - the held-out questions use formal titles, so paraphrase robustness is not measured;
   - the LLM path was sampled once, not evaluated;
   - no screen-reader listening pass.
+
+**CI finding (2026-10-13):** run 38350841823 for v0.11.0 (`6e11fdc`) failed on Python 3.11. `rag/compose.py` used a backslash inside an f-string expression, which is valid only from Python 3.12, so the module failed to import. The local fresh-environment reproduction used Python 3.14 and could not catch it. Fixed in v0.12.0, and the full suite was run under Python 3.11 locally (249 tests; only the expected pre-release checksum gate failed; 1 pypdf skip). v0.11.0 is kept unchanged as a published record but should not be used.
