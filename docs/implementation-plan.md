@@ -98,3 +98,15 @@ Not achieved in the sprint:
 | Live download → storage → parse → review queue | **PASS (audited manual import)**; scheduled discovery live `OK` (20 rows, none eligible) | `docs/sprint/s1_source_access_decision.v3.md` |
 | Always-on deployment + missed-run alerting | **PASS (tests)**; no host provisioned | ADR 0011, runbook, `tests/unit/test_deploy.py` |
 | Real-browser keyboard / AX tree / sub-500px | **PASS after 2 fixes**; no listening test | `frontend/scripts/browser-a11y-check.mjs`, `docs/verification.md` |
+
+## Follow-up sprint 2 (2026-10-13, v0.10.0)
+
+| Item | Result | Evidence |
+| --- | --- | --- |
+| CI for v0.9.0 | **PASS** (run 38281312499, all 4 jobs) | GitHub Actions API |
+| Garbled-Hindi gate | **PASS** — all Devanagari text-layer lines and mojibake withheld; real-PDF regressions | ADR 0012, `tests/unit/test_text_quality.py` |
+| Commencement policy | **PASS (engineering)**; no review mechanism yet | ADR 0013, `tests/unit/test_commencement.py` |
+| Always-on deployment | **UNVERIFIED** — no authorized host; units verified under real systemd in a container | runbook, `deploy/container-check/run.sh` |
+| Scheduled live run | see `docs/verification.md` (session scheduler, laptop) | observation log |
+| TLS after renewal | **UNVERIFIED** — not yet renewed | `docs/verification.md` |
+| VoiceOver/NVDA pass | **UNVERIFIED** — needs the user to enable VoiceOver AppleScript control | `frontend/scripts/voiceover-reading-pass.sh` |

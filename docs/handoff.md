@@ -97,3 +97,15 @@ The legal/research gate is unchanged: UNVERIFIED.
   - a listening test with a real screen reader.
 
 The legal/research gate is unchanged: UNVERIFIED.
+
+## Text quality, commencement, deployment status (2026-10-13, v0.10.0)
+
+- **Hindi from PDF text layers is never used as evidence.** Lines are withheld (text-quality-v1, ADR 0012), and legacy-font mojibake is detected. See `docs/methodology/text_quality.v1.md`.
+- **Commencement notifications** are discovered conservatively and stored as separate, unreviewed facts (ADR 0013). No review mechanism exists yet, which is the next legal-process step.
+- **Deployment:** the systemd units are verified under real systemd in a no-network container (`deploy/container-check/run.sh`). No always-on host is deployed.
+- **Unverified:**
+  - TLS after the e-Gazette certificate renewal (expires 2026-10-19);
+  - a VoiceOver/NVDA listening pass (script ready; needs the user to enable AppleScript control);
+  - deployment on an always-on host.
+
+The legal/research gate is unchanged: UNVERIFIED.

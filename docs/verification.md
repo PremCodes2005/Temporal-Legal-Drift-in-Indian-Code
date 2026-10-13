@@ -99,3 +99,33 @@ Remote GitHub Actions has still not been observed. See [../reports/phase3/tempor
   - listening with VoiceOver or NVDA (only the browser's accessibility tree was inspected);
   - a real systemd host or `systemd-analyze verify`;
   - a scheduled (non-manual) e-Gazette run that downloads an amending Act; none was listed today.
+
+## Text quality, commencement, deployment and observation addendum (2026-10-13, release v0.10.0)
+
+**CI:** GitHub Actions run 38281312499 for `8959a33` (v0.9.0) succeeded, with jobs 3.11, 3.12, 3.13 and frontend-build all green, read from the Actions API. Run 38346672834 for `a5c7667` (v0.10.0) also succeeded on all four jobs. It is the first run with pypdf 6.16.2 installed, so the real-PDF re-parse test ran in CI.
+
+**Text-quality gate:**
+- **Fixtures:** real Gazette PDFs CG-DL-E-12102026-277080 (Hindi mis-mapped) and CG-DL-E-10102026-277026 (KrutiDev mojibake), plus a correct-Unicode Hindi control PDF.
+- **Corpus calibration:** 278 of 245,761 frozen-corpus lines withheld, every one reviewed as garbage. English lines that must survive are pinned in tests.
+- **Remediation:** the operational overlay was rebuilt; the one chunk containing Devanagari was removed.
+- **Re-parse test:** a live pypdf re-parse must match the frozen extraction, and CI now installs pypdf 6.16.2.
+
+**Commencement policy:**
+- On the real MSMED notification: two `partial_commencement` facts, 2026-10-15 and 2026-12-15, with verbatim provisions, Act 16 of 2026 and S.O. 5575(E).
+- The publication fact is kept separate, and applicability stays `NOT_DETERMINED`.
+- The resolver escalates (`no_approved_temporal_evidence`) while the facts are unreviewed.
+- On the real listing, the discovery rule selected 1 of 18 subjects (the right one).
+
+**systemd (container harness, not a host):**
+- Environment: Debian 12 with systemd 252, run with `--network none`.
+- Results: `systemd-analyze verify` passed on all units; both timers were scheduled; the monitor job ran once per source and a repeat inside the window started nothing.
+- Alerting: the health check exited 3 on `INGESTION_STALE` and then `SCHEDULER_MISSED_RUN`, and `OnFailure=` delivered the alerts.
+- Script: `deploy/container-check/run.sh` reran this end to end with PASS.
+
+**TLS:** at 2026-10-13T04:27Z the e-Gazette certificate was not yet renewed (serial `0509D525…`, YR2, notAfter 2026-10-19 09:53Z), and the pinned-chain handshake succeeded.
+
+**Not verified:**
+- **Always-on host:** none is authorized or named, so deployment is unverified. Exact install steps are in the runbook.
+- **Certificate renewal:** has not happened yet, so TLS after renewal is unverified.
+- **Screen readers:** no VoiceOver or NVDA listening pass was done. NVDA is Windows-only. VoiceOver AppleScript control is off on this machine, and enabling it is the user's decision. `frontend/scripts/voiceover-reading-pass.sh` is ready but has not been run.
+- **Scheduled live run:** in progress on a session-scoped hourly scheduler on a laptop (not an always-on host). Results are appended below when observed.
