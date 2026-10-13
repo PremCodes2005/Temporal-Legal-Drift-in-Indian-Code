@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-// rag-answer-v2 rendering against real backend responses (fixtures/rag_answer_v2.json, generated offline).
+// rag-answer-v2 rendering against real backend responses (fixtures/rag_answer_v3.json, generated offline).
 import { readFileSync } from "node:fs";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, render, screen, within } from "@testing-library/react";
@@ -7,7 +7,7 @@ import userEvent from "@testing-library/user-event";
 import { RagResult } from "../App";
 
 afterEach(cleanup);
-const { responses } = JSON.parse(readFileSync("src/__tests__/fixtures/rag_answer_v2.json", "utf8"));
+const { responses } = JSON.parse(readFileSync("src/__tests__/fixtures/rag_answer_v3.json", "utf8"));
 const card = (title) => screen.getByRole("heading", { name: title, level: 3 }).closest("article");
 
 describe("answer first, then four separate determinations", () => {
@@ -22,7 +22,8 @@ describe("answer first, then four separate determinations", () => {
 
   it("shows each determination with its own state and reason, and no invented labels", () => {
     render(<RagResult result={responses["mv-s173"]} onExplain={() => {}} />);
-    expect(within(card("Textual drift")).getByText("Determined")).toBeTruthy();
+    expect(within(card("Wording drift")).getByText("Determined")).toBeTruthy();
+    expect(within(card("Rule drift")).getByText("15/100")).toBeTruthy();
     expect(within(card("Materiality")).getByText("Provisional")).toBeTruthy();
     expect(within(card("Materiality")).getByText(/not an expert judgment/)).toBeTruthy();
     expect(within(card("Answer change")).getByText("Changes")).toBeTruthy();
@@ -70,14 +71,17 @@ describe("partial and abstaining answers", () => {
     expect(screen.getByText(/not recorded as amending/)).toBeTruthy();
     expect(screen.queryByText("Clause comparison")).toBeNull();
     expect(screen.queryByText("How this score was calculated")).toBeNull();
-    expect(within(card("Textual drift")).getByText("Not enough evidence")).toBeTruthy();
+    expect(within(card("Wording drift")).getByText("Not enough evidence")).toBeTruthy();
+    expect(within(card("Outcome drift")).getByText("Cannot determine")).toBeTruthy();
   });
 
   it("answers a general question from the cited section without a before/after", () => {
     render(<RagResult result={responses.general} onExplain={() => {}} />);
     expect(screen.getByText(/Section 37 \(Reference to mediation\)/)).toBeTruthy();
     expect(screen.queryByRole("region", { name: "Before" })).toBeNull();
-    for (const title of ["Textual drift", "Materiality", "Answer change", "Risk"]) expect(within(card(title)).getByText("Not applicable")).toBeTruthy();
+    for (const title of ["Materiality", "Applicability", "Answer change", "Risk", "Wording drift", "Rule drift", "Outcome drift"]) {
+      expect(within(card(title)).getAllByText("Not applicable").length).toBeGreaterThan(0);
+    }
   });
 
   it("says an unknown Act is not in the corpus instead of answering from another document", () => {

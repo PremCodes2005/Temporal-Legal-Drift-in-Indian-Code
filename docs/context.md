@@ -53,3 +53,7 @@ The intended research scope and acceptance criteria remain in [plan.md](../plan.
 ## Update (2026-10-13, rag-answer-v2)
 
 The single-prompt assistant now answers from identity-selected evidence: the Act and section from the question, with corroborated graph-v4 transitions or footnote reconstructions. It reports four independent determinations (ADR 0014), accepts optional scenario facts, and abstains with specific reasons when the evidence cannot support a conclusion.
+
+## Update (2026-10-13, rag-answer-v3)
+
+Version comparisons return a Legal Change Fingerprint (ADR 0015): wording, rule and outcome drift, reported separately, plus a separate applicability determination. The legacy overall drift is retained as a labelled diagnostic.

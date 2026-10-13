@@ -40,7 +40,7 @@ class RagV2Tests(unittest.TestCase):
     # ---------- evidence and pairing ----------
     def test_named_act_and_section_select_the_corroborated_transition(self) -> None:
         result = self.ask("What amount must be deposited under section 173 of the Motor Vehicles Act after the 2019 amendment?")
-        self.assertEqual(result["contract_version"], "rag-answer-v2")
+        self.assertEqual(result["contract_version"], "rag-answer-v3")
         self.assertEqual(result["comparison"]["support_class"], "GRAPH_TRANSITION_FRAGMENTS")
         self.assertEqual({e["entry_id"] for e in result["evidence"]}, {"motor-vehicles-act-1988", "motor-vehicles-amendment-act-2019"})
         instruction = next(e for e in result["evidence"] if e["role"] == "amendment_instruction")
@@ -143,7 +143,7 @@ class RagV2Tests(unittest.TestCase):
         self.assertEqual((risk["state"], risk["label"]), ("CONDITIONAL", "Medium"))
         self.assertEqual(risk["details"]["rule_id"], "it19-post-conditional-v1")
         self.assertEqual((change["state"], change["label"]), ("CONDITIONAL", "Changes"))
-        self.assertIn("meets the rule", change["summary"])
+        self.assertIn("meets the modelled rule", change["summary"])
 
     def test_risk_rule_date_mismatch_abstains_and_never_reads_as_no_risk(self) -> None:
         risk = self.ask(IT19, scenario={**IT19_FACTS, "reference_date": "2015-06-01"})["determinations"]["risk"]

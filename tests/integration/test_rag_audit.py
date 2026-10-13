@@ -1,4 +1,4 @@
-"""Cross-corpus regression: the 24-case audit set (12 Acts, 15 strata) against source-derived expectations."""
+"""Cross-corpus regression: the 24-case audit set v2 (12 Acts, 15 strata) against source-derived expectations."""
 
 from __future__ import annotations
 
@@ -10,14 +10,14 @@ from temporal_legal_drift.rag.audit import offline_extractive, run_audit
 from temporal_legal_drift.rag.rag_pipeline import RagPipeline
 
 ROOT = Path(__file__).resolve().parents[2]
-SCHEMA = json.loads((ROOT / "schemas/rag/rag_answer.v2.schema.json").read_text())
+SCHEMA = json.loads((ROOT / "schemas/rag/rag_answer.v3.schema.json").read_text())
 
 
 class RagAuditRegression(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         with offline_extractive():
-            cls.report = run_audit(ROOT, ROOT / "configs/rag_audit/cases.v1.json", pipeline=RagPipeline(ROOT))
+            cls.report = run_audit(ROOT, ROOT / "configs/rag_audit/cases.v2.json", pipeline=RagPipeline(ROOT))
 
     def test_no_support_pairing_or_citation_errors(self) -> None:
         summary = self.report["summary"]
@@ -34,7 +34,7 @@ class RagAuditRegression(unittest.TestCase):
 class ContractTests(unittest.TestCase):
     """Responses carry every rag-answer-v2 field and use only the declared states and roles."""
 
-    def test_responses_follow_the_v2_contract(self) -> None:
+    def test_responses_follow_the_v3_contract(self) -> None:
         determination = SCHEMA["$defs"]["determination"]
         states = set(determination["properties"]["state"]["enum"])
         roles = set(SCHEMA["properties"]["evidence"]["items"]["properties"]["role"]["enum"])
@@ -49,9 +49,16 @@ class ContractTests(unittest.TestCase):
         for response in responses:
             with self.subTest(query=response["query"]):
                 self.assertLessEqual(set(SCHEMA["required"]), set(response))
-                self.assertEqual((response["schema_version"], response["contract_version"]), ("2.0.0", "rag-answer-v2"))
+                self.assertEqual((response["schema_version"], response["contract_version"]), ("3.0.0", "rag-answer-v3"))
                 self.assertLessEqual(set(SCHEMA["properties"]["answer"]["required"]), set(response["answer"]))
-                for name in ("textual_drift", "materiality", "answer_change", "risk"):
+                component = SCHEMA["$defs"]["component"]
+                for name in ("wording_drift", "rule_drift", "outcome_drift"):
+                    value = response["fingerprint"][name]
+                    self.assertEqual(set(value), set(component["required"]))
+                    self.assertIn(value["state"], set(component["properties"]["state"]["enum"]))
+                    if value["state"] in {"INSUFFICIENT_EVIDENCE", "OUT_OF_SCOPE", "NEEDS_FACTS"}:
+                        self.assertIsNone(value["value"])  # a missing component is never 0
+                for name in ("textual_drift", "materiality", "applicability", "answer_change", "risk"):
                     value = response["determinations"][name]
                     self.assertEqual(set(value), set(determination["required"]))
                     self.assertIn(value["state"], states)

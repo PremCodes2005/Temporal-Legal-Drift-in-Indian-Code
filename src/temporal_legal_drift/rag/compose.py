@@ -55,7 +55,7 @@ def _amending_name(versions: dict[str, Any], catalog_names: dict[str, str]) -> s
 
 
 def compose_version_answer(frame: QuestionFrame, mode: str, versions: dict[str, Any], determinations: dict[str, Any],
-                           catalog_names: dict[str, str]) -> dict[str, Any]:
+                           catalog_names: dict[str, str], fingerprint: dict[str, Any] | None = None) -> dict[str, Any]:
     if versions["support_class"] not in VERSION_CLAIMS:
         return _abstention(frame, versions, catalog_names)
     sub = versions.get("substitution")
@@ -98,13 +98,17 @@ def compose_version_answer(frame: QuestionFrame, mode: str, versions: dict[str, 
     if versions.get("other_unreconstructed_footnotes"):
         caveats.append(f"{versions['other_unreconstructed_footnotes']} other amendment footnote(s) for this section could not be reconstructed, "
                        "so other wording in it may also have changed.")
+    rule = (fingerprint or {}).get("rule_drift") or {}
+    if rule.get("state") in {"DETERMINED", "PROVISIONAL"}:
+        caveats.insert(0, rule["summary"])
     sections.append({"id": "what_changed", "title": "What changed", "text": what + (" " + " ".join(caveats) if caveats else ""),
                      "evidence_ids": [i for i in items if items[i]["role"] in {"amendment_instruction", "substitution_footnote"}] or list(items)[:1],
                      "kind": "evidence"})
     effect = change["summary"] if change["state"] in {"DETERMINED", "CONDITIONAL"} else change["reason"]
     if change["state"] == "CONDITIONAL":
         effect += " " + change["reason"]
-    sections.append({"id": "effect", "title": "Effect on your question", "text": effect, "evidence_ids": change.get("evidence_ids", []),
+    sections.append({"id": "effect", "title": "Effect on this scenario" if change.get("method") == "outcome-drift-v1" else "Effect on your question",
+                     "text": effect, "evidence_ids": change.get("evidence_ids", []),
                      "kind": "inference" if change["state"] != "DETERMINED" else "evidence"})
     return {"version": COMPOSITION_VERSION, "direct_answer": opening, "sections": sections, "limitations": _limitations(versions)}
 

@@ -2095,3 +2095,7 @@ The live-pipeline sprint (daily e-Gazette/India Code pipeline, drift-metrics-v3,
 ## Implementation status note (2026-10-13, rag-answer-v2)
 
 The assistant's evidence selection and its four determinations are described in ADR 0014 and `reports/rag_audit/integrated_audit.v1.md`. This changes no research acceptance criterion. Legal validation remains UNVERIFIED.
+
+## Implementation status note (2026-10-13, rag-answer-v3)
+
+The Legal Change Fingerprint is described in ADR 0015 and `reports/fingerprint/fingerprint_report.v1.md`. This changes no research acceptance criterion. Legal validation remains UNVERIFIED.

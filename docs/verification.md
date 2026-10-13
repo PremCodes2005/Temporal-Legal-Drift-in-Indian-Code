@@ -152,3 +152,26 @@ Remote GitHub Actions has still not been observed. See [../reports/phase3/tempor
   - no screen-reader listening pass.
 
 **CI finding (2026-10-13):** run 38350841823 for v0.11.0 (`6e11fdc`) failed on Python 3.11. `rag/compose.py` used a backslash inside an f-string expression, which is valid only from Python 3.12, so the module failed to import. The local fresh-environment reproduction used Python 3.14 and could not catch it. Fixed in v0.12.0, and the full suite was run under Python 3.11 locally (249 tests; only the expected pre-release checksum gate failed; 1 pypdf skip). v0.11.0 is kept unchanged as a published record but should not be used.
+
+## Legal Change Fingerprint addendum (2026-10-13)
+
+- **Executed:**
+  - Python suite: 270 tests under Python 3.14 and 3.11. Before the release, only the expected checksum gate failed. Every file compiles under 3.11.
+  - 24 frontend tests against real v3 backend responses.
+  - Audit case set v2: 24/24 expected states, including the fingerprint and applicability states. Case set v1 is kept unchanged.
+  - Held-out fingerprint run over 86 transitions (`reports/fingerprint/`).
+  - Real Chrome checks:
+    - keyboard check: 24 Tab stops with visible focus; Enter and Space work on "How wording drift was calculated"; no overflow at 320–480px;
+    - facts-form rerun: DM s.31 with 18 months elapsed gives wording 2.0%, rule 15/100 and outcome "Changed". The displayed values equal those from a direct API call.
+- **Defects found and fixed during this work:**
+  - a page-break footnote inside a clause truncated it;
+  - repeated identical markers are now resolved by the instruction's sub-section;
+  - "extend" was read as "ten" because of missing word boundaries;
+  - the OCR gate was blind to short garbled spans;
+  - "as may be decided" was read as a permission;
+  - upstream reasons were repeated across cards.
+- **Not verified:**
+  - legal accuracy;
+  - the rule extractor's precision beyond a 6-item spot check;
+  - the LLM proposer against a live model (only a timeout and validation are tested);
+  - a screen-reader listening pass.

@@ -3,6 +3,7 @@ import CaseReviewPanel from "./CaseReviewPanel";
 import ComparisonPanel from "./ComparisonPanel";
 import { GenerationNotice, IndicatorStrip, ScoreExplanation, VersionStatus } from "./ResultInsights";
 import { DeterminationCards, DirectAnswer, EvidenceList, ScenarioForm } from "./Determinations";
+import { LegalChangeFingerprint } from "./Fingerprint";
 import SourceHealth from "./SourceHealth";
 import ComplianceRiskPanel from "./ComplianceRiskPanel";
 
@@ -139,7 +140,7 @@ function RepositoryStatus({ status, error }) {
 }
 
 export function RagResult({ result, onExplain, onScenario = () => {}, busy = false }) {
-  if (result.contract_version === "rag-answer-v2") return <RagResultV2 result={result} onExplain={onExplain} onScenario={onScenario} busy={busy} />;
+  if (/^rag-answer-v[23]$/.test(result.contract_version || "")) return <RagResultV2 result={result} onExplain={onExplain} onScenario={onScenario} busy={busy} />;
   const answer = result.answer;
   const metrics = result.metrics;
   const isSummary = answer.answer_type === "single_document_summary";
@@ -182,10 +183,12 @@ function RagResultV2({ result, onExplain, onScenario, busy }) {
     {supported && <VersionStatus comparison={comparison} metrics={metrics} />}
     <DirectAnswer answer={answer} />
     {result.scenario && <p className="panel-note">Using your facts: {Object.entries({ ...result.scenario, ...(result.scenario.facts || {}) }).filter(([key, value]) => key !== "facts" && value !== null && value !== "").map(([key, value]) => `${key.replaceAll("_", " ")}: ${value === true ? "yes" : value === false ? "no" : String(value).replaceAll("_", " ")}`).join("; ")}.</p>}
+    {result.fingerprint && <LegalChangeFingerprint fingerprint={result.fingerprint}
+      legacy={metrics && <><p className="panel-note"><strong>Legacy diagnostic (drift-metrics-v3).</strong> {metrics.legacy_diagnostic?.note}</p><DriftPanel metrics={metrics} legacy /><ScoreExplanation metrics={metrics} /></>} />}
     <DeterminationCards determinations={determinations} />
-    <ScenarioForm key={JSON.stringify(result.scenario || {}) + result.query} determinations={determinations} scenario={result.scenario} onSubmit={onScenario} busy={busy} />
+    <ScenarioForm key={JSON.stringify(result.scenario || {}) + result.query} determinations={determinations} extraNeeds={result.fingerprint?.outcome_drift?.needs || []} scenario={result.scenario} onSubmit={onScenario} busy={busy} />
     {supported && <ComparisonPanel comparison={comparison} />}
-    {metrics && <><DriftPanel metrics={metrics} /><ScoreExplanation metrics={metrics} /><button className="explain-drift-button" type="button" onClick={onExplain}>Explain these scores with PDF evidence <span>→</span></button></>}
+    {metrics && !result.fingerprint && <><DriftPanel metrics={metrics} /><ScoreExplanation metrics={metrics} /><button className="explain-drift-button" type="button" onClick={onExplain}>Explain these scores with PDF evidence <span>→</span></button></>}
     <EvidenceList evidence={result.evidence} />
     <div className="result-columns"><VerificationPanel verification={result.verification} /></div>
     {(result.source_fidelity_warnings || []).map((item) => <div className="warning-note" role="alert" key={item.entry_id}><strong>Source text unreliable: {item.entry_id}</strong><span>{item.detail} Treat quoted wording from this source as unverified.</span></div>)}
@@ -199,14 +202,14 @@ function percent(value) { return value == null ? "Unavailable" : `${value}%`; }
 
 function AnswerSection({ label, text, tone }) { return <section className={`answer-section ${tone}`}><div className="answer-label"><span>{tone === "before" ? "B" : tone === "after" ? "A" : "S"}</span><strong>{label}</strong></div><p>{text}</p></section>; }
 
-function DriftPanel({ metrics }) {
+function DriftPanel({ metrics, legacy = false }) {
   const rows = [
     { label: "Vector drift (feature-hash)", value: metrics.semantic_drift_percent, tone: "blue", help: "Cosine distance between deterministic 256-dimension token-hash vectors; not a trained meaning model." },
     { label: "Lexical / textual shift", value: metrics.lexical_drift_percent, tone: "green", help: "Token and sequence changes in the paired excerpts." },
     { label: "Conceptual / legal intent shift", value: metrics.conceptual_drift_percent, tone: "purple", help: metrics.conceptual_method === "llm_judge" ? "Evidence-bound LLM judgment of operative legal change." : "Deterministic legal-cue proxy; no LLM judgment was available." },
     { label: "Evidence-alignment quality", value: metrics.evidence_alignment_quality_percent ?? metrics.alignment_accuracy_percent, tone: "gold", help: "Retrieval confidence, metadata coverage and paired-evidence completeness. Not answer accuracy or a probability." },
   ];
-  return <article className="analytics-panel"><div className="analytics-heading"><div><span className="section-kicker">Drift score breakdown</span><h3>How far the retrieved versions moved</h3></div><div className="overall-score"><strong>{percent(metrics.overall_drift_percent)}</strong><span>weighted RMS drift</span></div></div><div className="metric-bars">{rows.map((row) => <div className="metric-row" key={row.label}><div><strong>{row.label}</strong><span>{row.help}</span></div><div className="bar-line"><div className={`bar-fill ${row.tone}`} style={{ width: `${row.value == null ? 0 : Math.max(0, Math.min(100, row.value))}%` }} /></div><b>{percent(row.value)}</b></div>)}</div>{Object.values(metrics.unavailable_reasons || {}).map((reason) => <p className="panel-note" key={reason}>Unavailable: {reason}.</p>)}{metrics.component_disagreement && <p className="panel-note">The component scores strongly disagree. Review each score and its cited evidence separately; the overall score must not be interpreted as ordinary averaging.</p>}</article>;
+  return <article className="analytics-panel"><div className="analytics-heading"><div><span className="section-kicker">Drift score breakdown</span><h3>How far the retrieved versions moved</h3></div><div className="overall-score"><strong>{percent(metrics.overall_drift_percent)}</strong><span>{legacy ? "legacy overall (diagnostic)" : "weighted RMS drift"}</span></div></div><div className="metric-bars">{rows.map((row) => <div className="metric-row" key={row.label}><div><strong>{row.label}</strong><span>{row.help}</span></div><div className="bar-line"><div className={`bar-fill ${row.tone}`} style={{ width: `${row.value == null ? 0 : Math.max(0, Math.min(100, row.value))}%` }} /></div><b>{percent(row.value)}</b></div>)}</div>{Object.values(metrics.unavailable_reasons || {}).map((reason) => <p className="panel-note" key={reason}>Unavailable: {reason}.</p>)}{metrics.component_disagreement && <p className="panel-note">The component scores strongly disagree. Review each score and its cited evidence separately; the overall score must not be interpreted as ordinary averaging.</p>}</article>;
 }
 
 function DriftExplanation({ result, onAnalyse }) {

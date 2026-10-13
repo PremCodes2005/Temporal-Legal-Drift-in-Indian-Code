@@ -33,12 +33,12 @@ const focusInfo = `(() => { const el = document.activeElement; if (!el || el ===
     visibleFocus: cs.outlineStyle !== 'none' && parseFloat(cs.outlineWidth) > 0 || cs.boxShadow !== 'none', size: [Math.round(r.width), Math.round(r.height)], inViewport: r.bottom > 0 && r.top < innerHeight }; })()`;
 const stops = [];
 // Native date inputs style their inner focus a tick after the key event, so each stop settles briefly.
-for (let i = 0; i < 120; i++) { await key("Tab", "Tab", 9); await sleep(150); const f = await evaluate(focusInfo); if (!f) continue; stops.push(f); if (f.text.startsWith("How this score was calculated")) break; }
+for (let i = 0; i < 120; i++) { await key("Tab", "Tab", 9); await sleep(150); const f = await evaluate(focusInfo); if (!f) continue; stops.push(f); if (f.text.startsWith("How wording drift was calculated")) break; }
 report.tabStops = stops.length; report.noVisibleFocus = stops.filter((s) => !s.visibleFocus); report.zeroSize = stops.filter((s) => !s.size[0] || !s.size[1]);
-report.reachedSummary = stops.at(-1)?.text?.startsWith("How this score was calculated") || false;
+report.reachedSummary = stops.at(-1)?.text?.startsWith("How wording drift was calculated") || false;
 report.pdfLinkReachable = stops.some((s) => s.text.startsWith("Open source PDF at page"));
 report.focusScrolledIntoView = stops.every((s) => s.inViewport);
-if (report.reachedSummary) { await key("Enter", "Enter", 13); await sleep(200); report.enterOpensDetails = await evaluate("document.querySelector('.score-explanation').open"); await key(" ", "Space", 32); await sleep(200); report.spaceClosesDetails = !(await evaluate("document.querySelector('.score-explanation').open")); }
+if (report.reachedSummary) { await key("Enter", "Enter", 13); await sleep(200); report.enterOpensDetails = await evaluate("document.querySelector('.fp-details').open"); await key(" ", "Space", 32); await sleep(200); report.spaceClosesDetails = !(await evaluate("document.querySelector('.fp-details').open")); }
 report.offscreen = stops.filter((s) => !s.inViewport).map((s) => `${s.tag}:${s.text}`);
 report.stopsSample = stops.slice(0, 40).map((s) => `${s.tag}:${s.text}`);
 
@@ -60,7 +60,7 @@ await shot("desk-1280");
 report.narrow = {};
 for (const w of [320, 360, 414, 480]) {
   await load(w, 800, true);
-  await evaluate("document.querySelector('.score-explanation') && (document.querySelector('.score-explanation').open = true)"); await sleep(300);
+  await evaluate("document.querySelector('.fp-details') && (document.querySelector('.fp-details').open = true)"); await sleep(300);
   report.narrow[w] = await evaluate(`(() => { const W = document.documentElement.clientWidth; const over = [...document.querySelectorAll('body *')].filter(el => { const r = el.getBoundingClientRect(); return r.width && r.right > W + 1 && getComputedStyle(el).position !== 'fixed'; });
     const leaf = over.filter(el => !over.some(o => o !== el && el.contains(o)));
     return { scrollWidth: document.documentElement.scrollWidth, clientWidth: W, overflowing: leaf.slice(0, 8).map(el => el.tagName + '.' + (el.className || '').toString().split(' ')[0] + ':' + Math.round(el.getBoundingClientRect().right)),

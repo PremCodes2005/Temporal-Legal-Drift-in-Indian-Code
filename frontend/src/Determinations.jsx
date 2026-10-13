@@ -11,7 +11,9 @@ const STATE_TEXT = {
   INSUFFICIENT_EVIDENCE: "Not enough evidence",
   OUT_OF_SCOPE: "Not applicable",
 };
-const TITLES = { textual_drift: "Textual drift", materiality: "Materiality", answer_change: "Answer change", risk: "Risk" };
+// determinations-v2: textual_drift is a deprecated alias of the fingerprint's wording drift, so it is not shown twice.
+const TITLES = { materiality: "Materiality", applicability: "Applicability", answer_change: "Answer change", risk: "Risk" };
+const LEGACY_TITLES = { textual_drift: "Textual drift", materiality: "Materiality", answer_change: "Answer change", risk: "Risk" };
 const KIND_TEXT = { derived: "Derived text", inference: "Inference", limitation: "Limitation" };
 const ROLE_TEXT = {
   amendment_instruction: "Amendment instruction (verbatim)",
@@ -38,16 +40,17 @@ export function DirectAnswer({ answer }) {
 }
 
 export function DeterminationCards({ determinations }) {
-  return <section className="determinations" aria-label="Four separate determinations">
-    {Object.keys(TITLES).map((key) => <DeterminationCard key={key} name={key} value={determinations[key]} />)}
+  const titles = determinations?.applicability ? TITLES : LEGACY_TITLES;
+  return <section className="determinations" aria-label="Separate legal determinations">
+    {Object.keys(titles).map((key) => <DeterminationCard key={key} name={key} title={titles[key]} value={determinations[key]} />)}
   </section>;
 }
 
-function DeterminationCard({ name, value }) {
+function DeterminationCard({ name, title, value }) {
   if (!value) return null;
   const details = value.details || {};
   return <article className={`determination state-${value.state.toLowerCase()}`}>
-    <header><h3>{TITLES[name]}</h3><span className="state-badge">{STATE_TEXT[value.state] || value.state}</span></header>
+    <header><h3>{title || name}</h3><span className="state-badge">{STATE_TEXT[value.state] || value.state}</span></header>
     <strong className="determination-value">{value.label || "—"}</strong>
     <p>{value.summary}</p>
     <p className="determination-reason">{value.reason}</p>
@@ -64,15 +67,17 @@ function DeterminationCard({ name, value }) {
         {details.rule_id && <><dt>Obligation rule</dt><dd>{details.rule_id} ({details.provision_version})</dd></>}
         {details.reasoning_trace?.length > 0 && <><dt>Trace</dt><dd>{details.reasoning_trace.join(" ")}</dd></>}
         {details.outcomes && <><dt>Both versions</dt><dd>{details.outcomes.map((o) => `${o.date}: ${o.risk_flag ? "does not meet" : "meets"} the rule`).join("; ")}</dd></>}
+        {details.commencement && <><dt>Commencement</dt><dd>{details.commencement.date || "unknown"} — {details.commencement.basis}</dd></>}
+        {details.publication && <><dt>Publication</dt><dd>{details.publication.note}</dd></>}
       </dl>
     </details>}
   </article>;
 }
 
 // The minimal facts the backend asked for, merged across determinations; unknowns stay blank.
-export function ScenarioForm({ determinations, scenario, onSubmit, busy }) {
+export function ScenarioForm({ determinations, extraNeeds = [], scenario, onSubmit, busy }) {
   const needs = [];
-  for (const value of Object.values(determinations || {})) {
+  for (const value of [...Object.values(determinations || {}), { needs: extraNeeds }]) {
     for (const need of value?.needs || []) if (need.kind !== "text" && !needs.some((item) => item.key === need.key)) needs.push(need);
   }
   const initial = { ...(scenario || {}), facts: { ...(scenario?.facts || {}) } };
@@ -83,7 +88,9 @@ export function ScenarioForm({ determinations, scenario, onSubmit, busy }) {
     ? { ...current, facts: { ...current.facts, [key.slice(6)]: value } } : { ...current, [key]: value });
   const submit = (event) => {
     event.preventDefault();
-    const facts = Object.fromEntries(Object.entries(draft.facts || {}).filter(([, value]) => value !== "" && value !== undefined && value !== null));
+    const numeric = new Set(needs.filter((need) => need.kind === "number").map((need) => need.key.slice(6)));
+    const facts = Object.fromEntries(Object.entries(draft.facts || {}).filter(([, value]) => value !== "" && value !== undefined && value !== null)
+      .map(([key, value]) => [key, numeric.has(key) && !Number.isNaN(Number(value)) ? Number(value) : value]));
     const clean = Object.fromEntries(Object.entries(draft).filter(([key, value]) => key !== "facts" && value !== "" && value !== undefined && value !== null));
     onSubmit({ ...clean, facts });
   };
@@ -110,7 +117,8 @@ export function ScenarioForm({ determinations, scenario, onSubmit, busy }) {
           {need.kind === "date" && <small id={`${id}-hint`}>Format YYYY-MM-DD. Modelled dates: {need.options.join(", ")}</small>}
         </label>;
       }
-      return <label key={need.key} htmlFor={id}>{need.label}<input id={id} type="text" placeholder={need.kind === "date" ? "YYYY-MM-DD" : undefined} value={get(need.key) || ""} onChange={(e) => set(need.key, e.target.value)} /></label>;
+      return <label key={need.key} htmlFor={id}>{need.label}<input id={id} type="text" inputMode={need.kind === "number" ? "decimal" : undefined}
+        placeholder={need.kind === "date" ? "YYYY-MM-DD" : need.kind === "number" ? "a number" : undefined} value={get(need.key) ?? ""} onChange={(e) => set(need.key, e.target.value)} /></label>;
     })}</div>
     <button className="send-button" type="submit" disabled={busy}>{busy ? "Re-running…" : "Re-run with these facts"}</button>
   </form>;

@@ -22,7 +22,7 @@ from temporal_legal_drift.jsonio import canonical_json_bytes, load_json
 from .question import QuestionFrame
 from .versions import VERSION_CLAIMS
 
-DETERMINATIONS_VERSION = "determinations-v1"
+DETERMINATIONS_VERSION = "determinations-v2"  # v2 adds applicability; textual_drift mirrors fingerprint.wording_drift
 MATERIALITY_ARTIFACT = "data/silver/materiality_reassessment.v2.5.json"
 LLM_MATERIALITY_ARTIFACT = "data/assessments/materiality_llm_assessments.v2.json"
 SCENARIO_FIELDS = {"reference_date", "organization_type", "industry", "jurisdiction", "activity", "facts"}
@@ -136,7 +136,7 @@ WORD_NUMBERS = {w: i for i, w in enumerate("zero one two three four five six sev
                                            "sixteen seventeen eighteen nineteen twenty".split())}
 WORD_NUMBERS.update({"thirty": 30, "forty": 40, "fifty": 50, "sixty": 60, "seventy": 70, "eighty": 80, "ninety": 90})
 SCALES = {"hundred": 100, "thousand": 1000, "thousands": 1000, "lakh": 100000, "lakhs": 100000, "crore": 10000000, "crores": 10000000}
-NUMBER = re.compile(r"(?:\d[\d,]*(?:\.\d+)?|(?:(?:" + "|".join(sorted(list(WORD_NUMBERS) + list(SCALES), key=len, reverse=True)) + r")(?:[\s-]+|\b))+)", re.I)
+NUMBER = re.compile(r"(?:\b\d[\d,]*(?:\.\d+)?|\b(?:(?:" + "|".join(sorted(list(WORD_NUMBERS) + list(SCALES), key=len, reverse=True)) + r")(?:[\s-]+|\b))+)", re.I)  # \b: "often" is not "ten"
 UNITS = re.compile(r"^\s*(rupees|days?|months?|years?|persons?|times|hours?|weeks?)\b", re.I)
 
 
@@ -368,3 +368,38 @@ def _compare_versions(service: Any, request: dict[str, Any], rules: list[dict[st
     describe = lambda o: "meets the rule" if o["risk_flag"] is False else "does not meet the rule"
     return {"state": "COMPARED", "changed": changed, "outcomes": outcomes,
             "summary": f"Under the earlier wording your situation {describe(outcomes[0])}; under the later wording it {describe(outcomes[-1])}."}
+
+
+# ---------------- applicability ----------------
+def applicability(frame: QuestionFrame, versions: dict[str, Any], scenario: dict[str, Any] | None) -> dict[str, Any]:
+    """Publication, commencement and scenario applicability, kept as separate facts; never DETERMINED without approved facts."""
+    if not frame.asks_about_versions:
+        return _d("OUT_OF_SCOPE", summary="Not a question about versions.", reason="Applicability matters only when two versions are compared.")
+    if versions["support_class"] not in VERSION_CLAIMS:
+        return _d("INSUFFICIENT_EVIDENCE", summary="No supported versions.", reason="No supported before/after versions; the answer above explains why.",
+                  details={"upstream_reason": versions["reason"]})
+    if versions.get("effective_date"):
+        commencement = {"date": versions["effective_date"], "status": "MACHINE_EVIDENCED_ACT_WIDE",
+                        "basis": "graph v4: Act-wide commencement of the amending Act; not provision-specific and not reviewed"}
+    elif versions.get("footnote_stated_date"):
+        day, month, year = versions["footnote_stated_date"].split("-")
+        commencement = {"date": f"{year}-{int(month):02d}-{int(day):02d}", "status": "FOOTNOTE_STATED_UNVERIFIED",
+                        "basis": "date printed in the India Code footnote (w.e.f.); not verified as commencement"}
+    else:
+        commencement = {"date": None, "status": "UNKNOWN", "basis": "no commencement date is recorded for this amendment"}
+    details = {"publication": {"date": None, "status": "NOT_IN_THIS_EVIDENCE", "note": "publication is not commencement"},
+               "commencement": commencement,
+               "scenario_applicability": {"status": "NOT_DETERMINED", "note": "needs approved temporal facts and review"}}
+    reference = (scenario or {}).get("reference_date")
+    if not reference:
+        return _d("NEEDS_FACTS", summary="Add a reference date to see which wording would apply.", details=details,
+                  reason="Publication, commencement and your situation's applicability are separate; none decides your date without one.",
+                  needs=[{"key": "reference_date", "label": "Reference date (YYYY-MM-DD)", "kind": "date", "options": []}])
+    if not commencement["date"]:
+        return _d("INSUFFICIENT_EVIDENCE", summary="Cannot tell which wording applies on your date.", details=details,
+                  reason="No commencement date is recorded for this amendment.")
+    applies = "after" if reference >= commencement["date"] else "before"
+    details["scenario_applicability"] = {"status": "CONDITIONAL", "reference_date": reference, "applies": applies}
+    return _d("CONDITIONAL", label=f"{applies.capitalize()}-amendment wording", details=details,
+              summary=f"On {reference} the {applies}-amendment wording would apply if the commencement date ({commencement['date']}) governs your situation.",
+              reason=f"Commencement basis: {commencement['basis']}. Scenario applicability is not verified.")

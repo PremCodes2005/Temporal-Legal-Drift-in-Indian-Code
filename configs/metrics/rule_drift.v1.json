@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0.0",
+  "contract": "rule-drift-v1",
+  "unit": "the operative sentence(s) of the clause that contain the amended words",
+  "fields": {
+    "modality": {"weight": 25, "covers": ["obligation (shall, must)", "permission (may, discretion)", "prohibition (shall not, no person shall, prohibited)"],
+                 "why": "whether conduct is required, allowed or forbidden is the core of a legal instruction"},
+    "penalty": {"weight": 15, "covers": ["punishable with", "liable to a penalty", "fine", "imprisonment"], "why": "changes the consequence of non-compliance"},
+    "monetary_threshold": {"weight": 15, "covers": ["amounts in rupees, thousand, lakh, crore with their limit (up to, at least, fixed)"], "why": "changes when the rule bites or how much is at stake"},
+    "deadline": {"weight": 15, "covers": ["periods in days, months, years", "frequencies (annually, once in every N years)"], "why": "changes when compliance is due"},
+    "exception": {"weight": 10, "covers": ["Provided that", "except", "unless", "notwithstanding"], "why": "changes who or what escapes the rule"},
+    "scope": {"weight": 10, "covers": ["means", "includes", "applies to"], "why": "changes what the rule covers"},
+    "actor": {"weight": 5, "covers": ["the words before the modal verb"], "why": "who must act; low weight because the extractor is a heuristic"},
+    "action": {"weight": 5, "covers": ["the words after the modal verb"], "why": "what must be done; low weight because the extractor is a heuristic"}
+  },
+  "score": "sum of the weights of fields whose operation is ADDED, REMOVED or CHANGED (0-100). Fields marked UNCERTAIN are excluded and reported; the score is then a lower bound.",
+  "not_derived_from": ["text length", "token overlap", "an unvalidated language-model judgment", "the High/Medium/Low/None materiality label"],
+  "llm_proposals": "optional; a proposed field value is used only if it validates against the schema and is a verbatim substring of the cited clause; otherwise it is discarded and the deterministic result stands",
+  "abstain_when": ["no supported, same-provision amendment relationship", "the clause fails the text-quality gate", "the before clause is incomplete"]
+}

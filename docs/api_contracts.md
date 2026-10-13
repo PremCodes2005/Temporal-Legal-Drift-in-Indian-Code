@@ -4,7 +4,21 @@ The field lists were read from live responses of this checkout. They are enginee
 
 ## `POST /api/rag/query`  body `{"query": str, "mode": "specific" | "generic", "scenario"?: {...}}`
 
-**rag-answer-v2** (`schema_version` 2.0.0, `contract_version` "rag-answer-v2"; schema `schemas/rag/rag_answer.v2.schema.json`; ADR 0014). Every v1 field below is retained, so v1 consumers keep working.
+**rag-answer-v3** (`schema_version` 3.0.0; schema `schemas/rag/rag_answer.v3.schema.json`; ADR 0015) adds the following. Every v2 and v1 field is retained.
+
+- **`fingerprint`:** `{version: "legal-change-fingerprint-v1", wording_drift, rule_drift, outcome_drift, note}`.
+  - **Each component:** `{state, value, label, summary, reason, next_action, method, evidence_ids, details, needs, uncertainty, legal_validation}`.
+  - **`value`:** wording 0–100%; rule 0–100 (weighted); outcome 100 = a supported answer flip, 0 = none. It is `null` whenever the component is not determined, never 0.
+  - **`wording_drift.details`:** `before_clause`, `after_clause` (offsets refer to these), `spans[{operation: added | removed | substituted, before_text, after_text, before_offsets, after_offsets}]`, `inputs`, `weights`, `formula`, `calculation`, `flag` (IDENTICAL or FORMATTING_ONLY), and `legacy_trace`.
+  - **`rule_drift.details`:** `fields[{field, weight, operation, status, before, after, before_spans, after_spans, contribution}]`, `calculation`, `lower_bound`, `llm_proposal`, `operative_sentences`.
+  - **`outcome_drift.details`:** `evaluated[{field, decisive_fact, before_answer, after_answer, changed}]`, `not_evaluable`, `controlled_scenarios{values_tested, flips, evaluated, percent}`, `compat_percent`, `applies`.
+- **`determinations-v2`:** adds `applicability`, with `details.publication`, `details.commencement` and `details.scenario_applicability` kept separate.
+  - `textual_drift` is a deprecated alias of `fingerprint.wording_drift`.
+  - For a scenario, `answer_change` mirrors outcome drift.
+- **`metrics.legacy_diagnostic`:** marks `overall_drift_percent` and `conceptual_drift_percent` (drift-metrics-v3) as legacy diagnostics; their values are unchanged.
+- **Scenario facts used by outcome drift:** `elapsed_days`, `elapsed_months`, `amount`, `exception_conditions_met`, `contravention`, `within_scope`, plus the registry's own facts.
+
+**rag-answer-v2** (`schema_version` 2.0.0; schema `schemas/rag/rag_answer.v2.schema.json`; ADR 0014). Every v1 field below is retained, so v1 consumers keep working.
 
 - **Optional `scenario`:** `reference_date` (YYYY-MM-DD), `organization_type`, `industry`, `jurisdiction`, `activity` (short text), and `facts` (at most 30 snake_case names with scalar values). Unknown fields are rejected.
 - **Added top-level fields:**

@@ -125,3 +125,23 @@ The legal/research gate is unchanged: UNVERIFIED.
   - more obligation rules.
 
 The legal/research gate is unchanged: UNVERIFIED.
+
+## Legal Change Fingerprint status (2026-10-13, rag-answer-v3)
+
+- **Version comparisons** now return three separate measures, never averaged (ADR 0015):
+  - **wording drift:** clause-level, computed after normalisation;
+  - **rule drift:** an 8-field rule delta with versioned weights;
+  - **outcome drift:** your facts applied to both rules.
+- **Legacy score:** the legacy overall drift is kept and labelled a diagnostic.
+- **Applicability:** a separate determination, with publication, commencement and scenario applicability kept apart.
+- **Held-out run over 86 transitions:**
+  - wording determined for 83;
+  - rule drift determined for 53, with 30 lower bounds;
+  - 0 invariant violations.
+- **Next:**
+  - a count field (number of persons, members);
+  - a reviewed actor and action extractor;
+  - relative-clause modality;
+  - more outcome-evaluable fields.
+
+The legal/research gate is unchanged: UNVERIFIED.

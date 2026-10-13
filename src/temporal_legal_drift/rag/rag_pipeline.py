@@ -13,14 +13,15 @@ from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
 from .compose import compose_general_answer, compose_out_of_scope, compose_version_answer, section_answer
-from .determinations import DETERMINATIONS_VERSION, answer_change, materiality, risk, textual_drift, validate_scenario
+from .determinations import DETERMINATIONS_VERSION, answer_change, applicability, materiality, risk, textual_drift, validate_scenario
+from .fingerprint import build_fingerprint, validate_proposal
 from .indiacode import IndiaCodeLiveRepository, source_guidance
 from .metrics import calculate_drift_metrics
 from .question import ActCatalog, QuestionFrame, parse_question
 from .retriever import HybridRetriever, RetrievedChunk
 from .versions import VERSION_CLAIMS, VersionSelector
 
-ANSWER_CONTRACT_VERSION = "rag-answer-v2"
+ANSWER_CONTRACT_VERSION = "rag-answer-v3"  # v3 adds the Legal Change Fingerprint (ADR 0015)
 
 
 INTENT_PATTERNS = {
@@ -383,16 +384,33 @@ class RagPipeline:
             metrics["question_relevance"] = {"status": "MATCHES_REQUESTED_SECTION", "requested_section": frame.sections[0],
                                              "compared_section": frame.sections[0], "answers_scenario_question": False,
                                              "explanation": "The score measures how the selected clause's wording moved; whether your answer changes is reported separately."}
-        drift = textual_drift(frame, versions, metrics)
+        if metrics:
+            metrics["legacy_diagnostic"] = {"fields": ["overall_drift_percent", "conceptual_drift_percent"],
+                                            "note": "Legacy drift-metrics-v3 diagnostic on amendment fragments; it mixes wording and legal-cue signals. "
+                                                    "Use fingerprint.wording_drift and fingerprint.rule_drift instead."}
         mat = materiality(self.root, frame, versions)
         risk_result, comparison = risk(self.root, frame, versions, scenario)
+        timing = applicability(frame, versions, scenario)
+        applies = (timing["details"].get("scenario_applicability") or {}).get("applies")
+        fingerprint = build_fingerprint(versions, scenario, self.retriever.embed_text, comparison, timing["summary"] if applies else None,
+                                        proposer=_rule_delta_proposer(), asks_about_versions=True, applies=applies)
         change = answer_change(frame, versions, scenario, comparison)
-        determinations = {"version": DETERMINATIONS_VERSION, "textual_drift": drift, "materiality": mat, "answer_change": change, "risk": risk_result}
+        outcome = fingerprint["outcome_drift"]
+        if scenario and outcome["label"] in {"Changed", "Unchanged"}:  # for a scenario, the answer change IS the outcome drift
+            change = {**change, "state": outcome["state"], "label": "Changes" if outcome["label"] == "Changed" else "Does not change",
+                      "summary": outcome["summary"], "reason": outcome["reason"],
+                      "method": "outcome-drift-v1"}
+        wording = fingerprint["wording_drift"]
+        drift = {**textual_drift(frame, versions, metrics), "state": wording["state"], "label": wording["label"], "summary": wording["summary"],
+                 "reason": wording["reason"], "method": "alias of fingerprint.wording_drift (textual_drift is deprecated in determinations-v2)",
+                 "evidence_ids": wording["evidence_ids"], "details": {"deprecated": True, "use": "fingerprint.wording_drift"}}
+        determinations = {"version": DETERMINATIONS_VERSION, "textual_drift": drift, "materiality": mat, "applicability": timing,
+                          "answer_change": change, "risk": risk_result}
         names = {entry: f"{info['name']}" + ("" if info["kind"] == "principal" or not info["year"] or info["year"] in info["name"] else f" {info['year']}")
                  for entry, info in catalog.entries.items()}
         names = {entry: name.replace(" Act ", " (Amendment) Act ", 1) if catalog.entries[entry]["kind"] == "amending" and "Amendment" not in name else name
                  for entry, name in names.items()}
-        composed = compose_version_answer(frame, mode, versions, determinations, names)
+        composed = compose_version_answer(frame, mode, versions, determinations, names, fingerprint)
         citations = [{"label": item["role"], "evidence_id": item["evidence_id"], "chunk_id": None, "entry_id": item["entry_id"],
                       "act_name": item["act_name"], "version": item["scope"], "document_type": None, "date": None,
                       "source_anchor": _anchor(item), "page": item["page"], "line": item["line"], "pdf_url": item["pdf_url"],
@@ -409,7 +427,7 @@ class RagPipeline:
         after_section = next((sec for sec in composed["sections"] if sec["id"] == "after"), None)
         guidance = source_guidance(query)
         return {
-            "schema_version": "2.0.0", "contract_version": ANSWER_CONTRACT_VERSION, "query": query, "mode": mode,
+            "schema_version": "3.0.0", "contract_version": ANSWER_CONTRACT_VERSION, "query": query, "mode": mode,
             "intent": "diff_analysis", "question_frame": frame.to_dict(), "scenario": scenario,
             "answer": {
                 "answer_type": "comparison" if supported else "version_abstention",
@@ -421,6 +439,7 @@ class RagPipeline:
                 "markdown": _v2_markdown(composed), "generation_method": "grounded_composition", "generation_warning": None,
             },
             "metrics": metrics,
+            "fingerprint": fingerprint,
             "determinations": determinations,
             "evidence": versions["evidence"],
             "version_evidence": {k: v for k, v in versions.items() if k != "evidence"},
@@ -446,9 +465,10 @@ class RagPipeline:
         response = _insufficient_response(query, mode, _classify_intent(query), source_guidance(query), self.status())
         response["answer"].update({"answer_type": "out_of_scope", "direct_answer": composed["direct_answer"], "sections": [],
                                    "answer_limitations": composed["limitations"], "short_answer": composed["direct_answer"]})
-        response.update({"schema_version": "2.0.0", "contract_version": ANSWER_CONTRACT_VERSION, "question_frame": frame.to_dict(),
+        response.update({"schema_version": "3.0.0", "contract_version": ANSWER_CONTRACT_VERSION, "question_frame": frame.to_dict(),
                          "scenario": None, "evidence": [], "comparison": None, "source_fidelity_warnings": [],
-                         "determinations": {"version": DETERMINATIONS_VERSION, **{k: dict(out) for k in ("textual_drift", "materiality", "answer_change", "risk")}}})
+                         "fingerprint": build_fingerprint({}, None, self.retriever.embed_text, None, None, asks_about_versions=False),
+                         "determinations": {"version": DETERMINATIONS_VERSION, **{k: dict(out) for k in ("textual_drift", "materiality", "applicability", "answer_change", "risk")}}})
         return response
 
     def _attach_general(self, response: dict[str, object], frame: QuestionFrame, scenario: dict[str, object] | None, mode: str,
@@ -471,6 +491,7 @@ class RagPipeline:
         general = {"state": "OUT_OF_SCOPE", "label": None, "evidence_ids": [], "details": {}, "needs": [], "method": None,
                    "review_status": "UNREVIEWED", "legal_validation": "UNVERIFIED"}
         reasons = {"textual_drift": "This question does not ask how a provision changed, so no versions are compared.",
+                   "applicability": "Which version applies matters only when two versions are compared.",
                    "materiality": "Materiality is assessed for a specific amendment; none was asked about.",
                    "answer_change": "The question is about the law as written, not a change over time.",
                    "risk": "Risk is assessed only for a named provision with a modelled obligation and your facts."}
@@ -486,8 +507,9 @@ class RagPipeline:
             composed = compose_general_answer(frame, mode, opening, [str(p) for p in answer.get("key_differences") or []],
                                               [e["evidence_id"] for e in evidence])
         answer.update({"direct_answer": composed["direct_answer"], "sections": composed["sections"], "answer_limitations": composed["limitations"]})
-        response.update({"schema_version": "2.0.0", "contract_version": ANSWER_CONTRACT_VERSION, "question_frame": frame.to_dict(),
-                         "scenario": scenario, "evidence": evidence, "determinations": determinations})
+        response.update({"schema_version": "3.0.0", "contract_version": ANSWER_CONTRACT_VERSION, "question_frame": frame.to_dict(),
+                         "scenario": scenario, "evidence": evidence, "determinations": determinations,
+                         "fingerprint": build_fingerprint({}, None, self.retriever.embed_text, None, None, asks_about_versions=False)})
         return response
 
 
@@ -1371,4 +1393,23 @@ def _v2_verification(frame: QuestionFrame, versions: dict[str, object], citation
     ]
     return {"passed": all(c["passed"] for c in checks), "checks": checks, "pair_status": versions["support_class"].lower(),
             "note": "A failed check means the answer is partial; the reason is shown with the answer."}
+
+
+def _rule_delta_proposer():
+    """Optional LLM rule-delta proposals (TLD_RULE_DELTA_LLM=1); each value is validated before use."""
+    if os.environ.get("TLD_RULE_DELTA_LLM") != "1" or not _llm_configured():
+        return None
+
+    def propose(pair: dict[str, object]) -> object:
+        content = _chat_completion([
+            {"role": "system", "content": "Extract a legal rule delta. Return JSON only."},
+            {"role": "user", "content": (
+                "Fields: modality, penalty, monetary_threshold, deadline, exception, scope, actor, action. "
+                "For each field that differs between BEFORE and AFTER, return {field, before, after} where before/after are EXACT "
+                "substrings copied from the texts (or null if absent). Return {\"fields\": [...]}.\n\n"
+                f"BEFORE: {_bounded_text(pair['before'], 1800)}\n\nAFTER: {_bounded_text(pair['after'], 1800)}")},
+        ])
+        return json.loads(content)
+
+    return propose
 

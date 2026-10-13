@@ -1,0 +1,1382 @@
+{
+ "schema_version": "1.0.0",
+ "method": "legal-change-fingerprint-v1 over every strongly corroborated graph-v4 transition (86), one templated question each; offline, no model",
+ "summary": {
+  "wording:DETERMINED": 83,
+  "rule:PROVISIONAL": 30,
+  "rule:unclassified_lower_bound": 30,
+  "rule:DETERMINED": 53,
+  "wording:INSUFFICIENT_EVIDENCE": 3,
+  "rule:INSUFFICIENT_EVIDENCE": 3,
+  "rule:clean_zero_non_operative": 8
+ },
+ "changed_fields": {
+  "modality": 23,
+  "deadline": 8,
+  "exception": 12,
+  "actor": 25,
+  "action": 22,
+  "scope": 1,
+  "monetary_threshold": 9,
+  "penalty": 3
+ },
+ "wording_abstention_reasons": {
+  "The amended words could not be located exactly once in the consolidated clause, so the ear": 3
+ },
+ "invariant_violations": [],
+ "rows": [
+  {
+   "transition_id": "transition_0073464d5eafe078ca9126de",
+   "query": "Compare section 51 of the Aadhaar Act before and after the Aadhaar And Other Laws (Amendment) Act, 2019.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    0.2
+   ],
+   "rule": [
+    "PROVISIONAL",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_0094d04dad8de8765b0811cb",
+   "query": "Compare section 47 of the Disaster Management Act before and after the Disaster Management (Amendment) Act, 2025.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    5.5
+   ],
+   "rule": [
+    "PROVISIONAL",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_00cfa74eda65b9268f4c582f",
+   "query": "Compare section 25 of the Arbitration And Conciliation Act before and after the Arbitration And Conciliation (Amendment) Act, 2015.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    7.1
+   ],
+   "rule": [
+    "DETERMINED",
+    25.0,
+    [
+     "modality"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_063f3f5e680afbf865143e8b",
+   "query": "Compare section 46 of the Companies Act before and after the Companies (Amendment) Act, 2015.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    4.2
+   ],
+   "rule": [
+    "PROVISIONAL",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_0ba0d5ac1563c6ce515cd3e8",
+   "query": "Compare section 79 of the Disaster Management Act before and after the Disaster Management (Amendment) Act, 2025.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    7.1
+   ],
+   "rule": [
+    "DETERMINED",
+    60.0,
+    [
+     "modality",
+     "deadline",
+     "exception",
+     "actor",
+     "action"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_0c533c5c336dc42fc2af4971",
+   "query": "Compare section 7 of the Arbitration And Conciliation Act before and after the Arbitration And Conciliation (Amendment) Act, 2015.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    1.9
+   ],
+   "rule": [
+    "DETERMINED",
+    10.0,
+    [
+     "scope"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_10e21003b5d476d1a6f0bdf0",
+   "query": "Compare section 206 of the Motor Vehicles Act before and after the Motor Vehicles (Amendment) Act, 2019.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    8.1
+   ],
+   "rule": [
+    "DETERMINED",
+    45.0,
+    [
+     "modality",
+     "exception",
+     "actor",
+     "action"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_1357da5c97929009822f1f63",
+   "query": "Compare section 124 of the Companies Act before and after the Companies (Amendment) Act, 2015.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    0.6
+   ],
+   "rule": [
+    "PROVISIONAL",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_194a1dd269db869a6e08a08a",
+   "query": "Compare section 16 of the Competition Act before and after the Competition (Amendment) Act, 2023.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    0.5
+   ],
+   "rule": [
+    "DETERMINED",
+    5.0,
+    [
+     "actor"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_1e1b0ab0446350760161c616",
+   "query": "Compare section 5 of the Insolvency Bankruptcy Code before and after the Insolvency And Bankruptcy Code (Amendment) Act, 2020.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    0.1
+   ],
+   "rule": [
+    "DETERMINED",
+    5.0,
+    [
+     "action"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_1f050d212743c312bdbcf55b",
+   "query": "Compare section 40 of the Motor Vehicles Act before and after the Motor Vehicles (Amendment) Act, 2019.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    3.4
+   ],
+   "rule": [
+    "PROVISIONAL",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_24b6a537027bbe5485f99d91",
+   "query": "Compare section 108 of the Patents Act before and after the Patents (Amendment) Act, 2002.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    29.0
+   ],
+   "rule": [
+    "DETERMINED",
+    35.0,
+    [
+     "modality",
+     "actor",
+     "action"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_265b98e4b95cf26428de0208",
+   "query": "Compare section 50 of the Patents Act before and after the Patents (Amendment) Act, 2002.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    2.4
+   ],
+   "rule": [
+    "PROVISIONAL",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_265e3523b4b8fa9b39d15d40",
+   "query": "Compare section 240 of the Insolvency Bankruptcy Code before and after the Insolvency And Bankruptcy Code (Amendment) Act, 2020.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    0.5
+   ],
+   "rule": [
+    "DETERMINED",
+    35.0,
+    [
+     "modality",
+     "actor",
+     "action"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_29bb6a70095db14e40b153ae",
+   "query": "Compare section 30 of the Insolvency Bankruptcy Code before and after the Insolvency And Bankruptcy Code (Amendment) Act, 2019.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    1.7
+   ],
+   "rule": [
+    "PROVISIONAL",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_2d9369cf1ee3ed9744bc2adf",
+   "query": "Compare section 4 of the Insolvency Bankruptcy Code before and after the Insolvency And Bankruptcy Code (Amendment) Act, 2021.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    14.2
+   ],
+   "rule": [
+    "DETERMINED",
+    60.0,
+    [
+     "modality",
+     "monetary_threshold",
+     "exception",
+     "actor",
+     "action"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_2ffd3b0b1c64152063faf51f",
+   "query": "Compare section 94 of the Motor Vehicles Act before and after the Motor Vehicles (Amendment) Act, 2019.",
+   "operation": "INSERT",
+   "wording": [
+    "INSUFFICIENT_EVIDENCE",
+    null
+   ],
+   "rule": [
+    "INSUFFICIENT_EVIDENCE",
+    null,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_308d35784dfd748e7ce3360d",
+   "query": "Compare section 23 of the Arbitration And Conciliation Act before and after the Arbitration And Conciliation (Amendment) Act, 2015.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    8.4
+   ],
+   "rule": [
+    "DETERMINED",
+    30.0,
+    [
+     "modality",
+     "action"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_3436d5f054e401f8c8415bb1",
+   "query": "Compare section 32 of the Code Of Civil Procedure before and after the Code Of Civil Procedure (Amendment) Act, 1999.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    1.6
+   ],
+   "rule": [
+    "DETERMINED",
+    15.0,
+    [
+     "monetary_threshold"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_35d89b76fb86435bfe2c4145",
+   "query": "Compare section 59 of the Motor Vehicles Act before and after the Motor Vehicles (Amendment) Act, 2019.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    5.9
+   ],
+   "rule": [
+    "DETERMINED",
+    35.0,
+    [
+     "modality",
+     "actor",
+     "action"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_3d0e090704c564b6014f0ee6",
+   "query": "Compare section 30 of the Securities And Exchange Board Of India Act before and after the Securities Laws (Amendment) Act, 2014.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    8.2
+   ],
+   "rule": [
+    "DETERMINED",
+    35.0,
+    [
+     "modality",
+     "actor",
+     "action"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_3ee5b5104b282c294163e1be",
+   "query": "Compare section 65 of the Motor Vehicles Act before and after the Motor Vehicles (Amendment) Act, 2019.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    0.6
+   ],
+   "rule": [
+    "DETERMINED",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_44aec12a4ebe4e296281f13e",
+   "query": "Compare section 35 of the Competition Act before and after the Competition (Amendment) Act, 2023.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    2.2
+   ],
+   "rule": [
+    "DETERMINED",
+    35.0,
+    [
+     "modality",
+     "actor",
+     "action"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_45274b027bec7acb8923472a",
+   "query": "Compare section 40 of the Patents Act before and after the Patents (Amendment) Act, 2002.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    8.3
+   ],
+   "rule": [
+    "PROVISIONAL",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_454511c38fbda32a5772b8da",
+   "query": "Compare section 8 of the Arbitration And Conciliation Act before and after the Arbitration And Conciliation (Amendment) Act, 2015.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    3.2
+   ],
+   "rule": [
+    "DETERMINED",
+    45.0,
+    [
+     "modality",
+     "exception",
+     "actor",
+     "action"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_4617b4307c7ef729d5d06790",
+   "query": "Compare section 69 of the Disaster Management Act before and after the Disaster Management (Amendment) Act, 2025.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    9.1
+   ],
+   "rule": [
+    "PROVISIONAL",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_4b8d801723f3bb4459d391ea",
+   "query": "Compare section 11B of the Securities And Exchange Board Of India Act before and after the Securities Laws (Amendment) Act, 2014.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    2.6
+   ],
+   "rule": [
+    "DETERMINED",
+    35.0,
+    [
+     "modality",
+     "actor",
+     "action"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_4e25b7dafb6d04feac7422cf",
+   "query": "Compare section 180 of the Motor Vehicles Act before and after the Motor Vehicles (Amendment) Act, 2019.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    4.2
+   ],
+   "rule": [
+    "DETERMINED",
+    30.0,
+    [
+     "penalty",
+     "monetary_threshold"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_4f16b8a4d1ef4340e1cf7eda",
+   "query": "Compare section 181 of the Motor Vehicles Act before and after the Motor Vehicles (Amendment) Act, 2019.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    5.2
+   ],
+   "rule": [
+    "DETERMINED",
+    30.0,
+    [
+     "penalty",
+     "monetary_threshold"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_524e633ce10d09fcec3f536b",
+   "query": "Compare section 15 of the Prevention Of Corruption Act before and after the Prevention Of Corruption (Amendment) Act, 2018.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    3.9
+   ],
+   "rule": [
+    "PROVISIONAL",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_52bdf414449d6836bb5c4dfd",
+   "query": "Compare section 96 of the Motor Vehicles Act before and after the Motor Vehicles (Amendment) Act, 2019.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    1.6
+   ],
+   "rule": [
+    "PROVISIONAL",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_55f576c6cf3d257aa12e317c",
+   "query": "Compare section 12 of the Insolvency Bankruptcy Code before and after the Insolvency And Bankruptcy Code (Amendment) Act, 2019.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    9.1
+   ],
+   "rule": [
+    "DETERMINED",
+    75.0,
+    [
+     "modality",
+     "monetary_threshold",
+     "deadline",
+     "exception",
+     "actor",
+     "action"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_56025f003716d226bbc02d5a",
+   "query": "Compare section 173 of the Motor Vehicles Act before and after the Motor Vehicles (Amendment) Act, 2019.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    1.8
+   ],
+   "rule": [
+    "DETERMINED",
+    15.0,
+    [
+     "monetary_threshold"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_57e2db6e4e232ddf4f5a490a",
+   "query": "Compare section 227 of the Insolvency Bankruptcy Code before and after the Insolvency And Bankruptcy Code (Amendment) Act, 2020.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    1.4
+   ],
+   "rule": [
+    "DETERMINED",
+    10.0,
+    [
+     "exception"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_66eeabf41f5308ceaf8112ce",
+   "query": "Compare section 239 of the Insolvency Bankruptcy Code before and after the Insolvency And Bankruptcy Code (Amendment) Act, 2020.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    1.4
+   ],
+   "rule": [
+    "DETERMINED",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_67ee8c750088efe38d075781",
+   "query": "Compare section 92 of the Motor Vehicles Act before and after the Motor Vehicles (Amendment) Act, 2019.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    1.0
+   ],
+   "rule": [
+    "PROVISIONAL",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_6dd25e5deec2e1ffe95d703c",
+   "query": "Compare section 24 of the Wild Life Protection Act before and after the Wild Life Protection (Amendment) Act, 2022.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    3.2
+   ],
+   "rule": [
+    "PROVISIONAL",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_74c11d6433e91fff06350daf",
+   "query": "Compare section 52 of the Biological Diversity Act before and after the Biological Diversity (Amendment) Act, 2023.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    1.6
+   ],
+   "rule": [
+    "PROVISIONAL",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_7b4b6a9f29a7e8d7a0849a0e",
+   "query": "Compare section 65 of the Insolvency Bankruptcy Code before and after the Insolvency And Bankruptcy Code (Amendment) Act, 2021.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    2.5
+   ],
+   "rule": [
+    "DETERMINED",
+    50.0,
+    [
+     "modality",
+     "monetary_threshold",
+     "actor",
+     "action"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_7d8f5fd0a9ca5f5d995858a5",
+   "query": "Compare section 164 of the Companies Act before and after the Companies (Amendment) Act, 2019.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    1.1
+   ],
+   "rule": [
+    "DETERMINED",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_7f9a9d4487a838dca934f26a",
+   "query": "Compare section 31 of the Insolvency Bankruptcy Code before and after the Insolvency And Bankruptcy Code (Amendment) Act, 2019.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    1.3
+   ],
+   "rule": [
+    "PROVISIONAL",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_811fbb701f0e0a9402fea0d8",
+   "query": "Compare section 33 of the Insolvency Bankruptcy Code before and after the Insolvency And Bankruptcy Code (Amendment) Act, 2021.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    0.2
+   ],
+   "rule": [
+    "PROVISIONAL",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_85ecae9712ed6f1cd26b4929",
+   "query": "Compare section 63 of the Disaster Management Act before and after the Disaster Management (Amendment) Act, 2025.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    1.4
+   ],
+   "rule": [
+    "PROVISIONAL",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_862e4992408b12f970844a19",
+   "query": "Compare section 142 of the Patents Act before and after the Patents (Amendment) Act, 2002.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    1.9
+   ],
+   "rule": [
+    "DETERMINED",
+    15.0,
+    [
+     "deadline"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_86c7edc5c490ac18e52e9a36",
+   "query": "Compare section 170 of the Motor Vehicles Act before and after the Motor Vehicles (Amendment) Act, 2019.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    1.0
+   ],
+   "rule": [
+    "DETERMINED",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_86c9dac0194597b7e658880e",
+   "query": "Compare section 223 of the Companies Act before and after the Companies (Amendment) Act, 2015.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    0.2
+   ],
+   "rule": [
+    "PROVISIONAL",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_8ef5d3d30aca8c1227839e06",
+   "query": "Compare section 21 of the Insolvency Bankruptcy Code before and after the Insolvency And Bankruptcy Code (Amendment) Act, 2020.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    0.4
+   ],
+   "rule": [
+    "PROVISIONAL",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_96504a5c50c96c2c0a1d0490",
+   "query": "Compare section 60 of the Patents Act before and after the Patents (Amendment) Act, 2002.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    1.9
+   ],
+   "rule": [
+    "DETERMINED",
+    15.0,
+    [
+     "deadline"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_a0b23d12b29f4f100b70b598",
+   "query": "Compare section 45ZC of the Banking Regulation Act before and after the Banking Laws (Amendment) Act, 2025.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    1.8
+   ],
+   "rule": [
+    "PROVISIONAL",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_a1312e987b19a63d824ae552",
+   "query": "Compare section 74 of the Disaster Management Act before and after the Disaster Management (Amendment) Act, 2025.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    1.6
+   ],
+   "rule": [
+    "DETERMINED",
+    5.0,
+    [
+     "actor"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_a146c8e2e4357fc1ed34bf2b",
+   "query": "Compare section 46 of the Disaster Management Act before and after the Disaster Management (Amendment) Act, 2025.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    4.0
+   ],
+   "rule": [
+    "PROVISIONAL",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_a85dcff58c5ed023c079ec8e",
+   "query": "Compare section 72 of the Motor Vehicles Act before and after the Motor Vehicles (Amendment) Act, 2019.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    0.6
+   ],
+   "rule": [
+    "DETERMINED",
+    45.0,
+    [
+     "modality",
+     "exception",
+     "actor",
+     "action"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_aafda4149f7f7ac329991380",
+   "query": "Compare section 17 of the Prevention Of Corruption Act before and after the Prevention Of Corruption (Amendment) Act, 2018.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    0.1
+   ],
+   "rule": [
+    "DETERMINED",
+    10.0,
+    [
+     "exception"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_ab372a675d360d1c29c240d6",
+   "query": "Compare section 71 of the Disaster Management Act before and after the Disaster Management (Amendment) Act, 2025.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    1.6
+   ],
+   "rule": [
+    "PROVISIONAL",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_ad063b5172135751ec80993a",
+   "query": "Compare section 2 of the Companies Act before and after the Companies (Amendment) Act, 2019.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    0.0
+   ],
+   "rule": [
+    "PROVISIONAL",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_adb4b90ca8ff4adb0d722dae",
+   "query": "Compare section 64 of the Disaster Management Act before and after the Disaster Management (Amendment) Act, 2025.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    1.2
+   ],
+   "rule": [
+    "PROVISIONAL",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_ae2ce9de88fbb922aed36deb",
+   "query": "Compare section 14 of the Companies Act before and after the Companies (Amendment) Act, 2019.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    0.2
+   ],
+   "rule": [
+    "PROVISIONAL",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_af87b1df64cf9eaf599878cf",
+   "query": "Compare section 3 of the Aadhaar Act before and after the Aadhaar And Other Laws (Amendment) Act, 2019.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    4.0
+   ],
+   "rule": [
+    "DETERMINED",
+    30.0,
+    [
+     "modality",
+     "action"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_b08a6bdd1a48da15490b7ca8",
+   "query": "Compare section 114 of the Motor Vehicles Act before and after the Motor Vehicles (Amendment) Act, 2019.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    0.7
+   ],
+   "rule": [
+    "PROVISIONAL",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_b0fae4030d113a3be05f8cef",
+   "query": "Compare section 32 of the Competition Act before and after the Competition (Amendment) Act, 2023.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    0.1
+   ],
+   "rule": [
+    "PROVISIONAL",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_b1365566e3610436e83c5554",
+   "query": "Compare section 11 of the Insolvency Bankruptcy Code before and after the Insolvency And Bankruptcy Code (Amendment) Act, 2020.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    3.6
+   ],
+   "rule": [
+    "DETERMINED",
+    35.0,
+    [
+     "modality",
+     "actor",
+     "action"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_b5746e8ee623ee278f73f502",
+   "query": "Compare section 16 of the Insolvency Bankruptcy Code before and after the Insolvency And Bankruptcy Code (Amendment) Act, 2020.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    1.0
+   ],
+   "rule": [
+    "DETERMINED",
+    15.0,
+    [
+     "deadline"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_b6c7654945f71c91b0ba4998",
+   "query": "Compare section 11 of the Specific Relief Act before and after the Specific Relief (Amendment) Act, 2018.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    5.4
+   ],
+   "rule": [
+    "DETERMINED",
+    25.0,
+    [
+     "modality"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_b6df780326a33e5bcccd256a",
+   "query": "Compare section 20 of the Disaster Management Act before and after the Disaster Management (Amendment) Act, 2025.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    3.1
+   ],
+   "rule": [
+    "DETERMINED",
+    35.0,
+    [
+     "modality",
+     "actor",
+     "action"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_b74572025857a0c756b22a6d",
+   "query": "Compare section 24 of the Arbitration And Conciliation Act before and after the Arbitration And Conciliation (Amendment) Act, 2015.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    11.1
+   ],
+   "rule": [
+    "DETERMINED",
+    45.0,
+    [
+     "modality",
+     "exception",
+     "actor",
+     "action"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_b7dfc0d8814d97cb18a6986e",
+   "query": "Compare section 212 of the Companies Act before and after the Companies (Amendment) Act, 2015.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    3.5
+   ],
+   "rule": [
+    "DETERMINED",
+    5.0,
+    [
+     "actor"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_b858c77cc36f49e602f9a1da",
+   "query": "Compare section 168 of the Motor Vehicles Act before and after the Motor Vehicles (Amendment) Act, 2019.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    0.7
+   ],
+   "rule": [
+    "PROVISIONAL",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_b99dea9161ea34d22413865a",
+   "query": "Compare section 51 of the Competition Act before and after the Competition (Amendment) Act, 2023.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    4.0
+   ],
+   "rule": [
+    "DETERMINED",
+    10.0,
+    [
+     "actor",
+     "action"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_ba0b2d437969a72ab73c5196",
+   "query": "Compare section 33 of the Wild Life Protection Act before and after the Wild Life Protection (Amendment) Act, 2022.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    0.3
+   ],
+   "rule": [
+    "DETERMINED",
+    10.0,
+    [
+     "exception"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_bbcdcf571cfff7e5773a2423",
+   "query": "Compare section 77 of the Disaster Management Act before and after the Disaster Management (Amendment) Act, 2025.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    0.8
+   ],
+   "rule": [
+    "PROVISIONAL",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_c8a34914083ce5365d724bd8",
+   "query": "Compare section 35 of the Companies Act before and after the Companies (Amendment) Act, 2019.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    0.9
+   ],
+   "rule": [
+    "DETERMINED",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_cb3f1212970928e95a247625",
+   "query": "Compare section 28 of the Wild Life Protection Act before and after the Wild Life Protection (Amendment) Act, 2022.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    2.1
+   ],
+   "rule": [
+    "DETERMINED",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_cd5936e8a32f53fcc74c9a69",
+   "query": "Compare section 13 of the Right To Information Act before and after the Right To Information (Amendment) Act, 2019.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    0.7
+   ],
+   "rule": [
+    "DETERMINED",
+    15.0,
+    [
+     "deadline"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_ce471b622b62b6c6e77bd107",
+   "query": "Compare section 7 of the Insolvency Bankruptcy Code before and after the Insolvency And Bankruptcy Code (Amendment) Act, 2020.",
+   "operation": "INSERT",
+   "wording": [
+    "INSUFFICIENT_EVIDENCE",
+    null
+   ],
+   "rule": [
+    "INSUFFICIENT_EVIDENCE",
+    null,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_cff5e713bf8e7dad33229032",
+   "query": "Compare section 441 of the Companies Act before and after the Companies (Amendment) Act, 2019.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    0.1
+   ],
+   "rule": [
+    "DETERMINED",
+    15.0,
+    [
+     "monetary_threshold"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_d3fc4b6d3f382f4c1495069c",
+   "query": "Compare section 35 of the Wild Life Protection Act before and after the Wild Life Protection (Amendment) Act, 2022.",
+   "operation": "INSERT",
+   "wording": [
+    "INSUFFICIENT_EVIDENCE",
+    null
+   ],
+   "rule": [
+    "INSUFFICIENT_EVIDENCE",
+    null,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_d7e64b35640a6f87019880f3",
+   "query": "Compare section 31 of the Disaster Management Act before and after the Disaster Management (Amendment) Act, 2025.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    2.0
+   ],
+   "rule": [
+    "DETERMINED",
+    15.0,
+    [
+     "deadline"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_d91ccfe2e3370c7fa69d0ddb",
+   "query": "Compare section 239 of the Insolvency Bankruptcy Code before and after the Insolvency And Bankruptcy Code (Amendment) Act, 2021.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    2.1
+   ],
+   "rule": [
+    "DETERMINED",
+    35.0,
+    [
+     "modality",
+     "actor",
+     "action"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_d9c57b824e3741c3819575c0",
+   "query": "Compare section 436 of the Companies Act before and after the Companies (Amendment) Act, 2015.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    0.5
+   ],
+   "rule": [
+    "DETERMINED",
+    5.0,
+    [
+     "actor"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_e51c21fea6f360949ae95951",
+   "query": "Compare section 67 of the Disaster Management Act before and after the Disaster Management (Amendment) Act, 2025.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    2.2
+   ],
+   "rule": [
+    "DETERMINED",
+    5.0,
+    [
+     "actor"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_f72f2ae2fe1dc2180123b3a8",
+   "query": "Compare section 138 of the Motor Vehicles Act before and after the Motor Vehicles (Amendment) Act, 2019.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    10.0
+   ],
+   "rule": [
+    "DETERMINED",
+    45.0,
+    [
+     "modality",
+     "exception",
+     "actor",
+     "action"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_f898ddbe3ba65e9a09860fdb",
+   "query": "Compare section 20 of the Transplantation Of Human Organs And Tissues Act before and after the Transplantation Of Human Organs (Amendment) Act, 2011.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    7.3
+   ],
+   "rule": [
+    "DETERMINED",
+    45.0,
+    [
+     "penalty",
+     "monetary_threshold",
+     "deadline"
+    ]
+   ]
+  },
+  {
+   "transition_id": "transition_fbdb18e9dee4dcb49b384587",
+   "query": "Compare section 10 of the Motor Vehicles Act before and after the Motor Vehicles (Amendment) Act, 2019.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    2.0
+   ],
+   "rule": [
+    "DETERMINED",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_fde9b8189177cbec1726e4c3",
+   "query": "Compare section 134 of the Companies Act before and after the Companies (Amendment) Act, 2015.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    0.9
+   ],
+   "rule": [
+    "DETERMINED",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_fec66cdf7825334e3bec3134",
+   "query": "Compare section 21 of the Specific Relief Act before and after the Specific Relief (Amendment) Act, 2018.",
+   "operation": "SUBSTITUTE",
+   "wording": [
+    "DETERMINED",
+    1.1
+   ],
+   "rule": [
+    "PROVISIONAL",
+    0.0,
+    []
+   ]
+  },
+  {
+   "transition_id": "transition_ff084f2238ced08c27577fc5",
+   "query": "Compare section 177 of the Companies Act before and after the Companies (Amendment) Act, 2015.",
+   "operation": "INSERT",
+   "wording": [
+    "DETERMINED",
+    0.6
+   ],
+   "rule": [
+    "DETERMINED",
+    40.0,
+    [
+     "modality",
+     "exception",
+     "actor"
+    ]
+   ]
+  }
+ ],
+ "manual_spot_check": "6 random modality changes reviewed 2026-10-13: 4 correct; 'as may be decided' (Competition s.51) fixed as a delegation, not a permission; a relative clause 'circumstances in which ... may be terminated' (IBC s.240) remains a known limitation"
+}

@@ -83,7 +83,10 @@ def evaluate_case(case: dict[str, Any], response: dict[str, Any] | None, error: 
                        "has_link": bool(c.get("source_url") or c.get("local_pdf_url") or c.get("official_portal_url"))}
                       for c in response.get("citations") or []],
         "fidelity_warnings": len(response.get("source_fidelity_warnings") or []),
-        "determinations": {name: ((response.get("determinations") or {}).get(name) or {}).get("state", "ABSENT") for name in DETERMINATIONS},
+        "determinations": {name: ((response.get("determinations") or {}).get(name) or {}).get("state", "ABSENT")
+                           for name in (*DETERMINATIONS, *(k for k in expected["states"] if k not in DETERMINATIONS))},
+        "fingerprint": {name: ((response.get("fingerprint") or {}).get(name) or {}).get("state", "ABSENT")
+                        for name in ("wording_drift", "rule_drift", "outcome_drift")},
         "opening_answer": _opening(response),
     })
     errors = []
@@ -106,7 +109,9 @@ def evaluate_case(case: dict[str, Any], response: dict[str, Any] | None, error: 
     if allowed:
         citation_errors += [f"citation_outside_expected_act:{c['entry_id']}" for c in row["citations"] if c["entry_id"] not in allowed]
     state_mismatch = {name: {"expected": expected["states"][name], "actual": row["determinations"][name]}
-                      for name in DETERMINATIONS if row["determinations"][name] != expected["states"][name]}
+                      for name in expected["states"] if row["determinations"][name] != expected["states"][name]}
+    state_mismatch.update({f"fingerprint.{name}": {"expected": state, "actual": row["fingerprint"][name]}
+                           for name, state in (expected.get("fingerprint") or {}).items() if row["fingerprint"][name] != state})
     row.update({"support_errors": errors, "pairing_errors": pairing_errors, "citation_errors": citation_errors,
                 "state_mismatch": state_mismatch})
     return row
@@ -126,9 +131,10 @@ def _opening(response: dict[str, Any]) -> str:
 
 
 def summarise(rows: list[dict[str, Any]]) -> dict[str, Any]:
-    states: dict[str, dict[str, int]] = {name: {} for name in DETERMINATIONS}
+    states: dict[str, dict[str, int]] = {}
     for row in rows:
-        for name, state in (row.get("determinations") or {}).items():
+        for name, state in [*(row.get("determinations") or {}).items(), *((f"fingerprint.{k}", v) for k, v in (row.get("fingerprint") or {}).items())]:
+            states.setdefault(name, {})
             states[name][state] = states[name].get(state, 0) + 1
     return {
         "cases": len(rows),

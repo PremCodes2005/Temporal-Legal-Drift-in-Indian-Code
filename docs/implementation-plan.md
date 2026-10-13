@@ -121,3 +121,14 @@ Not achieved in the sprint:
 | 4 Answer generation | **PASS** — deterministic grounded composition; model answers cite every excerpt seen | `rag/compose.py` |
 | 5 Frontend | **PASS (jsdom and real Chrome)** — cards, scenario rerun, evidence list; focus and 320px checks | `frontend/src/Determinations.jsx`, `frontend/src/__tests__/answer_v2.test.jsx` |
 | 6 Validation and release | 0/0/0 errors; held-out 86/86 pairing | `reports/rag_audit/integrated_audit.v1.md` |
+
+## Legal Change Fingerprint sprint (2026-10-13, rag-answer-v3)
+
+| Phase | Result | Evidence |
+| --- | --- | --- |
+| Audit and design | Legacy scoring traced; clause-level reconstruction feasible for 86/86 transitions | ADR 0015, methodology v1 |
+| Contract | rag-answer-v3, determinations-v2, schema v3; v2 schema kept | `schemas/rag/rag_answer.v3.schema.json` |
+| Extraction and scoring | Wording and rule drift; 0 invariant violations over 86 transitions | `reports/fingerprint/` |
+| Scenario evaluation | Outcome drift with controlled sets; facts requested when missing | `tests/unit/test_fingerprint.py` |
+| UI | Fingerprint cards and panels; UI values equal the API's in real Chrome; 320px fits | `frontend/src/Fingerprint.jsx`, `fingerprint.test.jsx` |
+| Release | See `docs/verification.md` | — |

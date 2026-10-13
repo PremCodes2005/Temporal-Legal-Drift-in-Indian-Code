@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0.0",
+  "contract": "wording-drift-v1",
+  "unit": "the whole aligned clause, not the amendment fragment",
+  "inputs": {
+    "lexical": "drift-metrics-v3 lexical drift: 100 x (1 - (0.55 x Jaccard + 0.45 x sequence similarity)) over word tokens",
+    "feature_vector": "drift-metrics-v3 vector drift: 100 x (1 - cosine) of deterministic 256-dimension feature-hash token vectors; NOT a pretrained semantic embedding"
+  },
+  "weights": {"lexical": 0.5, "feature_vector": 0.5},
+  "aggregation": "arithmetic mean: both inputs measure the same thing (surface wording), so they are expected to agree; weighted RMS (used by the legacy overall) was meant for heterogeneous signals",
+  "normalisation_before_scoring": [
+    "case folding and whitespace collapsing",
+    "removal of India Code amendment markers such as 2[ and ]",
+    "removal of punctuation-only differences",
+    "-ise/-ize and -isation/-ization spelling variants treated as the same word"
+  ],
+  "formatting_only": "if the normalised clauses are identical but the raw texts differ, wording drift is 0 and the change is flagged FORMATTING_ONLY",
+  "abstain_when": ["no supported, same-provision amendment relationship", "either clause fails the text-quality gate (OCR, mojibake, Hindi text layer)", "the amended words cannot be located exactly once in the clause", "the before clause is incomplete"],
+  "legacy": "drift-metrics-v3 overall_drift_percent is retained unchanged as a LEGACY DIAGNOSTIC; it mixes wording and legal-cue signals and was computed on fragments"
+}
