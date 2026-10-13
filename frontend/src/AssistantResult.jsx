@@ -7,23 +7,29 @@ import { VerificationPanel } from "./SharedPanels";
 // The assistant page's answer for one stored analysis (rag-answer-v4/v5), in the single-page order of v0.13.0 (commit 6db1c49):
 // answer, path to the explanation pages, pre/post evidence, citations. Personal-situation and review details are folded away.
 // Every value is read from the stored analysis; nothing is recomputed here.
-export default function AssistantResult({ analysis, onPage = () => {}, onScenario = () => {}, busy = false, onReview, situationOpen = false }) {
+export default function AssistantResult({ analysis, onPage = () => {}, onScenario = () => {}, onSection = () => {}, busy = false, onReview, situationOpen = false }) {
   const fp = analysis.fingerprint || {};
   const versions = analysis.question_frame?.asks_about_versions;
   const scored = versions ? [["Wording drift", fp.wording_drift], ["Rule drift", fp.rule_drift]].filter(([, item]) => item?.value != null) : [];
   const combined = versions && fp.tlds?.value != null ? fp.tlds : null;
   const showEvidence = (id) => document.getElementById(`evidence-${id}`)?.focus();
+  const found = analysis.version_evidence?.section_candidates;
   return <section id="rag-result" className="results" aria-labelledby="result-title">
     <div className="result-heading"><div><span className="section-kicker">Grounded response · analysis {analysis.analysis_id}</span>
       <h2 id="result-title">{versions ? "Version comparison" : "Answer"}</h2></div>
       <div className="mode-badge">{analysis.mode === "generic" ? "Generic" : "Specific"} mode</div></div>
     <GenerationNotice method={analysis.answer.generation_method} warning={analysis.answer.generation_warning} />
     {versions && <VersionStatus comparison={analysis.comparison} metrics={analysis.metrics} />}
-    <DirectAnswer answer={analysis.answer} onEvidence={showEvidence} showLimits={false} />
+    {analysis.selection && <p className="selection-note">Section chosen from the list: <strong>section {analysis.selection.section}</strong> of the {analysis.selection.act_name}.
+      Your question is kept as you asked it.</p>}
+    {/* With the chooser shown, the answer's plain-text list of the same sections would repeat it. */}
+    <DirectAnswer answer={found ? { ...analysis.answer, sections: (analysis.answer.sections || []).filter((part) => part.id !== "candidates") } : analysis.answer}
+      onEvidence={showEvidence} showLimits={false} />
+    {found && <SectionChooser found={found} onSection={onSection} busy={busy} />}
     {analysis.scenario && <p className="panel-note">Using your facts: {Object.entries({ ...analysis.scenario, ...(analysis.scenario.facts || {}) })
       .filter(([key, value]) => key !== "facts" && value !== null && value !== "")
       .map(([key, value]) => `${key.replaceAll("_", " ")}: ${value === true ? "yes" : value === false ? "no" : String(value).replaceAll("_", " ")}`).join("; ")}.</p>}
-    {versions && <ChangePath scored={scored} combined={combined} analysis={analysis} onPage={onPage} />}
+    {versions && !found && <ChangePath scored={scored} combined={combined} analysis={analysis} onPage={onPage} />}
     <ComparisonPanel comparison={analysis.comparison} />
     <EvidenceList evidence={analysis.evidence} />
     {(analysis.source_fidelity_warnings || []).map((item) => <div className="warning-note" role="alert" key={item.entry_id || item.warning}>
@@ -47,6 +53,40 @@ function ChangePath({ scored, combined, analysis, onPage }) {
     <p className="panel-note">{DIAGNOSTIC_NOTE}</p>
     <button className="explain-drift-button" type="button" onClick={() => onPage("drift")}>Explain the change with the cited clauses <span aria-hidden="true">→</span></button>
     <button className="explain-drift-button" type="button" onClick={() => onPage("calculation")}>See how the scores are calculated <span aria-hidden="true">→</span></button>
+  </article>;
+}
+
+const STATUS = {
+  SUPPORTED: ["supported", "Before/after available"],
+  SEVERAL_CHANGES: ["limited", "Several changes recorded"],
+  NOT_CORROBORATED: ["limited", "Change recorded, not corroborated"],
+  TEXT_UNRELIABLE: ["limited", "Source text unreliable"],
+  NO_RECORDED_CHANGE: ["none", "Mentions your topic; no recorded change"],
+};
+
+// An Act-only question: the sections that can be compared, why each is listed, and where the evidence is. One click compares.
+function SectionChooser({ found, onSection, busy }) {
+  const supported = found.counts.SUPPORTED || 0;
+  return <article className="section-chooser" aria-labelledby="chooser-heading">
+    <span className="section-kicker">Choose a section</span>
+    <h3 id="chooser-heading">{found.candidates.length ? `Sections of the ${found.act_name} you can open` : "No section to compare"}</h3>
+    <p className="panel-note">{supported} section{supported === 1 ? "" : "s"} with a before/after comparison{found.amendment_year ? ` for the ${found.amendment_year} amendment` : ""}
+      {found.candidates.length < found.checked_sections ? `; showing the ${found.candidates.length} most relevant` : ""}. {found.note}</p>
+    {found.candidates.length > 0 && <ul className="chooser-list">{found.candidates.map((row) => {
+      const [tone, label] = STATUS[row.status] || ["none", row.status];
+      return <li key={row.section} className={`chooser-item ${tone}`}>
+        <div className="chooser-main">
+          <strong>Section {row.section}{row.heading ? ` · ${row.heading}` : ""}</strong>
+          <span className={`status-tag ${tone}`}>{label}</span>
+          <p>{row.why}</p>
+          <small>{[row.amendment, row.footnote_stated_date && `footnote states effect from ${row.footnote_stated_date} (not verified)`, row.effective_date && `in force ${row.effective_date}`].filter(Boolean).join(" · ")}
+            {row.source?.pdf_url && <> · <a href={row.source.pdf_url} target="_blank" rel="noreferrer">Source PDF{row.source.page ? ` p. ${row.source.page}` : ""} ↗</a></>}</small>
+        </div>
+        <button type="button" className={row.status === "SUPPORTED" ? "send-button" : "secondary-button"} disabled={busy} onClick={() => onSection(row.section)}
+          aria-label={row.status === "SUPPORTED" ? `Compare section ${row.section}` : `See why section ${row.section} cannot be compared`}>
+          {row.status === "SUPPORTED" ? "Compare" : "See why"}</button>
+      </li>;
+    })}</ul>}
   </article>;
 }
 

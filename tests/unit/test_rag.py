@@ -85,7 +85,9 @@ class RagPipelineTests(unittest.TestCase):
         self.assertEqual(result["retrieval"]["pair_status"], "no_supported_version")
         self.assertEqual(result["version_evidence"]["reason_code"], "SECTION_NOT_IDENTIFIED")
         self.assertIsNone(result["metrics"])
-        self.assertIn("66E", [row["section"] for row in result["version_evidence"]["suggested_sections"]])
+        candidates = result["version_evidence"]["section_candidates"]["candidates"]
+        privacy = next(row for row in candidates if row["section"] == "66E")
+        self.assertEqual((privacy["topic_match"], privacy["status"]), (True, "NO_RECORDED_CHANGE"))  # suggested for the topic, not as comparable
         self.assertEqual(result["determinations"]["textual_drift"]["state"], "INSUFFICIENT_EVIDENCE")
         paired = next(item for item in result["verification"]["checks"] if item["id"] == "paired_context")
         self.assertFalse(paired["passed"])

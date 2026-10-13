@@ -58,6 +58,16 @@ class DashboardServiceTests(unittest.TestCase):
             self.assertEqual(result["status"], "evidence_review_queue_not_corpus")
             self.assertEqual(result["byte_length"], len(payload))
 
+    def test_query_api_accepts_a_chosen_section_and_rejects_unknown_fields(self) -> None:
+        env = {"TLD_LIVE_INDIA_CODE": "0", "TLD_RAG_PROVIDER": "openai_compatible", "TLD_RAG_API_KEY": "", "OPENAI_API_KEY": ""}
+        with patch.dict(os.environ, env), patch("temporal_legal_drift.rag.analysis.store", side_effect=lambda root, response: response):
+            service = DashboardService(ROOT)
+            chosen = service.query_rag({"query": "What changed in the Motor Vehicles Act?", "mode": "specific", "section": "194"})
+            self.assertEqual(chosen["selection"]["section"], "194")
+            for bad in ({"query": "What changed in the Motor Vehicles Act?", "section": "194; x"}, {"query": "x", "act": "y"}):
+                with self.subTest(bad=bad), self.assertRaises(ValueError):
+                    service.query_rag(bad)
+
     def test_single_prompt_rag_api_contract(self) -> None:
         with patch.dict(os.environ, {
             "TLD_LIVE_INDIA_CODE": "0",

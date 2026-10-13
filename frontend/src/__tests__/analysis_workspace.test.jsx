@@ -8,15 +8,29 @@ import userEvent from "@testing-library/user-event";
 import App from "../App";
 import AssistantResult from "../AssistantResult";
 import { DriftExplanationPage, ScoreCalculationPage } from "../ExplanationPages";
+import { followUps, readHistory, remember } from "../App";
+import FAQ from "../faq.json";
 
 const { responses } = JSON.parse(readFileSync("src/__tests__/fixtures/rag_answer_v5.json", "utf8"));
 const v4 = JSON.parse(readFileSync("src/__tests__/fixtures/rag_answer_v4.json", "utf8")).responses;
 const weights = Object.fromEntries(Object.entries(JSON.parse(readFileSync("../configs/metrics/rule_drift.v1.2.json", "utf8")).fields).map(([k, v]) => [k, v.weight]));
-afterEach(() => { cleanup(); vi.unstubAllGlobals(); window.history.replaceState(null, "", "/"); window.sessionStorage.clear(); });
+afterEach(() => { cleanup(); vi.unstubAllGlobals(); window.history.replaceState(null, "", "/"); window.sessionStorage.clear(); window.localStorage.clear(); });
 // Text a reader sees without opening a folded section.
 const visible = () => { const copy = document.getElementById("rag-result").cloneNode(true); copy.querySelectorAll("details:not([open]) > :not(summary)").forEach((el) => el.remove()); return copy.textContent; };
 const fold = (name) => screen.getByText(name, { selector: "summary", exact: false }).closest("details");
 const scored = (analysis) => ["wording_drift", "rule_drift"].map((name) => analysis.fingerprint?.[name]).filter((item) => item?.value != null);
+
+// The backend as recorded in the fixtures: questions (with any chosen section) and stored analyses; anything else is a 404.
+function stubApi() {
+  vi.stubGlobal("fetch", vi.fn(async (url, init) => {
+    const id = String(url).match(/\/api\/analyses\/(an_[0-9a-f]{24})/)?.[1];
+    const sent = String(url).includes("/api/rag/query") ? JSON.parse(init.body) : null;
+    const body = sent ? Object.values(responses).find((r) => r.query === sent.query && r.mode === sent.mode && !r.scenario && (r.selection?.section || null) === (sent.section || null))
+      : id ? Object.values(responses).find((r) => r.analysis_id === id)
+      : String(url).includes("/api/corpus") ? { entries: [] } : String(url).includes("/api/sources/health") ? { sources: [] } : { ready: true };
+    return { ok: Boolean(body), status: body ? 200 : 404, json: async () => body || { error: "not found" } };
+  }));
+}
 
 describe("the restored single-page assistant", () => {
   it("shows the answer, the change measured, pre/post evidence and citations on one page, with no tabs and no empty assessments", () => {
@@ -239,14 +253,7 @@ describe("standalone Drift explanation and Score calculation pages", () => {
 });
 
 describe("links, history and keyboard", () => {
-  beforeEach(() => {
-    vi.stubGlobal("fetch", vi.fn(async (url, init) => {
-      const id = String(url).match(/\/api\/analyses\/(an_[0-9a-f]{24})/)?.[1];
-      const asked = String(url).includes("/api/rag/query") ? Object.values(responses).find((r) => r.query === JSON.parse(init.body).query && r.mode === JSON.parse(init.body).mode && !r.scenario) : null;
-      const body = asked || (id ? Object.values(responses).find((r) => r.analysis_id === id) : String(url).includes("/api/corpus") ? { entries: [] } : String(url).includes("/api/sources/health") ? { sources: [] } : { ready: true });
-      return { ok: Boolean(body), status: body ? 200 : 404, json: async () => body || { error: "Analysis not found" } };
-    }));
-  });
+  beforeEach(stubApi);
 
   const loaded = (analysis) => waitFor(() => expect(screen.getByText(new RegExp(`analysis ${analysis.analysis_id}`))).toBeTruthy());
 
@@ -372,9 +379,8 @@ describe("links, history and keyboard", () => {
     await waitFor(() => expect(screen.getByText(/Scheduled ingestion \(stored in UTC\):/).parentElement.textContent)
       .toMatch(/India Code: last checked .* · e-Gazette: last checked .* · 4 new document\(s\) awaiting review/));
     expect(screen.getByLabelText("Legal research question").value).toBe(analysis.query);
-    const suggestions = screen.getByText("Try asking").parentElement.querySelectorAll("button");
-    expect([...suggestions].map((b) => b.textContent)).toEqual(["What changed in the IT Act amendment regarding data privacy?",
-      "Compare Section 19 before and after the IT Amendment Act, 2008.", "What penalties were introduced for privacy violations in the IT Act?"]);
+    const suggestions = screen.getByRole("group", { name: "Try asking" }).querySelectorAll("button");
+    expect([...suggestions].map((b) => b.textContent)).toEqual(FAQ.starters);
   });
 
   it("opens older #analysis/<id>/<view> links on the assistant, with the situation open for 'scenario'", async () => {
@@ -404,3 +410,146 @@ describe("links, history and keyboard", () => {
     expect(css).toMatch(/\.fold>summary:focus-visible\{outline:3px solid var\(--primary\)/);
   });
 });
+
+describe("Act-only questions, section choice and evidence limits", () => {
+  beforeEach(stubApi);
+  it("lists the sections that can be compared, why each is listed, and where its evidence is", () => {
+    const found = responses["mv-act"].version_evidence.section_candidates;
+    render(<AssistantResult analysis={responses["mv-act"]} />);
+    const chooser = screen.getByRole("article", { name: /Sections of the Motor Vehicles Act 1988 you can open/ });
+    const items = within(chooser).getAllByRole("listitem");
+    expect(items).toHaveLength(found.candidates.length);
+    expect(items[0].textContent).toContain(`Section ${found.candidates[0].section}`);
+    expect(items[0].textContent).toContain("Before/after available");
+    expect(items[0].textContent).toContain(found.candidates[0].why);
+    expect(within(items[0]).getByRole("link", { name: /Source PDF/ }).getAttribute("href")).toBe(found.candidates[0].source.pdf_url);
+    expect(chooser.textContent).toContain("not the Act's complete amendment history");
+    expect(screen.queryByRole("article", { name: "The change, measured" })).toBeNull();  // no score for a whole Act
+    expect(within(screen.getByRole("article", { name: "Answer" })).queryByRole("region", { name: "Sections you can choose" })).toBeNull();  // not listed twice
+  });
+
+  it("labels sections that cannot be compared differently from supported ones", () => {
+    render(<AssistantResult analysis={responses.ocr} />);  // IT Act + "data privacy": topic matches first
+    const items = within(screen.getByRole("article", { name: /you can open/ })).getAllByRole("listitem");
+    expect(items[0].textContent).toContain("Mentions your topic; no recorded change");
+    expect(within(items[0]).getByRole("button").textContent).toBe("See why");
+  });
+
+  it("compares a chosen section with one click, keeps the question and records the choice", async () => {
+    const user = userEvent.setup();
+    const act = responses["mv-act"], chosen = responses["mv-act-194"];
+    window.history.replaceState(null, "", `#assistant/${act.analysis_id}`);
+    render(<App />);
+    await waitFor(() => screen.getByRole("article", { name: /you can open/ }));
+    await user.click(screen.getByRole("button", { name: "Compare section 194" }));
+    await waitFor(() => expect(window.location.hash).toBe(`#assistant/${chosen.analysis_id}`));
+    expect(fetch).toHaveBeenCalledWith("/api/rag/query", expect.objectContaining({ body: JSON.stringify({ query: act.query, mode: "specific", section: "194" }) }));
+    expect(screen.getByText(/Section chosen from the list:/).textContent).toContain("section 194 of the Motor Vehicles Act 1988");
+    expect(screen.getByLabelText("Legal research question").value).toBe(act.query);
+    expect(screen.getByRole("article", { name: "The change, measured" })).toBeTruthy();
+    expect(readHistory().filter((row) => row.query === act.query).length).toBeLessThanOrEqual(1);  // a chosen section is not a second entry
+  });
+
+  it("explains when no section passes the evidence checks, and when the Act is not in the corpus", () => {
+    render(<AssistantResult analysis={responses["ibc-act-2025"]} />);
+    expect(screen.getByRole("article", { name: "No section to compare" })).toBeTruthy();
+    expect(screen.getByRole("article", { name: "Answer" }).textContent).toMatch(/come from other amendments\. Check the official text on India Code/);
+    cleanup();
+    render(<AssistantResult analysis={responses["unknown-act"]} />);
+    expect(screen.getByRole("article", { name: "Answer" }).textContent).toContain("No Act in this corpus matches the name used");
+    expect(screen.getByRole("link", { name: /India Code/ }).getAttribute("href")).toMatch(/indiacode/);
+  });
+
+  it("never scores a footnote from a different amendment year", () => {
+    render(<AssistantResult analysis={responses["ibc99-2025"]} />);
+    expect(screen.getByRole("article", { name: "Answer" }).textContent).toMatch(/made by Act 6 of 2026, not by a 2025 amendment/);
+    expect(document.querySelector(".change-glance-list")).toBeNull();
+  });
+});
+
+describe("FAQ, recent questions and follow-ups", () => {
+  const post = () => fetch.mock.calls.filter(([url]) => String(url).includes("/api/rag/query"));
+  beforeEach(stubApi);
+
+  it("an FAQ click with an old result present asks exactly that question, once", async () => {
+    const user = userEvent.setup();
+    const old = responses.ibc99, faq = FAQ.questions[0];
+    window.history.replaceState(null, "", `#assistant/${old.analysis_id}`);
+    render(<App />);
+    await waitFor(() => screen.getByRole("article", { name: "Answer" }));
+    await user.click(within(screen.getByRole("navigation")).getByRole("button", { name: /Recent changes FAQ/ }));
+    expect(screen.getByRole("heading", { name: "Questions about amended Acts in this corpus" })).toBeTruthy();
+    const card = screen.getByText(faq.question, { selector: "h3" }).closest("article");
+    await user.click(within(card).getByRole("button", { name: /Ask this question/ }));
+    expect(screen.getByLabelText("Legal research question").value).toBe(faq.question);
+    await waitFor(() => expect(window.location.hash).toBe(`#assistant/${responses["mv-act"].analysis_id}`));
+    expect(screen.getByLabelText("Legal research question").value).toBe(faq.question);  // the old result never replaces it
+    expect(post().map(([, init]) => JSON.parse(init.body).query)).toEqual([faq.question]);
+  });
+
+  it("a direct question link asks once, even with an old analysis in the session, and Back does not re-ask", async () => {
+    const question = responses["mv-act"].query;
+    window.sessionStorage.setItem("tldrift:last-analysis", responses.ibc99.analysis_id);
+    window.history.replaceState(null, "", `#assistant?q=${encodeURIComponent(question)}`);
+    render(<App />);
+    await waitFor(() => expect(window.location.hash).toBe(`#assistant/${responses["mv-act"].analysis_id}`));
+    expect(post()).toHaveLength(1);
+    expect(fetch.mock.calls.some(([url]) => String(url).includes(responses.ibc99.analysis_id))).toBe(false);
+    window.history.back();
+    await waitFor(() => expect(window.location.hash).toBe("#assistant"));
+    expect(post()).toHaveLength(1);
+  });
+
+  it("every FAQ card says what it does and none claims to be recent", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await user.click(within(screen.getByRole("navigation")).getByRole("button", { name: /Recent changes FAQ/ }));
+    const cards = document.querySelectorAll(".faq-card");
+    expect(cards).toHaveLength(FAQ.questions.length);
+    for (const card of cards) expect(within(card).getByRole("button").textContent).toMatch(/^Ask this question/);
+    expect(document.querySelector(".page-section").textContent).not.toMatch(/recent/i);
+  });
+
+  it("keeps a short, deduplicated history of successful questions in this browser, with a way to clear it", async () => {
+    const user = userEvent.setup();
+    window.history.replaceState(null, "", "#assistant");
+    render(<App />);
+    expect(screen.queryByRole("group", { name: "Recently asked" })).toBeNull();  // empty history: starters only
+    expect(within(screen.getByRole("group", { name: "Try asking" })).getAllByRole("button")).toHaveLength(3);
+    const input = screen.getByLabelText("Legal research question");
+    for (const text of [responses["mv-act"].query, responses.ibc99.query, responses["mv-act"].query]) {
+      await user.clear(input); await user.type(input, text);
+      await user.click(screen.getByRole("button", { name: /Analyse/ }));
+      await waitFor(() => expect(screen.getByRole("article", { name: "Answer" }).textContent).toContain(Object.values(responses).find((r) => r.query === text && !r.scenario && !r.selection).answer.direct_answer));
+    }
+    const recent = screen.getByRole("group", { name: "Recently asked" });
+    expect(within(recent).getAllByRole("button").map((b) => b.textContent)).toEqual([responses["mv-act"].query, responses.ibc99.query, "Clear history"]);
+    expect(readHistory().map((row) => Object.keys(row).sort())).toEqual([["act", "mode", "query"], ["act", "mode", "query"]]);  // no facts stored
+    await user.click(within(recent).getByRole("button", { name: "Clear history" }));
+    expect(screen.queryByRole("group", { name: "Recently asked" })).toBeNull();
+    expect(window.localStorage.getItem("tldrift:recent-questions")).toBeNull();
+  });
+
+  it("caps history at five and survives unreadable storage", () => {
+    let rows = [];
+    for (let i = 0; i < 7; i++) rows = remember(rows, { query: `Question ${i}`, mode: "specific", act: null });
+    expect(rows.map((row) => row.query)).toEqual(["Question 6", "Question 5", "Question 4", "Question 3", "Question 2"]);
+    expect(remember(rows, { query: "  QUESTION   4 ", mode: "specific", act: null }).map((row) => row.query)).toEqual(["  QUESTION   4 ", "Question 6", "Question 5", "Question 3", "Question 2"]);
+    window.localStorage.setItem("tldrift:recent-questions", "{not json");
+    expect(readHistory()).toEqual([]);
+  });
+
+  it("suggests follow-ups from the Act and sections of the last answer, labelled as suggestions", async () => {
+    const supported = responses["mv-act"].version_evidence.section_candidates.candidates.filter((row) => row.status === "SUPPORTED").slice(0, 2);
+    expect(followUps(responses["mv-act"])).toEqual(supported.map((row) => `Compare section ${row.section} of the Motor Vehicles Act 1988 before and after the ${row.amendment_year} amendment.`));
+    expect(followUps(responses.ibc99)).toEqual(["What changed in the Insolvency Bankruptcy Code 2016?"]);
+    expect(followUps(responses.general)).toEqual([]);
+    window.history.replaceState(null, "", `#assistant/${responses.ibc99.analysis_id}`);
+    render(<App />);
+    const group = await screen.findByRole("group", { name: "Suggested follow-ups" });
+    await userEvent.setup().click(within(group).getByRole("button"));
+    expect(screen.getByLabelText("Legal research question").value).toBe("What changed in the Insolvency Bankruptcy Code 2016?");
+    expect(screen.getByText(/a comparison appears only if the evidence supports it/)).toBeTruthy();
+  });
+});
+

@@ -94,3 +94,15 @@
 .fold{padding:14px 18px;border:1px solid var(--line);border-radius:12px;background:#fff}.fold>summary{min-height:24px;color:var(--ink2);font-weight:800;cursor:pointer}
 .fold[open]>summary{margin-bottom:12px}.fold>summary:focus-visible{outline:3px solid var(--primary);outline-offset:3px}
 .comparison-panel .compare-text{max-height:280px;overflow:auto;padding-right:6px}.comparison-panel .compare-text:focus-visible{outline:3px solid var(--primary);outline-offset:2px}
+/* Section chooser for Act-only questions and the question chips */
+.section-chooser{padding:20px 22px;border:1px solid var(--line);border-radius:var(--radius);background:#fff}.section-chooser h3{margin:6px 0 4px;color:var(--ink2);font-size:18px}
+.chooser-list{display:grid;gap:10px;margin:14px 0 0;padding:0;list-style:none}
+.chooser-item{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:14px;padding:14px 16px;border:1px solid var(--line);border-left:4px solid var(--green);border-radius:11px;background:#fbfdfe}
+.chooser-item.limited{border-left-color:var(--gold)}.chooser-item.none{border-left-color:var(--subtle)}
+.chooser-main{min-width:0;overflow-wrap:anywhere}.chooser-main strong{display:block;color:var(--ink2);font-size:14px}.chooser-main p{margin:4px 0;color:var(--ink);font-size:13px}.chooser-main small{color:var(--muted);font-size:12px}
+.status-tag{display:inline-block;margin-top:4px;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:800}.status-tag.supported{background:var(--green-soft);color:var(--green)}
+.status-tag.limited{background:#fff4df;color:#8a5a14}.status-tag.none{background:#eef2f5;color:var(--muted)}
+.chooser-item .send-button,.chooser-item .secondary-button{min-height:44px;white-space:nowrap}
+.selection-note{margin:0;padding:10px 14px;border-radius:9px;background:var(--soft);color:var(--ink);font-size:13px}
+.question-chips .suggestions{margin-top:10px}.question-chips .panel-note{text-align:center}.clear-history{border-style:dashed!important}
+@media (max-width:620px){.chooser-item{grid-template-columns:1fr}.chooser-item .send-button,.chooser-item .secondary-button{width:100%;justify-content:center}}

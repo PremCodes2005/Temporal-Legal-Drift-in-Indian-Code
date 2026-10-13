@@ -1,0 +1,20 @@
+{
+  "note": "Questions about Acts and amendments held in this corpus. Every question is run against the backend by tests/unit/test_act_discovery.py: 'act' questions must offer at least one section with a before/after comparison, 'section' questions must return a supported comparison. Amendment years come from the evidence; nothing here claims complete or up-to-date India Code coverage.",
+  "questions": [
+    {"topic": "Motor vehicles", "kind": "act", "question": "What changed in the Motor Vehicles Act?"},
+    {"topic": "Motor vehicles · penalties", "kind": "act", "question": "What penalties changed in the Motor Vehicles Act?"},
+    {"topic": "Disaster management · 2025 amendment", "kind": "act", "question": "What changed in the Disaster Management Act after the 2025 amendment?"},
+    {"topic": "Insolvency", "kind": "act", "question": "What changed in the Insolvency and Bankruptcy Code?"},
+    {"topic": "Companies", "kind": "act", "question": "What changed in the Companies Act?"},
+    {"topic": "Wildlife", "kind": "act", "question": "What changed in the Wild Life (Protection) Act?"},
+    {"topic": "Insolvency · section 99", "kind": "section", "question": "Compare section 99 of the Insolvency and Bankruptcy Code before and after the 2026 amendment."},
+    {"topic": "Disaster management · section 31", "kind": "section", "question": "How often must the district disaster management plan be reviewed under section 31 of the Disaster Management Act after the 2025 amendment?"},
+    {"topic": "Contracts · section 11", "kind": "section", "question": "Is specific performance of a contract still discretionary under section 11 of the Specific Relief Act after the 2018 amendment?"},
+    {"topic": "Civil procedure · section 32", "kind": "section", "question": "What is the maximum fine a court can impose under section 32 of the Code of Civil Procedure after the 1999 amendment?"}
+  ],
+  "starters": [
+    "What changed in the Motor Vehicles Act?",
+    "Compare section 99 of the Insolvency and Bankruptcy Code before and after the 2026 amendment.",
+    "Compare Section 19 before and after the IT Amendment Act, 2008."
+  ]
+}

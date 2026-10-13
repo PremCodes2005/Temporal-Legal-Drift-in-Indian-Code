@@ -496,7 +496,8 @@
     "blocked_by_evidence": [],
     "explanation": "No facts are needed for this question."
    },
-   "analysis_id": "an_79480d1a0c1aaa9b494adbf0"
+   "selection": null,
+   "analysis_id": "an_1dfbbfac4a1e541831d7e853"
   },
   "out-of-scope": {
    "schema_version": "5.0.0",
@@ -874,7 +875,8 @@
     ],
     "explanation": "No facts are needed for this question. Facts cannot fill missing legal evidence for: which wording applies on your date, conditional compliance risk."
    },
-   "analysis_id": "an_25ef3c1ce24a5bca60a8568a"
+   "selection": null,
+   "analysis_id": "an_3a2de238b27052945cae6374"
   },
   "it-s19": {
    "schema_version": "5.0.0",
@@ -1834,7 +1836,7 @@
     }
    ],
    "version_evidence": {
-    "version": "version-evidence-v1",
+    "version": "version-evidence-v2",
     "candidates": [],
     "transition_id": null,
     "amendment_event_id": null,
@@ -2256,7 +2258,8 @@
     "blocked_by_evidence": [],
     "explanation": "Only these facts are needed; anything you leave blank is not assumed."
    },
-   "analysis_id": "an_a728e21336d31fb33f594f69"
+   "selection": null,
+   "analysis_id": "an_5ddd2afe76e8e192815486cb"
   },
   "it-s19-generic": {
    "schema_version": "5.0.0",
@@ -3195,7 +3198,7 @@
     }
    ],
    "version_evidence": {
-    "version": "version-evidence-v1",
+    "version": "version-evidence-v2",
     "candidates": [],
     "transition_id": null,
     "amendment_event_id": null,
@@ -3617,7 +3620,8 @@
     "blocked_by_evidence": [],
     "explanation": "Only these facts are needed; anything you leave blank is not assumed."
    },
-   "analysis_id": "an_00a9dcee2c7499509e664a16"
+   "selection": null,
+   "analysis_id": "an_02bf7839fa17a9a106ac57e8"
   },
   "sra": {
    "schema_version": "5.0.0",
@@ -4569,7 +4573,7 @@
     }
    ],
    "version_evidence": {
-    "version": "version-evidence-v1",
+    "version": "version-evidence-v2",
     "candidates": [],
     "transition_id": "transition_b6c7654945f71c91b0ba4998",
     "amendment_event_id": "aevent_0d9f040c58c71ac0ea7d5db9",
@@ -4886,7 +4890,8 @@
     "blocked_by_evidence": [],
     "explanation": "Only these facts are needed; anything you leave blank is not assumed."
    },
-   "analysis_id": "an_3f9659d168ab7fa85e64adca"
+   "selection": null,
+   "analysis_id": "an_f9fcaf6ceb07f4bdab6c34f5"
   },
   "dm31": {
    "schema_version": "5.0.0",
@@ -5853,7 +5858,7 @@
     }
    ],
    "version_evidence": {
-    "version": "version-evidence-v1",
+    "version": "version-evidence-v2",
     "candidates": [],
     "transition_id": "transition_d7e64b35640a6f87019880f3",
     "amendment_event_id": "aevent_a0a9ccf9dee58da801f533e3",
@@ -6170,7 +6175,8 @@
     "blocked_by_evidence": [],
     "explanation": "Only these facts are needed; anything you leave blank is not assumed."
    },
-   "analysis_id": "an_45ddf596804f3188bc6d620e"
+   "selection": null,
+   "analysis_id": "an_e900de663edcd3ca24e1aec6"
   },
   "dm31-month18": {
    "schema_version": "5.0.0",
@@ -7178,7 +7184,7 @@
     }
    ],
    "version_evidence": {
-    "version": "version-evidence-v1",
+    "version": "version-evidence-v2",
     "candidates": [],
     "transition_id": "transition_d7e64b35640a6f87019880f3",
     "amendment_event_id": "aevent_a0a9ccf9dee58da801f533e3",
@@ -7486,7 +7492,8 @@
     "blocked_by_evidence": [],
     "explanation": "Only these facts are needed; anything you leave blank is not assumed."
    },
-   "analysis_id": "an_8fc35e39540c3a3f0aafcc80"
+   "selection": null,
+   "analysis_id": "an_7c1f8dbf95e018cc9453df7e"
   },
   "dm31-month6": {
    "schema_version": "5.0.0",
@@ -8493,7 +8500,7 @@
     }
    ],
    "version_evidence": {
-    "version": "version-evidence-v1",
+    "version": "version-evidence-v2",
     "candidates": [],
     "transition_id": "transition_d7e64b35640a6f87019880f3",
     "amendment_event_id": "aevent_a0a9ccf9dee58da801f533e3",
@@ -8801,7 +8808,8 @@
     "blocked_by_evidence": [],
     "explanation": "Only these facts are needed; anything you leave blank is not assumed."
    },
-   "analysis_id": "an_197509c39623573c060a999a"
+   "selection": null,
+   "analysis_id": "an_834032463959296102545499"
   },
   "ibc99": {
    "schema_version": "5.0.0",
@@ -9778,7 +9786,7 @@
     }
    ],
    "version_evidence": {
-    "version": "version-evidence-v1",
+    "version": "version-evidence-v2",
     "candidates": [],
     "transition_id": null,
     "amendment_event_id": null,
@@ -10086,7 +10094,8 @@
     "blocked_by_evidence": [],
     "explanation": "Only these facts are needed; anything you leave blank is not assumed."
    },
-   "analysis_id": "an_8ce753b0d4d734c5d1328496"
+   "selection": null,
+   "analysis_id": "an_3b83f5619834adf04c1a938c"
   },
   "ibc99-day15": {
    "schema_version": "5.0.0",
@@ -11115,7 +11124,7 @@
     }
    ],
    "version_evidence": {
-    "version": "version-evidence-v1",
+    "version": "version-evidence-v2",
     "candidates": [],
     "transition_id": null,
     "amendment_event_id": null,
@@ -11414,7 +11423,8 @@
     "blocked_by_evidence": [],
     "explanation": "Only these facts are needed; anything you leave blank is not assumed."
    },
-   "analysis_id": "an_63fc91a27c908165a6c15f7c"
+   "selection": null,
+   "analysis_id": "an_55be7209ec22b7c0415b7aaa"
   },
   "ibc99-day25": {
    "schema_version": "5.0.0",
@@ -12442,7 +12452,7 @@
     }
    ],
    "version_evidence": {
-    "version": "version-evidence-v1",
+    "version": "version-evidence-v2",
     "candidates": [],
     "transition_id": null,
     "amendment_event_id": null,
@@ -12741,7 +12751,8 @@
     "blocked_by_evidence": [],
     "explanation": "Only these facts are needed; anything you leave blank is not assumed."
    },
-   "analysis_id": "an_826f93943382ab9f3af3e2c3"
+   "selection": null,
+   "analysis_id": "an_ae85593d79a3ca5270723d8c"
   },
   "mv173": {
    "schema_version": "5.0.0",
@@ -13699,7 +13710,7 @@
     }
    ],
    "version_evidence": {
-    "version": "version-evidence-v1",
+    "version": "version-evidence-v2",
     "candidates": [],
     "transition_id": "transition_56025f003716d226bbc02d5a",
     "amendment_event_id": "aevent_3f5d166f6343636e7dc5a23e",
@@ -14016,7 +14027,8 @@
     "blocked_by_evidence": [],
     "explanation": "Only these facts are needed; anything you leave blank is not assumed."
    },
-   "analysis_id": "an_0d0c5fbc3754d958032d4c3b"
+   "selection": null,
+   "analysis_id": "an_8c0aad10f17bcb6ce9aa9ffd"
   },
   "ibc240": {
    "schema_version": "5.0.0",
@@ -14929,7 +14941,7 @@
     }
    ],
    "version_evidence": {
-    "version": "version-evidence-v1",
+    "version": "version-evidence-v2",
     "candidates": [],
     "transition_id": "transition_265e3523b4b8fa9b39d15d40",
     "amendment_event_id": "aevent_44f8da95c1482290a47a9108",
@@ -15214,7 +15226,8 @@
     "blocked_by_evidence": [],
     "explanation": "Only these facts are needed; anything you leave blank is not assumed."
    },
-   "analysis_id": "an_68d30eee98e3b075b915d376"
+   "selection": null,
+   "analysis_id": "an_fef6714121082e7ea7f2d81b"
   },
   "mv170": {
    "schema_version": "5.0.0",
@@ -16099,7 +16112,7 @@
     }
    ],
    "version_evidence": {
-    "version": "version-evidence-v1",
+    "version": "version-evidence-v2",
     "candidates": [],
     "transition_id": "transition_86c7edc5c490ac18e52e9a36",
     "amendment_event_id": "aevent_d6c294b545bfbe97db2e9958",
@@ -16405,7 +16418,8 @@
     "blocked_by_evidence": [],
     "explanation": "Only these facts are needed; anything you leave blank is not assumed."
    },
-   "analysis_id": "an_0294fe5cc8ec1b0a3ab59a8e"
+   "selection": null,
+   "analysis_id": "an_e2fde9a366d5c8df1537da58"
   },
   "wrong-act": {
    "schema_version": "5.0.0",
@@ -16725,7 +16739,7 @@
    },
    "evidence": [],
    "version_evidence": {
-    "version": "version-evidence-v1",
+    "version": "version-evidence-v2",
     "candidates": [],
     "transition_id": null,
     "amendment_event_id": null,
@@ -16874,7 +16888,8 @@
     ],
     "explanation": "No facts are needed for this question. Facts cannot fill missing legal evidence for: which wording applies on your date, whether your answer changes."
    },
-   "analysis_id": "an_c6b04633ca96353bd4d15bc6"
+   "selection": null,
+   "analysis_id": "an_2a2f626ce76d813b7d01fcba"
   },
   "ocr": {
    "schema_version": "5.0.0",
@@ -16908,24 +16923,25 @@
    "scenario": null,
    "answer": {
     "answer_type": "version_abstention",
-    "direct_answer": "Please name the section you mean. Name a section of the IT Act 2000 to compare its versions; whole Acts are not compared. Sections that mention your topic: 29, 72, 66E, 2, 3.",
+    "direct_answer": "This corpus records changes to 5 sections of the IT Act 2000 that can be compared before and after, for example section 55 (Orders constituting Appellate Tribunal to be final and not to invalidate its proceedings); section 60 (Limitation); section 6 (Use of electronic record s and 1[electronic signatures ] in Government and its agencies); section 19 (Recognition of foreign Certifying Authorities). Choose a section below to see its comparison.",
     "sections": [
      {
-      "id": "suggestions",
-      "title": "Sections that mention your topic",
-      "text": "section 29 (Access to computers and data); section 72 (Penalty for Breach of confidentiality and privacy); section 66E (Punishment for violation of privacy); section 2 (Definitions); section 3 (Authentication of electronic records). Ask again naming one of them.",
+      "id": "candidates",
+      "title": "Sections you can choose",
+      "text": "section 66E: mentions your topic; no recorded change; section 72: mentions your topic; no recorded change; section 30: mentions your topic; no recorded change; section 55: before/after available; section 60: before/after available; section 6: before/after available; section 19: before/after available; section 43: before/after available",
       "evidence_ids": [],
       "kind": "limitation"
      }
     ],
     "answer_limitations": [
-     "No version comparison is shown because its support could not be established."
+     "Only changes recorded in the temporal graph or reconstructable from India Code footnotes are listed. This is not the Act's complete amendment history, and no score is given for the Act as a whole.",
+     "Not legal advice; verify on India Code."
     ],
-    "short_answer": "Please name the section you mean. Name a section of the IT Act 2000 to compare its versions; whole Acts are not compared. Sections that mention your topic: 29, 72, 66E, 2, 3.",
+    "short_answer": "This corpus records changes to 5 sections of the IT Act 2000 that can be compared before and after, for example section 55 (Orders constituting Appellate Tribunal to be final and not to invalidate its proceedings); section 60 (Limitation); section 6 (Use of electronic record s and 1[electronic signatures ] in Government and its agencies); section 19 (Recognition of foreign Certifying Authorities). Choose a section below to see its comparison.",
     "pre_amendment_baseline": "",
     "post_amendment_revision": "",
     "key_differences": [],
-    "markdown": "Please name the section you mean. Name a section of the IT Act 2000 to compare its versions; whole Acts are not compared. Sections that mention your topic: 29, 72, 66E, 2, 3.\n\n## Sections that mention your topic\nsection 29 (Access to computers and data); section 72 (Penalty for Breach of confidentiality and privacy); section 66E (Punishment for violation of privacy); section 2 (Definitions); section 3 (Authentication of electronic records). Ask again naming one of them.",
+    "markdown": "This corpus records changes to 5 sections of the IT Act 2000 that can be compared before and after, for example section 55 (Orders constituting Appellate Tribunal to be final and not to invalidate its proceedings); section 60 (Limitation); section 6 (Use of electronic record s and 1[electronic signatures ] in Government and its agencies); section 19 (Recognition of foreign Certifying Authorities). Choose a section below to see its comparison.\n\n## Sections you can choose\nsection 66E: mentions your topic; no recorded change; section 72: mentions your topic; no recorded change; section 30: mentions your topic; no recorded change; section 55: before/after available; section 60: before/after available; section 6: before/after available; section 19: before/after available; section 43: before/after available",
     "generation_method": "grounded_composition",
     "generation_warning": null
    },
@@ -17198,7 +17214,7 @@
    },
    "evidence": [],
    "version_evidence": {
-    "version": "version-evidence-v1",
+    "version": "version-evidence-v2",
     "candidates": [],
     "transition_id": null,
     "amendment_event_id": null,
@@ -17212,28 +17228,170 @@
     "support_class": "NO_SUPPORTED_VERSION",
     "reason_code": "SECTION_NOT_IDENTIFIED",
     "reason": "Name a section of the IT Act 2000 to compare its versions; whole Acts are not compared.",
-    "suggested_sections": [
-     {
-      "section": "29",
-      "heading": "Access to computers and data"
+    "section_candidates": {
+     "act_entry_id": "it-act-2000-consolidated",
+     "act_name": "IT Act 2000",
+     "amendment": null,
+     "amendment_year": null,
+     "candidates": [
+      {
+       "section": "66E",
+       "heading": "Punishment for violation of privacy",
+       "status": "NO_RECORDED_CHANGE",
+       "support_class": "NO_SUPPORTED_VERSION",
+       "amendment": null,
+       "amendment_year": null,
+       "operation": null,
+       "effective_date": null,
+       "footnote_stated_date": null,
+       "why": "The corpus records no amendment of section 66E of the IT Act 2000, and its consolidated text shows no substitution footnote for it. Its heading names your topic.",
+       "topic_match": true,
+       "topic_score": 3,
+       "source": null
+      },
+      {
+       "section": "72",
+       "heading": "Penalty for Breach of confidentiality and privacy",
+       "status": "NO_RECORDED_CHANGE",
+       "support_class": "NO_SUPPORTED_VERSION",
+       "amendment": null,
+       "amendment_year": null,
+       "operation": null,
+       "effective_date": null,
+       "footnote_stated_date": null,
+       "why": "The corpus records no amendment of section 72 of the IT Act 2000, and its consolidated text shows no substitution footnote for it. Its heading names your topic.",
+       "topic_match": true,
+       "topic_score": 3,
+       "source": null
+      },
+      {
+       "section": "30",
+       "heading": "Certifying Authority to follow certain procedures",
+       "status": "NO_RECORDED_CHANGE",
+       "support_class": "NO_SUPPORTED_VERSION",
+       "amendment": null,
+       "amendment_year": null,
+       "operation": null,
+       "effective_date": null,
+       "footnote_stated_date": null,
+       "why": "The corpus records no amendment of section 30 of the IT Act 2000, and its consolidated text shows no substitution footnote for it. Its text mentions your topic.",
+       "topic_match": true,
+       "topic_score": 1,
+       "source": null
+      },
+      {
+       "section": "55",
+       "heading": "Orders constituting Appellate Tribunal to be final and not to invalidate its proceedings",
+       "status": "SUPPORTED",
+       "support_class": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+       "amendment": "Act 7 of 2017 (named in the India Code footnote)",
+       "amendment_year": "2017",
+       "operation": "SUBSTITUTE",
+       "effective_date": null,
+       "footnote_stated_date": "26-5-2017",
+       "why": "India Code's footnote records a substitution, so the earlier wording can be reconstructed (Act 7 of 2017 (named in the India Code footnote)).",
+       "topic_match": false,
+       "topic_score": 0,
+       "source": {
+        "act_name": "IT Act 2000",
+        "page": 21,
+        "pdf_url": "/corpus/it-act-2000-consolidated.pdf#page=21",
+        "official_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/13116",
+        "verbatim": true
+       }
+      },
+      {
+       "section": "60",
+       "heading": "Limitation",
+       "status": "SUPPORTED",
+       "support_class": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+       "amendment": "Act 7 of 2017 (named in the India Code footnote)",
+       "amendment_year": "2017",
+       "operation": "SUBSTITUTE",
+       "effective_date": null,
+       "footnote_stated_date": "26-5-2017",
+       "why": "India Code's footnote records a substitution, so the earlier wording can be reconstructed (Act 7 of 2017 (named in the India Code footnote)).",
+       "topic_match": false,
+       "topic_score": 0,
+       "source": {
+        "act_name": "IT Act 2000",
+        "page": 22,
+        "pdf_url": "/corpus/it-act-2000-consolidated.pdf#page=22",
+        "official_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/13116",
+        "verbatim": true
+       }
+      },
+      {
+       "section": "6",
+       "heading": "Use of electronic record s and 1[electronic signatures ] in Government and its agencies",
+       "status": "SUPPORTED",
+       "support_class": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+       "amendment": "IT (Amendment) Act 2008",
+       "amendment_year": "2009",
+       "operation": "SUBSTITUTE",
+       "effective_date": null,
+       "footnote_stated_date": "27-10-2009",
+       "why": "India Code's footnote records a substitution, so the earlier wording can be reconstructed (IT (Amendment) Act 2008).",
+       "topic_match": false,
+       "topic_score": 0,
+       "source": {
+        "act_name": "IT Act 2000",
+        "page": 9,
+        "pdf_url": "/corpus/it-act-2000-consolidated.pdf#page=9",
+        "official_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/13116",
+        "verbatim": true
+       }
+      },
+      {
+       "section": "19",
+       "heading": "Recognition of foreign Certifying Authorities",
+       "status": "SUPPORTED",
+       "support_class": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+       "amendment": "IT (Amendment) Act 2008",
+       "amendment_year": "2009",
+       "operation": "SUBSTITUTE",
+       "effective_date": null,
+       "footnote_stated_date": "27-10-2009",
+       "why": "India Code's footnote records a substitution, so the earlier wording can be reconstructed (IT (Amendment) Act 2008).",
+       "topic_match": false,
+       "topic_score": 0,
+       "source": {
+        "act_name": "IT Act 2000",
+        "page": 13,
+        "pdf_url": "/corpus/it-act-2000-consolidated.pdf#page=13",
+        "official_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/13116",
+        "verbatim": true
+       }
+      },
+      {
+       "section": "43",
+       "heading": "6[Penalty and compensation ] for damage to computer, computer system, etc",
+       "status": "SUPPORTED",
+       "support_class": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+       "amendment": "IT (Amendment) Act 2008",
+       "amendment_year": "2009",
+       "operation": "SUBSTITUTE",
+       "effective_date": null,
+       "footnote_stated_date": "27-10-2009",
+       "why": "India Code's footnote records a substitution, so the earlier wording can be reconstructed (IT (Amendment) Act 2008).",
+       "topic_match": false,
+       "topic_score": 0,
+       "source": {
+        "act_name": "IT Act 2000",
+        "page": 18,
+        "pdf_url": "/corpus/it-act-2000-consolidated.pdf#page=18",
+        "official_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/13116",
+        "verbatim": true
+       }
+      }
+     ],
+     "counts": {
+      "NO_RECORDED_CHANGE": 3,
+      "SUPPORTED": 5
      },
-     {
-      "section": "72",
-      "heading": "Penalty for Breach of confidentiality and privacy"
-     },
-     {
-      "section": "66E",
-      "heading": "Punishment for violation of privacy"
-     },
-     {
-      "section": "2",
-      "heading": "Definitions"
-     },
-     {
-      "section": "3",
-      "heading": "Authentication of electronic records"
-     }
-    ]
+     "checked_sections": 8,
+     "note": "Only changes recorded in the temporal graph or reconstructable from India Code footnotes are listed. This is not the Act's complete amendment history, and no score is given for the Act as a whole."
+    }
    },
    "source_fidelity_warnings": [
     {
@@ -17365,6 +17523,2937 @@
     "live_repository_enabled": false
    },
    "limitations": [
+    "Only changes recorded in the temporal graph or reconstructable from India Code footnotes are listed. This is not the Act's complete amendment history, and no score is given for the Act as a whole.",
+    "Not legal advice; verify on India Code."
+   ],
+   "scenario_request": {
+    "fields": [],
+    "facts_in_use": {},
+    "blocked_by_evidence": [
+     "which wording applies on your date",
+     "whether your answer changes"
+    ],
+    "explanation": "No facts are needed for this question. Facts cannot fill missing legal evidence for: which wording applies on your date, whether your answer changes."
+   },
+   "selection": null,
+   "analysis_id": "an_e5589d8836a937b9584f6e87"
+  },
+  "mv-act": {
+   "schema_version": "5.0.0",
+   "contract_version": "rag-answer-v5",
+   "query": "What changed in the Motor Vehicles Act?",
+   "mode": "specific",
+   "intent": "diff_analysis",
+   "question_frame": {
+    "query": "What changed in the Motor Vehicles Act?",
+    "version": "question-frame-v1",
+    "question_type": "what_changed",
+    "asks_about_versions": true,
+    "principal": {
+     "entry_id": "motor-vehicles-act-1988",
+     "name": "Motor Vehicles Act 1988",
+     "kind": "principal",
+     "year": "1988"
+    },
+    "amending": null,
+    "amendment_year": null,
+    "sections": [],
+    "reference_date": null,
+    "focus_terms": [],
+    "unresolved_act_phrases": [],
+    "relation_error": null,
+    "ambiguities": []
+   },
+   "scenario": null,
+   "answer": {
+    "answer_type": "version_abstention",
+    "direct_answer": "This corpus records changes to 27 sections of the Motor Vehicles Act 1988 that can be compared before and after, for example section 194 (Driving vehicl e exceeding permissible weight); section 8 (Grant of learner ’s licence); section 10 (Form and contents of licences to drive); section 11 (Additions to driving licence). Choose a section below to see its comparison.",
+    "sections": [
+     {
+      "id": "candidates",
+      "title": "Sections you can choose",
+      "text": "section 194: before/after available; section 8: before/after available; section 10: before/after available; section 11: before/after available; section 40: before/after available; section 59: before/after available; section 65: before/after available; section 72: before/after available",
+      "evidence_ids": [],
+      "kind": "limitation"
+     }
+    ],
+    "answer_limitations": [
+     "Only changes recorded in the temporal graph or reconstructable from India Code footnotes are listed. This is not the Act's complete amendment history, and no score is given for the Act as a whole.",
+     "Not legal advice; verify on India Code."
+    ],
+    "short_answer": "This corpus records changes to 27 sections of the Motor Vehicles Act 1988 that can be compared before and after, for example section 194 (Driving vehicl e exceeding permissible weight); section 8 (Grant of learner ’s licence); section 10 (Form and contents of licences to drive); section 11 (Additions to driving licence). Choose a section below to see its comparison.",
+    "pre_amendment_baseline": "",
+    "post_amendment_revision": "",
+    "key_differences": [],
+    "markdown": "This corpus records changes to 27 sections of the Motor Vehicles Act 1988 that can be compared before and after, for example section 194 (Driving vehicl e exceeding permissible weight); section 8 (Grant of learner ’s licence); section 10 (Form and contents of licences to drive); section 11 (Additions to driving licence). Choose a section below to see its comparison.\n\n## Sections you can choose\nsection 194: before/after available; section 8: before/after available; section 10: before/after available; section 11: before/after available; section 40: before/after available; section 59: before/after available; section 65: before/after available; section 72: before/after available",
+    "generation_method": "grounded_composition",
+    "generation_warning": null
+   },
+   "metrics": null,
+   "fingerprint": {
+    "version": "legal-change-fingerprint-v1.2",
+    "wording_drift": {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "value": null,
+     "label": null,
+     "summary": "Not scored.",
+     "reason": "No supported before/after versions; the answer above explains why.",
+     "next_action": "Name the section and the amendment you mean.",
+     "method": "wording-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [
+      "evidence_gate_failed"
+     ],
+     "limit": {
+      "kind": "evidence",
+      "message": "No supported before/after versions; the answer above explains why.",
+      "action": {
+       "type": "verify_source",
+       "label": "Check the official source on India Code; your facts cannot fill this gap"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "rule_drift": {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "value": null,
+     "label": null,
+     "summary": "Not scored.",
+     "reason": "No supported before/after versions; the answer above explains why.",
+     "next_action": "Name the section and the amendment you mean.",
+     "method": "rule-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [
+      "evidence_gate_failed"
+     ],
+     "limit": {
+      "kind": "evidence",
+      "message": "No supported before/after versions; the answer above explains why.",
+      "action": {
+       "type": "verify_source",
+       "label": "Check the official source on India Code; your facts cannot fill this gap"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "outcome_drift": {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "value": null,
+     "label": "Cannot determine",
+     "summary": "Cannot determine.",
+     "reason": "No supported before/after versions; the answer above explains why.",
+     "next_action": "Name the section and the amendment you mean.",
+     "method": "outcome-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [
+      "evidence_gate_failed"
+     ],
+     "limit": {
+      "kind": "evidence",
+      "message": "No supported before/after versions; the answer above explains why.",
+      "action": {
+       "type": "verify_source",
+       "label": "Check the official source on India Code; your facts cannot fill this gap"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "reading": [],
+    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
+    "tlds": {
+     "version": "tlds-v1",
+     "weights": {
+      "textual": 0.2,
+      "semantic": 0.3,
+      "legal_effect": 0.4,
+      "rule_structure": 0.1
+     },
+     "missing_components": [
+      "textual",
+      "semantic",
+      "legal_effect",
+      "rule_structure"
+     ],
+     "formula": "D = 100 × (w_T·T + w_S·S + w_L·L + w_R·R), every component in [0, 1]",
+     "bands": [
+      [
+       0,
+       "Very low"
+      ],
+      [
+       10,
+       "Low"
+      ],
+      [
+       30,
+       "Moderate"
+      ],
+      [
+       50,
+       "High"
+      ],
+      [
+       75,
+       "Very high"
+      ]
+     ],
+     "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "state": "INCOMPLETE",
+     "value": null,
+     "tldp_percent": null,
+     "band": null,
+     "label": "Incomplete",
+     "partial_value": null,
+     "partial_label": null,
+     "calculation": null,
+     "components": {
+      "textual": {
+       "value": null,
+       "method": null,
+       "reason": "No supported before/after versions; the answer above explains why.",
+       "details": {}
+      },
+      "semantic": {
+       "value": null,
+       "method": null,
+       "reason": "No supported before/after versions; the answer above explains why.",
+       "details": {}
+      },
+      "legal_effect": {
+       "value": null,
+       "method": null,
+       "reason": "No supported before/after versions; the answer above explains why.",
+       "details": {}
+      },
+      "rule_structure": {
+       "value": null,
+       "method": null,
+       "reason": "No supported before/after versions; the answer above explains why.",
+       "details": {}
+      }
+     },
+     "config": "configs/metrics/tlds.v1.json",
+     "note": "An indicator of change between two versions of one clause, not the percentage of a statute that changed, not legal correctness, not a probability, not materiality and not risk. Read legal-effect drift beside it: a small wording change can carry a large legal effect.",
+     "evidence_ids": [],
+     "legal_validation": "UNVERIFIED"
+    }
+   },
+   "determinations": {
+    "version": "determinations-v4",
+    "textual_drift": {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "label": null,
+     "summary": "Not scored.",
+     "reason": "No supported before/after versions; the answer above explains why.",
+     "method": "alias of fingerprint.wording_drift (textual_drift is deprecated in determinations-v2)",
+     "evidence_ids": [],
+     "details": {
+      "deprecated": true,
+      "use": "fingerprint.wording_drift"
+     },
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "limit": {
+      "kind": "evidence",
+      "message": "No supported before/after versions; the answer above explains why.",
+      "action": {
+       "type": "verify_source",
+       "label": "Check the official source on India Code; your facts cannot fill this gap"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "materiality": {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "label": null,
+     "summary": "No supported change to assess.",
+     "reason": "No supported before/after versions; the answer above explains why.",
+     "method": null,
+     "evidence_ids": [],
+     "details": {
+      "upstream_reason": "Name a section of the Motor Vehicles Act 1988 to compare its versions; whole Acts are not compared."
+     },
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "limit": {
+      "kind": "evidence",
+      "message": "No supported before/after versions; the answer above explains why.",
+      "action": {
+       "type": "verify_source",
+       "label": "Check the official source on India Code; your facts cannot fill this gap"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "applicability": {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "label": null,
+     "summary": "No supported versions.",
+     "reason": "No supported before/after versions; the answer above explains why.",
+     "method": null,
+     "evidence_ids": [],
+     "details": {
+      "upstream_reason": "Name a section of the Motor Vehicles Act 1988 to compare its versions; whole Acts are not compared."
+     },
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "limit": {
+      "kind": "evidence",
+      "message": "No supported before/after versions; the answer above explains why.",
+      "action": {
+       "type": "verify_source",
+       "label": "Check the official source on India Code; your facts cannot fill this gap"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "answer_change": {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "label": null,
+     "summary": "No supported versions to compare.",
+     "reason": "No supported before/after versions; the answer above explains why.",
+     "method": null,
+     "evidence_ids": [],
+     "details": {
+      "upstream_reason": "Name a section of the Motor Vehicles Act 1988 to compare its versions; whole Acts are not compared."
+     },
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "limit": {
+      "kind": "evidence",
+      "message": "No supported before/after versions; the answer above explains why.",
+      "action": {
+       "type": "verify_source",
+       "label": "Check the official source on India Code; your facts cannot fill this gap"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "risk": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "No provision identified.",
+     "reason": "Risk is assessed only for a named provision with a modelled obligation.",
+     "method": null,
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "Risk is assessed only for a named provision with a modelled obligation.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    }
+   },
+   "evidence": [],
+   "version_evidence": {
+    "version": "version-evidence-v2",
+    "candidates": [],
+    "transition_id": null,
+    "amendment_event_id": null,
+    "operation": null,
+    "provision_path": null,
+    "effective_date": null,
+    "date_basis": null,
+    "relation_verification": null,
+    "before": null,
+    "after": null,
+    "support_class": "NO_SUPPORTED_VERSION",
+    "reason_code": "SECTION_NOT_IDENTIFIED",
+    "reason": "Name a section of the Motor Vehicles Act 1988 to compare its versions; whole Acts are not compared.",
+    "section_candidates": {
+     "act_entry_id": "motor-vehicles-act-1988",
+     "act_name": "Motor Vehicles Act 1988",
+     "amendment": null,
+     "amendment_year": null,
+     "candidates": [
+      {
+       "section": "194",
+       "heading": "Driving vehicl e exceeding permissible weight",
+       "status": "SUPPORTED",
+       "support_class": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+       "amendment": "Act 8 of 2026 (named in the India Code footnote)",
+       "amendment_year": "2026",
+       "operation": "SUBSTITUTE",
+       "effective_date": null,
+       "footnote_stated_date": "15-8-2026",
+       "why": "India Code's footnote records a substitution, so the earlier wording can be reconstructed (Act 8 of 2026 (named in the India Code footnote)).",
+       "topic_match": false,
+       "topic_score": 0,
+       "source": {
+        "act_name": "Motor Vehicles Act 1988",
+        "page": 106,
+        "pdf_url": "/corpus/motor-vehicles-act-1988.pdf#page=106",
+        "official_url": "https://indiacode.gov.in/items/2bbbcc40-38f1-4b15-ae94-646b85db4ee7",
+        "verbatim": true
+       }
+      },
+      {
+       "section": "8",
+       "heading": "Grant of learner ’s licence",
+       "status": "SUPPORTED",
+       "support_class": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+       "amendment": "Motor Vehicles (Amendment) Act 2019",
+       "amendment_year": "2019",
+       "operation": "SUBSTITUTE",
+       "effective_date": null,
+       "footnote_stated_date": "1-9-2019",
+       "why": "India Code's footnote records a substitution, so the earlier wording can be reconstructed (Motor Vehicles (Amendment) Act 2019).",
+       "topic_match": false,
+       "topic_score": 0,
+       "source": {
+        "act_name": "Motor Vehicles Act 1988",
+        "page": 15,
+        "pdf_url": "/corpus/motor-vehicles-act-1988.pdf#page=15",
+        "official_url": "https://indiacode.gov.in/items/2bbbcc40-38f1-4b15-ae94-646b85db4ee7",
+        "verbatim": true
+       }
+      },
+      {
+       "section": "10",
+       "heading": "Form and contents of licences to drive",
+       "status": "SUPPORTED",
+       "support_class": "GRAPH_TRANSITION_FRAGMENTS",
+       "amendment": "Motor Vehicles (Amendment) Act 2019",
+       "amendment_year": "2019",
+       "operation": "SUBSTITUTE",
+       "effective_date": null,
+       "footnote_stated_date": null,
+       "why": "A corroborated change recorded in the temporal graph (Motor Vehicles (Amendment) Act 2019).",
+       "topic_match": false,
+       "topic_score": 0,
+       "source": {
+        "act_name": "Motor Vehicles Act",
+        "page": 3,
+        "pdf_url": "/corpus/motor-vehicles-amendment-act-2019.pdf#page=3",
+        "official_url": "https://indiacode.gov.in/items/581f7763-0b61-44b3-973a-37f8e14ae174",
+        "verbatim": true
+       }
+      },
+      {
+       "section": "11",
+       "heading": "Additions to driving licence",
+       "status": "SUPPORTED",
+       "support_class": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+       "amendment": "Motor Vehicles (Amendment) Act 2019",
+       "amendment_year": "2019",
+       "operation": "SUBSTITUTE",
+       "effective_date": null,
+       "footnote_stated_date": "1-9-2019",
+       "why": "India Code's footnote records a substitution, so the earlier wording can be reconstructed (Motor Vehicles (Amendment) Act 2019).",
+       "topic_match": false,
+       "topic_score": 0,
+       "source": {
+        "act_name": "Motor Vehicles Act 1988",
+        "page": 18,
+        "pdf_url": "/corpus/motor-vehicles-act-1988.pdf#page=18",
+        "official_url": "https://indiacode.gov.in/items/2bbbcc40-38f1-4b15-ae94-646b85db4ee7",
+        "verbatim": true
+       }
+      },
+      {
+       "section": "40",
+       "heading": "Registration, where to be made",
+       "status": "SUPPORTED",
+       "support_class": "GRAPH_TRANSITION_FRAGMENTS",
+       "amendment": "Motor Vehicles (Amendment) Act 2019",
+       "amendment_year": "2019",
+       "operation": "SUBSTITUTE",
+       "effective_date": null,
+       "footnote_stated_date": null,
+       "why": "A corroborated change recorded in the temporal graph (Motor Vehicles (Amendment) Act 2019).",
+       "topic_match": false,
+       "topic_score": 0,
+       "source": {
+        "act_name": "Motor Vehicles Act",
+        "page": 6,
+        "pdf_url": "/corpus/motor-vehicles-amendment-act-2019.pdf#page=6",
+        "official_url": "https://indiacode.gov.in/items/581f7763-0b61-44b3-973a-37f8e14ae174",
+        "verbatim": true
+       }
+      },
+      {
+       "section": "59",
+       "heading": "Power to fix the age limit of motor vehicle",
+       "status": "SUPPORTED",
+       "support_class": "GRAPH_TRANSITION_FRAGMENTS",
+       "amendment": "Motor Vehicles (Amendment) Act 2019",
+       "amendment_year": "2019",
+       "operation": "INSERT",
+       "effective_date": null,
+       "footnote_stated_date": null,
+       "why": "A corroborated change recorded in the temporal graph (Motor Vehicles (Amendment) Act 2019).",
+       "topic_match": false,
+       "topic_score": 0,
+       "source": {
+        "act_name": "Motor Vehicles Act",
+        "page": 9,
+        "pdf_url": "/corpus/motor-vehicles-amendment-act-2019.pdf#page=9",
+        "official_url": "https://indiacode.gov.in/items/581f7763-0b61-44b3-973a-37f8e14ae174",
+        "verbatim": true
+       }
+      },
+      {
+       "section": "65",
+       "heading": "Power of State Government to make rules",
+       "status": "SUPPORTED",
+       "support_class": "GRAPH_TRANSITION_FRAGMENTS",
+       "amendment": "Motor Vehicles (Amendment) Act 2019",
+       "amendment_year": "2019",
+       "operation": "INSERT",
+       "effective_date": null,
+       "footnote_stated_date": null,
+       "why": "A corroborated change recorded in the temporal graph (Motor Vehicles (Amendment) Act 2019).",
+       "topic_match": false,
+       "topic_score": 0,
+       "source": {
+        "act_name": "Motor Vehicles Act",
+        "page": 11,
+        "pdf_url": "/corpus/motor-vehicles-amendment-act-2019.pdf#page=11",
+        "official_url": "https://indiacode.gov.in/items/581f7763-0b61-44b3-973a-37f8e14ae174",
+        "verbatim": true
+       }
+      },
+      {
+       "section": "72",
+       "heading": "G rant of stage carriage permits",
+       "status": "SUPPORTED",
+       "support_class": "GRAPH_TRANSITION_FRAGMENTS",
+       "amendment": "Motor Vehicles (Amendment) Act 2019",
+       "amendment_year": "2019",
+       "operation": "INSERT",
+       "effective_date": null,
+       "footnote_stated_date": null,
+       "why": "A corroborated change recorded in the temporal graph (Motor Vehicles (Amendment) Act 2019).",
+       "topic_match": false,
+       "topic_score": 0,
+       "source": {
+        "act_name": "Motor Vehicles Act",
+        "page": 13,
+        "pdf_url": "/corpus/motor-vehicles-amendment-act-2019.pdf#page=13",
+        "official_url": "https://indiacode.gov.in/items/581f7763-0b61-44b3-973a-37f8e14ae174",
+        "verbatim": true
+       }
+      }
+     ],
+     "counts": {
+      "SUPPORTED": 27,
+      "NOT_CORROBORATED": 3,
+      "TEXT_UNRELIABLE": 1
+     },
+     "checked_sections": 31,
+     "note": "Only changes recorded in the temporal graph or reconstructable from India Code footnotes are listed. This is not the Act's complete amendment history, and no score is given for the Act as a whole."
+    }
+   },
+   "source_fidelity_warnings": [],
+   "comparison": {
+    "contract_version": "comparison-record-v2",
+    "query_id": "q_9f932ec480adabfc",
+    "support_class": "NO_SUPPORTED_VERSION",
+    "support_reason": "Name a section of the Motor Vehicles Act 1988 to compare its versions; whole Acts are not compared.",
+    "before": null,
+    "after": null,
+    "graph_transition_id": null,
+    "amendment_event_id": null,
+    "operation": null,
+    "provision_path": null,
+    "competing_transition_ids": [],
+    "requested_date": null,
+    "reliability": null,
+    "question_relevance": null,
+    "supported_effective_date": null,
+    "changed_spans": [],
+    "scoring_contract_version": null,
+    "materiality_status": "INSUFFICIENT_EVIDENCE",
+    "applicability_status": "NOT_DETERMINED_REQUIRES_SCENARIO_FACTS_AND_REVIEW",
+    "consequence_status": "OUT_OF_SCOPE",
+    "abstention_reasons": [
+     "SECTION_NOT_IDENTIFIED"
+    ],
+    "legal_validation": "UNVERIFIED",
+    "relation_verification": null
+   },
+   "retrieval": {
+    "pair_status": "no_supported_version",
+    "candidate_count": 0,
+    "relation": {
+     "amending_entry_id": null,
+     "target_entry_id": "motor-vehicles-act-1988"
+    },
+    "pre": null,
+    "post": null,
+    "selection": "act_and_section_identity",
+    "live_indiacode": {
+     "attempted": false,
+     "candidate_count": 0,
+     "amendment_count": 0,
+     "amendments": [],
+     "error": null,
+     "role": "not used for version comparisons; India Code remains the authoritative source"
+    }
+   },
+   "citations": [],
+   "verification": {
+    "passed": false,
+    "checks": [
+     {
+      "id": "act_identified",
+      "label": "Act identified from the question",
+      "passed": true
+     },
+     {
+      "id": "provision_identified",
+      "label": "Provision identified",
+      "passed": false
+     },
+     {
+      "id": "relation_verified",
+      "label": "Amending Act linked to this Act",
+      "passed": false
+     },
+     {
+      "id": "paired_context",
+      "label": "Supported before/after versions of the same provision",
+      "passed": false
+     },
+     {
+      "id": "citation_anchors",
+      "label": "Page-level evidence attached",
+      "passed": false
+     }
+    ],
+    "pair_status": "no_supported_version",
+    "note": "A failed check means the answer is partial; the reason is shown with the answer."
+   },
+   "source_guidance": {
+    "message": "The retrieved excerpts may be incomplete. Visit the official India Code website for the complete legislation, commencement details and further information.",
+    "label": "Visit India Code for further information",
+    "url": "https://indiacode.gov.in/"
+   },
+   "repository": {
+    "ready": true,
+    "document_count": 100,
+    "chunk_count": 15998,
+    "embedding_dimensions": 256,
+    "vector_backend": "local_persistent_cosine",
+    "hybrid_search": true,
+    "index_fingerprint": "cfcbc384dd15bb0d3c39145915147210896c19c378406d1da2d1b7333d3bcdf4",
+    "dataset_version": "v0.1",
+    "graph_version": "v0.1",
+    "rag_index_version": "v0.1",
+    "graph_fingerprint": "73b8f9c50738329022b75a5840821e2c9ae89db7835817706628f9e6fe3497c1",
+    "index_identity": "5e8be5c684fef9a3b7f4497aeb45e06680704aefdda33dba21c54d090c6a3aa1",
+    "monitored_overlay": {
+     "status": "ACTIVE",
+     "overlay_sha256": "90eae154379b4b738b32ec10bb8158b7a48ac47f70fbd2ae57ad377a5bbebccc",
+     "documents": 1,
+     "chunks": 2,
+     "review_status": "HUMAN_REVIEW_PENDING"
+    },
+    "official_repository": "https://indiacode.gov.in/",
+    "metadata_fields": [
+     "document_type",
+     "version",
+     "act_name",
+     "date"
+    ],
+    "generation": {
+     "provider": "extractive_fallback",
+     "temperature": 0.0,
+     "model": null,
+     "grounded_output_required": true
+    },
+    "notice": "The local index is a research aid. India Code remains the authoritative source.",
+    "repository_mode": "live_indiacode_with_local_evidence_cache",
+    "live_repository_enabled": false
+   },
+   "limitations": [
+    "Only changes recorded in the temporal graph or reconstructable from India Code footnotes are listed. This is not the Act's complete amendment history, and no score is given for the Act as a whole.",
+    "Not legal advice; verify on India Code."
+   ],
+   "scenario_request": {
+    "fields": [],
+    "facts_in_use": {},
+    "blocked_by_evidence": [
+     "which wording applies on your date",
+     "whether your answer changes"
+    ],
+    "explanation": "No facts are needed for this question. Facts cannot fill missing legal evidence for: which wording applies on your date, whether your answer changes."
+   },
+   "selection": null,
+   "analysis_id": "an_ab6153729c3adceac8bd69ed"
+  },
+  "mv-act-194": {
+   "schema_version": "5.0.0",
+   "contract_version": "rag-answer-v5",
+   "query": "What changed in the Motor Vehicles Act?",
+   "mode": "specific",
+   "intent": "diff_analysis",
+   "question_frame": {
+    "query": "What changed in the Motor Vehicles Act?",
+    "version": "question-frame-v1",
+    "question_type": "what_changed",
+    "asks_about_versions": true,
+    "principal": {
+     "entry_id": "motor-vehicles-act-1988",
+     "name": "Motor Vehicles Act 1988",
+     "kind": "principal",
+     "year": "1988"
+    },
+    "amending": null,
+    "amendment_year": null,
+    "sections": [
+     "194"
+    ],
+    "reference_date": null,
+    "focus_terms": [],
+    "unresolved_act_phrases": [],
+    "relation_error": null,
+    "ambiguities": []
+   },
+   "scenario": null,
+   "answer": {
+    "answer_type": "comparison",
+    "direct_answer": "The Act 8 of 2026 changed section 194 of the Motor Vehicles Act 1988: “which may extend to one thousand rupees” was replaced by “liable to penalty”. The footnote states effect from 15-8-2026 (not verified as commencement).",
+    "sections": [
+     {
+      "id": "before",
+      "title": "Before",
+      "label": "Before — reconstructed from the India Code footnote (derived, not a verbatim historical text)",
+      "text": "…of the provisions of section 113 or section 114 or section 115 shall be which may extend to one thousand rupees 11[of twenty thousand rupees and an 12[additional penalty of two thousand…",
+      "evidence_ids": [
+       "E3",
+       "E2"
+      ],
+      "kind": "derived"
+     },
+     {
+      "id": "after",
+      "title": "After",
+      "label": "After — current consolidated text (today's wording; not proven to be the text in force on a past date)",
+      "text": "…of the provisions of section 113 or section 114 or section 115 shall be 10[liable to penalty  of twenty thousand rupees and an 12[additional penalty of two thousand rupees…",
+      "evidence_ids": [
+       "E1"
+      ],
+      "kind": "evidence"
+     },
+     {
+      "id": "what_changed",
+      "title": "Key change",
+      "text": "Substituted “which may extend to one thousand rupees” with “liable to penalty”. Changed rule fields: penalty, amount or numeric limit. 6 other amendment footnote(s) for this section could not be reconstructed, so other wording in it may also have changed.",
+      "evidence_ids": [
+       "E2"
+      ],
+      "kind": "evidence"
+     }
+    ],
+    "answer_limitations": [
+     "The earlier wording is reconstructed from India Code's footnote; the current text is today's version, not proven for a past date.",
+     "Machine-checked evidence; not legal advice and not independently legally validated."
+    ],
+    "short_answer": "The Act 8 of 2026 changed section 194 of the Motor Vehicles Act 1988: “which may extend to one thousand rupees” was replaced by “liable to penalty”. The footnote states effect from 15-8-2026 (not verified as commencement).",
+    "pre_amendment_baseline": "…of the provisions of section 113 or section 114 or section 115 shall be which may extend to one thousand rupees 11[of twenty thousand rupees and an 12[additional penalty of two thousand…",
+    "post_amendment_revision": "…of the provisions of section 113 or section 114 or section 115 shall be 10[liable to penalty  of twenty thousand rupees and an 12[additional penalty of two thousand rupees…",
+    "key_differences": [
+     "Substituted “which may extend to one thousand rupees” with “liable to penalty”. Changed rule fields: penalty, amount or numeric limit. 6 other amendment footnote(s) for this section could not be reconstructed, so other wording in it may also have changed."
+    ],
+    "markdown": "The Act 8 of 2026 changed section 194 of the Motor Vehicles Act 1988: “which may extend to one thousand rupees” was replaced by “liable to penalty”. The footnote states effect from 15-8-2026 (not verified as commencement).\n\n## Before\n…of the provisions of section 113 or section 114 or section 115 shall be which may extend to one thousand rupees 11[of twenty thousand rupees and an 12[additional penalty of two thousand… [E3, E2]\n\n## After\n…of the provisions of section 113 or section 114 or section 115 shall be 10[liable to penalty  of twenty thousand rupees and an 12[additional penalty of two thousand rupees… [E1]\n\n## Key change\nSubstituted “which may extend to one thousand rupees” with “liable to penalty”. Changed rule fields: penalty, amount or numeric limit. 6 other amendment footnote(s) for this section could not be reconstructed, so other wording in it may also have changed. [E2]",
+    "generation_method": "grounded_composition",
+    "generation_warning": null
+   },
+   "metrics": {
+    "metrics_contract_version": "drift-metrics-v3",
+    "semantic_drift_percent": 1.3,
+    "lexical_drift_percent": 4.0,
+    "conceptual_drift_percent": 34.0,
+    "overall_drift_percent": 18.8,
+    "availability": {
+     "semantic": "available",
+     "lexical": "available",
+     "conceptual": "available",
+     "overall": "available"
+    },
+    "unavailable_reasons": {
+     "evidence_alignment_quality": "evidence was selected by Act and section identity, not by similarity, so retrieval alignment quality does not apply"
+    },
+    "evidence_alignment_quality_percent": null,
+    "alignment_accuracy_percent": null,
+    "deprecated_fields": {
+     "alignment_accuracy_percent": "renamed evidence_alignment_quality_percent in drift-metrics-v2; it never measured accuracy"
+    },
+    "compared_text_sha256": {
+     "pre": "992e37dabee6c4211a4ff82c6c7831416583515d867f3ad8d109150c943b734b",
+     "post": "7578aa30db52982027428c9ebfafe8ccb18c77bf635837b6642543e91cc51bf4"
+    },
+    "changed_spans": [
+     {
+      "operation": "replace",
+      "before": "which may extend",
+      "after": "10 liable"
+     },
+     {
+      "operation": "replace",
+      "before": "one thousand rupees",
+      "after": "penalty"
+     }
+    ],
+    "weights": {
+     "semantic": 0.4,
+     "lexical": 0.3,
+     "conceptual": 0.3
+    },
+    "aggregation_method": "weighted_root_mean_square",
+    "component_spread_percent": 32.7,
+    "component_disagreement": false,
+    "aggregation_note": "Weighted RMS preserves strong drift signals instead of allowing a low component to cancel a high component. Component scores remain visible and must be interpreted separately.",
+    "levels": {
+     "semantic": "Low",
+     "lexical": "Low",
+     "conceptual": "Medium",
+     "overall": "Low"
+    },
+    "level_thresholds": {
+     "Low": "0.0-33.3",
+     "Medium": "33.4-66.6",
+     "High": "66.7-100.0"
+    },
+    "conceptual_method": "legal_cue_proxy",
+    "accuracy_definition": "evidence-alignment quality: retrieval confidence, paired-evidence completeness and metadata coverage; not answer accuracy, legal correctness or a probability",
+    "calculation_trace": {
+     "semantic": {
+      "method": "cosine of deterministic 256-dimension feature-hash token vectors; not a pretrained semantic encoder",
+      "cosine_similarity_percent": 98.7,
+      "formula": "100 × (1 - cosine similarity)"
+     },
+     "lexical": {
+      "pre_token_count": 199,
+      "post_token_count": 196,
+      "jaccard_similarity_percent": 94.6,
+      "sequence_similarity_percent": 97.7,
+      "formula": "100 × (1 - (0.55 × Jaccard similarity + 0.45 × sequence similarity))"
+     },
+     "conceptual": {
+      "method": "legal_cue_proxy",
+      "pre_legal_cues": [
+       "obligation:shall",
+       "penalty:liable",
+       "penalty:penalty",
+       "permission:may",
+       "prohibition:shall not"
+      ],
+      "post_legal_cues": [
+       "obligation:shall",
+       "penalty:liable",
+       "penalty:penalty",
+       "prohibition:shall not"
+      ],
+      "pre_numbers": [
+       "1",
+       "11",
+       "113",
+       "114",
+       "115",
+       "12",
+       "13",
+       "14",
+       "15",
+       "194",
+       "9"
+      ],
+      "post_numbers": [
+       "1",
+       "10",
+       "11",
+       "113",
+       "114",
+       "115",
+       "12",
+       "13",
+       "14",
+       "15",
+       "194",
+       "9"
+      ],
+      "formula": "Evidence-bound LLM score when available; otherwise deterministic legal-cue, numeric and polarity changes"
+     },
+     "overall": {
+      "formula": "sqrt(0.40 × semantic² + 0.30 × lexical² + 0.30 × conceptual²)",
+      "weighted_square_contributions": {
+       "semantic": 0.67,
+       "lexical": 4.83,
+       "conceptual": 346.8
+      },
+      "sum_of_weighted_squares": 352.3
+     },
+     "alignment": {
+      "average_retrieval_confidence_percent": 100.0,
+      "paired_evidence_completeness_percent": 100.0,
+      "metadata_coverage_percent": 100.0,
+      "formula": "0.50 × retrieval confidence + 0.30 × evidence completeness + 0.20 × metadata coverage"
+     }
+    },
+    "score_basis": {
+     "selection": "provision_identity_from_question",
+     "query": "What changed in the Motor Vehicles Act?",
+     "selection_method": "consolidated_footnote_reconstruction",
+     "presentation_mode_independent": true,
+     "pre_excerpt": "194. Driving vehicl e exceeding permissible weight .—9[(1) Whoever drive s a motor vehicle or causes or allows a motor vehicle to be driven in contravention of the provisions of section 113 or section 114 or section 115 shall be which may extend to one thousand rupees 11[of twenty thousand rupees and an 12[additional penalty] of two thousand rupees per tonne of excess load ], together with the liability to pay charges for off-loading of the excess load.] 13[Provided that such motor vehicle shall not be allowed to move before such excess load is removed or is caused or allowed to be removed by the person in control of such motor vehicle.] 14[(1A) Whoever drives a motor vehicle or causes or allows a motor vehicle to be driven when such motor vehicle is loaded in such a manner that the load or any part thereof or anything extends laterally beyond the side of the body or to the front or to the rear or in height beyond the permissible limit shall be 15[liable to penalty] of twenty thousand rupees, together with the liability to pay charges for off-loading of such load:",
+     "post_excerpt": "194. Driving vehicl e exceeding permissible weight .—9[(1) Whoever drive s a motor vehicle or causes or allows a motor vehicle to be driven in contravention of the provisions of section 113 or section 114 or section 115 shall be 10[liable to penalty ] 11[of twenty thousand rupees and an 12[additional penalty] of two thousand rupees per tonne of excess load ], together with the liability to pay charges for off-loading of the excess load.] 13[Provided that such motor vehicle shall not be allowed to move before such excess load is removed or is caused or allowed to be removed by the person in control of such motor vehicle.] 14[(1A) Whoever drives a motor vehicle or causes or allows a motor vehicle to be driven when such motor vehicle is loaded in such a manner that the load or any part thereof or anything extends laterally beyond the side of the body or to the front or to the rear or in height beyond the permissible limit shall be 15[liable to penalty] of twenty thousand rupees, together with the liability to pay charges for off-loading of such load:",
+     "pre_source_anchor": "pdf:page:106:line:28",
+     "post_source_anchor": "pdf:page:106:line:28",
+     "user_supplied_before_after_text": false,
+     "graph_alignment": null,
+     "note": "Selected by Act and section identity, not by similarity; the alignment-quality figure reflects that."
+    },
+    "reliability": {
+     "evidence_coverage": "BOTH_SIDES",
+     "pairing": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+     "temporal_certainty": {
+      "status": "FOOTNOTE_STATED_DATE_UNVERIFIED",
+      "date": "15-8-2026",
+      "basis": "date printed in the footnote"
+     },
+     "retrieval_relevance": null,
+     "relation_verification": "FOOTNOTE_ONLY",
+     "note": "Reliability indicators are reported separately; they are not drift and not accuracy."
+    },
+    "question_relevance": {
+     "status": "MATCHES_REQUESTED_SECTION",
+     "requested_section": "194",
+     "compared_section": "194",
+     "answers_scenario_question": false,
+     "explanation": "The score measures how the selected clause's wording moved; whether your answer changes is reported separately."
+    },
+    "legacy_diagnostic": {
+     "fields": [
+      "overall_drift_percent",
+      "conceptual_drift_percent"
+     ],
+     "note": "Legacy drift-metrics-v3 diagnostic on amendment fragments; it mixes wording and legal-cue signals. Use fingerprint.wording_drift and fingerprint.rule_drift instead."
+    }
+   },
+   "fingerprint": {
+    "version": "legal-change-fingerprint-v1.2",
+    "wording_drift": {
+     "state": "DETERMINED",
+     "value": 2.4,
+     "label": "2.4%",
+     "summary": "About 2.1% of the clause's words are in changed spans; the wording measures move 2.4% (0 = same words, 100 = no shared wording).",
+     "reason": "Computed on the whole aligned clause from surface wording only; it says nothing about legal effect.",
+     "next_action": null,
+     "method": "wording-drift-v1",
+     "evidence_ids": [
+      "E1",
+      "E2",
+      "E3"
+     ],
+     "details": {
+      "before_clause": "194. Driving vehicl e exceeding permissible weight .—(1) Whoever drive s a motor vehicle or causes or allows a motor vehicle to be driven in contravention of the provisions of section 113 or section 114 or section 115 shall be which may extend to one thousand rupees of twenty thousand rupees and an additional penalty of two thousand rupees per tonne of excess load , together with the liability to pay charges for off-loading of the excess load. Provided that such motor vehicle shall not be allowed to move before such excess load is removed or is caused or allowed to be removed by the person in control of such motor vehicle. (1A) Whoever drives a motor vehicle or causes or allows a motor vehicle to be driven when such motor vehicle is loaded in such a manner that the load or any part thereof or anything extends laterally beyond the side of the body or to the front or to the rear or in height beyond the permissible limit shall be liable to penalty of twenty thousand rupees, together with the liability to pay charges for off-loading of such load:",
+      "after_clause": "194. Driving vehicl e exceeding permissible weight .—(1) Whoever drive s a motor vehicle or causes or allows a motor vehicle to be driven in contravention of the provisions of section 113 or section 114 or section 115 shall be liable to penalty  of twenty thousand rupees and an additional penalty of two thousand rupees per tonne of excess load , together with the liability to pay charges for off-loading of the excess load. Provided that such motor vehicle shall not be allowed to move before such excess load is removed or is caused or allowed to be removed by the person in control of such motor vehicle. (1A) Whoever drives a motor vehicle or causes or allows a motor vehicle to be driven when such motor vehicle is loaded in such a manner that the load or any part thereof or anything extends laterally beyond the side of the body or to the front or to the rear or in height beyond the permissible limit shall be liable to penalty of twenty thousand rupees, together with the liability to pay charges for off-loading of such load:",
+      "before_kind": "derived: earlier wording reconstructed from the India Code footnote",
+      "after_kind": "verbatim: current consolidated text",
+      "derivation": "footnote_reconstruction",
+      "spans": [
+       {
+        "operation": "substituted",
+        "before_text": "which may extend",
+        "after_text": "liable",
+        "before_offsets": [
+         227,
+         243
+        ],
+        "after_offsets": [
+         227,
+         233
+        ]
+       },
+       {
+        "operation": "substituted",
+        "before_text": "one thousand rupees",
+        "after_text": "penalty",
+        "before_offsets": [
+         247,
+         266
+        ],
+        "after_offsets": [
+         237,
+         244
+        ]
+       }
+      ],
+      "normalisation": [
+       "case folding and whitespace collapsing",
+       "removal of India Code amendment markers such as 2[ and ]",
+       "removal of punctuation-only differences",
+       "-ise/-ize and -isation/-ization spelling variants treated as the same word"
+      ],
+      "clause_sha256": {
+       "before": "2c6a8e6e811181bcf642d796f516d68eb389ceef24fb96d86f8936beba897bd8",
+       "after": "e248414119b6e24fd0229bd201816736f8e725016167dcf22cc189526520beec"
+      },
+      "inputs": {
+       "lexical_drift_percent": 3.5,
+       "feature_vector_drift_percent": 1.2
+      },
+      "weights": {
+       "lexical": 0.5,
+       "feature_vector": 0.5
+      },
+      "formula": "0.5 × lexical drift + 0.5 × feature-vector drift (on normalised clauses)",
+      "calculation": "0.5 × 3.5 + 0.5 × 1.2 = 2.4",
+      "legacy_trace": {
+       "semantic": {
+        "method": "cosine of deterministic 256-dimension feature-hash token vectors; not a pretrained semantic encoder",
+        "cosine_similarity_percent": 98.8,
+        "formula": "100 × (1 - cosine similarity)"
+       },
+       "lexical": {
+        "pre_token_count": 193,
+        "post_token_count": 189,
+        "jaccard_similarity_percent": 95.3,
+        "sequence_similarity_percent": 97.9,
+        "formula": "100 × (1 - (0.55 × Jaccard similarity + 0.45 × sequence similarity))"
+       },
+       "conceptual": {
+        "method": "legal_cue_proxy",
+        "pre_legal_cues": [
+         "obligation:shall",
+         "penalty:liable",
+         "penalty:penalty",
+         "permission:may",
+         "prohibition:shall not"
+        ],
+        "post_legal_cues": [
+         "obligation:shall",
+         "penalty:liable",
+         "penalty:penalty",
+         "prohibition:shall not"
+        ],
+        "pre_numbers": [
+         "1",
+         "113",
+         "114",
+         "115",
+         "194"
+        ],
+        "post_numbers": [
+         "1",
+         "113",
+         "114",
+         "115",
+         "194"
+        ],
+        "formula": "Evidence-bound LLM score when available; otherwise deterministic legal-cue, numeric and polarity changes"
+       },
+       "overall": {
+        "formula": "sqrt(0.40 × semantic² + 0.30 × lexical² + 0.30 × conceptual²)",
+        "weighted_square_contributions": {
+         "semantic": 0.55,
+         "lexical": 3.74,
+         "conceptual": 58.8
+        },
+        "sum_of_weighted_squares": 63.09
+       },
+       "alignment": {
+        "average_retrieval_confidence_percent": 0.0,
+        "paired_evidence_completeness_percent": 100.0,
+        "metadata_coverage_percent": 0.0,
+        "formula": "0.50 × retrieval confidence + 0.30 × evidence completeness + 0.20 × metadata coverage"
+       }
+      },
+      "changed_word_share_percent": 2.1
+     },
+     "needs": [],
+     "uncertainty": [],
+     "limit": null,
+     "legal_validation": "UNVERIFIED"
+    },
+    "rule_drift": {
+     "state": "DETERMINED",
+     "value": 30.0,
+     "label": "30/100",
+     "summary": "Changed rule fields: penalty, amount or numeric limit.",
+     "reason": "Weighted sum of changed rule fields (weights in rule_drift.v1.2.json); independent of how many words changed and of materiality.",
+     "next_action": null,
+     "method": "rule-drift-v1.2",
+     "evidence_ids": [
+      "E1",
+      "E2",
+      "E3"
+     ],
+     "details": {
+      "fields": [
+       {
+        "field": "modality",
+        "label": "Duty, permission or prohibition",
+        "why": "changes whether conduct is required, allowed or forbidden, the core of a legal instruction",
+        "weight": 25,
+        "operation": "UNCHANGED",
+        "status": "EXTRACTED",
+        "before": [
+         "obligation: shall"
+        ],
+        "after": [
+         "obligation: shall"
+        ],
+        "before_spans": [
+         [
+          218,
+          223
+         ]
+        ],
+        "after_spans": [
+         [
+          218,
+          223
+         ]
+        ],
+        "contribution": 0
+       },
+       {
+        "field": "penalty",
+        "label": "Penalty",
+        "why": "changes the consequence of non-compliance; an amount inside a penalty counts here only, never twice",
+        "weight": 15,
+        "operation": "ADDED",
+        "status": "EXTRACTED",
+        "before": [],
+        "after": [
+         "liable to penalty of twenty thousand rupees and an additional penalty of two thousand rupees per tonne of excess load , together with th"
+        ],
+        "before_spans": [],
+        "after_spans": [
+         [
+          227,
+          364
+         ]
+        ],
+        "contribution": 15
+       },
+       {
+        "field": "threshold",
+        "label": "Amount or numeric limit",
+        "why": "changes when the rule bites, how much is at stake, or how many are allowed",
+        "weight": 15,
+        "operation": "REMOVED",
+        "status": "EXTRACTED",
+        "before": [
+         "amount: which may extend to one thousand rupees",
+         "amount: of twenty thousand rupees",
+         "amount: of two thousand rupees"
+        ],
+        "after": [],
+        "before_spans": [
+         [
+          227,
+          266
+         ],
+         [
+          267,
+          292
+         ],
+         [
+          319,
+          341
+         ]
+        ],
+        "after_spans": [],
+        "contribution": 15
+       },
+       {
+        "field": "deadline",
+        "label": "Deadline or period",
+        "why": "changes when compliance is due",
+        "weight": 15,
+        "operation": "ABSENT",
+        "status": "NOT_PRESENT",
+        "before": [],
+        "after": [],
+        "before_spans": [],
+        "after_spans": [],
+        "contribution": 0
+       },
+       {
+        "field": "exception",
+        "label": "Exception or proviso",
+        "why": "changes who or what escapes the rule",
+        "weight": 10,
+        "operation": "ABSENT",
+        "status": "NOT_PRESENT",
+        "before": [],
+        "after": [],
+        "before_spans": [],
+        "after_spans": [],
+        "contribution": 0
+       },
+       {
+        "field": "scope",
+        "label": "Scope (what the rule covers)",
+        "why": "changes what or whom the rule covers",
+        "weight": 10,
+        "operation": "ABSENT",
+        "status": "NOT_PRESENT",
+        "before": [],
+        "after": [],
+        "before_spans": [],
+        "after_spans": [],
+        "contribution": 0
+       },
+       {
+        "field": "actor",
+        "label": "Person or body named",
+        "why": "changes who acts, approves or is bound (low weight: the extractor is a heuristic)",
+        "weight": 5,
+        "operation": "ABSENT",
+        "status": "NOT_PRESENT",
+        "before": [],
+        "after": [],
+        "before_spans": [],
+        "after_spans": [],
+        "contribution": 0
+       },
+       {
+        "field": "action",
+        "label": "What must be done",
+        "why": "changes what must be done (low weight: the extractor is a heuristic)",
+        "weight": 5,
+        "operation": "ABSENT",
+        "status": "NOT_PRESENT",
+        "before": [],
+        "after": [],
+        "before_spans": [],
+        "after_spans": [],
+        "contribution": 0
+       }
+      ],
+      "uncertain_fields": [],
+      "structural_changes": [],
+      "operative_sentences": {
+       "before": [
+        [
+         5,
+         447
+        ]
+       ],
+       "after": [
+        [
+         5,
+         426
+        ]
+       ]
+      },
+      "weights_config": "configs/metrics/rule_drift.v1.2.json",
+      "llm_proposal": {
+       "status": "NOT_USED"
+      },
+      "formula": "sum of the weights of rule fields that were added, removed or changed",
+      "calculation": "penalty 15 + threshold 15 = 30",
+      "lower_bound": false
+     },
+     "needs": [],
+     "uncertainty": [],
+     "limit": null,
+     "legal_validation": "UNVERIFIED"
+    },
+    "outcome_drift": {
+     "state": "NEEDS_FACTS",
+     "value": null,
+     "label": "Cannot determine",
+     "summary": "Add your situation to see whether your answer changes.",
+     "reason": "Outcome drift applies your facts to both rules; no facts were given.",
+     "next_action": "Add the facts asked for below and re-run.",
+     "method": "outcome-drift-v1",
+     "evidence_ids": [],
+     "details": {
+      "compat_percent": null
+     },
+     "needs": [
+      {
+       "key": "facts.contravention",
+       "label": "Was the provision contravened?",
+       "kind": "boolean"
+      }
+     ],
+     "uncertainty": [],
+     "limit": {
+      "kind": "facts",
+      "message": "Outcome drift applies your facts to both rules; no facts were given.",
+      "action": {
+       "type": "add_facts",
+       "label": "Add the facts asked for in Scenario & Impact"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "reading": [
+     {
+      "kind": "wording",
+      "text": "2.4% of the clause's wording changed, in 2 places.",
+      "evidence_ids": [
+       "E1",
+       "E2",
+       "E3"
+      ]
+     },
+     {
+      "kind": "rule",
+      "field": "penalty",
+      "evidence_ids": [
+       "E1",
+       "E2",
+       "E3"
+      ],
+      "text": "Penalty added: — → “liable to penalty of twenty thousand rupees and an additional penalty of two thousand rupees per tonne of excess load , together with th”. It matters because it changes the consequence of non-compliance; an amount inside a penalty counts here only, never twice."
+     },
+     {
+      "kind": "rule",
+      "field": "threshold",
+      "evidence_ids": [
+       "E1",
+       "E2",
+       "E3"
+      ],
+      "text": "Amount or numeric limit removed: “amount: which may extend to one thousand rupees” / “amount: of twenty thousand rupees” / “amount: of two thousand rupees” → —. It matters because it changes when the rule bites, how much is at stake, or how many are allowed."
+     },
+     {
+      "kind": "disagreement",
+      "evidence_ids": [
+       "E1",
+       "E2",
+       "E3"
+      ],
+      "text": "Only 2.4% of the wording changed, yet the penalty and amount or numeric limit changed. A small edit can change what the law requires; that is why wording and rule change are measured separately and never averaged."
+     }
+    ],
+    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
+    "tlds": {
+     "version": "tlds-v1",
+     "weights": {
+      "textual": 0.2,
+      "semantic": 0.3,
+      "legal_effect": 0.4,
+      "rule_structure": 0.1
+     },
+     "missing_components": [],
+     "formula": "D = 100 × (w_T·T + w_S·S + w_L·L + w_R·R), every component in [0, 1]",
+     "bands": [
+      [
+       0,
+       "Very low"
+      ],
+      [
+       10,
+       "Low"
+      ],
+      [
+       30,
+       "Moderate"
+      ],
+      [
+       50,
+       "High"
+      ],
+      [
+       75,
+       "Very high"
+      ]
+     ],
+     "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "state": "COMPLETE",
+     "value": 34.30698701037066,
+     "tldp_percent": 34.30698701037066,
+     "band": "Moderate",
+     "label": "34.3/100 · Moderate",
+     "partial_value": null,
+     "calculation": "100 × (0.2 × 0.0311 + 0.3 × 0.0117 + 0.4 × 0.7500 + 0.1 × 0.3333) = 34.3",
+     "components": {
+      "textual": {
+       "value": 0.031088082901554404,
+       "method": "token-levenshtein-v1",
+       "reason": "Token edits needed to turn the before clause into the after clause, per token of the longer clause.",
+       "details": {
+        "edit_distance": 6,
+        "before_tokens": 193,
+        "after_tokens": 189,
+        "formula": "EditDistance(pre, post) ÷ max(|pre|, |post|)",
+        "calculation": "6 ÷ 193 = 0.0311"
+       }
+      },
+      "semantic": {
+       "value": 0.01172973396687449,
+       "method": "embedding-cosine-v1",
+       "reason": "1 − cosine of the two clause embeddings; a proxy for meaning, not proof of the same legal effect.",
+       "details": {
+        "model": "stable_feature_hashing-256 (retriever.embed_text; word-overlap stand-in, not a pretrained semantic model)",
+        "dimensions": 256,
+        "cosine": 0.9882702660331255,
+        "formula": "1 − cos(e_pre, e_post), cosine clipped to [0, 1]",
+        "calculation": "1 − 0.9883 = 0.0117"
+       }
+      },
+      "legal_effect": {
+       "value": 0.75,
+       "method": "legal-effect-rubric-v1",
+       "details": {
+        "changes": [
+         {
+          "field": "penalty",
+          "label": "Penalty",
+          "operation": "ADDED",
+          "score": 0.75,
+          "basis": "penalty added",
+          "before": [],
+          "after": [
+           "liable to penalty of twenty thousand rupees and an additional penalty of two thousand rupees per tonne of excess load , together with th"
+          ],
+          "before_spans": [],
+          "after_spans": [
+           [
+            227,
+            364
+           ]
+          ]
+         },
+         {
+          "field": "threshold",
+          "label": "Amount or numeric limit",
+          "operation": "REMOVED",
+          "score": 0.5,
+          "basis": "threshold removed",
+          "before": [
+           "amount: which may extend to one thousand rupees",
+           "amount: of twenty thousand rupees",
+           "amount: of two thousand rupees"
+          ],
+          "after": [],
+          "before_spans": [
+           [
+            227,
+            266
+           ],
+           [
+            267,
+            292
+           ],
+           [
+            319,
+            341
+           ]
+          ],
+          "after_spans": []
+         }
+        ],
+        "aggregation": "maximum over detected changes: the composite reflects the most severe change once, and every change is listed with its spans",
+        "level": "Substantial change to an obligation, entitlement or restriction",
+        "lower_bound": false
+       },
+       "reason": "Substantial change to an obligation, entitlement or restriction: the most severe detected change is penalty added."
+      },
+      "rule_structure": {
+       "value": 0.3333333333333333,
+       "method": "rule-element-edit-v1",
+       "reason": "Share of the clause's rule elements inserted, deleted or substituted.",
+       "details": {
+        "removed": [
+         "threshold: amount of twenty thousand rupees",
+         "threshold: amount of two thousand rupees",
+         "threshold: amount which may extend to one thousand rupees"
+        ],
+        "added": [
+         "penalty: liable to penalty of twenty thousand rupees and an additional penalty of two thousand rupees per tonne of excess load together with th"
+        ],
+        "substituted": 0,
+        "shared": 8,
+        "formula": "(only-before + only-after − substitutions) ÷ (all distinct elements − substitutions)",
+        "calculation": "(3 + 1 − 0) ÷ (12 − 0) = 0.3333"
+       }
+      }
+     },
+     "config": "configs/metrics/tlds.v1.json",
+     "note": "An indicator of change between two versions of one clause, not the percentage of a statute that changed, not legal correctness, not a probability, not materiality and not risk. Read legal-effect drift beside it: a small wording change can carry a large legal effect.",
+     "evidence_ids": [
+      "E1",
+      "E2",
+      "E3"
+     ],
+     "legal_validation": "UNVERIFIED"
+    }
+   },
+   "determinations": {
+    "version": "determinations-v4",
+    "textual_drift": {
+     "state": "DETERMINED",
+     "label": "2.4%",
+     "summary": "About 2.1% of the clause's words are in changed spans; the wording measures move 2.4% (0 = same words, 100 = no shared wording).",
+     "reason": "Computed on the whole aligned clause from surface wording only; it says nothing about legal effect.",
+     "method": "alias of fingerprint.wording_drift (textual_drift is deprecated in determinations-v2)",
+     "evidence_ids": [
+      "E1",
+      "E2",
+      "E3"
+     ],
+     "details": {
+      "deprecated": true,
+      "use": "fingerprint.wording_drift"
+     },
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "limit": null,
+     "legal_validation": "UNVERIFIED"
+    },
+    "materiality": {
+     "state": "PROVISIONAL",
+     "label": "High",
+     "summary": "Provisional machine triage of the amendment's legal significance, computed for this answer.",
+     "reason": "No frozen silver assessment covers this amendment, so the same two versioned rules were applied now. Both rules agree.",
+     "method": "machine triage computed now: rule-cue-transition-v1 and operation-delta-v1 on number-normalised text (triage-input-v2)",
+     "evidence_ids": [
+      "E3",
+      "E1"
+     ],
+     "details": {
+      "source": "ON_THE_FLY_MACHINE_TRIAGE",
+      "frozen_silver_match": false,
+      "is_gold": false,
+      "labels_are_legal_truth": false,
+      "rule_a": {
+       "label": "High",
+       "rationale": "The wording changes the presence of one or more high-impact legal-effect cues: liability.",
+       "dimensions": [
+        "liability",
+        "threshold"
+       ],
+       "method_id": "rule-cue-transition-v1"
+      },
+      "rule_b": {
+       "label": "High",
+       "rationale": "The operation changes a detected duty, right, prohibition, scope, liability, or exception cue: liability.",
+       "dimensions": [
+        "liability",
+        "threshold"
+       ],
+       "method_id": "operation-delta-v1"
+      },
+      "operands": {
+       "operation": "SUBSTITUTE",
+       "before_text": "which may extend to one thousand rupees",
+       "after_text": "liable to penalty"
+      },
+      "scored_operands": {
+       "operation": "SUBSTITUTE",
+       "before_text": "which may extend to 1000 rupees",
+       "after_text": "liable to penalty"
+      },
+      "input_normalisation": "triage-input-v2 (number words to digits)"
+     },
+     "needs": [],
+     "review_status": "NOT_REVIEWED_MACHINE_TRIAGE",
+     "limit": null,
+     "legal_validation": "UNVERIFIED"
+    },
+    "applicability": {
+     "state": "NEEDS_FACTS",
+     "label": null,
+     "summary": "Add a reference date to see which wording would apply.",
+     "reason": "Publication, commencement and your situation's applicability are separate; none decides your date without one.",
+     "method": null,
+     "evidence_ids": [],
+     "details": {
+      "publication": {
+       "date": null,
+       "status": "NOT_IN_THIS_EVIDENCE",
+       "note": "publication is not commencement"
+      },
+      "commencement": {
+       "date": "2026-08-15",
+       "status": "FOOTNOTE_STATED_UNVERIFIED",
+       "basis": "date printed in the India Code footnote (w.e.f.); not verified as commencement"
+      },
+      "scenario_applicability": {
+       "status": "NOT_DETERMINED",
+       "note": "needs approved temporal facts and review"
+      }
+     },
+     "needs": [
+      {
+       "key": "reference_date",
+       "label": "Reference date (YYYY-MM-DD)",
+       "kind": "date",
+       "options": []
+      }
+     ],
+     "review_status": "UNREVIEWED",
+     "limit": {
+      "kind": "facts",
+      "message": "Publication, commencement and your situation's applicability are separate; none decides your date without one.",
+      "action": {
+       "type": "add_facts",
+       "label": "Add the facts asked for in Scenario & Impact"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "answer_change": {
+     "state": "NEEDS_FACTS",
+     "label": null,
+     "summary": "Your question asks what changed; that is answered above.",
+     "reason": "To say whether the change alters the answer for a particular situation, ask about a specific figure, permission or duty in this provision, or add scenario facts where an obligation model exists.",
+     "method": null,
+     "evidence_ids": [
+      "E3",
+      "E1"
+     ],
+     "details": {},
+     "needs": [
+      {
+       "key": "question",
+       "label": "A specific question about this provision (for example an amount, a deadline or whether something is allowed)",
+       "kind": "text"
+      }
+     ],
+     "review_status": "UNREVIEWED",
+     "limit": {
+      "kind": "facts",
+      "message": "To say whether the change alters the answer for a particular situation, ask about a specific figure, permission or duty in this provision, or add scenario facts where an obligation model exists.",
+      "action": {
+       "type": "add_facts",
+       "label": "Add the facts asked for in Scenario & Impact"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "risk": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "No obligation model for this provision.",
+     "reason": "Risk is computed only where a versioned obligation rule exists; the registry has no rule for this provision.",
+     "method": null,
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "Risk is computed only where a versioned obligation rule exists; the registry has no rule for this provision.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    }
+   },
+   "evidence": [
+    {
+     "evidence_id": "E1",
+     "role": "current_consolidated_text",
+     "entry_id": "motor-vehicles-act-1988",
+     "act_name": "Motor Vehicles Act 1988",
+     "text": "194. Driving vehicl e exceeding permissible weight .—9[(1) Whoever drive s a motor vehicle or causes or allows a motor vehicle to be driven in contravention of the provisions of section 113 or section 114 or section 115 shall be 10[liable to penalty ] 11[of twenty thousand rupees and an 12[additional penalty] of two thousand rupees per tonne of excess load ], together with the liability to pay charges for off-loading of the excess load.] 13[Provided that such motor vehicle shall not be allowed to move before such excess load is removed or is caused or allowed to be removed by the person in control of such motor vehicle.] 14[(1A) Whoever drives a motor vehicle or causes or allows a motor vehicle to be driven when such motor vehicle is loaded in such a manner that the load or any part thereof or anything extends laterally beyond the side of the body or to the front or to the rear or in height beyond the permissible limit shall be 15[liable to penalty] of twenty thousand rupees, together with the liability to pay charges for off-loading of such load:",
+     "page": 106,
+     "line": 28,
+     "verbatim": true,
+     "scope": "CURRENT_CONSOLIDATED_SECTION",
+     "source_sha256": null,
+     "text_sha256": "7578aa30db52982027428c9ebfafe8ccb18c77bf635837b6642543e91cc51bf4",
+     "pdf_url": "/corpus/motor-vehicles-act-1988.pdf#page=106",
+     "official_url": "https://indiacode.gov.in/items/2bbbcc40-38f1-4b15-ae94-646b85db4ee7",
+     "text_reliability": "NO_KNOWN_EXTRACTION_RISK"
+    },
+    {
+     "evidence_id": "E2",
+     "role": "substitution_footnote",
+     "entry_id": "motor-vehicles-act-1988",
+     "act_name": "Motor Vehicles Act 1988",
+     "text": "Subs. by Act 8 of 2026, s. 2 and Sch., for “punishable with fine” (w.e.f. 15-8-2026).",
+     "page": 106,
+     "line": 28,
+     "verbatim": true,
+     "scope": "CONSOLIDATED_TEXT_FOOTNOTE",
+     "source_sha256": null,
+     "text_sha256": "a783b1d22e321f43aa55b4825072d098faec2602a9ac6fd2917b3f3528714b52",
+     "pdf_url": "/corpus/motor-vehicles-act-1988.pdf#page=106",
+     "official_url": "https://indiacode.gov.in/items/2bbbcc40-38f1-4b15-ae94-646b85db4ee7",
+     "text_reliability": "NO_KNOWN_EXTRACTION_RISK"
+    },
+    {
+     "evidence_id": "E3",
+     "role": "reconstructed_earlier_wording",
+     "entry_id": "motor-vehicles-act-1988",
+     "act_name": "Motor Vehicles Act 1988",
+     "text": "194. Driving vehicl e exceeding permissible weight .—9[(1) Whoever drive s a motor vehicle or causes or allows a motor vehicle to be driven in contravention of the provisions of section 113 or section 114 or section 115 shall be which may extend to one thousand rupees 11[of twenty thousand rupees and an 12[additional penalty] of two thousand rupees per tonne of excess load ], together with the liability to pay charges for off-loading of the excess load.] 13[Provided that such motor vehicle shall not be allowed to move before such excess load is removed or is caused or allowed to be removed by the person in control of such motor vehicle.] 14[(1A) Whoever drives a motor vehicle or causes or allows a motor vehicle to be driven when such motor vehicle is loaded in such a manner that the load or any part thereof or anything extends laterally beyond the side of the body or to the front or to the rear or in height beyond the permissible limit shall be 15[liable to penalty] of twenty thousand rupees, together with the liability to pay charges for off-loading of such load:",
+     "page": 106,
+     "line": 28,
+     "verbatim": false,
+     "scope": "DERIVED_FROM_FOOTNOTE",
+     "source_sha256": null,
+     "text_sha256": "992e37dabee6c4211a4ff82c6c7831416583515d867f3ad8d109150c943b734b",
+     "pdf_url": "/corpus/motor-vehicles-act-1988.pdf#page=106",
+     "official_url": "https://indiacode.gov.in/items/2bbbcc40-38f1-4b15-ae94-646b85db4ee7",
+     "text_reliability": "NO_KNOWN_EXTRACTION_RISK"
+    }
+   ],
+   "version_evidence": {
+    "version": "version-evidence-v2",
+    "candidates": [],
+    "transition_id": null,
+    "amendment_event_id": null,
+    "operation": "SUBSTITUTE",
+    "provision_path": "section:194",
+    "effective_date": null,
+    "date_basis": "FOOTNOTE_STATED_DATE_UNVERIFIED",
+    "relation_verification": "FOOTNOTE_ONLY",
+    "before": {
+     "evidence_id": "E3",
+     "role": "reconstructed_earlier_wording",
+     "text": "194. Driving vehicl e exceeding permissible weight .—9[(1) Whoever drive s a motor vehicle or causes or allows a motor vehicle to be driven in contravention of the provisions of section 113 or section 114 or section 115 shall be which may extend to one thousand rupees 11[of twenty thousand rupees and an 12[additional penalty] of two thousand rupees per tonne of excess load ], together with the liability to pay charges for off-loading of the excess load.] 13[Provided that such motor vehicle shall not be allowed to move before such excess load is removed or is caused or allowed to be removed by the person in control of such motor vehicle.] 14[(1A) Whoever drives a motor vehicle or causes or allows a motor vehicle to be driven when such motor vehicle is loaded in such a manner that the load or any part thereof or anything extends laterally beyond the side of the body or to the front or to the rear or in height beyond the permissible limit shall be 15[liable to penalty] of twenty thousand rupees, together with the liability to pay charges for off-loading of such load:"
+    },
+    "after": {
+     "evidence_id": "E1",
+     "role": "current_consolidated_text",
+     "text": "194. Driving vehicl e exceeding permissible weight .—9[(1) Whoever drive s a motor vehicle or causes or allows a motor vehicle to be driven in contravention of the provisions of section 113 or section 114 or section 115 shall be 10[liable to penalty ] 11[of twenty thousand rupees and an 12[additional penalty] of two thousand rupees per tonne of excess load ], together with the liability to pay charges for off-loading of the excess load.] 13[Provided that such motor vehicle shall not be allowed to move before such excess load is removed or is caused or allowed to be removed by the person in control of such motor vehicle.] 14[(1A) Whoever drives a motor vehicle or causes or allows a motor vehicle to be driven when such motor vehicle is loaded in such a manner that the load or any part thereof or anything extends laterally beyond the side of the body or to the front or to the rear or in height beyond the permissible limit shall be 15[liable to penalty] of twenty thousand rupees, together with the liability to pay charges for off-loading of such load:"
+    },
+    "support_class": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+    "reason_code": "FOOTNOTE_SUBSTITUTION",
+    "reason": "Earlier wording reconstructed from the consolidated Act's own substitution footnote for this section.",
+    "footnote_stated_date": "15-8-2026",
+    "footnote_act": {
+     "number": "8",
+     "year": "2026",
+     "section": "2"
+    },
+    "amending_entry": null,
+    "other_unreconstructed_footnotes": 6,
+    "substitution": {
+     "old": "which may extend to one thousand rupees",
+     "new": "liable to penalty"
+    }
+   },
+   "source_fidelity_warnings": [],
+   "comparison": {
+    "contract_version": "comparison-record-v2",
+    "query_id": "q_9f932ec480adabfc",
+    "support_class": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+    "support_reason": "Earlier wording reconstructed from the consolidated Act's own substitution footnote for this section.",
+    "before": {
+     "role": "reconstructed_earlier_wording",
+     "evidence_id": "E3",
+     "source_id": null,
+     "source_sha256": null,
+     "text_sha256": "992e37dabee6c4211a4ff82c6c7831416583515d867f3ad8d109150c943b734b",
+     "document_version": "DERIVED_FROM_FOOTNOTE",
+     "chunk_id": null,
+     "text_offset": null,
+     "span_basis": "derived_text_not_a_verbatim_source_span",
+     "local_pdf_url": "/corpus/motor-vehicles-act-1988.pdf#page=106",
+     "entry_id": "motor-vehicles-act-1988",
+     "act_name": "Motor Vehicles Act 1988",
+     "source_url": "https://indiacode.gov.in/items/2bbbcc40-38f1-4b15-ae94-646b85db4ee7",
+     "source_anchor": "pdf:page:106:line:28",
+     "page": 106,
+     "line": 28,
+     "page_region_highlight": "unavailable: no verified PDF text coordinates",
+     "compared_text": "194. Driving vehicl e exceeding permissible weight .—9[(1) Whoever drive s a motor vehicle or causes or allows a motor vehicle to be driven in contravention of the provisions of section 113 or section 114 or section 115 shall be which may extend to one thousand rupees 11[of twenty thousand rupees and an 12[additional penalty] of two thousand rupees per tonne of excess load ], together with the liability to pay charges for off-loading of the excess load.] 13[Provided that such motor vehicle shall not be allowed to move before such excess load is removed or is caused or allowed to be removed by the person in control of such motor vehicle.] 14[(1A) Whoever drives a motor vehicle or causes or allows a motor vehicle to be driven when such motor vehicle is loaded in such a manner that the load or any part thereof or anything extends laterally beyond the side of the body or to the front or to the rear or in height beyond the permissible limit shall be 15[liable to penalty] of twenty thousand rupees, together with the liability to pay charges for off-loading of such load:"
+    },
+    "after": {
+     "role": "current_consolidated_text",
+     "evidence_id": "E1",
+     "source_id": null,
+     "source_sha256": null,
+     "text_sha256": "7578aa30db52982027428c9ebfafe8ccb18c77bf635837b6642543e91cc51bf4",
+     "document_version": "CURRENT_CONSOLIDATED_SECTION",
+     "chunk_id": null,
+     "text_offset": null,
+     "span_basis": "exact_source_span",
+     "local_pdf_url": "/corpus/motor-vehicles-act-1988.pdf#page=106",
+     "entry_id": "motor-vehicles-act-1988",
+     "act_name": "Motor Vehicles Act 1988",
+     "source_url": "https://indiacode.gov.in/items/2bbbcc40-38f1-4b15-ae94-646b85db4ee7",
+     "source_anchor": "pdf:page:106:line:28",
+     "page": 106,
+     "line": 28,
+     "page_region_highlight": "unavailable: no verified PDF text coordinates",
+     "compared_text": "194. Driving vehicl e exceeding permissible weight .—9[(1) Whoever drive s a motor vehicle or causes or allows a motor vehicle to be driven in contravention of the provisions of section 113 or section 114 or section 115 shall be 10[liable to penalty ] 11[of twenty thousand rupees and an 12[additional penalty] of two thousand rupees per tonne of excess load ], together with the liability to pay charges for off-loading of the excess load.] 13[Provided that such motor vehicle shall not be allowed to move before such excess load is removed or is caused or allowed to be removed by the person in control of such motor vehicle.] 14[(1A) Whoever drives a motor vehicle or causes or allows a motor vehicle to be driven when such motor vehicle is loaded in such a manner that the load or any part thereof or anything extends laterally beyond the side of the body or to the front or to the rear or in height beyond the permissible limit shall be 15[liable to penalty] of twenty thousand rupees, together with the liability to pay charges for off-loading of such load:"
+    },
+    "graph_transition_id": null,
+    "amendment_event_id": null,
+    "operation": "SUBSTITUTE",
+    "provision_path": "section:194",
+    "competing_transition_ids": [],
+    "requested_date": null,
+    "reliability": {
+     "evidence_coverage": "BOTH_SIDES",
+     "pairing": "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION",
+     "temporal_certainty": {
+      "status": "FOOTNOTE_STATED_DATE_UNVERIFIED",
+      "date": "15-8-2026",
+      "basis": "date printed in the footnote"
+     },
+     "retrieval_relevance": null,
+     "relation_verification": "FOOTNOTE_ONLY",
+     "note": "Reliability indicators are reported separately; they are not drift and not accuracy."
+    },
+    "question_relevance": {
+     "status": "MATCHES_REQUESTED_SECTION",
+     "requested_section": "194",
+     "compared_section": "194",
+     "answers_scenario_question": false,
+     "explanation": "The score measures how the selected clause's wording moved; whether your answer changes is reported separately."
+    },
+    "supported_effective_date": null,
+    "changed_spans": [
+     {
+      "operation": "replace",
+      "before": "which may extend",
+      "after": "10 liable"
+     },
+     {
+      "operation": "replace",
+      "before": "one thousand rupees",
+      "after": "penalty"
+     }
+    ],
+    "scoring_contract_version": "drift-metrics-v3",
+    "materiality_status": "PROVISIONAL",
+    "applicability_status": "NOT_DETERMINED_REQUIRES_SCENARIO_FACTS_AND_REVIEW",
+    "consequence_status": "OUT_OF_SCOPE",
+    "abstention_reasons": [],
+    "legal_validation": "UNVERIFIED",
+    "relation_verification": "FOOTNOTE_ONLY"
+   },
+   "retrieval": {
+    "pair_status": "consolidated_footnote_reconstruction",
+    "candidate_count": 0,
+    "relation": {
+     "amending_entry_id": null,
+     "target_entry_id": "motor-vehicles-act-1988"
+    },
+    "pre": null,
+    "post": null,
+    "selection": "act_and_section_identity",
+    "live_indiacode": {
+     "attempted": false,
+     "candidate_count": 0,
+     "amendment_count": 0,
+     "amendments": [],
+     "error": null,
+     "role": "not used for version comparisons; India Code remains the authoritative source"
+    }
+   },
+   "citations": [
+    {
+     "label": "current_consolidated_text",
+     "evidence_id": "E1",
+     "chunk_id": null,
+     "entry_id": "motor-vehicles-act-1988",
+     "act_name": "Motor Vehicles Act 1988",
+     "version": "CURRENT_CONSOLIDATED_SECTION",
+     "document_type": null,
+     "date": null,
+     "source_anchor": "pdf:page:106:line:28",
+     "page": 106,
+     "line": 28,
+     "pdf_url": "/corpus/motor-vehicles-act-1988.pdf#page=106",
+     "official_identifier": null,
+     "source_url": "https://indiacode.gov.in/items/2bbbcc40-38f1-4b15-ae94-646b85db4ee7",
+     "official_portal_url": "https://indiacode.gov.in/items/2bbbcc40-38f1-4b15-ae94-646b85db4ee7",
+     "verbatim": true,
+     "text_reliability": "NO_KNOWN_EXTRACTION_RISK"
+    },
+    {
+     "label": "substitution_footnote",
+     "evidence_id": "E2",
+     "chunk_id": null,
+     "entry_id": "motor-vehicles-act-1988",
+     "act_name": "Motor Vehicles Act 1988",
+     "version": "CONSOLIDATED_TEXT_FOOTNOTE",
+     "document_type": null,
+     "date": null,
+     "source_anchor": "pdf:page:106:line:28",
+     "page": 106,
+     "line": 28,
+     "pdf_url": "/corpus/motor-vehicles-act-1988.pdf#page=106",
+     "official_identifier": null,
+     "source_url": "https://indiacode.gov.in/items/2bbbcc40-38f1-4b15-ae94-646b85db4ee7",
+     "official_portal_url": "https://indiacode.gov.in/items/2bbbcc40-38f1-4b15-ae94-646b85db4ee7",
+     "verbatim": true,
+     "text_reliability": "NO_KNOWN_EXTRACTION_RISK"
+    },
+    {
+     "label": "reconstructed_earlier_wording",
+     "evidence_id": "E3",
+     "chunk_id": null,
+     "entry_id": "motor-vehicles-act-1988",
+     "act_name": "Motor Vehicles Act 1988",
+     "version": "DERIVED_FROM_FOOTNOTE",
+     "document_type": null,
+     "date": null,
+     "source_anchor": "pdf:page:106:line:28",
+     "page": 106,
+     "line": 28,
+     "pdf_url": "/corpus/motor-vehicles-act-1988.pdf#page=106",
+     "official_identifier": null,
+     "source_url": "https://indiacode.gov.in/items/2bbbcc40-38f1-4b15-ae94-646b85db4ee7",
+     "official_portal_url": "https://indiacode.gov.in/items/2bbbcc40-38f1-4b15-ae94-646b85db4ee7",
+     "verbatim": false,
+     "text_reliability": "NO_KNOWN_EXTRACTION_RISK"
+    }
+   ],
+   "verification": {
+    "passed": false,
+    "checks": [
+     {
+      "id": "act_identified",
+      "label": "Act identified from the question",
+      "passed": true
+     },
+     {
+      "id": "provision_identified",
+      "label": "Provision identified",
+      "passed": true
+     },
+     {
+      "id": "relation_verified",
+      "label": "Amending Act linked to this Act",
+      "passed": false
+     },
+     {
+      "id": "paired_context",
+      "label": "Supported before/after versions of the same provision",
+      "passed": true
+     },
+     {
+      "id": "citation_anchors",
+      "label": "Page-level evidence attached",
+      "passed": true
+     }
+    ],
+    "pair_status": "consolidated_footnote_reconstruction",
+    "note": "A failed check means the answer is partial; the reason is shown with the answer."
+   },
+   "source_guidance": {
+    "message": "The retrieved excerpts may be incomplete. Visit the official India Code website for the complete legislation, commencement details and further information.",
+    "label": "Visit India Code for further information",
+    "url": "https://indiacode.gov.in/"
+   },
+   "repository": {
+    "ready": true,
+    "document_count": 100,
+    "chunk_count": 15998,
+    "embedding_dimensions": 256,
+    "vector_backend": "local_persistent_cosine",
+    "hybrid_search": true,
+    "index_fingerprint": "cfcbc384dd15bb0d3c39145915147210896c19c378406d1da2d1b7333d3bcdf4",
+    "dataset_version": "v0.1",
+    "graph_version": "v0.1",
+    "rag_index_version": "v0.1",
+    "graph_fingerprint": "73b8f9c50738329022b75a5840821e2c9ae89db7835817706628f9e6fe3497c1",
+    "index_identity": "5e8be5c684fef9a3b7f4497aeb45e06680704aefdda33dba21c54d090c6a3aa1",
+    "monitored_overlay": {
+     "status": "ACTIVE",
+     "overlay_sha256": "90eae154379b4b738b32ec10bb8158b7a48ac47f70fbd2ae57ad377a5bbebccc",
+     "documents": 1,
+     "chunks": 2,
+     "review_status": "HUMAN_REVIEW_PENDING"
+    },
+    "official_repository": "https://indiacode.gov.in/",
+    "metadata_fields": [
+     "document_type",
+     "version",
+     "act_name",
+     "date"
+    ],
+    "generation": {
+     "provider": "extractive_fallback",
+     "temperature": 0.0,
+     "model": null,
+     "grounded_output_required": true
+    },
+    "notice": "The local index is a research aid. India Code remains the authoritative source.",
+    "repository_mode": "live_indiacode_with_local_evidence_cache",
+    "live_repository_enabled": false
+   },
+   "limitations": [
+    "The earlier wording is reconstructed from India Code's footnote; the current text is today's version, not proven for a past date.",
+    "Machine-checked evidence; not legal advice and not independently legally validated."
+   ],
+   "scenario_request": {
+    "fields": [
+     {
+      "key": "reference_date",
+      "label": "Reference date (YYYY-MM-DD)",
+      "kind": "date",
+      "options": [],
+      "unlocks": [
+       "which wording applies on your date"
+      ],
+      "group": "core",
+      "value": null,
+      "source": null
+     },
+     {
+      "key": "facts.contravention",
+      "label": "Was the provision contravened?",
+      "kind": "boolean",
+      "unlocks": [
+       "whether your answer changes"
+      ],
+      "group": "core",
+      "value": null,
+      "source": null
+     }
+    ],
+    "facts_in_use": {},
+    "blocked_by_evidence": [],
+    "explanation": "Only these facts are needed; anything you leave blank is not assumed."
+   },
+   "selection": {
+    "act_entry_id": "motor-vehicles-act-1988",
+    "act_name": "Motor Vehicles Act 1988",
+    "section": "194",
+    "chosen_from": "section_candidates"
+   },
+   "analysis_id": "an_3a948942d848a7838775c44f"
+  },
+  "ibc-act-2025": {
+   "schema_version": "5.0.0",
+   "contract_version": "rag-answer-v5",
+   "query": "What changed in the Insolvency and Bankruptcy Code after the 2025 amendment?",
+   "mode": "specific",
+   "intent": "diff_analysis",
+   "question_frame": {
+    "query": "What changed in the Insolvency and Bankruptcy Code after the 2025 amendment?",
+    "version": "question-frame-v1",
+    "question_type": "what_changed",
+    "asks_about_versions": true,
+    "principal": {
+     "entry_id": "insolvency-bankruptcy-code-2016",
+     "name": "Insolvency Bankruptcy Code 2016",
+     "kind": "principal",
+     "year": "2016"
+    },
+    "amending": null,
+    "amendment_year": "2025",
+    "sections": [],
+    "reference_date": null,
+    "focus_terms": [],
+    "unresolved_act_phrases": [],
+    "relation_error": null,
+    "ambiguities": []
+   },
+   "scenario": null,
+   "answer": {
+    "answer_type": "version_abstention",
+    "direct_answer": "No recorded change made by a 2025 amendment to the Insolvency Bankruptcy Code 2016 has a before/after comparison that passes this system's evidence checks. 18 recorded changes come from other amendments. Check the official text on India Code.",
+    "sections": [],
+    "answer_limitations": [
+     "Only changes recorded in the temporal graph or reconstructable from India Code footnotes are listed. This is not the Act's complete amendment history, and no score is given for the Act as a whole.",
+     "Not legal advice; verify on India Code."
+    ],
+    "short_answer": "No recorded change made by a 2025 amendment to the Insolvency Bankruptcy Code 2016 has a before/after comparison that passes this system's evidence checks. 18 recorded changes come from other amendments. Check the official text on India Code.",
+    "pre_amendment_baseline": "",
+    "post_amendment_revision": "",
+    "key_differences": [],
+    "markdown": "No recorded change made by a 2025 amendment to the Insolvency Bankruptcy Code 2016 has a before/after comparison that passes this system's evidence checks. 18 recorded changes come from other amendments. Check the official text on India Code.",
+    "generation_method": "grounded_composition",
+    "generation_warning": null
+   },
+   "metrics": null,
+   "fingerprint": {
+    "version": "legal-change-fingerprint-v1.2",
+    "wording_drift": {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "value": null,
+     "label": null,
+     "summary": "Not scored.",
+     "reason": "No supported before/after versions; the answer above explains why.",
+     "next_action": "Name the section and the amendment you mean.",
+     "method": "wording-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [
+      "evidence_gate_failed"
+     ],
+     "limit": {
+      "kind": "evidence",
+      "message": "No supported before/after versions; the answer above explains why.",
+      "action": {
+       "type": "verify_source",
+       "label": "Check the official source on India Code; your facts cannot fill this gap"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "rule_drift": {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "value": null,
+     "label": null,
+     "summary": "Not scored.",
+     "reason": "No supported before/after versions; the answer above explains why.",
+     "next_action": "Name the section and the amendment you mean.",
+     "method": "rule-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [
+      "evidence_gate_failed"
+     ],
+     "limit": {
+      "kind": "evidence",
+      "message": "No supported before/after versions; the answer above explains why.",
+      "action": {
+       "type": "verify_source",
+       "label": "Check the official source on India Code; your facts cannot fill this gap"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "outcome_drift": {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "value": null,
+     "label": "Cannot determine",
+     "summary": "Cannot determine.",
+     "reason": "No supported before/after versions; the answer above explains why.",
+     "next_action": "Name the section and the amendment you mean.",
+     "method": "outcome-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [
+      "evidence_gate_failed"
+     ],
+     "limit": {
+      "kind": "evidence",
+      "message": "No supported before/after versions; the answer above explains why.",
+      "action": {
+       "type": "verify_source",
+       "label": "Check the official source on India Code; your facts cannot fill this gap"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "reading": [],
+    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
+    "tlds": {
+     "version": "tlds-v1",
+     "weights": {
+      "textual": 0.2,
+      "semantic": 0.3,
+      "legal_effect": 0.4,
+      "rule_structure": 0.1
+     },
+     "missing_components": [
+      "textual",
+      "semantic",
+      "legal_effect",
+      "rule_structure"
+     ],
+     "formula": "D = 100 × (w_T·T + w_S·S + w_L·L + w_R·R), every component in [0, 1]",
+     "bands": [
+      [
+       0,
+       "Very low"
+      ],
+      [
+       10,
+       "Low"
+      ],
+      [
+       30,
+       "Moderate"
+      ],
+      [
+       50,
+       "High"
+      ],
+      [
+       75,
+       "Very high"
+      ]
+     ],
+     "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "state": "INCOMPLETE",
+     "value": null,
+     "tldp_percent": null,
+     "band": null,
+     "label": "Incomplete",
+     "partial_value": null,
+     "partial_label": null,
+     "calculation": null,
+     "components": {
+      "textual": {
+       "value": null,
+       "method": null,
+       "reason": "No supported before/after versions; the answer above explains why.",
+       "details": {}
+      },
+      "semantic": {
+       "value": null,
+       "method": null,
+       "reason": "No supported before/after versions; the answer above explains why.",
+       "details": {}
+      },
+      "legal_effect": {
+       "value": null,
+       "method": null,
+       "reason": "No supported before/after versions; the answer above explains why.",
+       "details": {}
+      },
+      "rule_structure": {
+       "value": null,
+       "method": null,
+       "reason": "No supported before/after versions; the answer above explains why.",
+       "details": {}
+      }
+     },
+     "config": "configs/metrics/tlds.v1.json",
+     "note": "An indicator of change between two versions of one clause, not the percentage of a statute that changed, not legal correctness, not a probability, not materiality and not risk. Read legal-effect drift beside it: a small wording change can carry a large legal effect.",
+     "evidence_ids": [],
+     "legal_validation": "UNVERIFIED"
+    }
+   },
+   "determinations": {
+    "version": "determinations-v4",
+    "textual_drift": {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "label": null,
+     "summary": "Not scored.",
+     "reason": "No supported before/after versions; the answer above explains why.",
+     "method": "alias of fingerprint.wording_drift (textual_drift is deprecated in determinations-v2)",
+     "evidence_ids": [],
+     "details": {
+      "deprecated": true,
+      "use": "fingerprint.wording_drift"
+     },
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "limit": {
+      "kind": "evidence",
+      "message": "No supported before/after versions; the answer above explains why.",
+      "action": {
+       "type": "verify_source",
+       "label": "Check the official source on India Code; your facts cannot fill this gap"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "materiality": {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "label": null,
+     "summary": "No supported change to assess.",
+     "reason": "No supported before/after versions; the answer above explains why.",
+     "method": null,
+     "evidence_ids": [],
+     "details": {
+      "upstream_reason": "Name a section of the Insolvency Bankruptcy Code 2016 to compare its versions; whole Acts are not compared."
+     },
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "limit": {
+      "kind": "evidence",
+      "message": "No supported before/after versions; the answer above explains why.",
+      "action": {
+       "type": "verify_source",
+       "label": "Check the official source on India Code; your facts cannot fill this gap"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "applicability": {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "label": null,
+     "summary": "No supported versions.",
+     "reason": "No supported before/after versions; the answer above explains why.",
+     "method": null,
+     "evidence_ids": [],
+     "details": {
+      "upstream_reason": "Name a section of the Insolvency Bankruptcy Code 2016 to compare its versions; whole Acts are not compared."
+     },
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "limit": {
+      "kind": "evidence",
+      "message": "No supported before/after versions; the answer above explains why.",
+      "action": {
+       "type": "verify_source",
+       "label": "Check the official source on India Code; your facts cannot fill this gap"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "answer_change": {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "label": null,
+     "summary": "No supported versions to compare.",
+     "reason": "No supported before/after versions; the answer above explains why.",
+     "method": null,
+     "evidence_ids": [],
+     "details": {
+      "upstream_reason": "Name a section of the Insolvency Bankruptcy Code 2016 to compare its versions; whole Acts are not compared."
+     },
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "limit": {
+      "kind": "evidence",
+      "message": "No supported before/after versions; the answer above explains why.",
+      "action": {
+       "type": "verify_source",
+       "label": "Check the official source on India Code; your facts cannot fill this gap"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "risk": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "No provision identified.",
+     "reason": "Risk is assessed only for a named provision with a modelled obligation.",
+     "method": null,
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "Risk is assessed only for a named provision with a modelled obligation.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    }
+   },
+   "evidence": [],
+   "version_evidence": {
+    "version": "version-evidence-v2",
+    "candidates": [],
+    "transition_id": null,
+    "amendment_event_id": null,
+    "operation": null,
+    "provision_path": null,
+    "effective_date": null,
+    "date_basis": null,
+    "relation_verification": null,
+    "before": null,
+    "after": null,
+    "support_class": "NO_SUPPORTED_VERSION",
+    "reason_code": "SECTION_NOT_IDENTIFIED",
+    "reason": "Name a section of the Insolvency Bankruptcy Code 2016 to compare its versions; whole Acts are not compared.",
+    "section_candidates": {
+     "act_entry_id": "insolvency-bankruptcy-code-2016",
+     "act_name": "Insolvency Bankruptcy Code 2016",
+     "amendment": null,
+     "amendment_year": "2025",
+     "candidates": [],
+     "counts": {
+      "OTHER_AMENDMENT": 18
+     },
+     "checked_sections": 18,
+     "note": "Only changes recorded in the temporal graph or reconstructable from India Code footnotes are listed. This is not the Act's complete amendment history, and no score is given for the Act as a whole."
+    }
+   },
+   "source_fidelity_warnings": [],
+   "comparison": {
+    "contract_version": "comparison-record-v2",
+    "query_id": "q_0844625ea8e5ddc6",
+    "support_class": "NO_SUPPORTED_VERSION",
+    "support_reason": "Name a section of the Insolvency Bankruptcy Code 2016 to compare its versions; whole Acts are not compared.",
+    "before": null,
+    "after": null,
+    "graph_transition_id": null,
+    "amendment_event_id": null,
+    "operation": null,
+    "provision_path": null,
+    "competing_transition_ids": [],
+    "requested_date": null,
+    "reliability": null,
+    "question_relevance": null,
+    "supported_effective_date": null,
+    "changed_spans": [],
+    "scoring_contract_version": null,
+    "materiality_status": "INSUFFICIENT_EVIDENCE",
+    "applicability_status": "NOT_DETERMINED_REQUIRES_SCENARIO_FACTS_AND_REVIEW",
+    "consequence_status": "OUT_OF_SCOPE",
+    "abstention_reasons": [
+     "SECTION_NOT_IDENTIFIED"
+    ],
+    "legal_validation": "UNVERIFIED",
+    "relation_verification": null
+   },
+   "retrieval": {
+    "pair_status": "no_supported_version",
+    "candidate_count": 0,
+    "relation": {
+     "amending_entry_id": null,
+     "target_entry_id": "insolvency-bankruptcy-code-2016"
+    },
+    "pre": null,
+    "post": null,
+    "selection": "act_and_section_identity",
+    "live_indiacode": {
+     "attempted": false,
+     "candidate_count": 0,
+     "amendment_count": 0,
+     "amendments": [],
+     "error": null,
+     "role": "not used for version comparisons; India Code remains the authoritative source"
+    }
+   },
+   "citations": [],
+   "verification": {
+    "passed": false,
+    "checks": [
+     {
+      "id": "act_identified",
+      "label": "Act identified from the question",
+      "passed": true
+     },
+     {
+      "id": "provision_identified",
+      "label": "Provision identified",
+      "passed": false
+     },
+     {
+      "id": "relation_verified",
+      "label": "Amending Act linked to this Act",
+      "passed": false
+     },
+     {
+      "id": "paired_context",
+      "label": "Supported before/after versions of the same provision",
+      "passed": false
+     },
+     {
+      "id": "citation_anchors",
+      "label": "Page-level evidence attached",
+      "passed": false
+     }
+    ],
+    "pair_status": "no_supported_version",
+    "note": "A failed check means the answer is partial; the reason is shown with the answer."
+   },
+   "source_guidance": {
+    "message": "The retrieved excerpts may be incomplete. Visit the official India Code website for the complete legislation, commencement details and further information.",
+    "label": "Visit India Code for further information",
+    "url": "https://indiacode.gov.in/"
+   },
+   "repository": {
+    "ready": true,
+    "document_count": 100,
+    "chunk_count": 15998,
+    "embedding_dimensions": 256,
+    "vector_backend": "local_persistent_cosine",
+    "hybrid_search": true,
+    "index_fingerprint": "cfcbc384dd15bb0d3c39145915147210896c19c378406d1da2d1b7333d3bcdf4",
+    "dataset_version": "v0.1",
+    "graph_version": "v0.1",
+    "rag_index_version": "v0.1",
+    "graph_fingerprint": "73b8f9c50738329022b75a5840821e2c9ae89db7835817706628f9e6fe3497c1",
+    "index_identity": "5e8be5c684fef9a3b7f4497aeb45e06680704aefdda33dba21c54d090c6a3aa1",
+    "monitored_overlay": {
+     "status": "ACTIVE",
+     "overlay_sha256": "90eae154379b4b738b32ec10bb8158b7a48ac47f70fbd2ae57ad377a5bbebccc",
+     "documents": 1,
+     "chunks": 2,
+     "review_status": "HUMAN_REVIEW_PENDING"
+    },
+    "official_repository": "https://indiacode.gov.in/",
+    "metadata_fields": [
+     "document_type",
+     "version",
+     "act_name",
+     "date"
+    ],
+    "generation": {
+     "provider": "extractive_fallback",
+     "temperature": 0.0,
+     "model": null,
+     "grounded_output_required": true
+    },
+    "notice": "The local index is a research aid. India Code remains the authoritative source.",
+    "repository_mode": "live_indiacode_with_local_evidence_cache",
+    "live_repository_enabled": false
+   },
+   "limitations": [
+    "Only changes recorded in the temporal graph or reconstructable from India Code footnotes are listed. This is not the Act's complete amendment history, and no score is given for the Act as a whole.",
+    "Not legal advice; verify on India Code."
+   ],
+   "scenario_request": {
+    "fields": [],
+    "facts_in_use": {},
+    "blocked_by_evidence": [
+     "which wording applies on your date",
+     "whether your answer changes"
+    ],
+    "explanation": "No facts are needed for this question. Facts cannot fill missing legal evidence for: which wording applies on your date, whether your answer changes."
+   },
+   "selection": null,
+   "analysis_id": "an_e80d70ed53a8b038fa2087cd"
+  },
+  "ibc99-2025": {
+   "schema_version": "5.0.0",
+   "contract_version": "rag-answer-v5",
+   "query": "Compare section 99 of the Insolvency and Bankruptcy Code before and after the 2025 amendment.",
+   "mode": "specific",
+   "intent": "diff_analysis",
+   "question_frame": {
+    "query": "Compare section 99 of the Insolvency and Bankruptcy Code before and after the 2025 amendment.",
+    "version": "question-frame-v1",
+    "question_type": "what_changed",
+    "asks_about_versions": true,
+    "principal": {
+     "entry_id": "insolvency-bankruptcy-code-2016",
+     "name": "Insolvency Bankruptcy Code 2016",
+     "kind": "principal",
+     "year": "2016"
+    },
+    "amending": null,
+    "amendment_year": "2025",
+    "sections": [
+     "99"
+    ],
+    "reference_date": null,
+    "focus_terms": [],
+    "unresolved_act_phrases": [],
+    "relation_error": null,
+    "ambiguities": []
+   },
+   "scenario": null,
+   "answer": {
+    "answer_type": "version_abstention",
+    "direct_answer": "I can't compare versions of section 99 of the Insolvency Bankruptcy Code 2016: The only reconstructable change to section 99 of the Insolvency Bankruptcy Code 2016 was made by Act 6 of 2026, not by a 2025 amendment, so it is not used to answer this question.",
+    "sections": [],
+    "answer_limitations": [
+     "No version comparison is shown because its support could not be established."
+    ],
+    "short_answer": "I can't compare versions of section 99 of the Insolvency Bankruptcy Code 2016: The only reconstructable change to section 99 of the Insolvency Bankruptcy Code 2016 was made by Act 6 of 2026, not by a 2025 amendment, so it is not used to answer this question.",
+    "pre_amendment_baseline": "",
+    "post_amendment_revision": "",
+    "key_differences": [],
+    "markdown": "I can't compare versions of section 99 of the Insolvency Bankruptcy Code 2016: The only reconstructable change to section 99 of the Insolvency Bankruptcy Code 2016 was made by Act 6 of 2026, not by a 2025 amendment, so it is not used to answer this question.",
+    "generation_method": "grounded_composition",
+    "generation_warning": null
+   },
+   "metrics": null,
+   "fingerprint": {
+    "version": "legal-change-fingerprint-v1.2",
+    "wording_drift": {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "value": null,
+     "label": null,
+     "summary": "Not scored.",
+     "reason": "No supported before/after versions; the answer above explains why.",
+     "next_action": "Name the section and the amendment you mean.",
+     "method": "wording-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [
+      "evidence_gate_failed"
+     ],
+     "limit": {
+      "kind": "evidence",
+      "message": "No supported before/after versions; the answer above explains why.",
+      "action": {
+       "type": "verify_source",
+       "label": "Check the official source on India Code; your facts cannot fill this gap"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "rule_drift": {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "value": null,
+     "label": null,
+     "summary": "Not scored.",
+     "reason": "No supported before/after versions; the answer above explains why.",
+     "next_action": "Name the section and the amendment you mean.",
+     "method": "rule-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [
+      "evidence_gate_failed"
+     ],
+     "limit": {
+      "kind": "evidence",
+      "message": "No supported before/after versions; the answer above explains why.",
+      "action": {
+       "type": "verify_source",
+       "label": "Check the official source on India Code; your facts cannot fill this gap"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "outcome_drift": {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "value": null,
+     "label": "Cannot determine",
+     "summary": "Cannot determine.",
+     "reason": "No supported before/after versions; the answer above explains why.",
+     "next_action": "Name the section and the amendment you mean.",
+     "method": "outcome-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [
+      "evidence_gate_failed"
+     ],
+     "limit": {
+      "kind": "evidence",
+      "message": "No supported before/after versions; the answer above explains why.",
+      "action": {
+       "type": "verify_source",
+       "label": "Check the official source on India Code; your facts cannot fill this gap"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "reading": [],
+    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
+    "tlds": {
+     "version": "tlds-v1",
+     "weights": {
+      "textual": 0.2,
+      "semantic": 0.3,
+      "legal_effect": 0.4,
+      "rule_structure": 0.1
+     },
+     "missing_components": [
+      "textual",
+      "semantic",
+      "legal_effect",
+      "rule_structure"
+     ],
+     "formula": "D = 100 × (w_T·T + w_S·S + w_L·L + w_R·R), every component in [0, 1]",
+     "bands": [
+      [
+       0,
+       "Very low"
+      ],
+      [
+       10,
+       "Low"
+      ],
+      [
+       30,
+       "Moderate"
+      ],
+      [
+       50,
+       "High"
+      ],
+      [
+       75,
+       "Very high"
+      ]
+     ],
+     "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "state": "INCOMPLETE",
+     "value": null,
+     "tldp_percent": null,
+     "band": null,
+     "label": "Incomplete",
+     "partial_value": null,
+     "partial_label": null,
+     "calculation": null,
+     "components": {
+      "textual": {
+       "value": null,
+       "method": null,
+       "reason": "No supported before/after versions; the answer above explains why.",
+       "details": {}
+      },
+      "semantic": {
+       "value": null,
+       "method": null,
+       "reason": "No supported before/after versions; the answer above explains why.",
+       "details": {}
+      },
+      "legal_effect": {
+       "value": null,
+       "method": null,
+       "reason": "No supported before/after versions; the answer above explains why.",
+       "details": {}
+      },
+      "rule_structure": {
+       "value": null,
+       "method": null,
+       "reason": "No supported before/after versions; the answer above explains why.",
+       "details": {}
+      }
+     },
+     "config": "configs/metrics/tlds.v1.json",
+     "note": "An indicator of change between two versions of one clause, not the percentage of a statute that changed, not legal correctness, not a probability, not materiality and not risk. Read legal-effect drift beside it: a small wording change can carry a large legal effect.",
+     "evidence_ids": [],
+     "legal_validation": "UNVERIFIED"
+    }
+   },
+   "determinations": {
+    "version": "determinations-v4",
+    "textual_drift": {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "label": null,
+     "summary": "Not scored.",
+     "reason": "No supported before/after versions; the answer above explains why.",
+     "method": "alias of fingerprint.wording_drift (textual_drift is deprecated in determinations-v2)",
+     "evidence_ids": [],
+     "details": {
+      "deprecated": true,
+      "use": "fingerprint.wording_drift"
+     },
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "limit": {
+      "kind": "evidence",
+      "message": "No supported before/after versions; the answer above explains why.",
+      "action": {
+       "type": "verify_source",
+       "label": "Check the official source on India Code; your facts cannot fill this gap"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "materiality": {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "label": null,
+     "summary": "No supported change to assess.",
+     "reason": "No supported before/after versions; the answer above explains why.",
+     "method": null,
+     "evidence_ids": [],
+     "details": {
+      "upstream_reason": "The only reconstructable change to section 99 of the Insolvency Bankruptcy Code 2016 was made by Act 6 of 2026, not by a 2025 amendment, so it is not used to answer this question."
+     },
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "limit": {
+      "kind": "evidence",
+      "message": "No supported before/after versions; the answer above explains why.",
+      "action": {
+       "type": "verify_source",
+       "label": "Check the official source on India Code; your facts cannot fill this gap"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "applicability": {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "label": null,
+     "summary": "No supported versions.",
+     "reason": "No supported before/after versions; the answer above explains why.",
+     "method": null,
+     "evidence_ids": [],
+     "details": {
+      "upstream_reason": "The only reconstructable change to section 99 of the Insolvency Bankruptcy Code 2016 was made by Act 6 of 2026, not by a 2025 amendment, so it is not used to answer this question."
+     },
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "limit": {
+      "kind": "evidence",
+      "message": "No supported before/after versions; the answer above explains why.",
+      "action": {
+       "type": "verify_source",
+       "label": "Check the official source on India Code; your facts cannot fill this gap"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "answer_change": {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "label": null,
+     "summary": "No supported versions to compare.",
+     "reason": "No supported before/after versions; the answer above explains why.",
+     "method": null,
+     "evidence_ids": [],
+     "details": {
+      "upstream_reason": "The only reconstructable change to section 99 of the Insolvency Bankruptcy Code 2016 was made by Act 6 of 2026, not by a 2025 amendment, so it is not used to answer this question."
+     },
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "limit": {
+      "kind": "evidence",
+      "message": "No supported before/after versions; the answer above explains why.",
+      "action": {
+       "type": "verify_source",
+       "label": "Check the official source on India Code; your facts cannot fill this gap"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "risk": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "No obligation model for this provision.",
+     "reason": "Risk is computed only where a versioned obligation rule exists; the registry has no rule for this provision.",
+     "method": null,
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "Risk is computed only where a versioned obligation rule exists; the registry has no rule for this provision.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    }
+   },
+   "evidence": [],
+   "version_evidence": {
+    "version": "version-evidence-v2",
+    "candidates": [],
+    "transition_id": null,
+    "amendment_event_id": null,
+    "operation": null,
+    "provision_path": null,
+    "effective_date": null,
+    "date_basis": null,
+    "relation_verification": null,
+    "before": null,
+    "after": null,
+    "support_class": "NO_SUPPORTED_VERSION",
+    "reason_code": "FOOTNOTE_FROM_OTHER_AMENDMENT",
+    "reason": "The only reconstructable change to section 99 of the Insolvency Bankruptcy Code 2016 was made by Act 6 of 2026, not by a 2025 amendment, so it is not used to answer this question."
+   },
+   "source_fidelity_warnings": [],
+   "comparison": {
+    "contract_version": "comparison-record-v2",
+    "query_id": "q_eca418e12a648c29",
+    "support_class": "NO_SUPPORTED_VERSION",
+    "support_reason": "The only reconstructable change to section 99 of the Insolvency Bankruptcy Code 2016 was made by Act 6 of 2026, not by a 2025 amendment, so it is not used to answer this question.",
+    "before": null,
+    "after": null,
+    "graph_transition_id": null,
+    "amendment_event_id": null,
+    "operation": null,
+    "provision_path": null,
+    "competing_transition_ids": [],
+    "requested_date": null,
+    "reliability": null,
+    "question_relevance": null,
+    "supported_effective_date": null,
+    "changed_spans": [],
+    "scoring_contract_version": null,
+    "materiality_status": "INSUFFICIENT_EVIDENCE",
+    "applicability_status": "NOT_DETERMINED_REQUIRES_SCENARIO_FACTS_AND_REVIEW",
+    "consequence_status": "OUT_OF_SCOPE",
+    "abstention_reasons": [
+     "FOOTNOTE_FROM_OTHER_AMENDMENT"
+    ],
+    "legal_validation": "UNVERIFIED",
+    "relation_verification": null
+   },
+   "retrieval": {
+    "pair_status": "no_supported_version",
+    "candidate_count": 0,
+    "relation": {
+     "amending_entry_id": null,
+     "target_entry_id": "insolvency-bankruptcy-code-2016"
+    },
+    "pre": null,
+    "post": null,
+    "selection": "act_and_section_identity",
+    "live_indiacode": {
+     "attempted": false,
+     "candidate_count": 0,
+     "amendment_count": 0,
+     "amendments": [],
+     "error": null,
+     "role": "not used for version comparisons; India Code remains the authoritative source"
+    }
+   },
+   "citations": [],
+   "verification": {
+    "passed": false,
+    "checks": [
+     {
+      "id": "act_identified",
+      "label": "Act identified from the question",
+      "passed": true
+     },
+     {
+      "id": "provision_identified",
+      "label": "Provision identified",
+      "passed": true
+     },
+     {
+      "id": "relation_verified",
+      "label": "Amending Act linked to this Act",
+      "passed": false
+     },
+     {
+      "id": "paired_context",
+      "label": "Supported before/after versions of the same provision",
+      "passed": false
+     },
+     {
+      "id": "citation_anchors",
+      "label": "Page-level evidence attached",
+      "passed": false
+     }
+    ],
+    "pair_status": "no_supported_version",
+    "note": "A failed check means the answer is partial; the reason is shown with the answer."
+   },
+   "source_guidance": {
+    "message": "The retrieved excerpts may be incomplete. Visit the official India Code website for the complete legislation, commencement details and further information.",
+    "label": "Visit India Code for further information",
+    "url": "https://indiacode.gov.in/"
+   },
+   "repository": {
+    "ready": true,
+    "document_count": 100,
+    "chunk_count": 15998,
+    "embedding_dimensions": 256,
+    "vector_backend": "local_persistent_cosine",
+    "hybrid_search": true,
+    "index_fingerprint": "cfcbc384dd15bb0d3c39145915147210896c19c378406d1da2d1b7333d3bcdf4",
+    "dataset_version": "v0.1",
+    "graph_version": "v0.1",
+    "rag_index_version": "v0.1",
+    "graph_fingerprint": "73b8f9c50738329022b75a5840821e2c9ae89db7835817706628f9e6fe3497c1",
+    "index_identity": "5e8be5c684fef9a3b7f4497aeb45e06680704aefdda33dba21c54d090c6a3aa1",
+    "monitored_overlay": {
+     "status": "ACTIVE",
+     "overlay_sha256": "90eae154379b4b738b32ec10bb8158b7a48ac47f70fbd2ae57ad377a5bbebccc",
+     "documents": 1,
+     "chunks": 2,
+     "review_status": "HUMAN_REVIEW_PENDING"
+    },
+    "official_repository": "https://indiacode.gov.in/",
+    "metadata_fields": [
+     "document_type",
+     "version",
+     "act_name",
+     "date"
+    ],
+    "generation": {
+     "provider": "extractive_fallback",
+     "temperature": 0.0,
+     "model": null,
+     "grounded_output_required": true
+    },
+    "notice": "The local index is a research aid. India Code remains the authoritative source.",
+    "repository_mode": "live_indiacode_with_local_evidence_cache",
+    "live_repository_enabled": false
+   },
+   "limitations": [
     "No version comparison is shown because its support could not be established."
    ],
    "scenario_request": {
@@ -17376,7 +20465,471 @@
     ],
     "explanation": "No facts are needed for this question. Facts cannot fill missing legal evidence for: which wording applies on your date, whether your answer changes."
    },
-   "analysis_id": "an_8582506b62cce81af3696404"
+   "selection": null,
+   "analysis_id": "an_8e03f5bd562306412914a7d6"
+  },
+  "unknown-act": {
+   "schema_version": "5.0.0",
+   "contract_version": "rag-answer-v5",
+   "query": "What changed in the Banking Laws (Amendment) Act, 2025?",
+   "mode": "specific",
+   "intent": "diff_analysis",
+   "question_frame": {
+    "query": "What changed in the Banking Laws (Amendment) Act, 2025?",
+    "version": "question-frame-v1",
+    "question_type": "what_changed",
+    "asks_about_versions": true,
+    "principal": null,
+    "amending": {
+     "entry_id": "banking-laws-amendment-act-2025",
+     "name": "Banking Laws Act",
+     "kind": "amending",
+     "year": "2025"
+    },
+    "amendment_year": null,
+    "sections": [],
+    "reference_date": null,
+    "focus_terms": [],
+    "unresolved_act_phrases": [],
+    "relation_error": null,
+    "ambiguities": []
+   },
+   "scenario": null,
+   "answer": {
+    "answer_type": "version_abstention",
+    "direct_answer": "No Act in this corpus matches the name used. Check the Act's name or the Document repository; for Acts outside this corpus, use India Code.",
+    "sections": [],
+    "answer_limitations": [
+     "No version comparison is shown because its support could not be established."
+    ],
+    "short_answer": "No Act in this corpus matches the name used. Check the Act's name or the Document repository; for Acts outside this corpus, use India Code.",
+    "pre_amendment_baseline": "",
+    "post_amendment_revision": "",
+    "key_differences": [],
+    "markdown": "No Act in this corpus matches the name used. Check the Act's name or the Document repository; for Acts outside this corpus, use India Code.",
+    "generation_method": "grounded_composition",
+    "generation_warning": null
+   },
+   "metrics": null,
+   "fingerprint": {
+    "version": "legal-change-fingerprint-v1.2",
+    "wording_drift": {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "value": null,
+     "label": null,
+     "summary": "Not scored.",
+     "reason": "No supported before/after versions; the answer above explains why.",
+     "next_action": "Name the section and the amendment you mean.",
+     "method": "wording-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [
+      "evidence_gate_failed"
+     ],
+     "limit": {
+      "kind": "evidence",
+      "message": "No supported before/after versions; the answer above explains why.",
+      "action": {
+       "type": "verify_source",
+       "label": "Check the official source on India Code; your facts cannot fill this gap"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "rule_drift": {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "value": null,
+     "label": null,
+     "summary": "Not scored.",
+     "reason": "No supported before/after versions; the answer above explains why.",
+     "next_action": "Name the section and the amendment you mean.",
+     "method": "rule-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [
+      "evidence_gate_failed"
+     ],
+     "limit": {
+      "kind": "evidence",
+      "message": "No supported before/after versions; the answer above explains why.",
+      "action": {
+       "type": "verify_source",
+       "label": "Check the official source on India Code; your facts cannot fill this gap"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "outcome_drift": {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "value": null,
+     "label": "Cannot determine",
+     "summary": "Cannot determine.",
+     "reason": "No supported before/after versions; the answer above explains why.",
+     "next_action": "Name the section and the amendment you mean.",
+     "method": "outcome-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [
+      "evidence_gate_failed"
+     ],
+     "limit": {
+      "kind": "evidence",
+      "message": "No supported before/after versions; the answer above explains why.",
+      "action": {
+       "type": "verify_source",
+       "label": "Check the official source on India Code; your facts cannot fill this gap"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "reading": [],
+    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
+    "tlds": {
+     "version": "tlds-v1",
+     "weights": {
+      "textual": 0.2,
+      "semantic": 0.3,
+      "legal_effect": 0.4,
+      "rule_structure": 0.1
+     },
+     "missing_components": [
+      "textual",
+      "semantic",
+      "legal_effect",
+      "rule_structure"
+     ],
+     "formula": "D = 100 × (w_T·T + w_S·S + w_L·L + w_R·R), every component in [0, 1]",
+     "bands": [
+      [
+       0,
+       "Very low"
+      ],
+      [
+       10,
+       "Low"
+      ],
+      [
+       30,
+       "Moderate"
+      ],
+      [
+       50,
+       "High"
+      ],
+      [
+       75,
+       "Very high"
+      ]
+     ],
+     "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "state": "INCOMPLETE",
+     "value": null,
+     "tldp_percent": null,
+     "band": null,
+     "label": "Incomplete",
+     "partial_value": null,
+     "partial_label": null,
+     "calculation": null,
+     "components": {
+      "textual": {
+       "value": null,
+       "method": null,
+       "reason": "No supported before/after versions; the answer above explains why.",
+       "details": {}
+      },
+      "semantic": {
+       "value": null,
+       "method": null,
+       "reason": "No supported before/after versions; the answer above explains why.",
+       "details": {}
+      },
+      "legal_effect": {
+       "value": null,
+       "method": null,
+       "reason": "No supported before/after versions; the answer above explains why.",
+       "details": {}
+      },
+      "rule_structure": {
+       "value": null,
+       "method": null,
+       "reason": "No supported before/after versions; the answer above explains why.",
+       "details": {}
+      }
+     },
+     "config": "configs/metrics/tlds.v1.json",
+     "note": "An indicator of change between two versions of one clause, not the percentage of a statute that changed, not legal correctness, not a probability, not materiality and not risk. Read legal-effect drift beside it: a small wording change can carry a large legal effect.",
+     "evidence_ids": [],
+     "legal_validation": "UNVERIFIED"
+    }
+   },
+   "determinations": {
+    "version": "determinations-v4",
+    "textual_drift": {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "label": null,
+     "summary": "Not scored.",
+     "reason": "No supported before/after versions; the answer above explains why.",
+     "method": "alias of fingerprint.wording_drift (textual_drift is deprecated in determinations-v2)",
+     "evidence_ids": [],
+     "details": {
+      "deprecated": true,
+      "use": "fingerprint.wording_drift"
+     },
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "limit": {
+      "kind": "evidence",
+      "message": "No supported before/after versions; the answer above explains why.",
+      "action": {
+       "type": "verify_source",
+       "label": "Check the official source on India Code; your facts cannot fill this gap"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "materiality": {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "label": null,
+     "summary": "No supported change to assess.",
+     "reason": "No supported before/after versions; the answer above explains why.",
+     "method": null,
+     "evidence_ids": [],
+     "details": {
+      "upstream_reason": "No Act in this corpus matches the name used. Check the Act's name or the Document repository; for Acts outside this corpus, use India Code."
+     },
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "limit": {
+      "kind": "evidence",
+      "message": "No supported before/after versions; the answer above explains why.",
+      "action": {
+       "type": "verify_source",
+       "label": "Check the official source on India Code; your facts cannot fill this gap"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "applicability": {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "label": null,
+     "summary": "No supported versions.",
+     "reason": "No supported before/after versions; the answer above explains why.",
+     "method": null,
+     "evidence_ids": [],
+     "details": {
+      "upstream_reason": "No Act in this corpus matches the name used. Check the Act's name or the Document repository; for Acts outside this corpus, use India Code."
+     },
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "limit": {
+      "kind": "evidence",
+      "message": "No supported before/after versions; the answer above explains why.",
+      "action": {
+       "type": "verify_source",
+       "label": "Check the official source on India Code; your facts cannot fill this gap"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "answer_change": {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "label": null,
+     "summary": "No supported versions to compare.",
+     "reason": "No supported before/after versions; the answer above explains why.",
+     "method": null,
+     "evidence_ids": [],
+     "details": {
+      "upstream_reason": "No Act in this corpus matches the name used. Check the Act's name or the Document repository; for Acts outside this corpus, use India Code."
+     },
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "limit": {
+      "kind": "evidence",
+      "message": "No supported before/after versions; the answer above explains why.",
+      "action": {
+       "type": "verify_source",
+       "label": "Check the official source on India Code; your facts cannot fill this gap"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "risk": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "No provision identified.",
+     "reason": "Risk is assessed only for a named provision with a modelled obligation.",
+     "method": null,
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "Risk is assessed only for a named provision with a modelled obligation.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    }
+   },
+   "evidence": [],
+   "version_evidence": {
+    "version": "version-evidence-v2",
+    "candidates": [],
+    "transition_id": null,
+    "amendment_event_id": null,
+    "operation": null,
+    "provision_path": null,
+    "effective_date": null,
+    "date_basis": null,
+    "relation_verification": null,
+    "before": null,
+    "after": null,
+    "support_class": "NO_SUPPORTED_VERSION",
+    "reason_code": "ACT_NOT_IDENTIFIED",
+    "reason": "No Act in this corpus matches the name used. Check the Act's name or the Document repository; for Acts outside this corpus, use India Code."
+   },
+   "source_fidelity_warnings": [],
+   "comparison": {
+    "contract_version": "comparison-record-v2",
+    "query_id": "q_6819122f314eaaf4",
+    "support_class": "NO_SUPPORTED_VERSION",
+    "support_reason": "No Act in this corpus matches the name used. Check the Act's name or the Document repository; for Acts outside this corpus, use India Code.",
+    "before": null,
+    "after": null,
+    "graph_transition_id": null,
+    "amendment_event_id": null,
+    "operation": null,
+    "provision_path": null,
+    "competing_transition_ids": [],
+    "requested_date": null,
+    "reliability": null,
+    "question_relevance": null,
+    "supported_effective_date": null,
+    "changed_spans": [],
+    "scoring_contract_version": null,
+    "materiality_status": "INSUFFICIENT_EVIDENCE",
+    "applicability_status": "NOT_DETERMINED_REQUIRES_SCENARIO_FACTS_AND_REVIEW",
+    "consequence_status": "OUT_OF_SCOPE",
+    "abstention_reasons": [
+     "ACT_NOT_IDENTIFIED"
+    ],
+    "legal_validation": "UNVERIFIED",
+    "relation_verification": null
+   },
+   "retrieval": {
+    "pair_status": "no_supported_version",
+    "candidate_count": 0,
+    "relation": {
+     "amending_entry_id": null,
+     "target_entry_id": null
+    },
+    "pre": null,
+    "post": null,
+    "selection": "act_and_section_identity",
+    "live_indiacode": {
+     "attempted": false,
+     "candidate_count": 0,
+     "amendment_count": 0,
+     "amendments": [],
+     "error": null,
+     "role": "not used for version comparisons; India Code remains the authoritative source"
+    }
+   },
+   "citations": [],
+   "verification": {
+    "passed": false,
+    "checks": [
+     {
+      "id": "act_identified",
+      "label": "Act identified from the question",
+      "passed": false
+     },
+     {
+      "id": "provision_identified",
+      "label": "Provision identified",
+      "passed": false
+     },
+     {
+      "id": "relation_verified",
+      "label": "Amending Act linked to this Act",
+      "passed": false
+     },
+     {
+      "id": "paired_context",
+      "label": "Supported before/after versions of the same provision",
+      "passed": false
+     },
+     {
+      "id": "citation_anchors",
+      "label": "Page-level evidence attached",
+      "passed": false
+     }
+    ],
+    "pair_status": "no_supported_version",
+    "note": "A failed check means the answer is partial; the reason is shown with the answer."
+   },
+   "source_guidance": {
+    "message": "The retrieved excerpts may be incomplete. Visit the official India Code website for the complete legislation, commencement details and further information.",
+    "label": "Visit India Code for further information",
+    "url": "https://indiacode.gov.in/"
+   },
+   "repository": {
+    "ready": true,
+    "document_count": 100,
+    "chunk_count": 15998,
+    "embedding_dimensions": 256,
+    "vector_backend": "local_persistent_cosine",
+    "hybrid_search": true,
+    "index_fingerprint": "cfcbc384dd15bb0d3c39145915147210896c19c378406d1da2d1b7333d3bcdf4",
+    "dataset_version": "v0.1",
+    "graph_version": "v0.1",
+    "rag_index_version": "v0.1",
+    "graph_fingerprint": "73b8f9c50738329022b75a5840821e2c9ae89db7835817706628f9e6fe3497c1",
+    "index_identity": "5e8be5c684fef9a3b7f4497aeb45e06680704aefdda33dba21c54d090c6a3aa1",
+    "monitored_overlay": {
+     "status": "ACTIVE",
+     "overlay_sha256": "90eae154379b4b738b32ec10bb8158b7a48ac47f70fbd2ae57ad377a5bbebccc",
+     "documents": 1,
+     "chunks": 2,
+     "review_status": "HUMAN_REVIEW_PENDING"
+    },
+    "official_repository": "https://indiacode.gov.in/",
+    "metadata_fields": [
+     "document_type",
+     "version",
+     "act_name",
+     "date"
+    ],
+    "generation": {
+     "provider": "extractive_fallback",
+     "temperature": 0.0,
+     "model": null,
+     "grounded_output_required": true
+    },
+    "notice": "The local index is a research aid. India Code remains the authoritative source.",
+    "repository_mode": "live_indiacode_with_local_evidence_cache",
+    "live_repository_enabled": false
+   },
+   "limitations": [
+    "No version comparison is shown because its support could not be established."
+   ],
+   "scenario_request": {
+    "fields": [],
+    "facts_in_use": {},
+    "blocked_by_evidence": [
+     "which wording applies on your date",
+     "whether your answer changes"
+    ],
+    "explanation": "No facts are needed for this question. Facts cannot fill missing legal evidence for: which wording applies on your date, whether your answer changes."
+   },
+   "selection": null,
+   "analysis_id": "an_550f23ecfd622cb5be944186"
   },
   "timeout": {
    "schema_version": "5.0.0",
@@ -17875,7 +21428,8 @@
     "blocked_by_evidence": [],
     "explanation": "No facts are needed for this question."
    },
-   "analysis_id": "an_9fd1a3a581f712e9e17fa74f"
+   "selection": null,
+   "analysis_id": "an_42c7c562d0c72c951dac5adf"
   }
  }
 }

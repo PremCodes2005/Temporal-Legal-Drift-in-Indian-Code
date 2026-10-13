@@ -169,3 +169,11 @@ Not achieved in the sprint:
 | UI | `#drift` and `#calculation` are sidebar pages again (v0.13.0 layout); scoring unchanged | ADR 0019, `frontend/src/ExplanationPages.jsx`, `analysis_workspace.test.jsx` |
 | UI | `#assistant` is a single page again (v0.13.0 order, no tabs; situation and review details folded) | ADR 0020, `frontend/src/AssistantResult.jsx`, `reports/analysis_workspace/report.v3.md` |
 | Release | See `docs/verification.md` | — |
+
+## Act-only questions and FAQ (2026-10-13)
+
+| Phase | Result | Evidence |
+| --- | --- | --- |
+| Backend | version-evidence-v2 (footnote must match the named amendment; Act-only section discovery through the same gates), answer-composition-v3, `section` selection | ADR 0021, `tests/unit/test_act_discovery.py` |
+| Frontend | Section chooser, FAQ asks once, recent questions and follow-ups, verified FAQ | `analysis_workspace.test.jsx`, `reports/analysis_workspace/report.v4.md` |
+| Release | See `docs/verification.md` | — |

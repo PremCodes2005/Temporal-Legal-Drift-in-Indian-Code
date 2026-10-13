@@ -15,12 +15,12 @@ from urllib.request import Request, urlopen
 from .compose import COMPOSITION_VERSION, compose_general_answer, compose_out_of_scope, compose_version_answer, section_answer
 from .analysis import analysis_id, facts_from_question, merge_scenario, scenario_request
 from .determinations import DETERMINATIONS_VERSION, limit_for, answer_change, applicability, materiality, risk, textual_drift, validate_scenario
-from .fingerprint import FINGERPRINT_VERSION, TLDS_VERSION, build_fingerprint, validate_proposal
+from .fingerprint import FINGERPRINT_VERSION, TLDS_VERSION, build_fingerprint, clause_pair, text_gate, validate_proposal
 from .indiacode import IndiaCodeLiveRepository, source_guidance
 from .metrics import METRICS_CONTRACT_VERSION, calculate_drift_metrics
 from .question import ActCatalog, QuestionFrame, parse_question
 from .retriever import HybridRetriever, RetrievedChunk
-from .versions import VERSION_CLAIMS, VersionSelector
+from .versions import VERSION_CLAIMS, VERSION_EVIDENCE_VERSION, VersionSelector
 
 ANSWER_CONTRACT_VERSION = "rag-answer-v5"  # v5: fingerprint v1.2 with reading, determinations-v4, composition v2 (ADR 0017); v4: analysis IDs (ADR 0016)
 
@@ -94,7 +94,7 @@ class RagPipeline:
             self._selector = VersionSelector(consumer, chunks, risks, amenders)
         return self._catalog, self._selector
 
-    def answer(self, query: str, mode: str, scenario: dict[str, object] | None = None) -> dict[str, object]:
+    def answer(self, query: str, mode: str, scenario: dict[str, object] | None = None, section: str | None = None) -> dict[str, object]:
         query = " ".join(str(query or "").split())
         if not query:
             raise ValueError("query is required")
@@ -102,9 +102,21 @@ class RagPipeline:
             raise ValueError("query exceeds 4000 characters")
         if mode not in {"specific", "generic"}:
             raise ValueError("mode must be specific or generic")
+        if section is not None and (not isinstance(section, str) or not re.fullmatch(r"\d{1,4}[A-Z]{0,4}", section.strip().upper())):
+            raise ValueError("section must be a section number such as 99 or 45ZC")
         stated = validate_scenario(scenario)
         catalog, selector = self._components()
         frame = parse_question(query, catalog, reference_date=(stated or {}).get("reference_date"))
+        selection = None
+        if section is not None:  # a section chosen from the list for an Act-only question; the question itself is kept as asked
+            section = section.strip().upper()
+            if frame.principal is None:
+                raise ValueError("a section can be chosen only for a question that names an Act")
+            if frame.sections and frame.sections != [section]:
+                raise ValueError("the question already names a different section")
+            frame.sections, frame.asks_about_versions = [section], True
+            selection = {"act_entry_id": frame.principal.entry_id, "act_name": frame.principal.name, "section": section,
+                         "chosen_from": "section_candidates"}
         # Facts already written in the question are used; anything entered in the form overrides them.
         facts, sources = merge_scenario(stated or {}, facts_from_question(query), frame.reference_date)
         facts = validate_scenario(facts) if facts else None
@@ -120,9 +132,11 @@ class RagPipeline:
             response = self._attach_general(self._legacy_answer(query, mode, restrict=restrict, focus_chunk=focus), frame, facts, mode, focus)
         response["scenario_request"] = scenario_request(response["determinations"], response["fingerprint"], facts, sources)
         response["contract_version"], response["schema_version"] = ANSWER_CONTRACT_VERSION, "5.0.0"
+        response["selection"] = selection
         response["analysis_id"] = analysis_id({
             "contract": ANSWER_CONTRACT_VERSION, "methods": [DETERMINATIONS_VERSION, FINGERPRINT_VERSION, TLDS_VERSION, COMPOSITION_VERSION, METRICS_CONTRACT_VERSION],
-            "query": query, "mode": mode, "scenario": facts, "generation": response["answer"].get("generation_method"),
+            "query": query, "mode": mode, "scenario": facts, "selection": selection, "evidence_selection": VERSION_EVIDENCE_VERSION,
+            "generation": response["answer"].get("generation_method"),
             "index": self.retriever.status().get("index_identity"), "graph": getattr(selector.consumer, "graph_sha256", None),
             "release": _active_release(self.root)})
         return response
@@ -365,9 +379,13 @@ class RagPipeline:
 
     def _versioned_answer(self, query: str, mode: str, frame: QuestionFrame, scenario: dict[str, object] | None,
                           catalog: ActCatalog, selector: VersionSelector) -> dict[str, object]:
+        names = {entry: f"{info['name']}" + ("" if info["kind"] == "principal" or not info["year"] or info["year"] in info["name"] else f" {info['year']}")
+                 for entry, info in catalog.entries.items()}
+        names = {entry: name.replace(" Act ", " (Amendment) Act ", 1) if catalog.entries[entry]["kind"] == "amending" and "Amendment" not in name else name
+                 for entry, name in names.items()}
         versions = selector.select(frame)
         if versions["reason_code"] == "SECTION_NOT_IDENTIFIED" and frame.principal:
-            versions["suggested_sections"] = selector.suggest_sections(frame.principal.entry_id, frame.focus_terms)
+            versions["section_candidates"] = selector.discover(frame, _evidence_gate, names)
         supported = versions["support_class"] in VERSION_CLAIMS
         metrics = None
         if supported and str(versions["before"]["text"]).strip():
@@ -423,10 +441,6 @@ class RagPipeline:
                  "evidence_ids": wording["evidence_ids"], "details": {"deprecated": True, "use": "fingerprint.wording_drift"}}
         determinations = {"version": DETERMINATIONS_VERSION, "textual_drift": drift, "materiality": mat, "applicability": timing,
                           "answer_change": change, "risk": risk_result}
-        names = {entry: f"{info['name']}" + ("" if info["kind"] == "principal" or not info["year"] or info["year"] in info["name"] else f" {info['year']}")
-                 for entry, info in catalog.entries.items()}
-        names = {entry: name.replace(" Act ", " (Amendment) Act ", 1) if catalog.entries[entry]["kind"] == "amending" and "Amendment" not in name else name
-                 for entry, name in names.items()}
         composed = compose_version_answer(frame, mode, versions, determinations, names, fingerprint)
         citations = [{"label": item["role"], "evidence_id": item["evidence_id"], "chunk_id": None, "entry_id": item["entry_id"],
                       "act_name": item["act_name"], "version": item["scope"], "document_type": None, "date": None,
@@ -1341,6 +1355,12 @@ def _evidence_prompt_block(label: str, item: RetrievedChunk | None) -> str:
         f"Anchor: {item.metadata.get('source_anchor')}\n"
         f"Text: {_bounded_text(item.text, 1800)}"
     )
+
+
+def _evidence_gate(versions: dict[str, object]) -> str | None:
+    """The fingerprint's own gate: why a supported pair still cannot be scored (no aligned clause, OCR), or None."""
+    pair = clause_pair(versions)
+    return (pair.get("reason") or "no aligned clause") if pair["status"] != "OK" else text_gate(versions, pair)
 
 
 def _bounded_text(value: object, maximum: int = 1200) -> str:

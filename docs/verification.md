@@ -271,3 +271,17 @@ Remote GitHub Actions has still not been observed. See [../reports/phase3/tempor
   - very long clause text made the mobile assistant page 6,729px tall;
   - the scroll-to-result call failed under jsdom.
 - **Not verified:** a screen-reader listening pass; legal accuracy.
+
+## Act-only questions and FAQ addendum (2026-10-13)
+
+- **Executed:**
+  - Python: 308 tests under 3.14 and 3.11; before the release only the expected Phase 11 checksum gate failed. This includes 12 discovery tests over the real corpus: every FAQ question and starter is run, and every suggested Motor Vehicles section has the same supported or not-supported outcome as the same section typed.
+  - Frontend: 51 vitest tests, run 3 times.
+  - Real Chrome: see `reports/analysis_workspace/report.v4.md`. `browser-a11y-check.mjs` passed.
+- **Defects found and fixed during this work:**
+  - the FAQ prefill was overwritten by the old answer;
+  - footnotes were scored for a different amendment year;
+  - a section choice was saved to history as a duplicate entry, and duplicate React keys then rendered extra chips;
+  - after a `#assistant?q=` link was replaced in history, the previous session's analysis was restored over the new answer.
+  - Four runtime analysis records written by development servers before the final code were moved out of `data/runtime/analyses` (not deleted).
+- **Not verified:** legal accuracy of the listed sections; whether the corpus records every amendment.

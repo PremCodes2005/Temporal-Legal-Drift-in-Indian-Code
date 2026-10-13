@@ -5,18 +5,22 @@ Order of support (version-evidence-v1):
    fragments, with the verbatim amending instruction and the corroborating consolidated text);
 2. a substitution footnote in the consolidated Act's own text for the named section (reconstruction);
 3. otherwise an explicit reason: wrong amending Act, only weak candidates, several candidates, or nothing.
+v2: a footnote is used only when its amending Act matches the amendment or year the question names; and an Act-only
+question gets a ranked list of sections, each checked by the same selection and text gate as a typed section.
 Nothing here is legal validation; fragments are not complete historical sections.
 """
 
 from __future__ import annotations
 
 import re
+from collections import Counter
+from dataclasses import replace
 from hashlib import sha256
-from typing import Any
+from typing import Any, Callable
 
 from .question import QuestionFrame
 
-VERSION_EVIDENCE_VERSION = "version-evidence-v1"
+VERSION_EVIDENCE_VERSION = "version-evidence-v2"
 STRONG = "MACHINE_CROSS_SOURCE_CORROBORATED"
 VERSION_CLAIMS = {"GRAPH_TRANSITION_FRAGMENTS", "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION"}
 FOOTNOTE = re.compile(r"Subs\.\s*by\s*Act\s*(\d+)\s*of\s*(\d{4}),?\s*s\.\s*(\d+)", re.I)
@@ -149,8 +153,10 @@ class VersionSelector:
         if frame.relation_error:
             return {**base, "support_class": "RELATION_MISMATCH", "reason_code": "AMENDING_ACT_DOES_NOT_AMEND_PRINCIPAL", "reason": frame.relation_error}
         if not frame.principal:
+            named = f" (“{frame.unresolved_act_phrases[0]}”)" if frame.unresolved_act_phrases else ""
             return {**base, "support_class": "NO_SUPPORTED_VERSION", "reason_code": "ACT_NOT_IDENTIFIED",
-                    "reason": "Name the Act (and section) to compare its versions."}
+                    "reason": f"No Act in this corpus matches the name used{named}. Check the Act's name or the Document repository; "
+                              "for Acts outside this corpus, use India Code."}
         if not frame.sections:
             return {**base, "support_class": "NO_SUPPORTED_VERSION", "reason_code": "SECTION_NOT_IDENTIFIED",
                     "reason": f"Name a section of the {frame.principal.name} to compare its versions; whole Acts are not compared."}
@@ -172,7 +178,7 @@ class VersionSelector:
         if strong:
             return self._graph(base, frame, strong)
         footnote = self._footnote(base, frame, section)
-        if footnote:
+        if footnote and "mismatch" not in footnote:
             return footnote
         candidates = [{"transition_id": t["transition_id"], "validation_status": t["validation_status"], "operation": t["operation"],
                        "amending_entry": amending} for t, _, _, amending in rows]
@@ -184,6 +190,8 @@ class VersionSelector:
             return {**base, "candidates": candidates, "support_class": "NO_SUPPORTED_VERSION", "reason_code": "NAMED_AMENDMENT_HAS_NO_RECORDED_CHANGE",
                     "reason": f"No recorded change to section {section} comes from the amendment named; other amendments do: "
                               + ", ".join(sorted({c['amending_entry'] or '?' for c in candidates})) + "."}
+        if footnote:  # the only reconstructable change comes from a different amendment than the one asked about
+            return {**base, "support_class": "NO_SUPPORTED_VERSION", "reason_code": "FOOTNOTE_FROM_OTHER_AMENDMENT", "reason": footnote["mismatch"]}
         amenders = sorted(entry for entry in {row[3] for row in rows} if entry)
         return {**base, "support_class": "NO_SUPPORTED_VERSION", "reason_code": "NO_RECORDED_CHANGE_FOR_SECTION",
                 "reason": f"The corpus records no amendment of section {section} of the {frame.principal.name}"
@@ -238,13 +246,22 @@ class VersionSelector:
                 "after": {"evidence_id": "E3", "role": "after_fragment", "text": after["text"]}}
 
     def _footnote(self, base: dict[str, Any], frame: QuestionFrame, section: str) -> dict[str, Any] | None:
+        """The reconstruction, or {"mismatch": reason} when the footnote's amendment is not the one the question names."""
         principal = frame.principal.entry_id
+        named_year = frame.amending.year if frame.amending else frame.amendment_year
+        mismatch = None
         for chunk in self.sections.get((principal, section.upper()), []):
             found = footnote_reconstruction(chunk["text"], section)
             if not found:
                 continue
             page, line = self._anchor(chunk)
             act = found["footnote_act"]
+            if named_year and not self._footnote_names_asked_amendment(frame, act):
+                asked = f"the {frame.amending.name} {frame.amending.year}" if frame.amending else f"a {named_year} amendment"
+                by = f"Act {act['number']} of {act['year']}" if act else "an amending Act the footnote does not name"
+                mismatch = (f"The only reconstructable change to section {section} of the {frame.principal.name} was made by {by}, "
+                            f"not by {asked}, so it is not used to answer this question.")
+                continue
             verification, amending = "FOOTNOTE_ONLY", frame.amending.entry_id if frame.amending else None
             if act:
                 pattern = re.compile(rf"No\.?\s*{act['number']}\s*OF\s*{act['year']}", re.I)
@@ -272,4 +289,82 @@ class VersionSelector:
                     "substitution": {"old": found["old"], "new": found["new"]},
                     "before": {"evidence_id": "E3", "role": "reconstructed_earlier_wording", "text": found["reconstructed"]},
                     "after": {"evidence_id": "E1", "role": "current_consolidated_text", "text": found["provision"]}}
-        return None
+        return {"mismatch": mismatch} if mismatch else None
+
+    def _footnote_names_asked_amendment(self, frame: QuestionFrame, act: dict[str, str] | None) -> bool:
+        """Whether the footnote's amending Act is the amendment the question names. Act numbers can carry the next year
+        (the IT (Amendment) Act, 2008 is Act 10 of 2009), so the amending Act's own text decides when the years differ."""
+        if not act:
+            return False
+        pattern = re.compile(rf"No\.?\s*{act['number']}\s*OF\s*{act['year']}", re.I)
+        if frame.amending:
+            return act["year"] == frame.amending.year or self._entry_matches(frame.amending.entry_id, pattern)
+        return act["year"] == frame.amendment_year or any(
+            entry.endswith(frame.amendment_year) and self._entry_matches(entry, pattern) for entry in self.amenders.get(frame.principal.entry_id, ()))
+
+    # ---------- Act-only questions ----------
+    def discover(self, frame: QuestionFrame, gate: Callable[[dict[str, Any]], str | None], names: dict[str, str] | None = None,
+                 limit: int = 8) -> dict[str, Any]:
+        """Sections of the named Act with a recorded change, ranked; each is checked exactly as a typed section would be."""
+        principal = frame.principal.entry_id
+        sections = set()
+        for transition in self.transitions:
+            provision = self.provisions.get(transition["target_provision_id"]) or {}
+            if (self.acts.get(provision.get("act_id")) or {}).get("corpus_entry_id") == principal and provision.get("section"):
+                sections.add(str(provision["section"]).upper())
+        for (owner, section), chunks in self.sections.items():
+            if owner == principal and any(footnote_reconstruction(chunk["text"], section) for chunk in chunks):
+                sections.add(section)
+        topical = {row["section"].upper() for row in self.suggest_sections(principal, frame.focus_terms, limit=10)} if frame.focus_terms else set()
+        rows = []
+        for section in sorted(sections | topical):
+            versions = self.select(replace(frame, sections=[section]))
+            rows.append(self._candidate(principal, section, versions, gate, names or {}, frame.focus_terms))
+        rows = [row for row in rows if row["status"] != "NO_RECORDED_CHANGE" or row["topic_match"]]
+        rank = {"SUPPORTED": 0, "SEVERAL_CHANGES": 1, "NOT_CORROBORATED": 2, "TEXT_UNRELIABLE": 3, "OTHER_AMENDMENT": 4, "NO_RECORDED_CHANGE": 5}
+        number = lambda s: (int(re.match(r"\d+", s).group(0)), s)  # noqa: E731
+        # The question's topic first, then how well each section is evidenced, then the newest amendment.
+        rows.sort(key=lambda row: (-row["topic_score"], rank[row["status"]], -int(row["amendment_year"] or 0), number(row["section"])))
+        shown = [row for row in rows if row["status"] != "OTHER_AMENDMENT"][:limit]
+        amendment = ((names or {}).get(frame.amending.entry_id) or frame.amending.name) if frame.amending else None
+        return {"act_entry_id": principal, "act_name": frame.principal.name, "amendment": amendment,
+                "amendment_year": frame.amending.year if frame.amending else frame.amendment_year,
+                "candidates": shown, "counts": dict(Counter(row["status"] for row in rows)), "checked_sections": len(rows),
+                "note": "Only changes recorded in the temporal graph or reconstructable from India Code footnotes are listed. "
+                        "This is not the Act's complete amendment history, and no score is given for the Act as a whole."}
+
+    def _heading(self, entry: str, section: str) -> str | None:
+        chunk = self.section_chunk(entry, section)
+        found = re.match(rf"\s*{re.escape(section)}\s*\.\s*([^.—]{{3,90}})", " ".join((chunk or {}).get("text", "").split()), re.I)
+        return found.group(1).strip(" .—-") if found else None
+
+    def _candidate(self, entry: str, section: str, versions: dict[str, Any], gate: Callable[[dict[str, Any]], str | None],
+                   names: dict[str, str], terms: list[str]) -> dict[str, Any]:
+        support = versions["support_class"]
+        blocked = gate(versions) if support in VERSION_CLAIMS else None
+        status = ("SUPPORTED" if support in VERSION_CLAIMS and not blocked else "TEXT_UNRELIABLE" if support in VERSION_CLAIMS
+                  else "SEVERAL_CHANGES" if support == "AMBIGUOUS_CANDIDATES" else "NOT_CORROBORATED" if support == "WEAK_TRANSITION_ONLY"
+                  else "OTHER_AMENDMENT" if versions["reason_code"] in {"FOOTNOTE_FROM_OTHER_AMENDMENT", "NAMED_AMENDMENT_HAS_NO_RECORDED_CHANGE"}
+                  else "NO_RECORDED_CHANGE")
+        amending = versions.get("amending_entry") or next((c.get("amending_entry") for c in versions.get("candidates") or [] if c.get("amending_entry")), None)
+        act = versions.get("footnote_act")
+        year = act["year"] if act else (re.search(r"(\d{4})$", amending or "") or [None, None])[1]
+        amendment = (names.get(amending) or amending if amending else None) or (f"Act {act['number']} of {act['year']} (named in the India Code footnote)" if act else None)
+        heading = self._heading(entry, section)
+        # shortcut: plural/singular folding only ("penalties" ~ "penalty"); upgrade to a stemmer if topic recall matters more.
+        stems = {re.sub(r"(?:ies|es|s)$", "", term) for term in terms if len(term) > 4}
+        text = " ".join(chunk["text"] for chunk in self.sections.get((entry, section.upper()), [])[:1]).casefold()
+        # Topic relevance: a word in the heading counts twice; zero means the section is listed only for its recorded change.
+        topic_score = sum(2 * (stem in (heading or "").casefold()) + (stem in text) for stem in stems)
+        first = (versions.get("evidence") or [None])[0]
+        why = {"SUPPORTED": ("A corroborated change recorded in the temporal graph" if support == "GRAPH_TRANSITION_FRAGMENTS"
+                             else "India Code's footnote records a substitution, so the earlier wording can be reconstructed")
+                            + (f" ({amendment})." if amendment else "."),
+               "TEXT_UNRELIABLE": f"A change is recorded, but {blocked[0].lower() + blocked[1:] if blocked else ''}",
+               }.get(status, versions["reason"])
+        if topic_score:
+            why += " Its heading names your topic." if any(stem in (heading or "").casefold() for stem in stems) else " Its text mentions your topic."
+        return {"section": section, "heading": heading, "status": status, "support_class": support, "amendment": amendment, "amendment_year": year,
+                "operation": versions.get("operation"), "effective_date": versions.get("effective_date"),
+                "footnote_stated_date": versions.get("footnote_stated_date"), "why": why, "topic_match": topic_score > 0, "topic_score": topic_score,
+                "source": {key: first.get(key) for key in ("act_name", "page", "pdf_url", "official_url", "verbatim")} if first else None}

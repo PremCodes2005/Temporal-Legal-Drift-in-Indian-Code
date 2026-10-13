@@ -9,6 +9,7 @@ import ComplianceRiskPanel from "./ComplianceRiskPanel";
 import { DriftPanel, VerificationPanel, percent } from "./SharedPanels";
 import AssistantResult from "./AssistantResult";
 import { DriftExplanationPage, ScoreCalculationPage } from "./ExplanationPages";
+import FAQ from "./faq.json";
 
 // Addresses of one stored analysis: #assistant/<id>, #drift/<id>, #calculation/<id>. Plain #assistant, #drift or #calculation
 // reopen the analysis last shown. Older links (#analysis/<id>[/<view>], v0.14–v0.17) open the matching page.
@@ -36,18 +37,38 @@ const sections = [
   { id: "review", number: "08", label: "Case trace & review" },
 ];
 
-const suggestions = [
-  "What changed in the IT Act amendment regarding data privacy?",
-  "Compare Section 19 before and after the IT Amendment Act, 2008.",
-  "What penalties were introduced for privacy violations in the IT Act?",
-];
+// Recently asked questions stay in this browser only (question, mode and Act; never scenario facts or chosen sections).
+const HISTORY_KEY = "tldrift:recent-questions";
+const HISTORY_SIZE = 5;
+export function readHistory() {
+  try { const value = JSON.parse(window.localStorage.getItem(HISTORY_KEY) || "[]"); return Array.isArray(value) ? value.filter((row) => typeof row?.query === "string") : []; }
+  catch { return []; }
+}
+const sameQuestion = (a, b) => a.query.trim().toLowerCase().replace(/\s+/g, " ") === b.query.trim().toLowerCase().replace(/\s+/g, " ");
+export function remember(history, entry) {
+  const next = [entry, ...history.filter((row) => !sameQuestion(row, entry))].slice(0, HISTORY_SIZE);
+  try { window.localStorage.setItem(HISTORY_KEY, JSON.stringify(next)); } catch { /* storage unavailable: history is a convenience */ }
+  return next;
+}
+// Follow-ups are built from the Act and sections the last answer returned; they are suggestions, not promised scores.
+export function followUps(result) {
+  const act = result?.question_frame?.principal?.name;
+  if (!act) return [];
+  const found = result.version_evidence?.section_candidates;
+  if (found) {
+    return found.candidates.filter((row) => row.status === "SUPPORTED").slice(0, 2)
+      .map((row) => `Compare section ${row.section} of the ${act} before and after the ${row.amendment_year ? `${row.amendment_year} ` : ""}amendment.`);
+  }
+  return result.question_frame?.asks_about_versions ? [`What changed in the ${act}?`] : [];
+}
 
 export default function App() {
   // Deep links: #review or #review/run_<id> (validated) so a case can be shared with a reviewer.
   const initialHash = window.location.hash.slice(1).split("?")[0].split("/");
   const route = useMemo(() => parseRoute(window.location.hash), []);
   // Shareable question link: #assistant?q=<question> asks once on load.
-  const linkedQuestion = new URLSearchParams(window.location.hash.split("?")[1] || "").get("q")?.slice(0, 4000) || "";
+  // Read once: the link is replaced by #assistant after loading, and must not then look like "no question".
+  const [linkedQuestion] = useState(() => new URLSearchParams(window.location.hash.split("?")[1] || "").get("q")?.slice(0, 4000) || "");
   const [section, setSection] = useState(() => sections.some((item) => item.id === route.section) ? route.section : "assistant");
   const [situation, setSituation] = useState(route.situation);
   const [analysisError, setAnalysisError] = useState("");
@@ -58,7 +79,9 @@ export default function App() {
   const [corpus, setCorpus] = useState(null);
   const [status, setStatus] = useState(null);
   const [loadError, setLoadError] = useState("");
-  const [starterQuery, setStarterQuery] = useState(linkedQuestion);
+  // A question to place in the box: { text, run, id }. run=true asks it once (FAQ cards, #assistant?q= links).
+  const [starter, setStarter] = useState(() => (linkedQuestion ? { text: linkedQuestion, run: true, id: "link" } : null));
+  const [history, setHistory] = useState(readHistory);
   // The single source of truth for every view: the stored analysis, fetched by ID.
   const [lastResult, setLastResult] = useState(null);
 
@@ -76,6 +99,9 @@ export default function App() {
     api(`/api/analyses/${id}`).then(setLastResult).catch((error) => setAnalysisError(`The linked analysis could not be loaded: ${error.message}`))
       .finally(() => setLoadingAnalysis(false));
   }, [route.analysisId, linkedQuestion]);
+
+  // A #assistant?q= link asks once: its history entry is replaced so Back never re-asks it.
+  useEffect(() => { if (linkedQuestion) window.history.replaceState(null, "", "#assistant"); }, [linkedQuestion]);
 
   const currentId = useRef(null);
   currentId.current = lastResult?.analysis_id || null;
@@ -123,10 +149,19 @@ export default function App() {
   const activeNav = section;
   const pageProps = { analysis: lastResult, onEvidence: openEvidence, onField: openField, onAssistant: toAssistant };
 
+  // An FAQ card asks its question once; the previous answer is cleared so it cannot replace the question shown.
   const askFromFaq = (question) => {
-    setStarterQuery(question); setSection("assistant"); setMenuOpen(false);
+    setLastResult(null); setHighlight(null); setSituation(false);
+    setStarter({ text: question, run: true, id: Date.now() });
+    setSection("assistant"); setMenuOpen(false);
+    window.history.pushState(null, "", "#assistant");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
+  // A section chosen from a list re-asks the same question, so only the question itself is remembered.
+  const recordQuestion = (value, section) => {
+    if (value?.analysis_id && !section) setHistory((rows) => remember(rows, { query: value.query, mode: value.mode, act: value.question_frame?.principal?.name || null }));
+  };
+  const clearHistory = () => { try { window.localStorage.removeItem(HISTORY_KEY); } catch { /* storage unavailable */ } setHistory([]); };
 
   return <div className="app-shell">
     <a className="skip-link" href="#main-content">Skip to main content</a>
@@ -138,8 +173,9 @@ export default function App() {
     <div className="workspace">
       <header className="topbar"><button className="menu-toggle" onClick={() => setMenuOpen((open) => !open)} aria-label="Open navigation">☰</button><div><p className="eyebrow">Versioned Indian law</p><h1>{sections.find((item) => item.id === activeNav)?.label}</h1></div></header>
       <main id="main-content">
-        {section === "assistant" && <AssistantWorkspace status={status} error={loadError || analysisError} starterQuery={starterQuery} autoRun={Boolean(linkedQuestion)}
-          result={lastResult} onResult={showResult} situationOpen={situation} onPage={navigate} onReview={() => navigate("review")} />}
+        {section === "assistant" && <AssistantWorkspace status={status} error={loadError || analysisError} starter={starter}
+          result={lastResult} onResult={showResult} situationOpen={situation} onPage={navigate} onReview={() => navigate("review")}
+          history={history} onAsked={recordQuestion} onClearHistory={clearHistory} />}
         {["drift", "calculation"].includes(section) && (lastResult?.analysis_id
           ? section === "drift" ? <DriftExplanationPage {...pageProps} highlight={highlight} onCalculation={() => navigate("calculation")} /> : <ScoreCalculationPage {...pageProps} />
           : <section className="page-section"><div className="section-header"><span className="section-kicker">{section === "drift" ? "Drift explanation" : "Score calculation"}</span>
@@ -157,26 +193,33 @@ export default function App() {
   </div>;
 }
 
-function AssistantWorkspace({ status, error: statusError, starterQuery, autoRun = false, result, onResult, situationOpen, onPage, onReview }) {
-  const [query, setQuery] = useState(starterQuery || "");
+function AssistantWorkspace({ status, error: statusError, starter, result, onResult, situationOpen, onPage, onReview, history = [], onAsked = () => {}, onClearHistory }) {
+  const [query, setQuery] = useState(starter?.text || result?.query || "");
   const [mode, setMode] = useState("specific");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const handled = useRef(null);  // the starter already placed; survives StrictMode's effect replay, so a question runs once
+  const input = useRef(null);
+  const pending = starter && handled.current !== starter.id;
 
-  useEffect(() => { if (starterQuery) setQuery(starterQuery); }, [starterQuery]);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { if (autoRun && starterQuery) submit(null, starterQuery); }, []);
+  // A loaded or linked analysis shows its own question and mode, unless a newer question (FAQ, link) is about to replace it.
+  useEffect(() => { if (result?.query && !pending) { setQuery(result.query); if (result.mode) setMode(result.mode); } }, [result]);  // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (!pending) return;
+    handled.current = starter.id;
+    setQuery(starter.text);
+    if (starter.run) submit(null, starter.text); else input.current?.focus();
+  }, [starter]);  // eslint-disable-line react-hooks/exhaustive-deps
 
-  // A loaded or linked analysis shows its own question and mode, so a re-run asks exactly the same thing.
-  useEffect(() => { if (result?.query) { setQuery(result.query); if (result.mode) setMode(result.mode); } }, [result]);
-
-  const submit = async (event, text = query, scenario = null, runMode = mode) => {
+  const prefill = (text) => { setQuery(text); input.current?.focus(); };
+  const submit = async (event, text = query, scenario = null, runMode = mode, section = null) => {
     event?.preventDefault(); setError("");
     if (!text.trim()) return setError("Enter a question about the indexed Indian legal documents.");
     setBusy(true);
     try {
-      const value = await api("/api/rag/query", { method: "POST", body: { query: text.trim(), mode: runMode, ...(scenario ? { scenario } : {}) } });
+      const value = await api("/api/rag/query", { method: "POST", body: { query: text.trim(), mode: runMode, ...(scenario ? { scenario } : {}), ...(section ? { section } : {}) } });
       onResult(value, Boolean(scenario));
+      if (!scenario) onAsked(value, section);
       window.setTimeout(() => document.getElementById("rag-result")?.scrollIntoView?.({ behavior: "smooth", block: "start" }), 0);
     } catch (requestError) { setError(requestError.message); }
     finally { setBusy(false); }
@@ -192,7 +235,7 @@ function AssistantWorkspace({ status, error: statusError, starterQuery, autoRun 
       <SourceHealth request={api} />
       <form className="prompt-panel" onSubmit={submit}>
         <label htmlFor="legal-query" className="sr-only">Legal research question</label>
-        <textarea id="legal-query" rows="4" maxLength="4000" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Ask a question, for example: What changed in the IT Act amendment regarding data privacy?" />
+        <textarea id="legal-query" ref={input} rows="4" maxLength="4000" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Ask a question, for example: What changed in the IT Act amendment regarding data privacy?" />
         <div className="prompt-actions">
           <div className="mode-switch" role="group" aria-label="Analysis mode">
             <button type="button" aria-pressed={mode === "specific"} className={mode === "specific" ? "active" : ""} onClick={() => setMode("specific")}><strong>Specific</strong><small>Clause-level analysis</small></button>
@@ -201,15 +244,29 @@ function AssistantWorkspace({ status, error: statusError, starterQuery, autoRun 
           <button className="send-button" type="submit" disabled={busy || !query.trim()}>{busy ? "Searching…" : "Analyse"}<span aria-hidden="true">→</span></button>
         </div>
       </form>
-      <div className="suggestions"><span>Try asking</span>{suggestions.map((item) => <button key={item} type="button" onClick={() => setQuery(item)}>{item}</button>)}</div>
+      <QuestionChips history={history} followUps={followUps(result)} onPick={prefill} onClear={onClearHistory} />
       {error && <div className="form-error" role="alert"><strong>Analysis could not be completed.</strong><span>{error}</span></div>}
     </div>
     {busy && <div className="loading-panel"><span className="spinner"/><div><strong>Retrieving versioned legal evidence…</strong><p>Classifying the question, matching documents and validating the response context.</p></div></div>}
     {result && (result.analysis_id
       ? <AssistantResult analysis={result} onPage={onPage} busy={busy} onReview={onReview} situationOpen={situationOpen}
-          onScenario={(scenario) => submit(null, result.query, scenario, result.mode)} />
+          onScenario={(scenario) => submit(null, result.query, scenario, result.mode)}
+          onSection={(section) => submit(null, result.query, null, result.mode, section)} />
       : <RagResult result={result} onExplain={() => onPage?.("calculation")} busy={busy} onScenario={(scenario) => submit(null, result.query, scenario)} />)}
   </section>;
+}
+
+// "Recently asked" (this browser), "Suggested follow-ups" (from the last answer) and verified starter examples. A chip only fills the box.
+function QuestionChips({ history, followUps: next, onPick, onClear }) {
+  const chips = (items, label) => items.map((text) => <button key={label + text} type="button" onClick={() => onPick(text)}>{text}</button>);
+  return <div className="question-chips">
+    {history.length > 0 && <div className="suggestions" role="group" aria-label="Recently asked"><span>Recently asked</span>
+      {chips(history.map((row) => row.query), "recent")}
+      <button type="button" className="clear-history" onClick={onClear}>Clear history</button></div>}
+    {next.length > 0 && <div className="suggestions" role="group" aria-label="Suggested follow-ups"><span>Suggested follow-ups</span>{chips(next, "next")}</div>}
+    <div className="suggestions" role="group" aria-label="Try asking"><span>Try asking</span>{chips(FAQ.starters, "starter")}</div>
+    {next.length > 0 && <p className="panel-note">Follow-ups are built from your last answer; a comparison appears only if the evidence supports it.</p>}
+  </div>;
 }
 
 function RepositoryStatus({ status, error }) {
@@ -301,23 +358,17 @@ function Method() { return <section className="page-section"><div className="sec
   ["6", "Verify", "Check coverage, version pairing, citation anchors and response alignment."],
 ].map(([number, title, body]) => <article className="method-card" key={number}><span>{number}</span><h3>{title}</h3><p>{body}</p></article>)}</div><article className="source-guidance"><div><span className="section-kicker">Always verify</span><h3>Local retrieval is not the final legal authority</h3><p>If evidence is missing or incomplete, the assistant still directs the user to India Code for the complete text and further information.</p></div><a href="https://indiacode.gov.in/" target="_blank" rel="noreferrer">Visit India Code ↗</a></article></section>; }
 
-const recentChangeQuestions = [
-  ["Banking law", "What changed recently under the Banking Laws (Amendment) Act, 2025?"],
-  ["Disaster management", "What changed in the Disaster Management (Amendment) Act, 2025?"],
-  ["Competition", "What important changes were made by the Competition (Amendment) Act, 2023?"],
-  ["Biological diversity", "What changed under the Biological Diversity (Amendment) Act, 2023?"],
-  ["GST", "What changed in the Central Goods and Services Tax amendments of 2023?"],
-  ["Wildlife", "What changed in the Wild Life (Protection) Amendment Act, 2022?"],
-  ["Insolvency", "What changed across the Insolvency and Bankruptcy Code amendments from 2019 to 2021?"],
-  ["Data and technology", "What are the major legal changes affecting data and technology after the Information Technology Act, 2000?"],
-  ["Right to Information", "What changed in the Right to Information (Amendment) Act, 2019?"],
-  ["Motor vehicles", "What changed in the Motor Vehicles (Amendment) Act, 2019?"],
-  ["Aadhaar", "What changed in the Aadhaar and Other Laws (Amendment) Act, 2019?"],
-  ["Child protection", "What changed in the Protection of Children from Sexual Offences (Amendment) Act, 2019?"],
-];
 
 function RecentChangesFaq({ onAsk }) {
-  return <section className="page-section"><div className="section-header"><span className="section-kicker">Frequently asked questions</span><h2>What has changed recently in Indian Acts?</h2><p>Select a common question to analyse it using available India Code evidence. A drift score is shown only when a supported pre/post pair can be established.</p></div><div className="faq-grid">{recentChangeQuestions.map(([topic, question]) => <article className="faq-card" key={question}><span>{topic}</span><h3>{question}</h3><button type="button" onClick={() => onAsk(question)}>Ask the legal drift assistant <b>→</b></button></article>)}</div><article className="source-guidance"><div><span className="section-kicker">Current source</span><h3>Check the latest official text</h3><p>Recent-change answers depend on publication, commencement and applicability evidence. Confirm the complete record on India Code.</p></div><a href="https://indiacode.gov.in/" target="_blank" rel="noreferrer">Visit India Code ↗</a></article></section>;
+  const kinds = { act: "Shows the sections you can compare", section: "Opens a clause comparison" };
+  return <section className="page-section"><div className="section-header"><span className="section-kicker">Frequently asked questions</span>
+    <h2>Questions about amended Acts in this corpus</h2>
+    <p>Each question was checked against the evidence held here: it either lists the sections of an Act that can be compared, or opens a comparison of one section.
+      This corpus is a research sample, not complete or up-to-date India Code coverage.</p></div>
+    <div className="faq-grid">{FAQ.questions.map((item) => <article className="faq-card" key={item.question}><span>{item.topic}</span><h3>{item.question}</h3>
+      <p className="panel-note">{kinds[item.kind]}</p>
+      <button type="button" onClick={() => onAsk(item.question)}>Ask this question <b aria-hidden="true">→</b></button></article>)}</div>
+    <article className="source-guidance"><div><span className="section-kicker">Official source</span><h3>Check the latest official text</h3><p>Whether a change applies depends on publication, commencement and applicability evidence. Confirm the complete record on India Code.</p></div><a href="https://indiacode.gov.in/" target="_blank" rel="noreferrer">Visit India Code ↗</a></article></section>;
 }
 
 async function api(path, options = {}) { const init = { method: options.method || "GET", headers: { Accept: "application/json" } }; if (options.body !== undefined) { init.headers["Content-Type"] = "application/json"; init.body = JSON.stringify(options.body); } const response = await fetch(path, init); let value; try { value = await response.json(); } catch { throw new Error(`Server returned ${response.status}`); } if (!response.ok) throw new Error(value.error || `Request failed with ${response.status}`); return value; }

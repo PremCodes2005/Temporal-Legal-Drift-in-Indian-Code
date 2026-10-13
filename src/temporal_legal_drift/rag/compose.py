@@ -14,7 +14,7 @@ from typing import Any
 from .question import QuestionFrame
 from .versions import VERSION_CLAIMS
 
-COMPOSITION_VERSION = "answer-composition-v2"  # v2: concise before/after, "Key change", effect only when facts were applied
+COMPOSITION_VERSION = "answer-composition-v3"  # v3: Act-only questions list sections to compare; v2: concise before/after, "Key change"
 ROLE_LABELS = {
     "before_fragment": "Before — amendment fragment (only the words the amendment changed, not the full section)",
     "after_fragment": "After — amendment fragment (only the words the amendment changed, not the full section)",
@@ -140,6 +140,9 @@ def _abstention(frame: QuestionFrame, versions: dict[str, Any], catalog_names: d
         "ACT_NOT_IDENTIFIED": versions["reason"],
     }
     opening = openings.get(code, f"I can't compare versions of {provision}: {versions['reason']}")
+    found = versions.get("section_candidates")
+    if code == "SECTION_NOT_IDENTIFIED" and found:
+        return _act_overview(found)
     if versions.get("suggested_sections"):
         opening += " Sections that mention your topic: " + ", ".join(row["section"] for row in versions["suggested_sections"]) + "."
     sections = []  # the opening already states the reason
@@ -153,6 +156,33 @@ def _abstention(frame: QuestionFrame, versions: dict[str, Any], catalog_names: d
         sections.append({"id": "candidates", "title": "What the corpus records", "text": listed, "evidence_ids": [], "kind": "limitation"})
     return {"version": COMPOSITION_VERSION, "direct_answer": opening, "sections": sections,
             "limitations": ["No version comparison is shown because its support could not be established."]}
+
+
+STATUS_TEXT = {"SUPPORTED": "before/after available", "SEVERAL_CHANGES": "several changes; say which wording",
+               "NOT_CORROBORATED": "change recorded but not corroborated; no comparison", "TEXT_UNRELIABLE": "change recorded; source text unreliable",
+               "NO_RECORDED_CHANGE": "mentions your topic; no recorded change"}
+
+
+def _act_overview(found: dict[str, Any]) -> dict[str, Any]:
+    """An Act-only question: which sections can be compared, never a score for the whole Act."""
+    act = found["act_name"]
+    asked = f" made by the {found['amendment']}" if found.get("amendment") else f" made by a {found['amendment_year']} amendment" if found.get("amendment_year") else ""
+    counts = found["counts"]
+    supported = counts.get("SUPPORTED", 0)
+    listed = [c for c in found["candidates"] if c["status"] == "SUPPORTED"][:4]
+    if supported:
+        examples = "; ".join(f"section {c['section']}" + (f" ({c['heading']})" if c.get("heading") else "") for c in listed)
+        opening = (f"This corpus records changes{asked} to {supported} section{'s' if supported != 1 else ''} of the {act} that can be compared "
+                   f"before and after, for example {examples}. Choose a section below to see its comparison.")
+    else:
+        others = counts.get("OTHER_AMENDMENT", 0)
+        opening = (f"No recorded change{asked} to the {act} has a before/after comparison that passes this system's evidence checks."
+                   + (f" {others} recorded change{'s' if others != 1 else ''} come{'s' if others == 1 else ''} from other amendments." if others else "")
+                   + " Check the official text on India Code.")
+    rows = "; ".join(f"section {c['section']}: {STATUS_TEXT.get(c['status'], c['status'].lower())}" for c in found["candidates"])
+    sections = [{"id": "candidates", "title": "Sections you can choose", "text": rows or "None.", "evidence_ids": [], "kind": "limitation"}] if found["candidates"] else []
+    return {"version": COMPOSITION_VERSION, "direct_answer": opening, "sections": sections,
+            "limitations": [found["note"], "Not legal advice; verify on India Code."]}
 
 
 def compose_general_answer(frame: QuestionFrame, mode: str, short_answer: str, key_points: list[str], evidence_ids: list[str]) -> dict[str, Any]:
