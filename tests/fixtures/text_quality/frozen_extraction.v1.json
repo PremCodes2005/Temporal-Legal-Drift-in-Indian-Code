@@ -1,0 +1,57 @@
+{
+ "schema_version": "1.0.0",
+ "extractor": "pypdf==6.16.2 via PdfParser 1.0.0",
+ "documents": {
+  "egazette-CG-DL-E-12102026-277080.pdf": {
+   "sha256": "17f43a7340ed6e255f7d3b5db5683dcb42eacaa79a6db7954bb3802fcfdf2260",
+   "bytes": 401709,
+   "provenance": "https://egazette.gov.in/WriteReadData/2026/277080.pdf, downloaded 2026-10-12 by the audited manual import (pinned-TLS connector). MSMED Development (Amendment) Act 2026 commencement notification; Hindi page uses a font whose glyphs map to wrong Unicode code points.",
+   "blocks": [
+    {
+     "block_id": "blk_7aa28654ce2224346e4b39a2",
+     "source_anchor": "pdf:page:1",
+     "normalized_text": "7825 GI/2026 (1)\nरजिस्ट्री सं. डी.एल.- 33004/99 REGD. No. D. L.-33004/99\nxxxGIDHxxx\nxxxGIDExxx\nअसाधारण\nEXTRAORDINARY\nभाग II—खण् ड 3—उप-खण् ड (ii)\nPART II—Section 3—Sub-section (ii)\nप्राजधकार से प्रकाजित\nPUBLISHED BY AUTHORITY\nसूक्ष्म, लघु और मध्यम उद्यम मंत्रालय\nअजधसूचना\nनई दिल्ली, 12 अक् तूबर, 2026\nका.आ. 5575(अ).— क ें द्रीय सरकार, सूक्ष्म, लघु और मध्यम उद्यम जिकास (संिोधन) अजधजनयम , 2026\n(2026 का 16) की धारा 1 की उपधारा (2) द्वारा प्रित्त िजियों का प्रयोग करते हुए,-\n(क) 15 अि ू बर, 2026 को ऐसी तारीख क े रूप में जिसको उि अजधजनयम की धारा 2 से धारा 7 ( िोनों सजित),\nधारा 11 और धारा 13 से धारा 17 (िोनों सजित) के उपबंध प्रिृत्त िोंगे;\n(ख) 15 दिसंबर, 2026 को ऐसी तारीख क े रूप में जिसको उि अजधजनयम की धारा 12 के उपबंध प्रिृत्त िोंगे,\nजनयत करती िै।\n[फा. सं. 2/1(1)/2022-पी एंड िी/नीजत/ई ]\nडॉ. रिनीि, अपर सजचि\nसं. 5363] नई दिल्ली, सोमिार, अक् तूबर 12, 2026/आज‍ िन 20, 1948\nNo. 5363] NEW DELHI, MONDAY, OCTOBER 12, 2026/ASVINA 20, 1948\nसी.जी.-डी.एल.-अ.-12102026-277080\nCG-DL-E-12102026-277080"
+    },
+    {
+     "block_id": "blk_d3b851a1427d18fe190c8c58",
+     "source_anchor": "pdf:page:2",
+     "normalized_text": "2 THE GAZETTE OF INDIA : EXTRAORDINARY [PART II—SEC. 3(ii)]\nMINISTRY OF MICRO, SMALL AND MEDIUM ENTERPRISES\nNOTIFICATION\nNew Delhi, the 12th October, 2026\nS.O. 5575(E).— In exercise of the powers conferred by sub -section (2) of section 1 of the Micro,\nSmall and Medium Enterprises Development (Amendment) Act, 2026 (16 of 2026), the Central Government\nhereby appoints, –\n(a) the 15th October, 2026 as the date on which the provisions of sections 2 to 7 (both inclusive), section\n11 and sections 13 to 17 (both inclusive) of the said Act shall come into force;\n(b) the 15th December, 2026 as the date on which the provisions of section 12 of the said Act shall come\ninto force.\n[F. No. 2/1(1)/2022-P&G/Policy/E]\nDr. RAJNEESH, Addl. Secy.\nUploaded by Dte. of Printing at Government of India Press, Ring Road, Mayapuri, New Delhi-110064\nand Published by the Controller of Publications, Delhi-110054."
+    }
+   ]
+  },
+  "egazette-CG-DL-E-10102026-277026.pdf": {
+   "sha256": "137811b0b1b7cc0398164bfc1ec10426cd7b161be103cc98f6e7246eb1204ac1",
+   "bytes": 609484,
+   "provenance": "https://egazette.gov.in/WriteReadData/2026/277026.pdf, downloaded 2026-10-12 in the bounded S1 feasibility probe. Railways notification; Hindi set in a legacy KrutiDev-style font, extracted as Latin mojibake.",
+   "blocks": [
+    {
+     "block_id": "blk_a92cb905d82c69e8f972ba95",
+     "source_anchor": "pdf:page:1",
+     "normalized_text": "7561 GI/2026 (1)\nरजिस्ट्री सं. डी.एल.- 33004/99 REGD. No. D. L.-33004/99\nxxxGIDHxxx\nxxxGIDExxx\nअसाधारण\nEXTRAORDINARY\nभाग II—खण् ड 3—उप-खण् ड (ii)\nPART II—Section 3—Sub-section (ii)\nप्राजधकार से प्रकाजित\nPUBLISHED BY AUTHORITY\njsy ea=ky;\n(\nmÙkj jsyos)\n¼fQjkstiqj eaMy½\nvf/klwpuk\nfQjkstiqj] 30-flrEcj] 2026\nका.आ. 5392(अ).— jsyos ¼la'kks/ku½ vf/kfu;e&2008] dh /kkjk 2 ds [k.M 20 ,Q ¼6½ }kjk iznÙk 'kfDr;ksa\ndk iz;ksx djrs gq,] dsUnzh; ljdkj ,rn~}kjk ljdkjh jkti= esa vf/klwpuk ds izdk'ku dh frfFk ls izHkkoh uhps\nrkfydk ds dkWye ¼2½ esa of.kZr vf/kdkjh dks izkf/kd``r djrh gS fd og rkfydk ds dkWye ¼4½ esa of.kZr jsyos\nifj;kstuk ds dk;Z & fu\"iknu] vuqikyu] izcU/ku ,oa ifjpkyu gsrq dkWye ¼3½ esaa of.kZr jkT; esa vkfcZVsªªVj ds :i\nesaa dk;Z fu\"ikfnr djsaA\nrkfydk\nØekad\nvkfcZVsªªVj\ntuin\njkT;\njsyos ifj;kstuk dk uke\n1- 2- 3- 4- 5-\nउप vkयुक्त]\ndiwjFkyk\ndiwjFkyk iatkc lkusgoky&tkya/kj flVh [kaM ij ofj\"V vuqHkkx\nvfHk;ark@QxokMk ds v/khu ekuo;qDr ysoy dzkWflax\nla[;k ,l& 79 vkSj ,l&80 ds LFkku ij 5 ehVj x\nसं. 5184] नई दिल्ली, बुधवार, जसतम् बर 30, 2026/आज‍ वन 8, 1948\nNo. 5184] NEW DELHI, WEDNESDAY, SEPTEMBER 30, 2026/ASVINA 8, 1948\nसी.जी.-डी.एल.-अ.-10102026-277026\nCG-DL-E-10102026-277026"
+    },
+    {
+     "block_id": "blk_040bf89b13810c230f49a5bb",
+     "source_anchor": "pdf:page:2",
+     "normalized_text": "2 THE GAZETTE OF INDIA : EXTRAORDINARY [PART II—SEC. 3(ii)]\n1- 5 ehVj vkdkj ds lhfer ÅapkbZ okys lcos dk fuekZ.k]\n/kDdk fof/k }kjkA\n[Qk- la- 635& MCyw@175@2025@,y-Mh-,p]\n,l- ds- JhokLro, lh,vks@fuekZ.k@vkj,lih\nMINISTRY OF RAILWAYS\n(Northern Railways)\n(FIROZPUR DIVISION)\nNOTIFICATION\nFirozpur, the 30th September, 2026\nS.O. 5392(E).— In exercise of the power conferred by clause 20 F (6) of section 2 of the Railway's\n(Amendment) Act-2008, the Central Government hereby authorizes the officer mentioned in column (2) of\nthe table below to Perform the functions of the Arbitrator in respect of the Railway Project as mentioned in\ncolumn (4) of the table, for execution maintenance, management and operation in the state mentioned in\ncolumn (3) of the said Table, with effect from the date of publications of this notification in the official\nGazette.\nTABLE\nS.No. Arbitrator District State Name of Railway Project\n1. 2. 3. 4. 5.\n1 Deputy\nCommissioner,\nKapurthala\nKapurthala Punjab Construction of Limited Height Subway of\nsize 5mtr x 5mtr by pushing method in lieu\nof manned Level crossing no S-79 & S-80\non Sanehwal-Jalandhar City section under\nSenior Section Engineer/Phagwara.\n[F. No. 635-W/175/2025/LDH]\nS. K. SRIVASTAVA, CAO/Const./RSP\nअजधसूचना\nfQjkstiqj] 30 जसतम्बर, 2026\nका.आ. 5393(अ).— jsyos ¼la'kks/ku½ vf/kfu;e&2008] dh /kkjk 2 ds [k.M 7&, }kjk iznÙk 'kfDr;ksa dk\niz;ksx djrs gq,] dsUnzh; ljdkj ,rn~}kjk ljdkjh jkti= esa vf/klwpuk ds izdk'ku dh frfFk ls izHkkoh uhps rkfydk\nds dkWye ¼2½ esa of.kZr vf/kdkjh dks izkf/kd``r djrh gS fd og rkfydk ds dkWye ¼4½ esa of.kZr jsyos ifj;kstuk ds\ndk;Z & fu\"iknu] vuqikyu] izcU/ku ,oa ifjpkyu gsrq dkWye ¼3½ esaa of.kZr jkT; esa le{k izkf/kdkjh ds :i esaa dk;Z\nfu\"ikfnr djsaA\nrkfydk\nØekad\nle{k vf/kdkjh\ntuin\njkT;\njsyos ifj;kstuk dk uke\n1- 2- 3- 4- 5-\n1-\nmieaMy efTkLVªsV]\nQxokMk\ndiwjFkyk iatkc lkusgoky&tkya/kj flVh [kaM ij ofj\"V vuqHkkx\nvfHk;ark@QxokMk ds v/khu ekuo;qDr ysoy\ndzkWflax la[;k ,l& 79 vkSj ,l&80 ds LFkku"
+    },
+    {
+     "block_id": "blk_2aedb5aadf4d9a083cab452c",
+     "source_anchor": "pdf:page:3",
+     "normalized_text": "[भाग II—खण् ड 3(ii)] भारत का रािपत्र : असाधारण 3\nij 5 ehVj x 5 ehVj vkdkj ds lhfer ÅapkbZ\nokys lcos dk fuekZ.k] /kDdk fof/k }kjkA\n[Qk- la- 635& MCyw@175@2025@,y-Mh-,p]\n,l-ds- JhokLro, lh,vks@fuekZ.k@vkj,lih\nNOTIFICATION\nFirozpur, the 30th September, 2026\nS.O. 5393(E). — In exercise of the power conferred by clause 7 -A of section 2 of the Railway's\n(Amendment) Act-2008, the Central Government hereby authorizes the officer mentioned in column (2) of\nthe table below to Perform the functions of the Competent Authority in res pect of the Railway Project as\nmentioned in column (4) of the table, for execution maintenance, management and operation in the state\nmentioned in column (3) of the said Table, with effect from the date of publications of this notification in the\nofficial Gazette.\nTABLE\nS.No. Competent\nAuthority\nState Name of Railway Project\n1. 2. 3. 4.\n1 Sub-Divisional\nMagistrate,\nPhagwara\nPunjab Construction of Limited Height Subway of size 5mtr\nx 5mtr by pushing method in lieu of manned Level\ncrossing no S-79 & S-80 on Sanehwal-Jalandhar City\nsection under Senior Section Engineer/Phagwara.\n[F. No. 635-W/175/2025/LDH]\nS. K. SRIVASTAVA, CAO/Const./RSP\nUploaded by Dte. of Printing at Government of India Press, Ring Road, Mayapuri, New Delhi-110064\nand Published by the Controller of Publications, Delhi-110054."
+    }
+   ]
+  },
+  "correct-unicode-hindi-control.pdf": {
+   "sha256": "42c03e5af3f0f9e4f5d13d63a72d9a7cb7ad9aaedef02edd8581d07d010cac71",
+   "bytes": 48797,
+   "provenance": "Generated 2026-10-12 by Chrome 154 (headless --print-to-pdf) from correct-unicode-hindi-control.html: correctly spelled Unicode Hindi plus English. Negative control showing pypdf drops vowel signs even from a correctly encoded PDF.",
+   "blocks": [
+    {
+     "block_id": "blk_607c4b70172ba4b6ae6eb65a",
+     "source_anchor": "pdf:page:1",
+     "normalized_text": "भारत का राजपत्र : असाधारण\nभाग II—खण्ड 3—उप-खण्ड (ii)\nप्रा\u0000धकार से प्रका\u0000शत\nसूक्ष्म, लघु और मध्यम उद्यम मंत्रालय\nअ\u0000धसूचना\nनई \u0000द\u0000ी, 12 अक्तूबर, 2026\nका.आ. 5575(अ).— क\u0000 \u0000ीय सरकार, सूक्ष्म, लघु और मध्यम उद्यम \u0000वकास (संशोधन) अ\u0000ध\u0000नयम, 2026 (2026 का 16) क\u0000 धारा 1 क\u0000 उपधारा (2)\n\u0000ारा प्रदत्त श\u0000क्तय\u0000 का प्रयोग करते हुए, 15 अक्तूबर, 2026 को ऐसी तारीख के रूप म\u0000 \u0000नयत करती ह\u0000 \u0000जसको उक्त अ\u0000ध\u0000नयम क\u0000 धारा 2 से धारा 7\n(दोन\u0000 स\u0000हत) के उपबंध प्रवृत्त ह\u0000गे।\nMINISTRY OF MICRO, SMALL AND MEDIUM ENTERPRISES — NOTIFICATION\nIn exercise of the powers conferred by sub-section (2) of section 1 of the said Act, the Central Government hereby\nappoints the 15th October, 2026."
+    }
+   ]
+  }
+ }
+}

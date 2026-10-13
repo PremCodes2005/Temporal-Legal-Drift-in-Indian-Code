@@ -32,7 +32,9 @@ from temporal_legal_drift.acquisition.models import utc_now_iso
 from temporal_legal_drift.amendment_extraction.extractor import GeneralisedAmendmentExtractor
 from temporal_legal_drift.amendment_extraction.models import EXTRACTOR_VERSION
 from temporal_legal_drift.jsonio import atomic_replace, atomic_write_new, canonical_json_bytes, load_json
+from temporal_legal_drift.parsing.text_quality import TEXT_QUALITY_VERSION, quarantine_document
 
+from .commencement import extract_commencement, find_conflicts
 from .indiacode import DiscoveredRecord, SourceShapeError
 
 WINDOW = timedelta(hours=24)
@@ -248,11 +250,19 @@ class MonitoringService:
                         "review_reason": "SOURCE_TEXT_UNREADABLE"}
             atomic_write_new(normalized_path, canonical_json_bytes(document.to_dict()))
             stages["parse"] = "OK"
-        document = load_json(normalized_path)
+        # Untrustworthy lines (Devanagari text layer, legacy-font mojibake) are withheld before any use.
+        document, quarantine = quarantine_document(load_json(normalized_path))
+        if quarantine["withheld_lines"]:
+            quarantine_path = self.base / "quarantine" / f"{digest}.{parser_version}.{TEXT_QUALITY_VERSION}.json"
+            if not quarantine_path.is_file():
+                atomic_write_new(quarantine_path, canonical_json_bytes(
+                    {**quarantine, "official_id": record.official_id, "sha256": digest, "parser": parser_version}))
         fidelity = _text_fidelity(document)
+        fidelity["quarantine"] = {key: quarantine[key] for key in ("version", "status", "withheld_lines", "by_reason")}
         stages["text_fidelity"] = fidelity
         if fidelity["status"] == "UNREADABLE":
-            return {**stages, "terminal": "REVIEW_REQUIRED", "review_reason": "SOURCE_TEXT_UNREADABLE"}
+            reason = "SOURCE_TEXT_QUARANTINED" if quarantine["withheld_lines"] else "SOURCE_TEXT_UNREADABLE"
+            return {**stages, "terminal": "REVIEW_REQUIRED", "review_reason": reason}
         events, unresolved = GeneralisedAmendmentExtractor().extract(
             document, source_document=record.official_id, source_sha256=digest, amending_act=record.title,
             source_risk="automated text-fidelity check flagged this document" if fidelity["status"] == "UNRELIABLE" else None)
@@ -268,6 +278,13 @@ class MonitoringService:
             "publication_fact": {"date": record.stated_dates.get("published") or record.stated_dates.get("issued"),
                                  "status": "UNAPPROVED", "note": "publication is not commencement"},
         }
+        commencement = extract_commencement(document, official_id=record.official_id, sha256=digest,
+                                            published=record.stated_dates.get("published"))
+        if commencement is not None:
+            stages["commencement"] = self._record_commencement(commencement)
+        if fidelity["status"] == "UNRELIABLE":  # extracted for review only; never served as evidence
+            return {**stages, "index": {"status": "WITHHELD", "reason": "SOURCE_TEXT_UNRELIABLE"},
+                    "terminal": "REVIEW_REQUIRED", "review_reason": "SOURCE_TEXT_UNRELIABLE"}
         if self.index_updater is None:
             stages["index"] = {"status": "NOT_CONFIGURED"}
         else:
@@ -278,6 +295,24 @@ class MonitoringService:
                         "terminal": "REVIEW_REQUIRED", "review_reason": "INDEX_UPDATE_FAILED"}
         stages["terminal"] = "PROCESSED"
         return stages
+
+    def _record_commencement(self, commencement: dict[str, Any]) -> dict[str, Any]:
+        """Write-once per content hash; conflicts with earlier notifications are recorded, never resolved."""
+        folder = self.base / "commencement"
+        path = folder / f"{commencement['official_id']}.{commencement['sha256'][:12]}.json"
+        with self._file_lock("commencement"):
+            if not path.is_file():
+                existing = [load_json(item) for item in sorted(folder.glob("*.json"))] if folder.is_dir() else []
+                commencement = {**commencement, "conflicts": find_conflicts(commencement, existing)}
+                atomic_write_new(path, canonical_json_bytes(commencement))
+            stored = load_json(path)
+        return {"status": stored["status"], "record": path.name, "legal_effect_claimed": False,
+                "facts": sum(f["fact_type"] != "publication" for f in stored["facts"]),
+                "unresolved": len(stored["unresolved"]), "conflicts": len(stored["conflicts"])}
+
+    def commencement_records(self) -> list[dict[str, Any]]:
+        folder = self.base / "commencement"
+        return [load_json(path) for path in sorted(folder.glob("*.json"))] if folder.is_dir() else []
 
     def _record_candidate(self, fingerprint: str, event: dict[str, Any], record: DiscoveredRecord, digest: str,
                           reasons: list[str]) -> dict[str, Any]:
@@ -331,9 +366,13 @@ class MonitoringService:
                 ready = version["state"] == "PROCESSED" or include == (doc["official_id"], version.get("sha256"))
                 normalized = sorted((self.base / "normalized").glob(f"{version.get('sha256')}.*.json")) if ready else []
                 if normalized:
+                    # Applied on every read, so versions processed before the gate existed are cleaned too.
+                    evidence, quarantine = quarantine_document(load_json(normalized[-1]))
+                    if _text_fidelity(evidence)["status"] != "READABLE":
+                        continue
                     docs.append({"doc_id": doc["doc_id"], "official_id": doc["official_id"], "source_key": doc["source_key"],
                                  "version": version["version"], "sha256": version["sha256"], "record": version["record"],
-                                 "normalized": load_json(normalized[-1])})
+                                 "normalized": evidence, "text_quality": {key: quarantine[key] for key in ("version", "withheld_lines", "by_reason")}})
         return docs
 
     # ---------- reviewed manual import ----------
@@ -439,6 +478,7 @@ class MonitoringService:
         return {"sources": sources, "alerts": alerts, "review_queue_pending": sum(item["status"] == "HUMAN_REVIEW_PENDING" for item in queue),
                 "document_states": {name: states.count(name) for name in sorted(set(states))},
                 "failed_documents": states.count("FAILED"),
+                "commencement_pending_review": sum(r["status"] != "REVIEWED" for r in self.commencement_records()),
                 "time_base": "UTC", "coverage_claim": "partial; see docs/sprint/s1_source_access_decision.v2.md"}
 
 

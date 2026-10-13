@@ -28,6 +28,8 @@ Top level: `schema_version, query, intent, mode, answer, citations, comparison, 
 
 ## `GET /api/sources/health`
 
-Top level: `sources, alerts, document_states, failed_documents, review_queue_pending, time_base, active_binding, live_query_lookup, coverage_claim`. Each entry in `alerts` is `{source_key, code: SCHEDULER_MISSED_RUN | INGESTION_STALE, detail}`.
+Top level: `sources, alerts, document_states, failed_documents, review_queue_pending, time_base, active_binding, live_query_lookup, coverage_claim`. Each entry in `alerts` is `{source_key, code: SCHEDULER_MISSED_RUN | INGESTION_STALE, detail}`. `commencement_pending_review` counts commencement records awaiting a qualified review.
+
+`source_fidelity_warnings` in `/api/rag/query` may include `{"warning": "source text partly withheld"}`: lines on the cited page were withheld by `text-quality-v1`.
 
 Each entry in `sources` has: `source_key` (`india_code` or `egazette`), `last_attempt_at`, `last_success_at`, `last_status`, `next_eligible_at`, `lag_hours`, `scheduled_ingestion_healthy`. Times are UTC.

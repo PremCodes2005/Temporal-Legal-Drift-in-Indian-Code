@@ -62,9 +62,15 @@ class MissedRunAlertTests(unittest.TestCase):
         self.assertIn("INGESTION_STALE", self.alerts("2026-10-14T00:06:00+00:00"))
 
     def test_check_flag_turns_alerts_into_a_failing_exit_code(self) -> None:
+        from datetime import UTC, datetime, timedelta
+
+        now = datetime.now(UTC)  # the CLI uses the wall clock, so the healthy state is built relative to it
+        state = self.root / "data/monitoring/state.v1.json"
+        state.write_text(json.dumps({"sources": {"india_code": {
+            "last_attempt_at": (now - timedelta(hours=1)).isoformat(), "last_success_at": (now - timedelta(hours=1)).isoformat(),
+            "next_eligible_at": (now + timedelta(hours=23)).isoformat(), "last_status": "OK"}}}))
         with redirect_stdout(io.StringIO()):
             self.assertEqual(main(["--project-root", str(self.root), "monitor-health", "--check"]), 0)
-        state = self.root / "data/monitoring/state.v1.json"
         stale = json.loads(state.read_text())
         stale["sources"]["india_code"].update(next_eligible_at="2020-01-01T00:00:00+00:00")
         state.write_text(json.dumps(stale))

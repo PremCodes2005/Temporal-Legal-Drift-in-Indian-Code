@@ -15,5 +15,7 @@ These ADRs are **retrospective descriptions of decisions visible in the current 
 | [0009](0009-document-state-machine-and-index-overlay.md) | Document state machine, cross-portal linking, index overlay (2026-10-12) |
 | [0010](0010-pinned-intermediates-for-incomplete-tls-chains.md) | Pinned Let's Encrypt intermediates for e-Gazette's incomplete TLS chain (2026-10-12) |
 | [0011](0011-always-on-monitoring-deployment-and-alerting.md) | systemd deployment of the daily job with missed-run alerting (2026-10-12) |
+| [0012](0012-text-quality-quarantine.md) | Withhold untrustworthy PDF text lines (Hindi text layer, legacy-font mojibake) (2026-10-13) |
+| [0013](0013-commencement-notification-policy.md) | Conservative commencement-notification policy with separate, unreviewed facts (2026-10-13) |
 
 Audit base: commit `68030875a719aa626fb05f294880de2953084781`, 2026-10-12. Verification limits: [../verification.md](../verification.md).

@@ -80,10 +80,17 @@ class RagPipeline:
         risks = {entry.entry_id: entry.known_extraction_risk for entry in CorpusManifest.from_file(
             self.root / "configs/corpus/pilot_v1.json").entries if entry.known_extraction_risk}
         entry_ids = dict.fromkeys(str(item.metadata.get("entry_id")) for item in items if item)
-        return [
+        warnings = [
             {"entry_id": entry_id, "warning": "source text unreadable or unreliable", "detail": str(risks[entry_id])}
             for entry_id in entry_ids if entry_id in risks
         ]
+        for item in items:
+            withheld = int((item.metadata.get("quarantined_lines_on_page") or 0) if item else 0)
+            if withheld and all(w["entry_id"] != str(item.metadata.get("entry_id")) for w in warnings):
+                warnings.append({"entry_id": str(item.metadata.get("entry_id")), "warning": "source text partly withheld",
+                                 "detail": f"{withheld} line(s) on this page (Hindi text layer or garbled legacy-font text) were withheld "
+                                           "as unverifiable; only the remaining text was used. Check the official PDF."})
+        return warnings
 
     def status(self) -> dict[str, object]:
         retrieval = self.retriever.status()

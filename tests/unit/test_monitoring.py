@@ -241,11 +241,23 @@ class MonitoringTests(unittest.TestCase):
         self.parser.text = "scan"
         unreadable = self.service.run_due("w")[1]["records"][0]
         self.assertEqual((unreadable["outcome"], unreadable["review_reason"]), ("REVIEW_REQUIRED", "SOURCE_TEXT_UNREADABLE"))
-        garbled = AMENDMENT + " ~h~ ~a~ette (j{ ~i4 1{flT n-1JlI\\'I sh@ll b€ subst!tuted " * 20
+        # Legacy-font/OCR garbage lines are withheld; the clean amendment text is still processed.
+        garbled = AMENDMENT + "\n" + "~h~ ~a~ette (j{ ~i4 1{flT sh@ll b€ subst!tuted\n" * 20
         service = MonitoringService(self.root / "other", {"india_code": self.india}, clock=self.clock,
                                     parser=FakeParser(garbled), graph_mapper=lambda event: {"status": "TARGET_UNRESOLVED"})
         result = service.run_due("w")[0]["records"][0]
-        self.assertEqual(result["stages"]["text_fidelity"]["status"], "UNRELIABLE")
+        self.assertEqual(result["stages"]["text_fidelity"]["quarantine"]["by_reason"], {"LEGACY_FONT_MOJIBAKE": 20})
+        self.assertTrue(all("~" not in c["event"]["evidence_text"] for c in service.candidates()))
+        # Garbage that matches no quarantine rule still makes the whole document unreliable: reviewed, never indexed.
+        odd = AMENDMENT + " " + "subst!tuted b€ (j{ th|s 0f|ence " * 30
+        calls: list[int] = []
+        service = MonitoringService(self.root / "third", {"india_code": self.india}, clock=self.clock, parser=FakeParser(odd),
+                                    index_updater=lambda root, docs: calls.append(len(docs)) or {"status": "ACTIVATED"},
+                                    graph_mapper=lambda event: {"status": "TARGET_UNRESOLVED"})
+        result = service.run_due("w")[0]["records"][0]
+        self.assertEqual((result["stages"]["text_fidelity"]["status"], result["outcome"], result["stages"]["index"]["status"]),
+                         ("UNRELIABLE", "REVIEW_REQUIRED", "WITHHELD"))
+        self.assertEqual(calls, [])
         self.assertTrue(all(c["materiality_triage"]["status"] == "REVIEW_REQUIRED" for c in service.candidates()))
 
     def test_index_failure_keeps_document_reviewable(self) -> None:

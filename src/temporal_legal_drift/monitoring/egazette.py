@@ -19,6 +19,7 @@ from temporal_legal_drift.acquisition.fetch import Transport, UrllibTransport
 from temporal_legal_drift.acquisition.tls import LETS_ENCRYPT_GEN_Y_CHAIN, pinned_intermediate_context
 from temporal_legal_drift.errors import AcquisitionError
 
+from .commencement import is_commencement_subject
 from .indiacode import DiscoveredRecord, SourceShapeError
 
 HOME = "https://egazette.gov.in/"
@@ -57,6 +58,13 @@ def parse_listing(page: str) -> list[dict[str, str]]:
 
 def _iso_date(value: str) -> str:
     return datetime.strptime(value, "%d-%b-%Y").date().isoformat()
+
+
+def _instrument_class(row: dict[str, str]) -> str:
+    if row["PartSection"].startswith("Part II-Section 1") or RELEVANT.search(row["Subject"]):
+        return "AMENDING_INSTRUMENT"
+    # Commencement notifications decide when amendments take effect (docs/methodology/commencement_policy.v1.md).
+    return "COMMENCEMENT_NOTIFICATION_CANDIDATE" if is_commencement_subject(row["Subject"]) else "OTHER"
 
 
 def _megabytes(value: str) -> float | None:
@@ -101,8 +109,9 @@ class EGazetteConnector:
                 stated_dates={"issued": _iso_date(row["IssueDate"]), "published": published},
                 bitstream_name=f"{identity.group(2)}.pdf", bitstream_url=url, bitstream_md5=None,
                 bitstream_bytes=int(size * 1024 * 1024) if size else None,
-                listing={key: row[key] for key in ("Ministry", "Department", "Office", "Category", "PartSection", "FileSize")},
-                download_eligible=row["PartSection"].startswith("Part II-Section 1") or bool(RELEVANT.search(row["Subject"])),
+                listing={**{key: row[key] for key in ("Ministry", "Department", "Office", "Category", "PartSection", "FileSize")},
+                         "instrument_class": _instrument_class(row)},
+                download_eligible=_instrument_class(row) != "OTHER",
                 size_tolerance=0.15,
             ))
         return records

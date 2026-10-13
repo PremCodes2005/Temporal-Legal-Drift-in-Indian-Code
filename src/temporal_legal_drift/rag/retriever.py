@@ -660,6 +660,8 @@ def update_monitored_overlay(root: Path, documents: list[dict[str, object]]) -> 
                         "source_anchor": block.get("source_anchor"), "block_id": block.get("block_id"),
                         "sections": sorted(set(match.lower() for match in SECTION_RE.findall(part))),
                         "primary_sections": _primary_sections(part), "review_status": "HUMAN_REVIEW_PENDING",
+                        "quarantined_lines_on_page": int(block.get("quarantined_lines", 0)),
+                        "text_quality_version": item["normalized"].get("text_quality_version"),
                     },
                 })
     document = {"schema_version": "1.0.0", "overlay_version": OVERLAY_VERSION, "base_index_identity": base_identity,

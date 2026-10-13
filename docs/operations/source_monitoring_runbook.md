@@ -32,6 +32,8 @@ Times are stored in **UTC**; display local time separately. Recommended trigger:
 | `review_queue/` | One item per new or revised content hash. |
 | `stage_runs.v1.jsonl`, `normalized/`, `candidates/` | Stage cache keyed by content hash and stage version. |
 | `data/raw/monitoring/sha256/` | Immutable artifacts. |
+| `quarantine/` | Write-once records of withheld PDF text lines (`text-quality-v1`): Hindi text layer, legacy-font mojibake. |
+| `commencement/` | Write-once commencement records: unreviewed `TemporalFact`s, conflicts, unresolved wording (`commencement-policy-v1`). |
 
 ## Safety
 
@@ -64,3 +66,36 @@ Times are stored in **UTC**; display local time separately. Recommended trigger:
 - The heartbeat stopping: the whole host is down. This needs the external heartbeat service.
 
 **Pause:** `systemctl disable --now tldrift-monitor.timer`. Keep the health timer so the pause is visible.
+
+## Verifying the units before deployment (no network, no live sources)
+
+Run `sh deploy/container-check/run.sh` (needs Docker). It boots real systemd in a throwaway Debian 12 container with `--network none`, then checks:
+- `systemd-analyze verify` passes on all units;
+- the monitor job runs once per source;
+- a repeat inside the window starts nothing;
+- the health check fails on stale ingestion;
+- the `OnFailure=` alert is delivered.
+
+This verifies the units only; it is not a deployment.
+
+## Exact installation on an always-on host (Debian/Ubuntu with systemd)
+
+```sh
+sudo useradd --system --create-home tldrift
+sudo git clone https://github.com/PremCodes2005/Temporal-Legal-Drift-in-Indian-Code.git /srv/temporal-legal-drift
+cd /srv/temporal-legal-drift && sudo git checkout <release commit>
+sudo python3 -m venv .venv && sudo .venv/bin/pip install -e . "pypdf==6.16.2"
+sudo .venv/bin/tldrift restore-release-inputs
+sudo chown -R tldrift:tldrift /srv/temporal-legal-drift
+sudo install -d -m 0750 /etc/tldrift
+sudo install -m 0640 -g tldrift deploy/systemd/tldrift.env.example /etc/tldrift/tldrift.env   # then edit: alert command, heartbeat URL
+sudo cp deploy/systemd/*.service deploy/systemd/*.timer /etc/systemd/system/
+sudo systemd-analyze verify /etc/systemd/system/tldrift-*.service /etc/systemd/system/tldrift-*.timer
+sudo systemctl daemon-reload && sudo systemctl enable --now tldrift-monitor.timer tldrift-health.timer
+sudo systemctl start tldrift-alert@install-test.service      # confirm the alert arrives
+systemctl list-timers 'tldrift-*'
+```
+
+Record the host name, owner and the first scheduled run time in `docs/verification.md`.
+
+**Copying existing state:** if `data/monitoring/` is copied from another machine, its 24 h windows are kept. A fresh host starts with all sources eligible.
