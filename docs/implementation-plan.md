@@ -166,5 +166,6 @@ Not achieved in the sprint:
 
 | Phase | Result | Evidence |
 | --- | --- | --- |
-| UI | `#drift` and `#calculation` are sidebar pages again (v0.13.0 layout); workspace has four tabs; scoring unchanged | ADR 0019, `frontend/src/ExplanationPages.jsx`, `analysis_workspace.test.jsx` |
+| UI | `#drift` and `#calculation` are sidebar pages again (v0.13.0 layout); scoring unchanged | ADR 0019, `frontend/src/ExplanationPages.jsx`, `analysis_workspace.test.jsx` |
+| UI | `#assistant` is a single page again (v0.13.0 order, no tabs; situation and review details folded) | ADR 0020, `frontend/src/AssistantResult.jsx`, `reports/analysis_workspace/report.v3.md` |
 | Release | See `docs/verification.md` | — |

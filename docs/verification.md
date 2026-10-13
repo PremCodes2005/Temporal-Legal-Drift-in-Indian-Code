@@ -259,3 +259,15 @@ Remote GitHub Actions has still not been observed. See [../reports/phase3/tempor
   - a screen-reader listening pass;
   - legal accuracy.
   - The backend's own sentences still say "the answer above" and "never averaged". These are fingerprint-v1.2 contract text, left unchanged.
+
+## Single-page assistant addendum (2026-10-13)
+
+- **Executed:**
+  - Frontend: 39 vitest tests, run 3 times; the run exits 0 with no unhandled errors.
+  - Real Chrome against the running app: the end-to-end ask, page switching, back/forward, refresh, facts re-run and 390px checks in `reports/analysis_workspace/report.v3.md`, with screenshots in `screenshots/v3/`.
+  - `browser-a11y-check.mjs` (updated for the single-page assistant) passed.
+  - Python and gates: see the release record.
+- **Defects found and fixed during this work:**
+  - very long clause text made the mobile assistant page 6,729px tall;
+  - the scroll-to-result call failed under jsdom.
+- **Not verified:** a screen-reader listening pass; legal accuracy.

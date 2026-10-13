@@ -30,11 +30,6 @@
 .fingerprint{margin:16px 0;padding:18px 20px;border:1px solid var(--line);border-radius:14px;background:#fff}.fingerprint-heading h2{margin:4px 0 4px;font-size:20px}.fingerprint-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:10px}.fingerprint-card{display:flex;flex-direction:column;gap:5px;padding:14px;border:1px solid var(--line);border-radius:12px;background:#fbfcfd;min-width:0;overflow-wrap:anywhere}.fingerprint-card header{display:flex;justify-content:space-between;gap:6px;align-items:flex-start}.fingerprint-card h3{margin:0;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--primary);overflow-wrap:normal}.fp-question{margin:0;color:var(--muted);font-size:12px}.fp-value{font-size:22px;color:var(--ink2)}.fingerprint-card p{margin:0;font-size:13px;line-height:1.45}.fp-reason{color:var(--muted)}.fp-next{font-size:12px!important}.fp-details{margin-top:6px;font-size:12px}.fp-details summary{cursor:pointer;font-weight:800}.fp-details summary:focus-visible{outline:3px solid var(--primary);outline-offset:2px}.fp-details p{margin:6px 0}.fp-table{width:100%;min-width:0;margin:8px 0;border-collapse:collapse;font-size:12px}.fp-table caption{text-align:left;font-weight:800;padding-bottom:4px}.fp-table th,.fp-table td{padding:4px 6px;border-top:1px solid var(--line);text-align:left;vertical-align:top;overflow-wrap:anywhere}.fp-legacy{margin-top:10px;padding-top:8px;border-top:1px dashed var(--line)}.fingerprint-card.state-determined .state-badge{background:#e3f4ea;color:#14532d}.fingerprint-card.state-provisional .state-badge,.fingerprint-card.state-conditional .state-badge{background:#fff3dc;color:#7a4f12}.fingerprint-card.state-needs_facts .state-badge{background:#e6efff;color:#1e3a8a}.fingerprint-card.state-insufficient_evidence .state-badge{background:#fde8e8;color:#7f1d1d}@media (max-width:900px){.fingerprint-grid{grid-template-columns:1fr}}
 .hero.compact{padding-top:12px;padding-bottom:12px}.hero.compact .prompt-panel textarea{min-height:72px}
 .analysis-query{margin:0 0 10px;color:var(--muted);font-size:13px}
-.analysis-tabs{display:flex;gap:4px;margin:4px 0 0;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:thin}
-.analysis-tabs [role=tab]{flex:0 0 auto;padding:10px 14px;border:0;border-bottom:3px solid transparent;background:none;color:var(--muted);font:inherit;font-size:13px;font-weight:700;cursor:pointer}
-.analysis-tabs [role=tab].active{color:var(--ink2);border-bottom-color:var(--primary)}
-.analysis-tabs [role=tab]:focus-visible{outline:3px solid var(--primary);outline-offset:-3px}
-.analysis-panel{padding-top:16px}.analysis-panel:focus-visible{outline:3px solid var(--primary);outline-offset:4px}
 .answer-side{position:sticky;top:12px}.view-stack{display:grid;gap:14px}
 .strip-state{margin-left:6px;padding:1px 6px;border-radius:999px;background:#eef2f6;font-size:10px;font-weight:800}.strip-meaning{color:var(--muted)}
 .link-button{padding:0;border:0;background:none;color:var(--primary);font:inherit;font-weight:700;text-decoration:underline;cursor:pointer}
@@ -51,7 +46,6 @@
 .determinations.single{grid-template-columns:1fr}.clause-pair h4{margin:0 0 4px;font-size:12px;text-transform:uppercase;letter-spacing:.05em}
 
 /* analysis workspace v2: six views, clean answer, explanation and calculation */
-.analysis-panel{padding-top:18px}.analysis-panel:focus-visible{outline:3px solid var(--primary);outline-offset:4px}
 .view-stack{display:grid;gap:16px}.view-stack>*{min-width:0}.view-stack>.panel h3{margin:6px 0 10px}
 .answer-view{display:grid;gap:14px;max-width:860px}
 .change-glance{padding:14px 18px;border:1px solid var(--line);border-radius:12px;background:#fff}
@@ -92,3 +86,11 @@
 .calculation-card .table-scroll{margin-top:14px}.legacy-diagnostic summary{cursor:pointer;font-weight:700}
 @media (max-width:480px){.drift-score-grid{grid-template-columns:1fr}.calculation-row{grid-template-columns:1fr}.drift-breakdown,.difference-evidence,.calculation-card,.calculation-sources article{padding:16px}}
 .calculation-page code,.drift-page code{white-space:normal;overflow-wrap:anywhere}
+/* Single-page assistant result (v0.13.0 order): answer, the change measured, pre/post evidence, citations, folded details */
+.results>*+*{margin-top:16px}.change-path{padding:20px 22px;border:1px solid var(--line);border-radius:var(--radius);background:#fff}
+.change-glance-list{display:flex;flex-wrap:wrap;gap:10px 28px;margin:8px 0 0;padding:0;list-style:none}.change-glance-list li{display:grid;gap:2px}
+.change-glance-list span{color:var(--muted);font-size:12px}.change-glance-list strong{color:var(--ink2);font-size:18px}
+.change-path .explain-drift-button{min-height:44px;font-size:14px}
+.fold{padding:14px 18px;border:1px solid var(--line);border-radius:12px;background:#fff}.fold>summary{min-height:24px;color:var(--ink2);font-weight:800;cursor:pointer}
+.fold[open]>summary{margin-bottom:12px}.fold>summary:focus-visible{outline:3px solid var(--primary);outline-offset:3px}
+.comparison-panel .compare-text{max-height:280px;overflow:auto;padding-right:6px}.comparison-panel .compare-text:focus-visible{outline:3px solid var(--primary);outline-offset:2px}

@@ -54,7 +54,7 @@ function Pane({ side, data, spans, comparison }) {
       {derived && <span className="derived-badge">Derived text — not a verbatim quote</span>}
       <span className="source-links">{data.local_pdf_url && <a href={data.local_pdf_url} target="_blank" rel="noreferrer">Open source PDF at page {data.page} ↗</a>}
         {data.source_url && <a href={data.source_url} target="_blank" rel="noreferrer">Official record ↗</a>}</span></header>
-    {data.compared_text ? <p className="compare-text">{markedTokens(data.compared_text, spans, side)}</p>
+    {data.compared_text ? <p className="compare-text" tabIndex={0} aria-label={`${ROLE_TEXT[data.role] || data.role} text`}>{markedTokens(data.compared_text, spans, side)}</p>
       : <p className="panel-note">No aligned text was compared for this side.</p>}
     <small className="panel-note">Page-region highlight unavailable: no verified PDF text coordinates. The PDF link opens the cited page only.</small>
   </section>;

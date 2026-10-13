@@ -7,24 +7,23 @@ import { LegalChangeFingerprint } from "./Fingerprint";
 import SourceHealth from "./SourceHealth";
 import ComplianceRiskPanel from "./ComplianceRiskPanel";
 import { DriftPanel, VerificationPanel, percent } from "./SharedPanels";
-import AnalysisWorkspace, { TABS } from "./AnalysisWorkspace";
+import AssistantResult from "./AssistantResult";
 import { DriftExplanationPage, ScoreCalculationPage } from "./ExplanationPages";
 
-// Addresses: #analysis/<id>/<view> (assistant), #drift/<id> and #calculation/<id> (standalone pages of that analysis).
-// Plain #drift or #calculation open the current analysis. v0.14/v0.15 links (#analysis/<id>/drift|calculation|scores) open the pages.
-const PAGES = ["drift", "calculation"];
+// Addresses of one stored analysis: #assistant/<id>, #drift/<id>, #calculation/<id>. Plain #assistant, #drift or #calculation
+// reopen the analysis last shown. Older links (#analysis/<id>[/<view>], v0.14–v0.17) open the matching page.
+const ANALYSIS_PAGES = ["assistant", "drift", "calculation"];
 const ANALYSIS_ID = /^an_[0-9a-f]{24}$/;
 function parseRoute(hash) {
   const parts = hash.slice(1).split("?")[0].split("/");
   const id = ANALYSIS_ID.test(parts[1] || "") ? parts[1] : null;
   if (parts[0] === "analysis" && id) {
     const view = parts[2] === "scores" ? "calculation" : parts[2];
-    if (PAGES.includes(view)) return { section: view, analysisId: id, tab: "answer" };
-    return { section: "assistant", analysisId: id, tab: TABS.some((t) => t.id === view) ? view : "answer" };
+    return { section: ["drift", "calculation"].includes(view) ? view : "assistant", analysisId: id, situation: view === "scenario" };
   }
-  return { section: parts[0] || "assistant", analysisId: PAGES.includes(parts[0]) ? id : null, tab: "answer" };
+  return { section: parts[0] || "assistant", analysisId: ANALYSIS_PAGES.includes(parts[0]) ? id : null, situation: false };
 }
-const pageHash = (page, id, tab) => (PAGES.includes(page) ? `#${page}${id ? `/${id}` : ""}` : id ? `#analysis/${id}/${tab}` : `#${page}`);
+const pageHash = (page, id) => (ANALYSIS_PAGES.includes(page) && id ? `#${page}/${id}` : `#${page}`);
 
 const sections = [
   { id: "assistant", number: "01", label: "Legal drift assistant" },
@@ -50,7 +49,7 @@ export default function App() {
   // Shareable question link: #assistant?q=<question> asks once on load.
   const linkedQuestion = new URLSearchParams(window.location.hash.split("?")[1] || "").get("q")?.slice(0, 4000) || "";
   const [section, setSection] = useState(() => sections.some((item) => item.id === route.section) ? route.section : "assistant");
-  const [tab, setTab] = useState(route.tab);
+  const [situation, setSituation] = useState(route.situation);
   const [analysisError, setAnalysisError] = useState("");
   const [loadingAnalysis, setLoadingAnalysis] = useState(false);
   const [highlight, setHighlight] = useState(null);
@@ -90,29 +89,22 @@ export default function App() {
     const onNavigate = () => {
       const next = parseRoute(window.location.hash);
       if (next.analysisId && next.analysisId !== currentId.current || /[?&]q=/.test(window.location.hash)) { window.location.reload(); return; }
-      if (sections.some((item) => item.id === next.section)) { setSection(next.section); setTab(next.tab); }
+      if (sections.some((item) => item.id === next.section)) setSection(next.section);
     };
     window.addEventListener("popstate", onNavigate);
     window.addEventListener("hashchange", onNavigate);
     return () => { window.removeEventListener("popstate", onNavigate); window.removeEventListener("hashchange", onNavigate); };
   }, []);
 
-  const showResult = (value, nextTab = "answer") => {
-    setLastResult(value); setHighlight(null); setSection("assistant");
-    if (value?.analysis_id) {
-      setTab(nextTab);
-      window.history.pushState(null, "", `#analysis/${value.analysis_id}/${nextTab}`);
-    }
-  };
-  const changeTab = (next) => {
-    setTab(next);
-    if (lastResult?.analysis_id) window.history.pushState(null, "", `#analysis/${lastResult.analysis_id}/${next}`);
+  const showResult = (value, keepSituation = false) => {
+    setLastResult(value); setHighlight(null); setSection("assistant"); setSituation(keepSituation);
+    if (value?.analysis_id) window.history.pushState(null, "", `#assistant/${value.analysis_id}`);
   };
 
-  const navigate = (next, nextTab = tab) => {
+  const navigate = (next) => {
     setMenuOpen(false); window.scrollTo({ top: 0, behavior: "smooth" });
-    setSection(next); setTab(nextTab);
-    window.history.pushState(null, "", pageHash(next, ["assistant", ...PAGES].includes(next) ? lastResult?.analysis_id : null, nextTab));
+    setSection(next);
+    window.history.pushState(null, "", pageHash(next, lastResult?.analysis_id));
   };
   // Evidence and rule-field links from either page open the Drift explanation page at the cited item.
   const openEvidence = (id) => {
@@ -124,7 +116,10 @@ export default function App() {
     if (section !== "drift") navigate("drift");
     window.setTimeout(() => document.getElementById("clause-pair-heading")?.focus(), 0);
   };
-  const toAssistant = (nextTab = "answer") => navigate("assistant", nextTab);
+  const toAssistant = (part) => {
+    navigate("assistant");
+    if (part === "scenario") { setSituation(true); window.setTimeout(() => document.querySelector(".fold.situation summary")?.focus(), 0); }
+  };
   const activeNav = section;
   const pageProps = { analysis: lastResult, onEvidence: openEvidence, onField: openField, onAssistant: toAssistant };
 
@@ -144,8 +139,8 @@ export default function App() {
       <header className="topbar"><button className="menu-toggle" onClick={() => setMenuOpen((open) => !open)} aria-label="Open navigation">☰</button><div><p className="eyebrow">Versioned Indian law</p><h1>{sections.find((item) => item.id === activeNav)?.label}</h1></div></header>
       <main id="main-content">
         {section === "assistant" && <AssistantWorkspace status={status} error={loadError || analysisError} starterQuery={starterQuery} autoRun={Boolean(linkedQuestion)}
-          result={lastResult} onResult={showResult} tab={tab} onTab={changeTab} onPage={navigate} onReview={() => navigate("review")} />}
-        {PAGES.includes(section) && (lastResult?.analysis_id
+          result={lastResult} onResult={showResult} situationOpen={situation} onPage={navigate} onReview={() => navigate("review")} />}
+        {["drift", "calculation"].includes(section) && (lastResult?.analysis_id
           ? section === "drift" ? <DriftExplanationPage {...pageProps} highlight={highlight} onCalculation={() => navigate("calculation")} /> : <ScoreCalculationPage {...pageProps} />
           : <section className="page-section"><div className="section-header"><span className="section-kicker">{section === "drift" ? "Drift explanation" : "Score calculation"}</span>
             <h2>{loadingAnalysis ? "Loading the analysis…" : "Ask a comparison question first."}</h2>
@@ -162,7 +157,7 @@ export default function App() {
   </div>;
 }
 
-function AssistantWorkspace({ status, error: statusError, starterQuery, autoRun = false, result, onResult, tab, onTab, onPage, onReview }) {
+function AssistantWorkspace({ status, error: statusError, starterQuery, autoRun = false, result, onResult, situationOpen, onPage, onReview }) {
   const [query, setQuery] = useState(starterQuery || "");
   const [mode, setMode] = useState("specific");
   const [busy, setBusy] = useState(false);
@@ -175,14 +170,14 @@ function AssistantWorkspace({ status, error: statusError, starterQuery, autoRun 
   // A loaded or linked analysis shows its own question and mode, so a re-run asks exactly the same thing.
   useEffect(() => { if (result?.query) { setQuery(result.query); if (result.mode) setMode(result.mode); } }, [result]);
 
-  const submit = async (event, text = query, scenario = null, keepTab = null, runMode = mode) => {
+  const submit = async (event, text = query, scenario = null, runMode = mode) => {
     event?.preventDefault(); setError("");
     if (!text.trim()) return setError("Enter a question about the indexed Indian legal documents.");
     setBusy(true);
     try {
       const value = await api("/api/rag/query", { method: "POST", body: { query: text.trim(), mode: runMode, ...(scenario ? { scenario } : {}) } });
-      onResult(value, keepTab || "answer");
-      window.setTimeout(() => document.getElementById("rag-result")?.scrollIntoView({ behavior: "smooth", block: "start" }), 0);
+      onResult(value, Boolean(scenario));
+      window.setTimeout(() => document.getElementById("rag-result")?.scrollIntoView?.({ behavior: "smooth", block: "start" }), 0);
     } catch (requestError) { setError(requestError.message); }
     finally { setBusy(false); }
   };
@@ -200,8 +195,8 @@ function AssistantWorkspace({ status, error: statusError, starterQuery, autoRun 
         <textarea id="legal-query" rows="4" maxLength="4000" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Ask a question, for example: What changed in the IT Act amendment regarding data privacy?" />
         <div className="prompt-actions">
           <div className="mode-switch" role="group" aria-label="Analysis mode">
-            <button type="button" className={mode === "specific" ? "active" : ""} onClick={() => setMode("specific")}><strong>Specific</strong><small>Clause-level analysis</small></button>
-            <button type="button" className={mode === "generic" ? "active" : ""} onClick={() => setMode("generic")}><strong>Generic</strong><small>High-level overview</small></button>
+            <button type="button" aria-pressed={mode === "specific"} className={mode === "specific" ? "active" : ""} onClick={() => setMode("specific")}><strong>Specific</strong><small>Clause-level analysis</small></button>
+            <button type="button" aria-pressed={mode === "generic"} className={mode === "generic" ? "active" : ""} onClick={() => setMode("generic")}><strong>Generic</strong><small>High-level overview</small></button>
           </div>
           <button className="send-button" type="submit" disabled={busy || !query.trim()}>{busy ? "Searching…" : "Analyse"}<span aria-hidden="true">→</span></button>
         </div>
@@ -211,8 +206,8 @@ function AssistantWorkspace({ status, error: statusError, starterQuery, autoRun 
     </div>
     {busy && <div className="loading-panel"><span className="spinner"/><div><strong>Retrieving versioned legal evidence…</strong><p>Classifying the question, matching documents and validating the response context.</p></div></div>}
     {result && (result.analysis_id
-      ? <AnalysisWorkspace analysis={result} tab={tab} onTab={onTab} onPage={onPage} busy={busy} onReview={onReview}
-          onScenario={(scenario) => submit(null, result.query, scenario, tab, result.mode)} />
+      ? <AssistantResult analysis={result} onPage={onPage} busy={busy} onReview={onReview} situationOpen={situationOpen}
+          onScenario={(scenario) => submit(null, result.query, scenario, result.mode)} />
       : <RagResult result={result} onExplain={() => onPage?.("calculation")} busy={busy} onScenario={(scenario) => submit(null, result.query, scenario)} />)}
   </section>;
 }
@@ -226,7 +221,7 @@ function RepositoryStatus({ status, error }) {
 }
 
 export function RagResult({ result, onExplain, onScenario = () => {}, busy = false }) {
-  if (result.analysis_id) return <AnalysisWorkspace analysis={result} onScenario={onScenario} busy={busy} />;
+  if (result.analysis_id) return <AssistantResult analysis={result} onScenario={onScenario} busy={busy} />;
   if (/^rag-answer-v[23]$/.test(result.contract_version || "")) return <RagResultV2 result={result} onExplain={onExplain} onScenario={onScenario} busy={busy} />;
   const answer = result.answer;
   const metrics = result.metrics;

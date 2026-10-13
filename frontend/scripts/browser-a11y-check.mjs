@@ -22,7 +22,7 @@ const report = {};
 async function load(width, height = 900, mobile = false) {
   await send("Emulation.setDeviceMetricsOverride", { width, height, deviceScaleFactor: 1, mobile });
   await send("Page.navigate", { url: URL_ });
-  for (let i = 0; i < 120; i++) { await sleep(500); if (await evaluate("!!document.querySelector('[role=tablist]')")) break; }
+  for (let i = 0; i < 120; i++) { await sleep(500); if (await evaluate("!!document.querySelector('#rag-result .answer-card')")) break; }
   await sleep(500);
 }
 
@@ -32,13 +32,13 @@ const focusInfo = `(() => { const el = document.activeElement; if (!el || el ===
   return { tag: el.tagName, text: (el.getAttribute('aria-label') || el.innerText || el.value || el.getAttribute('href') || '').trim().slice(0, 60),
     visibleFocus: cs.outlineStyle !== 'none' && parseFloat(cs.outlineWidth) > 0 || cs.boxShadow !== 'none', size: [Math.round(r.width), Math.round(r.height)], inViewport: r.bottom > 0 && r.top < innerHeight }; })()`;
 const stops = [];
-// Tab to the analysis views and arrow across them (ARIA tabs); then open the standalone Score calculation page from the sidebar
-// and Tab through it to the collapsible legacy diagnostic.
+// Tab through the assistant to the folded "Check your situation" control and open it with Enter; then open the standalone
+// Score calculation page from the sidebar and Tab through it to the collapsible legacy diagnostic.
 // Native date inputs style their inner focus a tick after the key event, so each stop settles briefly.
-for (let i = 0; i < 120; i++) { await key("Tab", "Tab", 9); await sleep(150); const f = await evaluate(focusInfo); if (!f) continue; stops.push(f); if (await evaluate("document.activeElement.getAttribute('role') === 'tab'")) break; }
-for (let i = 0; i < 3; i++) await key("ArrowRight", "ArrowRight", 39);
-await sleep(300);
-report.arrowsReachScores = await evaluate("document.activeElement.id === 'tab-sources' && document.activeElement.getAttribute('aria-selected') === 'true'");
+for (let i = 0; i < 160; i++) { await key("Tab", "Tab", 9); await sleep(150); const f = await evaluate(focusInfo); if (!f) continue; stops.push(f); if (f.text.startsWith("Check your situation")) break; }
+await key("Enter", "Enter", 13); await sleep(300);
+report.arrowsReachScores = await evaluate("document.activeElement.tagName === 'SUMMARY' && document.activeElement.parentElement.open === true");
+report.assistantHash = await evaluate("location.hash");
 const openPage = (label) => evaluate(`[...document.querySelectorAll('.nav-item')].find((b) => b.textContent.includes(${JSON.stringify(label)})).click(), true`);
 await openPage("Score calculation"); await sleep(500);
 report.calculationHash = await evaluate("location.hash");
@@ -87,7 +87,7 @@ console.log(JSON.stringify(report, null, 1));
 const text = nodes.filter((n) => n.role?.value === "StaticText").map((n) => n.name?.value || "").join("");
 const failures = [
   report.noVisibleFocus.length && "focus without a visible indicator", report.unnamedInteractive.length && "unnamed controls",
-  !report.reachedSummary && "score calculation details not reachable by Tab", !report.arrowsReachScores && "arrow keys do not move between analysis views", !/^#calculation\/an_/.test(report.calculationHash) && "sidebar does not open the calculation page of this analysis", !report.enterTogglesDetails && "Enter does not toggle the score explanation",
+  !report.reachedSummary && "score calculation details not reachable by Tab", !report.arrowsReachScores && "'Check your situation' is not reachable and openable by keyboard", !/^#assistant\/an_/.test(report.assistantHash) && "assistant does not keep the analysis address", !/^#calculation\/an_/.test(report.calculationHash) && "sidebar does not open the calculation page of this analysis", !report.enterTogglesDetails && "Enter does not toggle the score explanation",
   !text.includes("[removed:") && "no screen-reader cue for removed words",
   ...Object.entries(report.narrow).map(([w, v]) => v.scrollWidth > v.clientWidth && `horizontal scroll at ${w}px`),
 ].filter(Boolean);
