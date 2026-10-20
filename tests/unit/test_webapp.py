@@ -65,7 +65,7 @@ class DashboardServiceTests(unittest.TestCase):
         self.assertEqual(method["sensitivity"]["weightings"]["default"]["legal_effect_material_but_band_low"], 42)
         self.assertIn("no expert labels", method["sensitivity"]["finding"])
         notes = service.source_notifications()
-        self.assertEqual(notes["version"], "source-notifications-v1")
+        self.assertEqual(notes["version"], "source-notifications-v2")
         self.assertIn("Not a complete list of Indian amendments", notes["scope"])
         self.assertTrue(all(row["legal_effect_claimed"] is False for row in notes["items"] + notes["listed"]))
 
