@@ -1,18 +1,18 @@
 import ComparisonPanel from "./ComparisonPanel";
-import { DeterminationCard, DirectAnswer, EvidenceList, FactsForm } from "./Determinations";
+import { DeterminationCard, DirectAnswer } from "./Determinations";
 import { DIAGNOSTIC_NOTE } from "./ExplanationPages";
 import { GenerationNotice, VersionStatus } from "./ResultInsights";
 import { VerificationPanel } from "./SharedPanels";
 
 // The assistant page's answer for one stored analysis (rag-answer-v4/v5), in the single-page order of v0.13.0 (commit 6db1c49):
-// answer, path to the explanation pages, pre/post evidence, citations. Personal-situation and review details are folded away.
+// answer, path to the explanation pages, pre/post comparison. Evidence ids open their cards on the Drift explanation page;
+// review details are folded away.
 // Every value is read from the stored analysis; nothing is recomputed here.
-export default function AssistantResult({ analysis, onPage = () => {}, onScenario = () => {}, onSection = () => {}, busy = false, situationOpen = false }) {
+export default function AssistantResult({ analysis, onPage = () => {}, onEvidence = () => {}, onSection = () => {}, busy = false }) {
   const fp = analysis.fingerprint || {};
   const versions = analysis.question_frame?.asks_about_versions;
   const scored = versions ? [["Wording drift", fp.wording_drift], ["Rule drift", fp.rule_drift]].filter(([, item]) => item?.value != null) : [];
   const combined = versions && fp.tlds?.value != null ? fp.tlds : null;
-  const showEvidence = (id) => document.getElementById(`evidence-${id}`)?.focus();
   const found = analysis.version_evidence?.section_candidates;
   return <section id="rag-result" className="results" aria-labelledby="result-title">
     <div className="result-heading"><div><span className="section-kicker">Grounded response · analysis {analysis.analysis_id}</span>
@@ -24,17 +24,15 @@ export default function AssistantResult({ analysis, onPage = () => {}, onScenari
       Your question is kept as you asked it.</p>}
     {/* With the chooser shown, the answer's plain-text list of the same sections would repeat it. */}
     <DirectAnswer answer={found ? { ...analysis.answer, sections: (analysis.answer.sections || []).filter((part) => part.id !== "candidates") } : analysis.answer}
-      onEvidence={showEvidence} showLimits={false} />
+      onEvidence={onEvidence} showLimits={false} />
     {found && <SectionChooser found={found} onSection={onSection} busy={busy} />}
     {analysis.scenario && <p className="panel-note">Using your facts: {Object.entries({ ...analysis.scenario, ...(analysis.scenario.facts || {}) })
       .filter(([key, value]) => key !== "facts" && value !== null && value !== "")
       .map(([key, value]) => `${key.replaceAll("_", " ")}: ${value === true ? "yes" : value === false ? "no" : String(value).replaceAll("_", " ")}`).join("; ")}.</p>}
     {versions && !found && <ChangePath scored={scored} combined={combined} analysis={analysis} onPage={onPage} />}
     <ComparisonPanel comparison={analysis.comparison} />
-    <EvidenceList evidence={analysis.evidence} />
     {(analysis.source_fidelity_warnings || []).map((item) => <div className="warning-note" role="alert" key={item.entry_id || item.warning}>
       <strong>Source text unreliable: {item.entry_id}</strong><span>{item.detail || item.warning} Treat quoted wording from this source as unverified.</span></div>)}
-    <Situation analysis={analysis} onScenario={onScenario} busy={busy} open={situationOpen} />
     <Review analysis={analysis} />
     {analysis.source_guidance && <article className="source-guidance"><div><span className="section-kicker">Authoritative source</span><h3>Verify the complete legal text</h3>
       <p>{analysis.source_guidance.message}</p></div><a href={analysis.source_guidance.url} target="_blank" rel="noreferrer">{analysis.source_guidance.label} ↗</a></article>}
@@ -90,26 +88,6 @@ function SectionChooser({ found, onSection, busy }) {
       </li>;
     })}</ul>}
   </article>;
-}
-
-function Situation({ analysis, onScenario, busy, open }) {
-  const d = analysis.determinations || {};
-  const outcome = analysis.fingerprint?.outcome_drift;
-  const relevant = (item) => item && item.state !== "OUT_OF_SCOPE";
-  const asks = (analysis.scenario_request?.fields || []).length > 0;
-  if (!asks && !analysis.scenario) return null;
-  const missing = (analysis.scenario_request?.fields || []).filter((row) => row.group === "core" && (row.value === null || row.value === undefined)).length;
-  return <details className="fold situation" open={open || Boolean(analysis.scenario)}>
-    <summary>Check your situation{missing ? ` · ${missing} fact${missing === 1 ? "" : "s"} decide whether this changes for you` : ""}</summary>
-    <FactsForm request={analysis.scenario_request} onSubmit={onScenario} busy={busy} />
-    {analysis.scenario && <section className="determinations" aria-label="Impact on your situation">
-      {relevant(d.applicability) && <DeterminationCard name="applicability" title="Which wording applies" value={d.applicability} />}
-      {relevant(outcome) && <DeterminationCard name="outcome" title="Does your answer change" value={outcome} />}
-      {relevant(d.risk) && <DeterminationCard name="risk" title="Conditional compliance risk" value={d.risk} />}
-    </section>}
-    {d.risk && !relevant(d.risk) && <p className="panel-note">No modelled compliance obligation covers this provision, so no risk is assessed.</p>}
-    <p className="panel-note">Outcome change is not risk, and neither depends on the drift scores. Facts you leave blank are never assumed.</p>
-  </details>;
 }
 
 function Review({ analysis }) {

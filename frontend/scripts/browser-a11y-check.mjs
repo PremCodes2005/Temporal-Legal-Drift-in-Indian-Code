@@ -32,10 +32,10 @@ const focusInfo = `(() => { const el = document.activeElement; if (!el || el ===
   return { tag: el.tagName, text: (el.getAttribute('aria-label') || el.innerText || el.value || el.getAttribute('href') || '').trim().slice(0, 60),
     visibleFocus: cs.outlineStyle !== 'none' && parseFloat(cs.outlineWidth) > 0 || cs.boxShadow !== 'none', size: [Math.round(r.width), Math.round(r.height)], inViewport: r.bottom > 0 && r.top < innerHeight }; })()`;
 const stops = [];
-// Tab through the assistant to the folded "Check your situation" control and open it with Enter; then open the standalone
+// Tab through the assistant to the folded "Sources, quality and review" control and open it with Enter; then open the standalone
 // Score calculation page from the sidebar and Tab through it to the collapsible legacy diagnostic.
 // Native date inputs style their inner focus a tick after the key event, so each stop settles briefly.
-for (let i = 0; i < 160; i++) { await key("Tab", "Tab", 9); await sleep(150); const f = await evaluate(focusInfo); if (!f) continue; stops.push(f); if (f.text.startsWith("Check your situation")) break; }
+for (let i = 0; i < 160; i++) { await key("Tab", "Tab", 9); await sleep(150); const f = await evaluate(focusInfo); if (!f) continue; stops.push(f); if (f.text.startsWith("Sources, quality and review")) break; }
 await key("Enter", "Enter", 13); await sleep(300);
 report.arrowsReachScores = await evaluate("document.activeElement.tagName === 'SUMMARY' && document.activeElement.parentElement.open === true");
 report.assistantHash = await evaluate("location.hash");
@@ -87,7 +87,7 @@ console.log(JSON.stringify(report, null, 1));
 const text = nodes.filter((n) => n.role?.value === "StaticText").map((n) => n.name?.value || "").join("");
 const failures = [
   report.noVisibleFocus.length && "focus without a visible indicator", report.unnamedInteractive.length && "unnamed controls",
-  !report.reachedSummary && "score calculation details not reachable by Tab", !report.arrowsReachScores && "'Check your situation' is not reachable and openable by keyboard", !/^#assistant\/an_/.test(report.assistantHash) && "assistant does not keep the analysis address", !/^#calculation\/an_/.test(report.calculationHash) && "sidebar does not open the calculation page of this analysis", !report.enterTogglesDetails && "Enter does not toggle the score explanation",
+  !report.reachedSummary && "score calculation details not reachable by Tab", !report.arrowsReachScores && "'Sources, quality and review' is not reachable and openable by keyboard", !/^#assistant\/an_/.test(report.assistantHash) && "assistant does not keep the analysis address", !/^#calculation\/an_/.test(report.calculationHash) && "sidebar does not open the calculation page of this analysis", !report.enterTogglesDetails && "Enter does not toggle the score explanation",
   !text.includes("[removed:") && "no screen-reader cue for removed words",
   ...Object.entries(report.narrow).map(([w, v]) => v.scrollWidth > v.clientWidth && `horizontal scroll at ${w}px`),
 ].filter(Boolean);

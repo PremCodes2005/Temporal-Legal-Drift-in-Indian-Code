@@ -131,7 +131,7 @@ export function DriftExplanationPage({ analysis, highlight, onField, onEvidence,
         : <p className="limit-note"><strong>No rule field scored.</strong> {rule?.reason}</p>}
       {(rule?.details?.structural_changes || []).length > 0 && <p className="panel-note">Structure: {rule.details.structural_changes.map((item) => item.value).join("; ")}. A list item or Explanation changes what the rule covers.</p>}
       <p className="panel-note"><strong>Your situation (separate):</strong> {outcome?.value != null ? outcome.summary
-        : outcome?.limit?.kind === "facts" ? <>it depends on your facts. <button type="button" className="link-button" onClick={() => onAssistant("scenario")}>Check your situation</button></> : outcome?.reason}</p>
+        : outcome?.limit?.kind === "facts" ? "it depends on facts about your situation, which were not given." : outcome?.reason}</p>
     </article>
     <ProvisionDetails analysis={analysis} />
     <EvidenceCards analysis={analysis} />

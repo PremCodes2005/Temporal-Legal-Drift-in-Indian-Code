@@ -23,9 +23,9 @@ function parseRoute(hash) {
   const id = ANALYSIS_ID.test(parts[1] || "") ? parts[1] : null;
   if (parts[0] === "analysis" && id) {
     const view = parts[2] === "scores" ? "calculation" : parts[2];
-    return { section: VIEW_PAGES.includes(view) ? view : "assistant", analysisId: id, situation: view === "scenario" };
+    return { section: VIEW_PAGES.includes(view) ? view : "assistant", analysisId: id };
   }
-  return { section: parts[0] || "assistant", analysisId: ANALYSIS_PAGES.includes(parts[0]) ? id : null, situation: false };
+  return { section: parts[0] || "assistant", analysisId: ANALYSIS_PAGES.includes(parts[0]) ? id : null };
 }
 const pageHash = (page, id) => (ANALYSIS_PAGES.includes(page) && id ? `#${page}/${id}` : `#${page}`);
 
@@ -73,7 +73,6 @@ export default function App() {
   // Read once: the link is replaced by #assistant after loading, and must not then look like "no question".
   const [linkedQuestion] = useState(() => new URLSearchParams(window.location.hash.split("?")[1] || "").get("q")?.slice(0, 4000) || "");
   const [section, setSection] = useState(() => KNOWN.has(route.section) ? route.section : "assistant");
-  const [situation, setSituation] = useState(route.situation);
   const [analysisError, setAnalysisError] = useState("");
   const [loadingAnalysis, setLoadingAnalysis] = useState(false);
   const [highlight, setHighlight] = useState(null);
@@ -124,8 +123,8 @@ export default function App() {
     return () => { window.removeEventListener("popstate", onNavigate); window.removeEventListener("hashchange", onNavigate); };
   }, []);
 
-  const showResult = (value, keepSituation = false) => {
-    setLastResult(value); setHighlight(null); setSection("assistant"); setSituation(keepSituation);
+  const showResult = (value) => {
+    setLastResult(value); setHighlight(null); setSection("assistant");
     if (value?.analysis_id) window.history.pushState(null, "", `#assistant/${value.analysis_id}`);
   };
 
@@ -144,10 +143,7 @@ export default function App() {
     if (section !== "drift") navigate("drift");
     window.setTimeout(() => document.getElementById("clause-pair-heading")?.focus(), 0);
   };
-  const toAssistant = (part) => {
-    navigate("assistant");
-    if (part === "scenario") { setSituation(true); window.setTimeout(() => document.querySelector(".fold.situation summary")?.focus(), 0); }
-  };
+  const toAssistant = () => navigate("assistant");
   const activeNav = section;
   const pageProps = { analysis: lastResult, onEvidence: openEvidence, onField: openField, onAssistant: toAssistant, onPage: navigate, request: api };
   const discoveries = useDiscoveries(api);
@@ -160,7 +156,7 @@ export default function App() {
 
   // An FAQ card asks its question once; the previous answer is cleared so it cannot replace the question shown.
   const askFromFaq = (question) => {
-    setLastResult(null); setHighlight(null); setSituation(false);
+    setLastResult(null); setHighlight(null);
     setStarter({ text: question, run: true, id: Date.now() });
     setSection("assistant"); setMenuOpen(false);
     window.history.pushState(null, "", "#assistant");
@@ -188,7 +184,7 @@ export default function App() {
       <DiscoveryAlert fresh={discoveries.fresh} onOpen={() => { discoveries.dismiss(); setPanelOpen(true); }} onDismiss={discoveries.dismiss} />
       <main id="main-content">
         {section === "assistant" && <AssistantWorkspace status={status} error={loadError || analysisError} starter={starter}
-          result={lastResult} onResult={showResult} situationOpen={situation} onPage={navigate}
+          result={lastResult} onResult={showResult} onPage={navigate} onEvidence={openEvidence}
           history={history} onAsked={recordQuestion} onClearHistory={clearHistory} />}
         {VIEW_PAGES.includes(section) && (lastResult?.analysis_id
           ? section === "drift" ? <DriftExplanationPage {...pageProps} highlight={highlight} onCalculation={() => navigate("calculation")} />
@@ -213,7 +209,7 @@ export default function App() {
   </div>;
 }
 
-function AssistantWorkspace({ status, error: statusError, starter, result, onResult, situationOpen, onPage, history = [], onAsked = () => {}, onClearHistory }) {
+function AssistantWorkspace({ status, error: statusError, starter, result, onResult, onPage, onEvidence, history = [], onAsked = () => {}, onClearHistory }) {
   const [query, setQuery] = useState(starter?.text || result?.query || "");
   const [mode, setMode] = useState("specific");
   const [busy, setBusy] = useState(false);
@@ -238,7 +234,7 @@ function AssistantWorkspace({ status, error: statusError, starter, result, onRes
     setBusy(true);
     try {
       const value = await api("/api/rag/query", { method: "POST", body: { query: text.trim(), mode: runMode, ...(scenario ? { scenario } : {}), ...(section ? { section } : {}) } });
-      onResult(value, Boolean(scenario));
+      onResult(value);
       if (!scenario) onAsked(value, section);
       window.setTimeout(() => document.getElementById("rag-result")?.scrollIntoView?.({ behavior: scrollBehavior(), block: "start" }), 0);
     } catch (requestError) { setError(requestError.message); }
@@ -271,8 +267,7 @@ function AssistantWorkspace({ status, error: statusError, starter, result, onRes
     </div>
     {busy && <div className="loading-panel"><span className="spinner"/><div><strong>Retrieving versioned legal evidence…</strong><p>Classifying the question, matching documents and validating the response context.</p></div></div>}
     {result && (result.analysis_id
-      ? <AssistantResult analysis={result} onPage={onPage} busy={busy} situationOpen={situationOpen}
-          onScenario={(scenario) => submit(null, result.query, scenario, result.mode)}
+      ? <AssistantResult analysis={result} onPage={onPage} onEvidence={onEvidence} busy={busy}
           onSection={(section) => submit(null, result.query, null, result.mode, section)} />
       : <RagResult result={result} onExplain={() => onPage?.("calculation")} busy={busy} onScenario={(scenario) => submit(null, result.query, scenario)} />)}
   </section>;

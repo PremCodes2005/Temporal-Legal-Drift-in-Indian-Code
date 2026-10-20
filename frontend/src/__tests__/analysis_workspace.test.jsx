@@ -38,7 +38,7 @@ function stubApi() {
 }
 
 describe("the restored single-page assistant", () => {
-  it("shows the answer, the change measured, pre/post evidence and citations on one page, with no tabs and no empty assessments", () => {
+  it("shows the answer, the change measured and the clause comparison on one page, without the evidence list or situation form", () => {
     for (const key of ["it-s19", "ibc99", "ibc240", "mv170", "dm31", "wrong-act", "ocr", "general", "timeout"]) {
       render(<AssistantResult analysis={responses[key]} />);
       expect(screen.queryByRole("tablist"), key).toBeNull();
@@ -46,14 +46,16 @@ describe("the restored single-page assistant", () => {
       for (const empty of ["Cannot determine", "Needs your facts", "Not enough evidence", "Not scored", "Not applicable"]) expect(text, `${key}: ${empty}`).not.toContain(empty);
       expect([...document.querySelectorAll(".determination")].filter((el) => !el.closest("details:not([open])")).length, key).toBe(0);
       expect(screen.getByRole("article", { name: "Answer" }).textContent).toContain(responses[key].answer.direct_answer);
-      if (responses[key].evidence?.length) expect(screen.getByRole("article", { name: "Evidence" })).toBeTruthy();
+      expect(screen.queryByRole("article", { name: "Evidence" })).toBeNull();
+      expect(screen.queryByText(/Check your situation/)).toBeNull();
+      expect(screen.queryByRole("form", { name: "Your situation" })).toBeNull();
       cleanup();
     }
   });
 
-  it("keeps the v0.13.0 order: answer, the change measured, clause comparison, evidence", () => {
+  it("keeps the order: answer, the change measured, clause comparison", () => {
     render(<AssistantResult analysis={responses.ibc99} />);
-    const order = ["Answer", "The change, measured", "Clause comparison", "Evidence"].map((name) => screen.getByRole("article", { name }));
+    const order = ["Answer", "The change, measured", "Clause comparison"].map((name) => screen.getByRole("article", { name }));
     for (let i = 1; i < order.length; i++) expect(order[i - 1].compareDocumentPosition(order[i]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
@@ -72,42 +74,32 @@ describe("the restored single-page assistant", () => {
     expect([...document.querySelectorAll(".change-glance-list li")].map((li) => li.textContent)).toEqual([`Wording drift${responses.mv170.fingerprint.wording_drift.label}`]);  // no rule or combined number
   });
 
-  it("folds personal-situation details behind one 'Check your situation' control", async () => {
-    const user = userEvent.setup();
-    render(<AssistantResult analysis={responses["it-s19"]} />);
-    const details = fold("Check your situation");
-    expect(details.querySelector("summary").textContent).toBe("Check your situation · 3 facts decide whether this changes for you");
-    expect(details.open).toBe(false);
-    await user.click(details.querySelector("summary"));
-    expect(details.open).toBe(true);
-    expect(screen.getByRole("form", { name: "Your situation" })).toBeTruthy();
-  });
-
   it("labels a model timeout and still answers from the evidence", () => {
     render(<AssistantResult analysis={responses.timeout} />);
     expect(screen.getAllByRole("status")[0].textContent).toMatch(/Extractive evidence summary.*TimeoutError; this answer was produced without it/);
   });
 
-  it("re-runs with the facts that decide the outcome, and keeps irrelevant risk out", async () => {
-    const user = userEvent.setup();
-    const onScenario = vi.fn();
-    render(<AssistantResult analysis={responses.ibc99} onScenario={onScenario} />);
-    await user.click(fold("Check your situation").querySelector("summary"));
-    await user.type(screen.getByLabelText(/How many days have passed/), "15");
-    await user.click(screen.getByRole("button", { name: "Re-run with these facts" }));
-    expect(onScenario).toHaveBeenCalledWith({ facts: { elapsed_days: 15 } });
-    expect(screen.getByText(/No modelled compliance obligation covers this provision/)).toBeTruthy();
-    expect(screen.queryByRole("heading", { name: "Conditional compliance risk" })).toBeNull();
-  });
-
-  it("shows a deadline flip for one scenario and not for another, with the facts used", () => {
+  it("still shows a stored scenario outcome, on Score calculation, with the facts used on the answer", () => {
     for (const [key, label] of [["ibc99-day15", "Changed"], ["ibc99-day25", "Unchanged"]]) {
       render(<AssistantResult analysis={responses[key]} />);
-      expect(fold("Check your situation").open).toBe(true);  // a re-run with facts shows its result
-      expect(within(screen.getByRole("region", { name: "Impact on your situation" })).getByText(label)).toBeTruthy();
       expect(screen.getByText(/Using your facts: elapsed days/)).toBeTruthy();
       cleanup();
+      render(<ScoreCalculationPage analysis={responses[key]} onEvidence={vi.fn()} onField={vi.fn()} onAssistant={vi.fn()} />);
+      expect(screen.getByRole("heading", { name: `Outcome drift: ${label}` })).toBeTruthy();
+      cleanup();
     }
+  });
+
+  it("opens an evidence id from the answer as its card on the Drift explanation page", async () => {
+    stubApi();
+    const user = userEvent.setup();
+    window.history.replaceState(null, "", `#assistant/${responses.ibc99.analysis_id}`);
+    render(<App />);
+    const answer = await screen.findByRole("article", { name: "Answer" });
+    await user.click(within(answer).getAllByRole("button", { name: "Show evidence E1" })[0]);
+    expect(window.location.hash).toBe(`#drift/${responses.ibc99.analysis_id}`);
+    await waitFor(() => expect(document.activeElement.id).toBe("evidence-E1"));
+    expect(document.activeElement.classList.contains("evidence-card")).toBe(true);
   });
 
   it("shows unreadable-source warnings openly and keeps review details folded", () => {
@@ -389,12 +381,12 @@ describe("links, history and keyboard", () => {
     expect([...suggestions].map((b) => b.textContent)).toEqual(FAQ.starters);
   });
 
-  it("opens older #analysis/<id>/<view> links on the assistant, with the situation open for 'scenario'", async () => {
+  it("opens older #analysis/<id>/<view> links, including 'scenario', on the assistant", async () => {
     const analysis = responses.ibc99;
     window.history.replaceState(null, "", `#analysis/${analysis.analysis_id}/scenario`);
     render(<App />);
     await waitFor(() => screen.getByRole("article", { name: "Answer" }));
-    expect(fold("Check your situation").open).toBe(true);
+    expect(screen.queryByText(/Check your situation/)).toBeNull();
     expect(screen.queryByRole("tablist")).toBeNull();
   });
 

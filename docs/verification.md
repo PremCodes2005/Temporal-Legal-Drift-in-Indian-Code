@@ -313,3 +313,12 @@ Remote GitHub Actions has still not been observed. See [../reports/phase3/tempor
   - a single-field weight tier read "25 each";
   - a test of mine pinned the notifications version I had just bumped, and it was committed before the suite was rerun; it was fixed in the next commit.
 - **Not verified:** a screen-reader listening pass; an alert caused by a genuinely new source record (none arrived; the alert was exercised by making the browser forget one known record); legal accuracy.
+
+## Assistant answer without the evidence list and situation form (2026-10-20)
+
+- **Change:** at the user's request, the assistant answer no longer shows the "Sources / Evidence" list or the "Check your situation" form.
+  - The answer's evidence ids now open the matching card on the Drift explanation page, where the sources are shown in full.
+  - Stored scenario outcomes are still shown on Score calculation.
+  - Old `#analysis/<id>/scenario` links open the plain answer.
+  - The backend `scenario` field and stored analyses are unchanged.
+- **Executed:** 76 vitest tests (run 3 times); the Python suite (static frontend checks included); `browser-a11y-check.mjs` against port 8765 (its keyboard check now opens "Sources, quality and review"); a real-Chrome check that an evidence id in the answer opens `#drift/<id>` with its card focused.
