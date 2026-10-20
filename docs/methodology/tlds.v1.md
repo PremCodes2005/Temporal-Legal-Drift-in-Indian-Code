@@ -104,3 +104,10 @@ Aggregation takes the maximum, so the most severe change counts once and every c
 - The weights, rubric and bands have no expert-labelled ground truth. The tests check that the software behaves as specified, not that the legal judgements are right.
 
 Legal validation: UNVERIFIED.
+
+## tlds-v1.1 and the weight decision (2026-10-20, ADR 0022)
+
+- **What tlds-v1.1 changes:** it adds `contributions` (100 × weight × value per component) and a `disagreement` flag (spread of 0.6 or more, the threshold the legacy metrics used). The formula, weights, rubric, bands and every value are unchanged; a test recomputes all 59 complete held-out scores and matches them exactly.
+- **Weights kept as they are.** The held-out run shows the band depends heavily on the weights (42 of 59 material changes are Low with the current weights, 0 with the legal-effect-heavy weights), while the order hardly changes (Spearman ≥ 0.976). With no expert labels, nothing shows that any weighting is more correct. Changing them would only make the bands look better, so they stay provisional.
+- **What the reader sees instead:** the Score Calculation page shows each component's value, weight and points, where its inputs came from, each weight's stated rationale (`component_rationale` in the config), the sensitivity table, a warning when the components disagree or when legal effect is material but the band is Low, and what happens when a component is missing.
+- **Not claimed:** the weights were not learned from data, not optimised and not legally validated.

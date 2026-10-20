@@ -177,3 +177,12 @@ Not achieved in the sprint:
 | Backend | version-evidence-v2 (footnote must match the named amendment; Act-only section discovery through the same gates), answer-composition-v3, `section` selection | ADR 0021, `tests/unit/test_act_discovery.py` |
 | Frontend | Section chooser, FAQ asks once, recent questions and follow-ups, verified FAQ | `analysis_workspace.test.jsx`, `reports/analysis_workspace/report.v4.md` |
 | Release | See `docs/verification.md` | — |
+
+## Discoveries, weights and comparison page (2026-10-20)
+
+| Phase | Result | Evidence |
+| --- | --- | --- |
+| Monitoring | Read-only `source-notifications-v1` over the ledger; discoveries panel | `tests/unit/test_notifications.py` |
+| Scoring | tlds-v1.1 (contributions, disagreement; values unchanged); weights kept, rationale and sensitivity shown | ADR 0022, `docs/methodology/tlds.v1.md` |
+| UI | `#comparison/<id>` page, question jump control, readability and reduced motion | `analysis_workspace.test.jsx`, `reports/analysis_workspace/report.v5.md` |
+| Release | See `docs/verification.md` | — |

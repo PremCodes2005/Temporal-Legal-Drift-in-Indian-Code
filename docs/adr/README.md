@@ -25,5 +25,6 @@ These ADRs are **retrospective descriptions of decisions visible in the current 
 | [0019](0019-standalone-drift-and-calculation-pages.md) | Standalone Drift explanation and Score calculation pages (2026-10-13) |
 | [0020](0020-single-page-assistant.md) | Single-page Legal drift assistant (2026-10-13) |
 | [0021](0021-act-only-questions-and-faq.md) | Act-only questions, amendment matching, recent questions and the FAQ (2026-10-13) |
+| [0022](0022-discoveries-weights-and-comparison-page.md) | Latest discoveries, transparent weights and a clause comparison page (2026-10-20) |
 
 Audit base: commit `68030875a719aa626fb05f294880de2953084781`, 2026-10-12. Verification limits: [../verification.md](../verification.md).

@@ -88,3 +88,37 @@ Top level: `sources, alerts, document_states, failed_documents, review_queue_pen
 `source_fidelity_warnings` in `/api/rag/query` may include `{"warning": "source text partly withheld"}`: lines on the cited page were withheld by `text-quality-v1`.
 
 Each entry in `sources` has: `source_key` (`india_code` or `egazette`), `last_attempt_at`, `last_success_at`, `last_status`, `next_eligible_at`, `lag_hours`, `scheduled_ingestion_healthy`. Times are UTC.
+
+## Additions (2026-10-20, ADR 0022)
+
+### `GET /api/sources/notifications` (source-notifications-v1)
+
+A read-only view of the monitoring ledger. It makes no network request and does not affect the 24-hour source-check gate.
+
+- **Top level:** `version, generated_at, scope, note, legal_effect_claimed: false, items, total, listed, listed_total, sources`.
+- **`items`:** one per official record that is in the review queue or whose download failed, newest first by first discovery. Each is `{id, title, source_key, source, published, discovered_at, last_checked_at, official_url, status, status_label, queue_id, candidate_events, candidate_targets, legal_effect_claimed: false}`.
+  - `discovered_at` is the first observation of the record; `last_checked_at` is the latest.
+  - `official_url` is null unless it is `https` on that source's official host.
+  - `status` is one of AWAITING_REVIEW, REVISED_AWAITING_REVIEW, CANDIDATE_UNVERIFIED, DOWNLOAD_FAILED, or a review-ledger state (REVIEW_ACKNOWLEDGED, ESCALATED_FOR_QUALIFIED_REVIEW, CHANGES_REQUESTED, OPINION_RECORDED). No status means a verified or commenced change to law; the review ledger has no action that produces one.
+- **`listed`:** records the source listed but that were never downloaded (status LISTED_NOT_DOWNLOADED). They are kept apart so they cannot bury documents under review.
+- **`sources`:** `{source_key, source, state: OK | STALE | FAILED | NEVER_SUCCEEDED, detail, last_success_at, last_attempt_at, next_eligible_at}`. STALE means no success for more than 48 hours.
+
+### `GET /api/methods/tlds`
+
+The combined-score method read from `configs/metrics/tlds.v1.json` and `reports/fingerprint/tlds_heldout.v1.json`:
+- `version`, `formula`, `weights`, `weights_status`;
+- `components` (per component: `measures`, `why_this_weight`);
+- `bands`, `bands_note`, `missing`, `disagreement_spread`;
+- `sensitivity` (the four held-out weightings, with band counts, "material legal effect but Low" counts and Spearman order agreement).
+
+### `fingerprint.tlds` (tlds-v1.1)
+
+Same formula, weights and values as tlds-v1. It adds:
+- **`contributions`:** `{component: 100 × weight × value}`, or null for a missing component;
+- **`disagreement`:** `{spread, highest, lowest, strong, rule}`, where `strong` means the components' values differ by 0.6 or more.
+
+Stored tlds-v1 analyses are unchanged and still open; the page says their points were not recorded.
+
+### Frontend address
+
+`#comparison/<analysis_id>` is the clause comparison of a stored analysis; plain `#comparison` reopens the last one shown.

@@ -285,3 +285,19 @@ Remote GitHub Actions has still not been observed. See [../reports/phase3/tempor
   - after a `#assistant?q=` link was replaced in history, the previous session's analysis was restored over the new answer.
   - Four runtime analysis records written by development servers before the final code were moved out of `data/runtime/analyses` (not deleted).
 - **Not verified:** legal accuracy of the listed sections; whether the corpus records every amendment.
+
+## Discoveries, weights and comparison page addendum (2026-10-20)
+
+- **Baseline (v0.20.0):** Python 308 OK, vitest 51 passed, 12 gates passed.
+- **Executed after the change:**
+  - Python: 322 tests under 3.14 and 3.11, including 9 notification tests and 4 new tlds tests; the tlds tests include a check that v1.1 reproduces all 59 complete held-out scores. Before the release only the expected Phase 11 checksum gate failed. `validate-contract` passed.
+  - Frontend: 63 vitest tests, run 3 times.
+  - Real Chrome and `browser-a11y-check.mjs`: see `reports/analysis_workspace/report.v5.md`.
+- **Defects found and fixed during this work:**
+  - the source status wording built every message up front and crashed on a source that had never succeeded;
+  - gazette listings that were never downloaded buried the documents awaiting review;
+  - the top bar overflowed at 320px;
+  - the weights table broke its column headers mid-word;
+  - the discoveries panel covered the page on desktop.
+- **Process note:** the fixture generator lived in a temporary folder that was cleared, so it is now committed as `frontend/scripts/generate_answer_fixture.py`.
+- **Not verified:** a screen-reader listening pass; completeness of the monitored sources; any legal or statistical claim about the weights.

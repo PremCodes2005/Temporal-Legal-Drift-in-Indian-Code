@@ -566,7 +566,7 @@ def notifications(service: "MonitoringService", review_ledger: Any | None = None
         state = ("NEVER_SUCCEEDED" if row["last_success_at"] is None else "FAILED" if row["last_status"] not in {"OK", "PARTIAL_FAILURE"}
                  else "STALE" if not row["scheduled_ingestion_healthy"] else "OK")
         detail = ("Checked within the last 48 hours." if state == "OK"
-                  else f"The last check ({row['last_attempt_at']}) ended with {str(row['last_status']).lower().replace('_', ' ')}; "
+                  else f"The last check ended with {str(row['last_status']).lower().replace('_', ' ')}; "
                        "showing items from the last successful check." if state == "FAILED"
                   else f"No successful check for {round(lag)} hours; new items may be missing." if state == "STALE"
                   else "No successful check is recorded; nothing from this source can be listed.")
