@@ -133,5 +133,59 @@ class NotificationTests(unittest.TestCase):
         self.assertEqual((self.india.discover_calls, len(self.india.downloads)), calls)
 
 
+    # ---------- source-notifications-v2 ----------
+    def test_the_latest_five_records_come_first_and_older_ones_stay_available(self) -> None:
+        for day in range(7):
+            self.downloaded(f"doc{day}", f"2026-10-0{day + 1}T00:00:00Z")
+            self.service.run_due("w1")
+            self.later(25)
+        out = self.view()
+        self.assertEqual([row["id"] for row in out["latest"]], ["doc6", "doc5", "doc4", "doc3", "doc2"])
+        self.assertEqual([row["id"] for row in out["older"]], ["doc1", "doc0"])
+        self.assertEqual(out["total"], 7)
+
+    def test_fewer_than_five_records_are_never_padded(self) -> None:
+        self.downloaded("only", "2026-10-01T00:00:00Z")
+        self.service.run_due("w1")
+        out = self.view()
+        self.assertEqual(([row["id"] for row in out["latest"]], out["older"]), (["only"], []))
+
+    def test_a_repeat_check_is_not_a_new_record_but_a_revised_pdf_is(self) -> None:
+        url = self.downloaded("doc", "2026-10-01T00:00:00Z")
+        self.service.run_due("w1")
+        first = [row["key"] for row in self.view()["latest"]]
+        self.later(25)
+        self.service.run_due("w1")  # same bytes again
+        self.assertEqual([row["key"] for row in self.view()["latest"]], first)
+        self.later(25)
+        self.india.records[:] = [record("india_code", "doc", "2026-10-03T00:00:00Z", url, md5="m2")]
+        self.india.payloads[url] = PDF_A + b" revised"
+        self.service.run_due("w1")
+        keys = [row["key"] for row in self.view()["latest"]]
+        self.assertEqual(len(keys), 2)
+        self.assertTrue(all(key.startswith("doc:") for key in keys))
+        self.assertEqual(len(set(keys)), 2)  # same official id, two content hashes
+
+    def test_the_same_bytes_under_two_official_ids_are_one_record(self) -> None:
+        for official_id in ("first-id", "second-id"):
+            url = f"https://indiacode.gov.in/server/api/core/bitstreams/{official_id}/content"
+            self.india.records.append(record("india_code", official_id, "2026-10-01T00:00:00Z", url))
+            self.india.payloads[url] = PDF_A
+        self.service.run_due("w1")
+        latest = self.view()["latest"]
+        self.assertEqual(len(latest), 1)
+        self.assertEqual(sorted([latest[0]["id"]] + latest[0].get("same_document_ids", [])), ["first-id", "second-id"])
+
+    def test_categories_keep_new_documents_possible_amendments_and_verified_amendments_apart(self) -> None:
+        self.downloaded("candidate", "2026-10-01T00:00:00Z")
+        self.service.run_due("w1")
+        out = self.view()
+        self.assertEqual(out["latest"][0]["category_label"], "Possible amendment awaiting review")
+        counts = {row["category"]: row["count"] for row in out["categories"]}
+        self.assertEqual(counts, {"NEW_DOCUMENT": 0, "POSSIBLE_AMENDMENT": 1, "VERIFIED_AMENDMENT": 0})
+        verified = next(row for row in out["categories"] if row["category"] == "VERIFIED_AMENDMENT")
+        self.assertIn("nothing is in this category", verified["note"])
+
+
 if __name__ == "__main__":
     unittest.main()

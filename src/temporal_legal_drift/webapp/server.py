@@ -60,6 +60,7 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             "/api/sources/health": self.dashboard_service.source_health,
             "/api/sources/notifications": self.dashboard_service.source_notifications,
             "/api/methods/tlds": self.dashboard_service.tlds_method,
+            "/api/methods/rule-drift": self.dashboard_service.rule_drift_method,
         }
         try:
             if path in api_routes:

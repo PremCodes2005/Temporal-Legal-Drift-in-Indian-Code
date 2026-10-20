@@ -85,6 +85,19 @@ class DashboardService:
         record = run_case(self.root, dict(value))
         return self.get_run(str(record["correlation_id"]))
 
+    def rule_drift_method(self) -> dict[str, object]:
+        """The rule-drift field weights as configured, why they were chosen, and their held-out sensitivity (not the TLDS weights)."""
+        config = load_json(self.root / "configs/metrics/rule_drift.v1.2.json")
+        report = load_json(self.root / "reports/fingerprint/rule_weights_sensitivity.v1.json")
+        return {"version": config["contract"], "config": "configs/metrics/rule_drift.v1.2.json", "score": config["score"],
+                "fields": [{"field": name, "label": row["label"], "weight": row["weight"], "why": row["why"]} for name, row in config["fields"].items()],
+                "rationale": config["weights_rationale"],
+                "sensitivity": {"source": "reports/fingerprint/rule_weights_sensitivity.v1.json", "transitions": report["transitions_scored"],
+                                "changed_field_counts": report["changed_field_counts"], "finding": report["finding"], "note": report["note"],
+                                "weightings": {name: {key: row[key] for key in ("weights", "spearman_vs_current", "ordered_pairs_kept_percent",
+                                                                                  "pairs_whose_tie_status_changed", "median_abs_change", "max_abs_change")}
+                                               for name, row in report["weightings"].items()}}}
+
     def tlds_method(self) -> dict[str, object]:
         """The combined-score method as configured, with the held-out weight-sensitivity findings, from the versioned files."""
         from temporal_legal_drift.rag.fingerprint import DISAGREEMENT_SPREAD, TLDS_VERSION

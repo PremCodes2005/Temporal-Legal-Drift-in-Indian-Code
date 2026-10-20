@@ -1,0 +1,115 @@
+{
+ "schema_version": "1.0.0",
+ "method": "rule-drift-v1.2 field weights; alternatives applied to the stored changed fields",
+ "transitions_scored": 59,
+ "changed_field_counts": {
+  "actor": 31,
+  "modality": 17,
+  "action": 13,
+  "exception": 12,
+  "scope": 12,
+  "deadline": 8,
+  "penalty": 5,
+  "threshold": 4
+ },
+ "weightings": {
+  "current": {
+   "weights": {
+    "modality": 25,
+    "penalty": 15,
+    "threshold": 15,
+    "deadline": 15,
+    "exception": 10,
+    "scope": 10,
+    "actor": 5,
+    "action": 5
+   },
+   "median": 15,
+   "max": 60,
+   "spearman_vs_current": 1.0,
+   "ordered_pairs_kept_percent": 100.0,
+   "pairs_whose_tie_status_changed": 0,
+   "median_abs_change": 0,
+   "max_abs_change": 0
+  },
+  "equal": {
+   "weights": {
+    "modality": 12.5,
+    "penalty": 12.5,
+    "threshold": 12.5,
+    "deadline": 12.5,
+    "exception": 12.5,
+    "scope": 12.5,
+    "actor": 12.5,
+    "action": 12.5
+   },
+   "median": 12.5,
+   "max": 62.5,
+   "spearman_vs_current": 0.812,
+   "ordered_pairs_kept_percent": 99.9,
+   "pairs_whose_tie_status_changed": 614,
+   "median_abs_change": 2.5,
+   "max_abs_change": 12.5
+  },
+  "flatter_tiers": {
+   "weights": {
+    "modality": 20,
+    "penalty": 15,
+    "threshold": 15,
+    "deadline": 15,
+    "exception": 12.5,
+    "scope": 12.5,
+    "actor": 5,
+    "action": 5
+   },
+   "median": 15,
+   "max": 57.5,
+   "spearman_vs_current": 1.0,
+   "ordered_pairs_kept_percent": 100.0,
+   "pairs_whose_tie_status_changed": 1,
+   "median_abs_change": 2.5,
+   "max_abs_change": 5
+  },
+  "no_heuristic_discount": {
+   "weights": {
+    "modality": 20,
+    "penalty": 13.333333333333334,
+    "threshold": 13.333333333333334,
+    "deadline": 13.333333333333334,
+    "exception": 10,
+    "scope": 10,
+    "actor": 10,
+    "action": 10
+   },
+   "median": 13.333333333333334,
+   "max": 63.333333333333336,
+   "spearman_vs_current": 0.952,
+   "ordered_pairs_kept_percent": 99.9,
+   "pairs_whose_tie_status_changed": 211,
+   "median_abs_change": 1.67,
+   "max_abs_change": 5
+  },
+  "core_heavy": {
+   "weights": {
+    "modality": 35,
+    "penalty": 15,
+    "threshold": 15,
+    "deadline": 15,
+    "exception": 7.5,
+    "scope": 7.5,
+    "actor": 2.5,
+    "action": 2.5
+   },
+   "median": 15,
+   "max": 62.5,
+   "spearman_vs_current": 1.0,
+   "ordered_pairs_kept_percent": 100.0,
+   "pairs_whose_tie_status_changed": 0,
+   "median_abs_change": 2.5,
+   "max_abs_change": 10
+  }
+ },
+ "invariant_violations": [],
+ "finding": "Tiered alternatives keep the order of rule scores (Spearman 0.952 or more against the current weights; at least 99.9% of strictly ordered pairs keep their order under every alternative). Removing the tiers (equal weights) mostly changes ties: 614 pairs switch between tied and ordered (Spearman 0.812). So the tier structure, more than the exact numbers, decides which changes score alike. The most often changed field is actor (31 of 59 changes); actor and action are the heuristic fields, so their low weight limits how much extraction errors move the scores.",
+ "note": "No expert labels exist, so no weighting is shown to be more correct; this checks stability only. Legal validation: UNVERIFIED."
+}

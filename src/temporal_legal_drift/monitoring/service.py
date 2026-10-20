@@ -483,9 +483,21 @@ class MonitoringService:
                 "time_base": "UTC", "coverage_claim": "partial; see docs/sprint/s1_source_access_decision.v2.md"}
 
 
-NOTIFICATIONS_VERSION = "source-notifications-v1"
+NOTIFICATIONS_VERSION = "source-notifications-v2"  # v2: records keyed by official id + content hash; latest five
 SOURCE_LABELS = {"india_code": "India Code", "egazette": "e-Gazette of India"}
 OFFICIAL_HOSTS = {"india_code": {"indiacode.gov.in", "www.indiacode.gov.in"}, "egazette": {"egazette.gov.in"}}
+LATEST = 5
+# What a record can be. Nothing in this system can yet mark an amendment as verified: the review ledger has no such action.
+CATEGORIES = {
+    "NEW_DOCUMENT": "Newly discovered document",
+    "POSSIBLE_AMENDMENT": "Possible amendment awaiting review",
+    "VERIFIED_AMENDMENT": "Verified amendment",
+}
+CATEGORY_NOTE = {
+    "NEW_DOCUMENT": "Downloaded from a monitored source and waiting for review. Not a change to law.",
+    "POSSIBLE_AMENDMENT": "Machine extraction found amendment wording; nobody has checked it yet.",
+    "VERIFIED_AMENDMENT": "Would need a recorded decision by a qualified legal reviewer. The review ledger has no such action, so nothing is in this category.",
+}
 # Precise wording per ledger state. Nothing here says a law changed: discovery and download are not amendment or commencement.
 ITEM_STATUS = {
     "AWAITING_REVIEW": "New document awaiting review",
@@ -501,14 +513,15 @@ ITEM_STATUS = {
 
 
 def notifications(service: "MonitoringService", review_ledger: Any | None = None, limit: int = 25) -> dict[str, Any]:
-    """Latest items discovered in the monitored sources, read only from the persisted ledger (no network access).
+    """Latest documents discovered in the monitored sources, read only from the persisted ledger (no network access).
 
-    One item per official record: its first observation is the discovery time and the most advanced ledger record gives the
-    status. Review-ledger actions are reported as they are; no ledger state means a verified change to law."""
+    A record is one downloaded version: its official id plus its content hash, so a repeat check never makes a new record and a
+    revised PDF does. The same bytes under several official ids are one record. Its discovery time is the first observation of
+    that version. Review-ledger actions are reported as they are; no ledger state means a verified change to law."""
     health = service.health()
     now = _parse_time(service.clock())
     folder = service.base / "review_queue"
-    queue = {item["official_id"]: item for item in (load_json(p) for p in sorted(folder.glob("*.json")))} if folder.is_dir() else {}
+    queue = [load_json(p) for p in sorted(folder.glob("*.json"))] if folder.is_dir() else []
     documents = {doc["official_id"]: doc for doc in service.documents()}
     candidates: dict[str, list[dict[str, Any]]] = {}
     for path in sorted((service.base / "candidates").glob("*.json")) if (service.base / "candidates").is_dir() else []:
@@ -517,49 +530,61 @@ def notifications(service: "MonitoringService", review_ledger: Any | None = None
             for official_id in [record.get("official_id")] + [p.get("official_id") for p in record.get("provenance", [])]:
                 if official_id:
                     candidates.setdefault(official_id, []).append(event)
-    seen: dict[str, dict[str, Any]] = {}
-    for observation in service.observations():
-        entry = seen.setdefault(observation["official_id"], {"first": observation, "last": observation})
-        if observation["observed_at"] < entry["first"]["observed_at"]:
-            entry["first"] = observation
-        if observation["observed_at"] >= entry["last"]["observed_at"]:
-            entry["last"] = observation
-    items = []
-    for official_id, entry in seen.items():
-        first, last = entry["first"], entry["last"]
-        item, doc = queue.get(official_id), documents.get(official_id)
+    observations: dict[str, list[dict[str, Any]]] = {}
+    for observation in sorted(service.observations(), key=lambda row: row["observed_at"]):
+        observations.setdefault(observation["official_id"], []).append(observation)
+
+    def describe(official_id: str, sha: str | None, item: dict[str, Any] | None) -> dict[str, Any]:
+        seen = observations.get(official_id) or [{}]
+        first = next((o for o in seen if sha and o.get("sha256") == sha), seen[0])
+        last = seen[-1]
         source = last.get("source_key") or (item or {}).get("source_key")
-        state = doc["versions"][-1]["state"] if doc and doc.get("versions") else None
-        if item:
-            code = "REVISED_AWAITING_REVIEW" if item.get("change") == "REVISED" else "AWAITING_REVIEW"
-            if candidates.get(official_id):
-                code = "CANDIDATE_UNVERIFIED"
-            reviewed = review_ledger.current_state(item["queue_id"], item["status"]) if review_ledger else item["status"]
-            code = reviewed if reviewed in ITEM_STATUS else code
-        elif state == "FAILED" or last["status"] in {"FAILED", "CHECKSUM_MISMATCH"} and not doc:
-            code = "DOWNLOAD_FAILED"
-        elif last["status"] == "METADATA_ONLY":
-            code = "LISTED_NOT_DOWNLOADED"
-        else:
-            continue  # seen before and unchanged: nothing new to report
         url = (item or {}).get("canonical_url") or last.get("canonical_url")
-        host = urlparse(str(url or "")).hostname
         dates = (item or {}).get("stated_dates") or last.get("stated_dates") or {}
+        return {"id": official_id, "key": f"{official_id}:{sha or 'none'}", "sha256": sha, "version": (item or {}).get("version"),
+                "title": " ".join(str((item or {}).get("title") or last.get("title") or "Untitled record").split()),
+                "source_key": source, "source": SOURCE_LABELS.get(source, source),
+                "published": dates.get("published") or dates.get("issued") or dates.get("enactment"),
+                "discovered_at": first.get("observed_at"), "last_checked_at": last.get("observed_at"),
+                "official_url": url if urlparse(str(url or "")).scheme == "https" and urlparse(str(url)).hostname in OFFICIAL_HOSTS.get(source, set()) else None,
+                "legal_effect_claimed": False}
+
+    records: dict[str, dict[str, Any]] = {}
+    by_hash: dict[str, str] = {}
+    for item in queue:
+        official_id, sha = item["official_id"], item.get("sha256")
+        row = describe(official_id, sha, item)
+        if sha and sha in by_hash:  # the same bytes published under another official id: one record
+            records[by_hash[sha]].setdefault("same_document_ids", []).append(official_id)
+            continue
+        code = "REVISED_AWAITING_REVIEW" if item.get("change") == "REVISED" else "AWAITING_REVIEW"
+        if candidates.get(official_id):
+            code = "CANDIDATE_UNVERIFIED"
+        reviewed = review_ledger.current_state(item["queue_id"], item["status"]) if review_ledger else item["status"]
+        code = reviewed if reviewed in ITEM_STATUS else code
         targets = sorted({str(e.get("target_act") or e.get("principal_act") or "").strip() for e in candidates.get(official_id, [])} - {""})
-        items.append({
-            "id": official_id, "title": " ".join(str((item or {}).get("title") or last.get("title") or "Untitled record").split()),
-            "source_key": source, "source": SOURCE_LABELS.get(source, source),
-            "published": dates.get("published") or dates.get("issued") or dates.get("enactment"),
-            "discovered_at": first["observed_at"], "last_checked_at": last["observed_at"],
-            "official_url": url if urlparse(str(url or "")).scheme == "https" and host in OFFICIAL_HOSTS.get(source, set()) else None,
-            "status": code, "status_label": ITEM_STATUS[code], "queue_id": (item or {}).get("queue_id"),
-            "candidate_events": len(candidates.get(official_id, [])), "candidate_targets": targets,
-            "legal_effect_claimed": False,
-        })
-    items.sort(key=lambda row: (row["discovered_at"], row["id"]), reverse=True)
-    # Source listings that were never downloaded (most gazette notices) are kept apart so they cannot bury documents under review.
-    listed = [row for row in items if row["status"] == "LISTED_NOT_DOWNLOADED"]
-    items = [row for row in items if row["status"] != "LISTED_NOT_DOWNLOADED"]
+        records[row["key"]] = {**row, "status": code, "status_label": ITEM_STATUS[code], "queue_id": item["queue_id"],
+                               "category": "POSSIBLE_AMENDMENT" if candidates.get(official_id) else "NEW_DOCUMENT",
+                               "candidate_events": len(candidates.get(official_id, [])), "candidate_targets": targets}
+        if sha:
+            by_hash[sha] = row["key"]
+    for row in records.values():
+        row["category_label"] = CATEGORIES[row["category"]]
+    queued = {item["official_id"] for item in queue}
+    failed, listed = [], []
+    for official_id, seen in observations.items():
+        if official_id in queued:
+            continue
+        doc = documents.get(official_id)
+        state = doc["versions"][-1]["state"] if doc and doc.get("versions") else None
+        if state == "FAILED" or (seen[-1]["status"] in {"FAILED", "CHECKSUM_MISMATCH"} and not doc):
+            failed.append({**describe(official_id, None, None), "status": "DOWNLOAD_FAILED", "status_label": ITEM_STATUS["DOWNLOAD_FAILED"]})
+        elif seen[-1]["status"] == "METADATA_ONLY":
+            listed.append({**describe(official_id, None, None), "status": "LISTED_NOT_DOWNLOADED", "status_label": ITEM_STATUS["LISTED_NOT_DOWNLOADED"]})
+    order = lambda row: (row["discovered_at"] or "", row["key"])  # noqa: E731
+    items = sorted(records.values(), key=order, reverse=True)
+    failed.sort(key=order, reverse=True)
+    listed.sort(key=order, reverse=True)
     sources = []
     for row in health["sources"]:
         lag = row["lag_hours"]
@@ -575,8 +600,11 @@ def notifications(service: "MonitoringService", review_ledger: Any | None = None
         sources.append({"source_key": row["source_key"], "source": SOURCE_LABELS.get(row["source_key"], row["source_key"]), "state": state,
                         "detail": detail, "last_success_at": row["last_success_at"], "last_attempt_at": row["last_attempt_at"],
                         "next_eligible_at": row["next_eligible_at"]})
-    return {"version": NOTIFICATIONS_VERSION, "generated_at": now.isoformat().replace("+00:00", "Z"), "items": items[:limit], "total": len(items),
-            "listed": listed[:limit], "listed_total": len(listed),
+    counts = {name: sum(row["category"] == name for row in items) for name in CATEGORIES}
+    return {"version": NOTIFICATIONS_VERSION, "generated_at": now.isoformat().replace("+00:00", "Z"),
+            "latest": items[:LATEST], "older": items[LATEST:limit], "items": items[:limit], "total": len(items),
+            "categories": [{"category": name, "label": label, "count": counts[name], "note": CATEGORY_NOTE[name]} for name, label in CATEGORIES.items()],
+            "failed": failed[:limit], "listed": listed[:limit], "listed_total": len(listed),
             "sources": sources, "scope": "Latest discovered in monitored sources (India Code and the e-Gazette), checked at most once every "
                                           "24 hours. Not a complete list of Indian amendments.",
             "note": "A discovered or downloaded document is not a confirmed change to law, and nothing listed here changes the answers "

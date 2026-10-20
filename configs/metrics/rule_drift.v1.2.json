@@ -110,5 +110,46 @@
   "actor = persons or bodies named within the changed words (e.g. Tribunal -> Central Government), replacing the subject heuristic",
   "action only from a fixed operative-verb list after the modal",
   "a non-identical change with no supported field is Not scored with a specific reason; v1.1 could report 0 for changes outside operative sentences"
- ]
+ ],
+ "weights_rationale": {
+  "status": "Provisional research-design choices, stated when rule drift was introduced (docs/methodology/legal_change_fingerprint.v1.md): the weights rank legal function. They were not learned from data, not optimised and not reviewed or approved by a legal expert. The tier order is the stated reasoning; the exact numbers inside that order are this project's choice.",
+  "total": "The eight weights add up to 100, so a score reads as the share of the fields' combined weight that changed: 100 would mean every field changed. It is not a percentage of legal importance.",
+  "tiers": [
+   {
+    "fields": [
+     "modality"
+    ],
+    "weight": 25,
+    "reason": "Whether conduct is required, allowed or forbidden is the core of a legal instruction; changing it changes the kind of rule, so it gets the highest weight."
+   },
+   {
+    "fields": [
+     "penalty",
+     "threshold",
+     "deadline"
+    ],
+    "weight": 15,
+    "reason": "The consequence of breaking the rule, when it applies (amounts and numeric limits) and when compliance is due. Each changes what a person must do or risks without changing the kind of instruction."
+   },
+   {
+    "fields": [
+     "exception",
+     "scope"
+    ],
+    "weight": 10,
+    "reason": "Who or what the rule covers or exempts. These matter, but the core instruction stays in place."
+   },
+   {
+    "fields": [
+     "actor",
+     "action"
+    ],
+    "weight": 5,
+    "reason": "Who acts and what must be done also matter legally, but they are detected with a phrase list and a verb list. A low weight limits the effect of those heuristic detections being wrong."
+   }
+  ],
+  "counting": "A field adds its weight once when it is added, removed or changed, however many words changed inside it. A field the extractor marks uncertain adds nothing and is listed, so the score is then a lower bound. A change outside every field is Not scored, never 0.",
+  "not_the_combined_weights": "These are the rule-drift field weights (a 0–100 rule score). They are separate from the 0.2 / 0.3 / 0.4 / 0.1 weights of the combined indicator (TLDS), which combine four different measures.",
+  "sensitivity": "reports/fingerprint/rule_weights_sensitivity.v1.json"
+ }
 }
