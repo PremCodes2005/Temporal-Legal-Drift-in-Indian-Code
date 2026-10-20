@@ -8,24 +8,29 @@ import SourceHealth from "./SourceHealth";
 import ComplianceRiskPanel from "./ComplianceRiskPanel";
 import { DriftPanel, VerificationPanel, percent } from "./SharedPanels";
 import AssistantResult from "./AssistantResult";
-import { DriftExplanationPage, ScoreCalculationPage } from "./ExplanationPages";
+import { ComparisonPage, DriftExplanationPage, ScoreCalculationPage } from "./ExplanationPages";
+import Notifications, { readSeen, saveSeen, useDiscoveries } from "./Notifications";
 import FAQ from "./faq.json";
 
-// Addresses of one stored analysis: #assistant/<id>, #drift/<id>, #calculation/<id>. Plain #assistant, #drift or #calculation
-// reopen the analysis last shown. Older links (#analysis/<id>[/<view>], v0.14–v0.17) open the matching page.
-const ANALYSIS_PAGES = ["assistant", "drift", "calculation"];
+// Addresses of one stored analysis: #assistant/<id>, #drift/<id>, #calculation/<id>, #comparison/<id>. Plain #assistant, #drift,
+// #calculation or #comparison reopen the analysis last shown. Older links (#analysis/<id>[/<view>], v0.14–v0.17) open the matching page.
+const ANALYSIS_PAGES = ["assistant", "drift", "calculation", "comparison"];
+const VIEW_PAGES = ["drift", "calculation", "comparison"];
+// Smooth scrolling only when the reader has not asked for reduced motion.
+export const scrollBehavior = () => (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth");
 const ANALYSIS_ID = /^an_[0-9a-f]{24}$/;
 function parseRoute(hash) {
   const parts = hash.slice(1).split("?")[0].split("/");
   const id = ANALYSIS_ID.test(parts[1] || "") ? parts[1] : null;
   if (parts[0] === "analysis" && id) {
     const view = parts[2] === "scores" ? "calculation" : parts[2];
-    return { section: ["drift", "calculation"].includes(view) ? view : "assistant", analysisId: id, situation: view === "scenario" };
+    return { section: VIEW_PAGES.includes(view) ? view : "assistant", analysisId: id, situation: view === "scenario" };
   }
   return { section: parts[0] || "assistant", analysisId: ANALYSIS_PAGES.includes(parts[0]) ? id : null, situation: false };
 }
 const pageHash = (page, id) => (ANALYSIS_PAGES.includes(page) && id ? `#${page}/${id}` : `#${page}`);
 
+const PAGE_TITLES = { comparison: "Clause comparison" };  // pages reached from an answer, not from the sidebar
 const sections = [
   { id: "assistant", number: "01", label: "Legal drift assistant" },
   { id: "drift", number: "02", label: "Drift explanation" },
@@ -36,6 +41,7 @@ const sections = [
   { id: "risk", number: "07", label: "Compliance risk" },
   { id: "review", number: "08", label: "Case trace & review" },
 ];
+const KNOWN = new Set([...sections.map((item) => item.id), ...Object.keys(PAGE_TITLES)]);
 
 // Recently asked questions stay in this browser only (question, mode and Act; never scenario facts or chosen sections).
 const HISTORY_KEY = "tldrift:recent-questions";
@@ -69,7 +75,7 @@ export default function App() {
   // Shareable question link: #assistant?q=<question> asks once on load.
   // Read once: the link is replaced by #assistant after loading, and must not then look like "no question".
   const [linkedQuestion] = useState(() => new URLSearchParams(window.location.hash.split("?")[1] || "").get("q")?.slice(0, 4000) || "");
-  const [section, setSection] = useState(() => sections.some((item) => item.id === route.section) ? route.section : "assistant");
+  const [section, setSection] = useState(() => KNOWN.has(route.section) ? route.section : "assistant");
   const [situation, setSituation] = useState(route.situation);
   const [analysisError, setAnalysisError] = useState("");
   const [loadingAnalysis, setLoadingAnalysis] = useState(false);
@@ -115,7 +121,7 @@ export default function App() {
     const onNavigate = () => {
       const next = parseRoute(window.location.hash);
       if (next.analysisId && next.analysisId !== currentId.current || /[?&]q=/.test(window.location.hash)) { window.location.reload(); return; }
-      if (sections.some((item) => item.id === next.section)) setSection(next.section);
+      if (KNOWN.has(next.section)) setSection(next.section);
     };
     window.addEventListener("popstate", onNavigate);
     window.addEventListener("hashchange", onNavigate);
@@ -128,7 +134,7 @@ export default function App() {
   };
 
   const navigate = (next) => {
-    setMenuOpen(false); window.scrollTo({ top: 0, behavior: "smooth" });
+    setMenuOpen(false); window.scrollTo({ top: 0, behavior: scrollBehavior() });
     setSection(next);
     window.history.pushState(null, "", pageHash(next, lastResult?.analysis_id));
   };
@@ -147,7 +153,14 @@ export default function App() {
     if (part === "scenario") { setSituation(true); window.setTimeout(() => document.querySelector(".fold.situation summary")?.focus(), 0); }
   };
   const activeNav = section;
-  const pageProps = { analysis: lastResult, onEvidence: openEvidence, onField: openField, onAssistant: toAssistant };
+  const pageProps = { analysis: lastResult, onEvidence: openEvidence, onField: openField, onAssistant: toAssistant, onPage: navigate, request: api };
+  const discoveries = useDiscoveries(api);
+  const [seen, setSeen] = useState(readSeen);
+  const [panelOpen, setPanelOpen] = useState(false);
+  const toggle = useRef(null);
+  const unread = (discoveries.data?.items || []).filter((row) => !seen.includes(row.id)).length;
+  const markSeen = (ids) => { saveSeen(ids); setSeen(ids); };
+  const closePanel = () => { setPanelOpen(false); toggle.current?.focus(); };
 
   // An FAQ card asks its question once; the previous answer is cleared so it cannot replace the question shown.
   const askFromFaq = (question) => {
@@ -155,7 +168,7 @@ export default function App() {
     setStarter({ text: question, run: true, id: Date.now() });
     setSection("assistant"); setMenuOpen(false);
     window.history.pushState(null, "", "#assistant");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: scrollBehavior() });
   };
   // A section chosen from a list re-asks the same question, so only the question itself is remembered.
   const recordQuestion = (value, section) => {
@@ -170,18 +183,24 @@ export default function App() {
       <nav className="nav-list">{sections.map((item) => <button key={item.id} type="button" aria-current={activeNav === item.id ? "page" : undefined} className={`nav-item ${activeNav === item.id ? "active" : ""}`} onClick={() => navigate(item.id)}><span>{item.number}</span>{item.label}</button>)}</nav>
       <a className="official-link side-link" href="https://indiacode.gov.in/" target="_blank" rel="noreferrer">India Code official website ↗</a>
     </aside>
-    <div className="workspace">
-      <header className="topbar"><button className="menu-toggle" onClick={() => setMenuOpen((open) => !open)} aria-label="Open navigation">☰</button><div><p className="eyebrow">Versioned Indian law</p><h1>{sections.find((item) => item.id === activeNav)?.label}</h1></div></header>
+    <div className={`workspace ${panelOpen ? "panel-open" : ""}`}>
+      <header className="topbar"><button className="menu-toggle" onClick={() => setMenuOpen((open) => !open)} aria-label="Open navigation">☰</button><div><p className="eyebrow">Versioned Indian law</p><h1>{sections.find((item) => item.id === activeNav)?.label || PAGE_TITLES[activeNav]}</h1></div>
+        <button ref={toggle} type="button" className="discoveries-toggle" aria-expanded={panelOpen} aria-controls="discoveries-panel" onClick={() => setPanelOpen((open) => !open)}
+          aria-label={`Latest discoveries${unread > 0 ? `, ${unread} unread` : ""}`}>
+          <span className="long">Latest discoveries</span><span className="short" aria-hidden="true">Discoveries</span>{unread > 0 && <span className="count" aria-hidden="true">{unread}</span>}</button></header>
+      <Notifications {...discoveries} open={panelOpen} onClose={closePanel} seen={seen} onSeen={markSeen} />
       <main id="main-content">
         {section === "assistant" && <AssistantWorkspace status={status} error={loadError || analysisError} starter={starter}
           result={lastResult} onResult={showResult} situationOpen={situation} onPage={navigate} onReview={() => navigate("review")}
           history={history} onAsked={recordQuestion} onClearHistory={clearHistory} />}
-        {["drift", "calculation"].includes(section) && (lastResult?.analysis_id
-          ? section === "drift" ? <DriftExplanationPage {...pageProps} highlight={highlight} onCalculation={() => navigate("calculation")} /> : <ScoreCalculationPage {...pageProps} />
-          : <section className="page-section"><div className="section-header"><span className="section-kicker">{section === "drift" ? "Drift explanation" : "Score calculation"}</span>
+        {VIEW_PAGES.includes(section) && (lastResult?.analysis_id
+          ? section === "drift" ? <DriftExplanationPage {...pageProps} highlight={highlight} onCalculation={() => navigate("calculation")} />
+            : section === "comparison" ? <ComparisonPage {...pageProps} /> : <ScoreCalculationPage {...pageProps} />
+          : <section className="page-section"><div className="section-header"><span className="section-kicker">{{ drift: "Drift explanation", calculation: "Score calculation", comparison: "Clause comparison" }[section]}</span>
             <h2>{loadingAnalysis ? "Loading the analysis…" : "Ask a comparison question first."}</h2>
-            <p>{analysisError || (section === "drift" ? "This page explains what the drift scores of the current analysis mean, with the before and after clauses and their sources."
-              : "This page shows the exact inputs, formulas and worked calculation of the current analysis.")} General questions have no change scores.</p></div>
+            <p>{analysisError || { drift: "This page explains what the drift scores of the current analysis mean, with the before and after clauses and their sources.",
+              calculation: "This page shows the exact inputs, formulas and worked calculation of the current analysis.",
+              comparison: "This page shows the compared clauses of the current analysis side by side, with their sources." }[section]} General questions have no change scores.</p></div>
             <button className="send-button" type="button" onClick={() => navigate("assistant")}>Open legal drift assistant <span>→</span></button></section>)}
         {section === "corpus" && <CorpusBrowser corpus={corpus} error={loadError} status={status} />}
         {section === "method" && <Method />}
@@ -220,7 +239,7 @@ function AssistantWorkspace({ status, error: statusError, starter, result, onRes
       const value = await api("/api/rag/query", { method: "POST", body: { query: text.trim(), mode: runMode, ...(scenario ? { scenario } : {}), ...(section ? { section } : {}) } });
       onResult(value, Boolean(scenario));
       if (!scenario) onAsked(value, section);
-      window.setTimeout(() => document.getElementById("rag-result")?.scrollIntoView?.({ behavior: "smooth", block: "start" }), 0);
+      window.setTimeout(() => document.getElementById("rag-result")?.scrollIntoView?.({ behavior: scrollBehavior(), block: "start" }), 0);
     } catch (requestError) { setError(requestError.message); }
     finally { setBusy(false); }
   };
@@ -244,6 +263,8 @@ function AssistantWorkspace({ status, error: statusError, starter, result, onRes
           <button className="send-button" type="submit" disabled={busy || !query.trim()}>{busy ? "Searching…" : "Analyse"}<span aria-hidden="true">→</span></button>
         </div>
       </form>
+      <p className="jump-row"><button type="button" className="link-button" onClick={() => { const area = document.getElementById("question-chips");
+        area?.scrollIntoView?.({ behavior: scrollBehavior(), block: "center" }); area?.focus(); }}>Recently asked and suggested questions ↓</button></p>
       <QuestionChips history={history} followUps={followUps(result)} onPick={prefill} onClear={onClearHistory} />
       {error && <div className="form-error" role="alert"><strong>Analysis could not be completed.</strong><span>{error}</span></div>}
     </div>
@@ -259,7 +280,7 @@ function AssistantWorkspace({ status, error: statusError, starter, result, onRes
 // "Recently asked" (this browser), "Suggested follow-ups" (from the last answer) and verified starter examples. A chip only fills the box.
 function QuestionChips({ history, followUps: next, onPick, onClear }) {
   const chips = (items, label) => items.map((text) => <button key={label + text} type="button" onClick={() => onPick(text)}>{text}</button>);
-  return <div className="question-chips">
+  return <div className="question-chips" id="question-chips" tabIndex={-1} role="region" aria-label="Recently asked and suggested questions">
     {history.length > 0 && <div className="suggestions" role="group" aria-label="Recently asked"><span>Recently asked</span>
       {chips(history.map((row) => row.query), "recent")}
       <button type="button" className="clear-history" onClick={onClear}>Clear history</button></div>}

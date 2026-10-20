@@ -1,5 +1,5 @@
 {
- "_note": "Generated offline from the backend (rag-answer-v5) by the fixture script; 'timeout' used a real local socket that never answers (2 s limit).",
+ "_note": "Generated offline from the backend (rag-answer-v5) by frontend/scripts/generate_answer_fixture.py; 'timeout' used a real local socket that never answers (2 s limit).",
  "responses": {
   "general": {
    "schema_version": "5.0.0",
@@ -413,7 +413,7 @@
     "reading": [],
     "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
     "tlds": {
-     "version": "tlds-v1",
+     "version": "tlds-v1.1",
      "weights": {
       "textual": 0.2,
       "semantic": 0.3,
@@ -450,6 +450,13 @@
       ]
      ],
      "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "contributions": {
+      "textual": null,
+      "semantic": null,
+      "legal_effect": null,
+      "rule_structure": null
+     },
+     "disagreement": null,
      "state": "NOT_APPLICABLE",
      "value": null,
      "tldp_percent": null,
@@ -497,7 +504,7 @@
     "explanation": "No facts are needed for this question."
    },
    "selection": null,
-   "analysis_id": "an_1dfbbfac4a1e541831d7e853"
+   "analysis_id": "an_c81ed3a8d06d2c657953ea92"
   },
   "out-of-scope": {
    "schema_version": "5.0.0",
@@ -686,7 +693,7 @@
     "reading": [],
     "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
     "tlds": {
-     "version": "tlds-v1",
+     "version": "tlds-v1.1",
      "weights": {
       "textual": 0.2,
       "semantic": 0.3,
@@ -723,6 +730,13 @@
       ]
      ],
      "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "contributions": {
+      "textual": null,
+      "semantic": null,
+      "legal_effect": null,
+      "rule_structure": null
+     },
+     "disagreement": null,
      "state": "NOT_APPLICABLE",
      "value": null,
      "tldp_percent": null,
@@ -876,7 +890,7 @@
     "explanation": "No facts are needed for this question. Facts cannot fill missing legal evidence for: which wording applies on your date, conditional compliance risk."
    },
    "selection": null,
-   "analysis_id": "an_3a2de238b27052945cae6374"
+   "analysis_id": "an_d430ddd416da342a2f6a6716"
   },
   "it-s19": {
    "schema_version": "5.0.0",
@@ -1453,7 +1467,7 @@
     ],
     "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
     "tlds": {
-     "version": "tlds-v1",
+     "version": "tlds-v1.1",
      "weights": {
       "textual": 0.2,
       "semantic": 0.3,
@@ -1487,6 +1501,19 @@
       ]
      ],
      "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "contributions": {
+      "textual": 0.15267175572519084,
+      "semantic": 0.14452289778365324,
+      "legal_effect": null,
+      "rule_structure": 0.0
+     },
+     "disagreement": {
+      "spread": 0.007633587786259542,
+      "highest": "textual",
+      "lowest": "rule_structure",
+      "strong": false,
+      "rule": "components disagree strongly when their values differ by 0.6 or more on the 0–1 scale"
+     },
      "state": "INCOMPLETE",
      "value": null,
      "tldp_percent": null,
@@ -2259,7 +2286,7 @@
     "explanation": "Only these facts are needed; anything you leave blank is not assumed."
    },
    "selection": null,
-   "analysis_id": "an_5ddd2afe76e8e192815486cb"
+   "analysis_id": "an_ace3978b44efa921f6caa19b"
   },
   "it-s19-generic": {
    "schema_version": "5.0.0",
@@ -2815,7 +2842,7 @@
     ],
     "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
     "tlds": {
-     "version": "tlds-v1",
+     "version": "tlds-v1.1",
      "weights": {
       "textual": 0.2,
       "semantic": 0.3,
@@ -2849,6 +2876,19 @@
       ]
      ],
      "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "contributions": {
+      "textual": 0.15267175572519084,
+      "semantic": 0.14452289778365324,
+      "legal_effect": null,
+      "rule_structure": 0.0
+     },
+     "disagreement": {
+      "spread": 0.007633587786259542,
+      "highest": "textual",
+      "lowest": "rule_structure",
+      "strong": false,
+      "rule": "components disagree strongly when their values differ by 0.6 or more on the 0–1 scale"
+     },
      "state": "INCOMPLETE",
      "value": null,
      "tldp_percent": null,
@@ -3621,7 +3661,7 @@
     "explanation": "Only these facts are needed; anything you leave blank is not assumed."
    },
    "selection": null,
-   "analysis_id": "an_02bf7839fa17a9a106ac57e8"
+   "analysis_id": "an_fca86d5352f7ac387fe8fb39"
   },
   "sra": {
    "schema_version": "5.0.0",
@@ -4214,7 +4254,7 @@
     ],
     "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
     "tlds": {
-     "version": "tlds-v1",
+     "version": "tlds-v1.1",
      "weights": {
       "textual": 0.2,
       "semantic": 0.3,
@@ -4246,6 +4286,19 @@
       ]
      ],
      "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "contributions": {
+      "textual": 1.9444444444444444,
+      "semantic": 1.0481757072229725,
+      "legal_effect": 30.0,
+      "rule_structure": 5.0
+     },
+     "disagreement": {
+      "spread": 0.7150608097592343,
+      "highest": "legal_effect",
+      "lowest": "semantic",
+      "strong": true,
+      "rule": "components disagree strongly when their values differ by 0.6 or more on the 0–1 scale"
+     },
      "state": "COMPLETE",
      "value": 37.992620151667424,
      "tldp_percent": 37.992620151667424,
@@ -4891,7 +4944,7 @@
     "explanation": "Only these facts are needed; anything you leave blank is not assumed."
    },
    "selection": null,
-   "analysis_id": "an_f9fcaf6ceb07f4bdab6c34f5"
+   "analysis_id": "an_948b5bc0fa59a214da3cb7b3"
   },
   "dm31": {
    "schema_version": "5.0.0",
@@ -5489,7 +5542,7 @@
     ],
     "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
     "tlds": {
-     "version": "tlds-v1",
+     "version": "tlds-v1.1",
      "weights": {
       "textual": 0.2,
       "semantic": 0.3,
@@ -5521,6 +5574,19 @@
       ]
      ],
      "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "contributions": {
+      "textual": 0.6896551724137931,
+      "semantic": 0.12903287262544416,
+      "legal_effect": 20.0,
+      "rule_structure": 0.5555555555555556
+     },
+     "disagreement": {
+      "spread": 0.49569890424581853,
+      "highest": "legal_effect",
+      "lowest": "semantic",
+      "strong": false,
+      "rule": "components disagree strongly when their values differ by 0.6 or more on the 0–1 scale"
+     },
      "state": "COMPLETE",
      "value": 21.374243600594795,
      "tldp_percent": 21.374243600594795,
@@ -6176,7 +6242,7 @@
     "explanation": "Only these facts are needed; anything you leave blank is not assumed."
    },
    "selection": null,
-   "analysis_id": "an_e900de663edcd3ca24e1aec6"
+   "analysis_id": "an_9a1c27d7e8f977a07b54b1ad"
   },
   "dm31-month18": {
    "schema_version": "5.0.0",
@@ -6815,7 +6881,7 @@
     ],
     "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
     "tlds": {
-     "version": "tlds-v1",
+     "version": "tlds-v1.1",
      "weights": {
       "textual": 0.2,
       "semantic": 0.3,
@@ -6847,6 +6913,19 @@
       ]
      ],
      "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "contributions": {
+      "textual": 0.6896551724137931,
+      "semantic": 0.12903287262544416,
+      "legal_effect": 20.0,
+      "rule_structure": 0.5555555555555556
+     },
+     "disagreement": {
+      "spread": 0.49569890424581853,
+      "highest": "legal_effect",
+      "lowest": "semantic",
+      "strong": false,
+      "rule": "components disagree strongly when their values differ by 0.6 or more on the 0–1 scale"
+     },
      "state": "COMPLETE",
      "value": 21.374243600594795,
      "tldp_percent": 21.374243600594795,
@@ -7493,7 +7572,7 @@
     "explanation": "Only these facts are needed; anything you leave blank is not assumed."
    },
    "selection": null,
-   "analysis_id": "an_7c1f8dbf95e018cc9453df7e"
+   "analysis_id": "an_a072a37e3a232d6c6faf2303"
   },
   "dm31-month6": {
    "schema_version": "5.0.0",
@@ -8131,7 +8210,7 @@
     ],
     "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
     "tlds": {
-     "version": "tlds-v1",
+     "version": "tlds-v1.1",
      "weights": {
       "textual": 0.2,
       "semantic": 0.3,
@@ -8163,6 +8242,19 @@
       ]
      ],
      "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "contributions": {
+      "textual": 0.6896551724137931,
+      "semantic": 0.12903287262544416,
+      "legal_effect": 20.0,
+      "rule_structure": 0.5555555555555556
+     },
+     "disagreement": {
+      "spread": 0.49569890424581853,
+      "highest": "legal_effect",
+      "lowest": "semantic",
+      "strong": false,
+      "rule": "components disagree strongly when their values differ by 0.6 or more on the 0–1 scale"
+     },
      "state": "COMPLETE",
      "value": 21.374243600594795,
      "tldp_percent": 21.374243600594795,
@@ -8809,7 +8901,7 @@
     "explanation": "Only these facts are needed; anything you leave blank is not assumed."
    },
    "selection": null,
-   "analysis_id": "an_834032463959296102545499"
+   "analysis_id": "an_58e14c9e9aa6288928592ec8"
   },
   "ibc99": {
    "schema_version": "5.0.0",
@@ -9444,7 +9536,7 @@
     ],
     "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
     "tlds": {
-     "version": "tlds-v1",
+     "version": "tlds-v1.1",
      "weights": {
       "textual": 0.2,
       "semantic": 0.3,
@@ -9476,6 +9568,19 @@
       ]
      ],
      "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "contributions": {
+      "textual": 0.11695906432748537,
+      "semantic": 0.049582243668130355,
+      "legal_effect": 20.0,
+      "rule_structure": 0.5555555555555556
+     },
+     "disagreement": {
+      "spread": 0.49834725854439565,
+      "highest": "legal_effect",
+      "lowest": "semantic",
+      "strong": false,
+      "rule": "components disagree strongly when their values differ by 0.6 or more on the 0–1 scale"
+     },
      "state": "COMPLETE",
      "value": 20.722096863551172,
      "tldp_percent": 20.722096863551172,
@@ -10095,7 +10200,7 @@
     "explanation": "Only these facts are needed; anything you leave blank is not assumed."
    },
    "selection": null,
-   "analysis_id": "an_3b83f5619834adf04c1a938c"
+   "analysis_id": "an_4d7ea15223595fbc98c7c84a"
   },
   "ibc99-day15": {
    "schema_version": "5.0.0",
@@ -10782,7 +10887,7 @@
     ],
     "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
     "tlds": {
-     "version": "tlds-v1",
+     "version": "tlds-v1.1",
      "weights": {
       "textual": 0.2,
       "semantic": 0.3,
@@ -10814,6 +10919,19 @@
       ]
      ],
      "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "contributions": {
+      "textual": 0.11695906432748537,
+      "semantic": 0.049582243668130355,
+      "legal_effect": 20.0,
+      "rule_structure": 0.5555555555555556
+     },
+     "disagreement": {
+      "spread": 0.49834725854439565,
+      "highest": "legal_effect",
+      "lowest": "semantic",
+      "strong": false,
+      "rule": "components disagree strongly when their values differ by 0.6 or more on the 0–1 scale"
+     },
      "state": "COMPLETE",
      "value": 20.722096863551172,
      "tldp_percent": 20.722096863551172,
@@ -11424,7 +11542,7 @@
     "explanation": "Only these facts are needed; anything you leave blank is not assumed."
    },
    "selection": null,
-   "analysis_id": "an_55be7209ec22b7c0415b7aaa"
+   "analysis_id": "an_12970ab74fc32fc5c51588eb"
   },
   "ibc99-day25": {
    "schema_version": "5.0.0",
@@ -12110,7 +12228,7 @@
     ],
     "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
     "tlds": {
-     "version": "tlds-v1",
+     "version": "tlds-v1.1",
      "weights": {
       "textual": 0.2,
       "semantic": 0.3,
@@ -12142,6 +12260,19 @@
       ]
      ],
      "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "contributions": {
+      "textual": 0.11695906432748537,
+      "semantic": 0.049582243668130355,
+      "legal_effect": 20.0,
+      "rule_structure": 0.5555555555555556
+     },
+     "disagreement": {
+      "spread": 0.49834725854439565,
+      "highest": "legal_effect",
+      "lowest": "semantic",
+      "strong": false,
+      "rule": "components disagree strongly when their values differ by 0.6 or more on the 0–1 scale"
+     },
      "state": "COMPLETE",
      "value": 20.722096863551172,
      "tldp_percent": 20.722096863551172,
@@ -12752,7 +12883,7 @@
     "explanation": "Only these facts are needed; anything you leave blank is not assumed."
    },
    "selection": null,
-   "analysis_id": "an_ae85593d79a3ca5270723d8c"
+   "analysis_id": "an_9bd067f34b7a534a187568e7"
   },
   "mv173": {
    "schema_version": "5.0.0",
@@ -13348,7 +13479,7 @@
     ],
     "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
     "tlds": {
-     "version": "tlds-v1",
+     "version": "tlds-v1.1",
      "weights": {
       "textual": 0.2,
       "semantic": 0.3,
@@ -13380,6 +13511,19 @@
       ]
      ],
      "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "contributions": {
+      "textual": 0.25316455696202533,
+      "semantic": 0.3041859364992672,
+      "legal_effect": 20.0,
+      "rule_structure": 0.8333333333333333
+     },
+     "disagreement": {
+      "spread": 0.48986046878335776,
+      "highest": "legal_effect",
+      "lowest": "semantic",
+      "strong": false,
+      "rule": "components disagree strongly when their values differ by 0.6 or more on the 0–1 scale"
+     },
      "state": "COMPLETE",
      "value": 21.390683826794625,
      "tldp_percent": 21.390683826794625,
@@ -14028,7 +14172,7 @@
     "explanation": "Only these facts are needed; anything you leave blank is not assumed."
    },
    "selection": null,
-   "analysis_id": "an_8c0aad10f17bcb6ce9aa9ffd"
+   "analysis_id": "an_bd411222390b6c7d05e6fae7"
   },
   "ibc240": {
    "schema_version": "5.0.0",
@@ -14598,7 +14742,7 @@
     ],
     "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
     "tlds": {
-     "version": "tlds-v1",
+     "version": "tlds-v1.1",
      "weights": {
       "textual": 0.2,
       "semantic": 0.3,
@@ -14630,6 +14774,19 @@
       ]
      ],
      "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "contributions": {
+      "textual": 0.1841269841269841,
+      "semantic": 0.002568345385507431,
+      "legal_effect": 20.0,
+      "rule_structure": 0.05681818181818182
+     },
+     "disagreement": {
+      "spread": 0.49991438848714975,
+      "highest": "legal_effect",
+      "lowest": "semantic",
+      "strong": false,
+      "rule": "components disagree strongly when their values differ by 0.6 or more on the 0–1 scale"
+     },
      "state": "COMPLETE",
      "value": 20.243513511330676,
      "tldp_percent": 20.243513511330676,
@@ -15227,7 +15384,7 @@
     "explanation": "Only these facts are needed; anything you leave blank is not assumed."
    },
    "selection": null,
-   "analysis_id": "an_fef6714121082e7ea7f2d81b"
+   "analysis_id": "an_a49cc6545cfe4cdc78521c55"
   },
   "mv170": {
    "schema_version": "5.0.0",
@@ -15791,7 +15948,7 @@
     ],
     "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
     "tlds": {
-     "version": "tlds-v1",
+     "version": "tlds-v1.1",
      "weights": {
       "textual": 0.2,
       "semantic": 0.3,
@@ -15825,6 +15982,19 @@
       ]
      ],
      "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "contributions": {
+      "textual": 0.12269938650306748,
+      "semantic": 0.16483516312458923,
+      "legal_effect": null,
+      "rule_structure": 1.1111111111111112
+     },
+     "disagreement": {
+      "spread": 0.1056166056736248,
+      "highest": "rule_structure",
+      "lowest": "semantic",
+      "strong": false,
+      "rule": "components disagree strongly when their values differ by 0.6 or more on the 0–1 scale"
+     },
      "state": "INCOMPLETE",
      "value": null,
      "tldp_percent": null,
@@ -16419,7 +16589,7 @@
     "explanation": "Only these facts are needed; anything you leave blank is not assumed."
    },
    "selection": null,
-   "analysis_id": "an_e2fde9a366d5c8df1537da58"
+   "analysis_id": "an_46d7c7981b71cac193b8beba"
   },
   "wrong-act": {
    "schema_version": "5.0.0",
@@ -16548,7 +16718,7 @@
     "reading": [],
     "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
     "tlds": {
-     "version": "tlds-v1",
+     "version": "tlds-v1.1",
      "weights": {
       "textual": 0.2,
       "semantic": 0.3,
@@ -16585,6 +16755,13 @@
       ]
      ],
      "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "contributions": {
+      "textual": null,
+      "semantic": null,
+      "legal_effect": null,
+      "rule_structure": null
+     },
+     "disagreement": null,
      "state": "INCOMPLETE",
      "value": null,
      "tldp_percent": null,
@@ -16889,7 +17066,7 @@
     "explanation": "No facts are needed for this question. Facts cannot fill missing legal evidence for: which wording applies on your date, whether your answer changes."
    },
    "selection": null,
-   "analysis_id": "an_2a2f626ce76d813b7d01fcba"
+   "analysis_id": "an_6ff5d7b3e5b395115ecd827e"
   },
   "ocr": {
    "schema_version": "5.0.0",
@@ -17023,7 +17200,7 @@
     "reading": [],
     "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
     "tlds": {
-     "version": "tlds-v1",
+     "version": "tlds-v1.1",
      "weights": {
       "textual": 0.2,
       "semantic": 0.3,
@@ -17060,6 +17237,13 @@
       ]
      ],
      "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "contributions": {
+      "textual": null,
+      "semantic": null,
+      "legal_effect": null,
+      "rule_structure": null
+     },
+     "disagreement": null,
      "state": "INCOMPLETE",
      "value": null,
      "tldp_percent": null,
@@ -17536,7 +17720,7 @@
     "explanation": "No facts are needed for this question. Facts cannot fill missing legal evidence for: which wording applies on your date, whether your answer changes."
    },
    "selection": null,
-   "analysis_id": "an_e5589d8836a937b9584f6e87"
+   "analysis_id": "an_33ed2e62d3cc2e995bcc80ff"
   },
   "mv-act": {
    "schema_version": "5.0.0",
@@ -17667,7 +17851,7 @@
     "reading": [],
     "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
     "tlds": {
-     "version": "tlds-v1",
+     "version": "tlds-v1.1",
      "weights": {
       "textual": 0.2,
       "semantic": 0.3,
@@ -17704,6 +17888,13 @@
       ]
      ],
      "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "contributions": {
+      "textual": null,
+      "semantic": null,
+      "legal_effect": null,
+      "rule_structure": null
+     },
+     "disagreement": null,
      "state": "INCOMPLETE",
      "value": null,
      "tldp_percent": null,
@@ -18192,7 +18383,7 @@
     "explanation": "No facts are needed for this question. Facts cannot fill missing legal evidence for: which wording applies on your date, whether your answer changes."
    },
    "selection": null,
-   "analysis_id": "an_ab6153729c3adceac8bd69ed"
+   "analysis_id": "an_6b31d49f11828431d1f740ec"
   },
   "mv-act-194": {
    "schema_version": "5.0.0",
@@ -18838,7 +19029,7 @@
     ],
     "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
     "tlds": {
-     "version": "tlds-v1",
+     "version": "tlds-v1.1",
      "weights": {
       "textual": 0.2,
       "semantic": 0.3,
@@ -18870,6 +19061,19 @@
       ]
      ],
      "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "contributions": {
+      "textual": 0.6217616580310881,
+      "semantic": 0.3518920190062347,
+      "legal_effect": 30.0,
+      "rule_structure": 3.333333333333333
+     },
+     "disagreement": {
+      "spread": 0.7382702660331255,
+      "highest": "legal_effect",
+      "lowest": "semantic",
+      "strong": true,
+      "rule": "components disagree strongly when their values differ by 0.6 or more on the 0–1 scale"
+     },
      "state": "COMPLETE",
      "value": 34.30698701037066,
      "tldp_percent": 34.30698701037066,
@@ -19524,7 +19728,7 @@
     "section": "194",
     "chosen_from": "section_candidates"
    },
-   "analysis_id": "an_3a948942d848a7838775c44f"
+   "analysis_id": "an_d27a7949bb8e3dac343ad8ea"
   },
   "ibc-act-2025": {
    "schema_version": "5.0.0",
@@ -19647,7 +19851,7 @@
     "reading": [],
     "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
     "tlds": {
-     "version": "tlds-v1",
+     "version": "tlds-v1.1",
      "weights": {
       "textual": 0.2,
       "semantic": 0.3,
@@ -19684,6 +19888,13 @@
       ]
      ],
      "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "contributions": {
+      "textual": null,
+      "semantic": null,
+      "legal_effect": null,
+      "rule_structure": null
+     },
+     "disagreement": null,
      "state": "INCOMPLETE",
      "value": null,
      "tldp_percent": null,
@@ -20001,7 +20212,7 @@
     "explanation": "No facts are needed for this question. Facts cannot fill missing legal evidence for: which wording applies on your date, whether your answer changes."
    },
    "selection": null,
-   "analysis_id": "an_e80d70ed53a8b038fa2087cd"
+   "analysis_id": "an_2db62b504b313bbb0d0955cb"
   },
   "ibc99-2025": {
    "schema_version": "5.0.0",
@@ -20125,7 +20336,7 @@
     "reading": [],
     "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
     "tlds": {
-     "version": "tlds-v1",
+     "version": "tlds-v1.1",
      "weights": {
       "textual": 0.2,
       "semantic": 0.3,
@@ -20162,6 +20373,13 @@
       ]
      ],
      "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "contributions": {
+      "textual": null,
+      "semantic": null,
+      "legal_effect": null,
+      "rule_structure": null
+     },
+     "disagreement": null,
      "state": "INCOMPLETE",
      "value": null,
      "tldp_percent": null,
@@ -20466,7 +20684,7 @@
     "explanation": "No facts are needed for this question. Facts cannot fill missing legal evidence for: which wording applies on your date, whether your answer changes."
    },
    "selection": null,
-   "analysis_id": "an_8e03f5bd562306412914a7d6"
+   "analysis_id": "an_ec8a4f8498d1478ed085f4ed"
   },
   "unknown-act": {
    "schema_version": "5.0.0",
@@ -20588,7 +20806,7 @@
     "reading": [],
     "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
     "tlds": {
-     "version": "tlds-v1",
+     "version": "tlds-v1.1",
      "weights": {
       "textual": 0.2,
       "semantic": 0.3,
@@ -20625,6 +20843,13 @@
       ]
      ],
      "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "contributions": {
+      "textual": null,
+      "semantic": null,
+      "legal_effect": null,
+      "rule_structure": null
+     },
+     "disagreement": null,
      "state": "INCOMPLETE",
      "value": null,
      "tldp_percent": null,
@@ -20929,7 +21154,7 @@
     "explanation": "No facts are needed for this question. Facts cannot fill missing legal evidence for: which wording applies on your date, whether your answer changes."
    },
    "selection": null,
-   "analysis_id": "an_550f23ecfd622cb5be944186"
+   "analysis_id": "an_0d193e9b107b3b2ba876f6d2"
   },
   "timeout": {
    "schema_version": "5.0.0",
@@ -21345,7 +21570,7 @@
     "reading": [],
     "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
     "tlds": {
-     "version": "tlds-v1",
+     "version": "tlds-v1.1",
      "weights": {
       "textual": 0.2,
       "semantic": 0.3,
@@ -21382,6 +21607,13 @@
       ]
      ],
      "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "contributions": {
+      "textual": null,
+      "semantic": null,
+      "legal_effect": null,
+      "rule_structure": null
+     },
+     "disagreement": null,
      "state": "NOT_APPLICABLE",
      "value": null,
      "tldp_percent": null,
@@ -21429,7 +21661,7 @@
     "explanation": "No facts are needed for this question."
    },
    "selection": null,
-   "analysis_id": "an_42c7c562d0c72c951dac5adf"
+   "analysis_id": "an_288c5acea934eb4145820b4b"
   }
  }
 }

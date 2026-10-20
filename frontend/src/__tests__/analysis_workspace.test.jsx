@@ -10,6 +10,8 @@ import AssistantResult from "../AssistantResult";
 import { DriftExplanationPage, ScoreCalculationPage } from "../ExplanationPages";
 import { followUps, readHistory, remember } from "../App";
 import FAQ from "../faq.json";
+import { ComparisonPage } from "../ExplanationPages";
+const recorded = JSON.parse(readFileSync("src/__tests__/fixtures/methods_and_discoveries.json", "utf8"));
 
 const { responses } = JSON.parse(readFileSync("src/__tests__/fixtures/rag_answer_v5.json", "utf8"));
 const v4 = JSON.parse(readFileSync("src/__tests__/fixtures/rag_answer_v4.json", "utf8")).responses;
@@ -27,7 +29,8 @@ function stubApi() {
     const sent = String(url).includes("/api/rag/query") ? JSON.parse(init.body) : null;
     const body = sent ? Object.values(responses).find((r) => r.query === sent.query && r.mode === sent.mode && !r.scenario && (r.selection?.section || null) === (sent.section || null))
       : id ? Object.values(responses).find((r) => r.analysis_id === id)
-      : String(url).includes("/api/corpus") ? { entries: [] } : String(url).includes("/api/sources/health") ? { sources: [] } : { ready: true };
+      : String(url).includes("/api/corpus") ? { entries: [] } : String(url).includes("/api/sources/health") ? { sources: [] }
+      : String(url).includes("/api/sources/notifications") ? recorded.notifications : String(url).includes("/api/methods/tlds") ? recorded.method : { ready: true };
     return { ok: Boolean(body), status: body ? 200 : 404, json: async () => body || { error: "not found" } };
   }));
 }
@@ -196,7 +199,8 @@ describe("standalone Drift explanation and Score calculation pages", () => {
       const recomputed = 100 * Object.entries(tlds.components).reduce((sum, [name, part]) => sum + tlds.weights[name] * part.value, 0);
       expect(tlds.calculation.endsWith(`= ${recomputed.toFixed(1)}`), key).toBe(true);  // the shown sum reproduces from the shown parts
       expect(page().textContent).toContain(analysis.fingerprint.wording_drift.details.clause_sha256.before.slice(0, 16));
-      expect(page().textContent).not.toMatch(/pretrained semantic embedding|legal accuracy/i);
+      expect(page().textContent).not.toMatch(/pretrained semantic embedding/i);
+      expect(page().textContent).toContain("it is not legal accuracy, not the materiality of the amendment, not compliance risk and not a probability");
       cleanup();
     }
   });
@@ -215,7 +219,7 @@ describe("standalone Drift explanation and Score calculation pages", () => {
     calc(responses.mv170);
     expect(page().textContent).toMatch(/Only a cross-reference changed \(“149” → “150”\)/);
     const card = screen.getByRole("article", { name: /Why there is no combined score/ });
-    expect(card.textContent).toMatch(/Incomplete\. Missing: legal effect\. A missing component is never counted as 0/);
+    expect(card.textContent).toMatch(/Incomplete: no combined score\. Missing: Legal effect \(L\)\. A missing component is never counted as 0/);
     expect(card.textContent).toContain("Partial, not comparable with complete scores");
   });
 
@@ -550,6 +554,194 @@ describe("FAQ, recent questions and follow-ups", () => {
     await userEvent.setup().click(within(group).getByRole("button"));
     expect(screen.getByLabelText("Legal research question").value).toBe("What changed in the Insolvency Bankruptcy Code 2016?");
     expect(screen.getByText(/a comparison appears only if the evidence supports it/)).toBeTruthy();
+  });
+});
+
+describe("latest discoveries from the monitored sources", () => {
+  beforeEach(stubApi);
+  const open = async (user) => user.click(await screen.findByRole("button", { name: /Latest discoveries/ }));
+
+  it("lists discovered documents with source, dates, status and official link, and states each source's condition", async () => {
+    const user = userEvent.setup();
+    const data = recorded.notifications;
+    render(<App />);
+    const toggle = await screen.findByRole("button", { name: /Latest discoveries/ });
+    await waitFor(() => expect(toggle.textContent).toContain(String(data.total)));  // unread count
+    await open(user);
+    const panel = screen.getByRole("complementary", { name: "Latest discovered in monitored sources" });
+    expect(toggle.getAttribute("aria-expanded")).toBe("true");
+    expect(panel.textContent).toContain("Not a complete list of Indian amendments");
+    const states = within(panel).getByRole("list", { name: "Source status" }).textContent;
+    expect(states).toContain("Last check failed");
+    expect(states).toContain("Not checked recently");
+    const items = panel.querySelectorAll(".discovery-list > li");
+    expect(items).toHaveLength(data.items.length);
+    data.items.forEach((row, index) => {
+      expect(items[index].textContent).toContain(row.title);
+      expect(items[index].textContent).toContain(row.status_label);
+      expect(items[index].textContent).toContain(row.source);
+      expect(within(items[index]).getByRole("link", { name: /Official record/ }).getAttribute("href")).toBe(row.official_url);
+    });
+    expect(panel.textContent).toMatch(/Machine extraction names .*; this relationship is not verified\./);
+    for (const item of items) expect(item.querySelector(".status-tag").textContent).not.toMatch(/confirmed|in force|commenced|amended/i);
+    expect(panel.textContent).toContain("is not a confirmed change to law");
+    expect(panel.textContent).toContain(`${data.listed_total} other listings seen but not downloaded`);
+  });
+
+  it("keeps read marks in this browser and closes with Escape, returning focus", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await open(user);
+    const panel = screen.getByRole("complementary", { name: "Latest discovered in monitored sources" });
+    await waitFor(() => expect(within(panel).getAllByText("New").length).toBe(recorded.notifications.total));
+    await user.click(within(panel).getAllByRole("button", { name: "Mark as read" })[0]);
+    expect(within(panel).getAllByText("New")).toHaveLength(recorded.notifications.total - 1);
+    await user.click(within(panel).getByRole("button", { name: "Mark all as read" }));
+    expect(within(panel).queryAllByText("New")).toHaveLength(0);
+    expect(JSON.parse(window.localStorage.getItem("tldrift:seen-discoveries"))).toHaveLength(recorded.notifications.total);
+    await user.keyboard("{Escape}");
+    expect(screen.queryByRole("complementary", { name: "Latest discovered in monitored sources" })).toBeNull();
+    expect(document.activeElement.textContent).toMatch(/^Latest discoveries/);
+  });
+
+  it("shows empty and unavailable states honestly", async () => {
+    const user = userEvent.setup();
+    const empty = { ...recorded.notifications, items: [], total: 0, listed: [], listed_total: 0 };
+    const base = fetch.getMockImplementation();
+    fetch.mockImplementation(async (url, init) => (String(url).includes("/api/sources/notifications") ? { ok: true, status: 200, json: async () => empty } : base(url, init)));
+    render(<App />);
+    await open(user);
+    expect(await screen.findByText("No new documents are recorded from the monitored sources.")).toBeTruthy();
+    cleanup();
+    fetch.mockImplementation(async (url, init) => (String(url).includes("/api/sources/notifications") ? { ok: false, status: 500, json: async () => ({ error: "x" }) } : base(url, init)));
+    render(<App />);
+    await open(user);
+    expect(await screen.findByText(/The discovery list could not be loaded/)).toBeTruthy();
+  });
+});
+
+describe("worked score weights", () => {
+  const request = vi.fn(async (path) => (path === "/api/methods/tlds" ? recorded.method : null));
+  const calcPage = (analysis) => render(<ScoreCalculationPage analysis={analysis} onEvidence={vi.fn()} onField={vi.fn()} onAssistant={vi.fn()} request={request} />);
+
+  it("shows value × weight = points for each component, adding up to the stored score, with its inputs", async () => {
+    const tlds = responses.ibc99.fingerprint.tlds;
+    calcPage(responses.ibc99);
+    await waitFor(() => expect(screen.getByText(/not learned from data, not optimised and not legally validated/)).toBeTruthy());  // method loaded
+    const table = screen.getByRole("table", { name: /value × weight × 100 = points/ });
+    const rows = within(table).getAllByRole("row").slice(1, 5);
+    const points = rows.map((row) => Number(row.cells[4].textContent));
+    expect(points).toEqual(["textual", "semantic", "legal_effect", "rule_structure"].map((key) => Number(tlds.contributions[key].toFixed(1))));
+    expect(Math.abs(points.reduce((a, b) => a + b, 0) - tlds.value)).toBeLessThan(0.2);  // rounding of the shown points only
+    expect(rows[2].textContent).toContain(recorded.method.components.legal_effect.measures);
+    expect(within(rows[2]).getByRole("button", { name: "Show the words behind legal effect: Deadline or period" })).toBeTruthy();
+    expect(within(table).getByRole("row", { name: /Total/ }).textContent).toContain(tlds.calculation);
+    await waitFor(() => expect(screen.getByText(/not learned from data, not optimised and not legally validated/)).toBeTruthy());
+    for (const key of Object.keys(recorded.method.components)) expect(document.body.textContent).toContain(recorded.method.components[key].why_this_weight);
+  });
+
+  it("surfaces the sensitivity finding: the band depends on the weights", async () => {
+    calcPage(responses.ibc99);
+    const table = await screen.findByRole("table", { name: /held-out changes with a complete score, under four weightings/ });
+    expect(within(table).getAllByRole("row")).toHaveLength(5);
+    expect(within(table).getByRole("row", { name: /Current weights/ }).textContent).toContain("42");
+    expect(document.body.textContent).toContain("There are no expert labels to say which weighting is right");
+    expect(document.body.textContent).toContain("The weights were not changed to improve these numbers");
+  });
+
+  it("flags one component at 1 and the others at 0 prominently instead of hiding it in the total", () => {
+    const base = responses.ibc99;
+    const tlds = { ...base.fingerprint.tlds, value: 40, band: "Moderate", label: "40.0/100 · Moderate", calculation: "100 × (0.2 × 0.0000 + 0.3 × 0.0000 + 0.4 × 1.0000 + 0.1 × 0.0000) = 40.0",
+      contributions: { textual: 0, semantic: 0, legal_effect: 40, rule_structure: 0 },
+      disagreement: { spread: 1, highest: "legal_effect", lowest: "textual", strong: true, rule: "x" },
+      components: Object.fromEntries(Object.entries(base.fingerprint.tlds.components).map(([key, part]) => [key, { ...part, value: key === "legal_effect" ? 1 : 0 }])) };
+    calcPage({ ...base, fingerprint: { ...base.fingerprint, tlds } });
+    const note = screen.getAllByRole("note").find((el) => el.textContent.startsWith("The components disagree."));
+    expect(note.textContent).toContain("Legal effect (L) is 1.00 but Textual (T) is 0.00");
+  });
+
+  it("never counts a missing component as 0 and withholds the total", () => {
+    calcPage(responses.mv170);
+    const row = within(screen.getByRole("table", { name: /value × weight × 100 = points/ })).getByRole("row", { name: /Legal effect/ });
+    expect(row.textContent).toContain("missing");
+    expect(row.textContent).toContain("not counted");
+    expect(document.body.textContent).toContain("A missing component is never counted as 0, so the total is withheld");
+  });
+});
+
+describe("dedicated clause comparison page", () => {
+  beforeEach(stubApi);
+  const handlers = () => ({ onEvidence: vi.fn(), onField: vi.fn(), onAssistant: vi.fn(), onPage: vi.fn() });
+
+  it("opens from a supported answer at #comparison/<id> and survives a refresh", async () => {
+    const user = userEvent.setup();
+    const analysis = responses.ibc99;
+    window.history.replaceState(null, "", `#assistant/${analysis.analysis_id}`);
+    render(<App />);
+    await user.click(await screen.findByRole("button", { name: /View detailed clause comparison/ }));
+    expect(window.location.hash).toBe(`#comparison/${analysis.analysis_id}`);
+    expect(screen.getByRole("heading", { name: "Before and after, side by side" })).toBeTruthy();
+    cleanup();
+    window.history.replaceState(null, "", `#comparison/${analysis.analysis_id}`);
+    render(<App />);
+    expect(await screen.findByRole("heading", { name: "Before and after, side by side" })).toBeTruthy();
+    window.history.back();
+  });
+
+  it("shows provision, amendment, status, both sides with page links, highlighted changes and the rule fields", async () => {
+    const user = userEvent.setup();
+    const analysis = responses.ibc99, h = handlers();
+    render(<ComparisonPage analysis={analysis} {...h} />);
+    const page = document.querySelector(".comparison-page");
+    expect(page.textContent).toContain("Insolvency Bankruptcy Code 2016");
+    expect(page.textContent).toMatch(/Section 99/);
+    expect(page.textContent).toContain("Act 6 of 2026 (from the footnote)");
+    expect(page.textContent).toContain("Evidence status: Earlier wording reconstructed from India Code's own footnote (derived, not verbatim)");
+    expect(page.querySelectorAll(".comparison-panel.full .compare-pane")).toHaveLength(2);
+    expect(page.querySelector(".compare-pane.derived").textContent).toContain("Derived text — not a verbatim quote");
+    expect([...page.querySelectorAll(".compare-pane a")].filter((a) => /Open source PDF at page 98/.test(a.textContent))).toHaveLength(2);
+    expect(page.querySelector(".comparison-panel del")).toBeTruthy();
+    expect(page.querySelector(".comparison-panel ins")).toBeTruthy();
+    expect(page.textContent).toContain("“within ten days” → “within twenty-one days”");
+    await user.click(screen.getAllByRole("button", { name: "Drift explanation →" })[0]);
+    await user.click(screen.getAllByRole("button", { name: "Score calculation →" })[0]);
+    expect(h.onPage.mock.calls).toEqual([["drift"], ["calculation"]]);
+  });
+
+  it("explains precisely why there is no pair, and never shows unrelated excerpts as versions", () => {
+    render(<ComparisonPage analysis={responses["wrong-act"]} {...handlers()} />);
+    expect(screen.getByRole("heading", { name: "No before and after to compare" })).toBeTruthy();
+    expect(document.querySelector(".compare-pane")).toBeNull();
+    expect(document.body.textContent).toContain(responses["wrong-act"].version_evidence.reason);
+    cleanup();
+    render(<AssistantResult analysis={responses["mv-act"]} />);
+    expect(screen.queryByRole("button", { name: /View detailed clause comparison/ })).toBeNull();
+  });
+});
+
+describe("question area and layout", () => {
+  beforeEach(stubApi);
+
+  it("jumps to the recently asked and suggested questions and focuses them, respecting reduced motion", async () => {
+    const user = userEvent.setup();
+    const scroll = vi.fn();
+    window.HTMLElement.prototype.scrollIntoView = scroll;
+    window.matchMedia = vi.fn(() => ({ matches: true }));
+    render(<App />);
+    await user.click(screen.getByRole("button", { name: /Recently asked and suggested questions/ }));
+    expect(document.activeElement).toBe(screen.getByRole("region", { name: "Recently asked and suggested questions" }));
+    expect(scroll).toHaveBeenCalledWith({ behavior: "auto", block: "center" });
+    delete window.HTMLElement.prototype.scrollIntoView;
+    delete window.matchMedia;
+  });
+
+  it("stacks the panel, chips and comparison on narrow screens and honours reduced motion", () => {
+    const css = readFileSync("src/styles.css", "utf8");
+    expect(css).toMatch(/@media \(max-width:900px\)\{\.discoveries\{position:static/);
+    expect(css).toMatch(/@media \(max-width:620px\)\{\.question-chips \.suggestions button\{flex:1 1 100%\}/);
+    expect(css).toMatch(/@media \(prefers-reduced-motion: reduce\)\{html\{scroll-behavior:auto\}/);
+    expect(css).toMatch(/\.comparison-panel\.full \.compare-text\{max-height:none/);
+    expect(css).toMatch(/\.compare-text,\.clause-text\{font:15px\/1\.7 var\(--reading\);overflow-wrap:anywhere\}/);
   });
 });
 

@@ -1,0 +1,564 @@
+{
+ "_note": "Recorded from the backend (GET /api/methods/tlds and GET /api/sources/notifications on the repository's monitoring ledger, 2026-10-20).",
+ "method": {
+  "version": "tlds-v1.1",
+  "config": "configs/metrics/tlds.v1.json",
+  "formula": "D = 100 × (w_T·T + w_S·S + w_L·L + w_R·R), every component in [0, 1]",
+  "weights": {
+   "textual": 0.2,
+   "semantic": 0.3,
+   "legal_effect": 0.4,
+   "rule_structure": 0.1
+  },
+  "weights_status": "Chosen by the project as provisional research parameters before evaluation. They were not learned from data, not optimised and not legally validated.",
+  "components": {
+   "textual": {
+    "measures": "How many words were inserted, deleted or substituted, per word of the longer clause.",
+    "why_this_weight": "0.20: a surface measure. One changed word can reverse a duty, so it is kept well below legal effect; S measures similar wording, so T is not given more."
+   },
+   "semantic": {
+    "measures": "How far the two clauses' word-hash vectors moved apart (1 − cosine). It is a word-overlap stand-in, not a pretrained meaning model.",
+    "why_this_weight": "0.30: the weight intended for meaning-level change. Because the current vector reflects shared words, T and S together give surface wording 0.50 of the score."
+   },
+   "legal_effect": {
+    "measures": "The most severe change found in the rule fields (duty, penalty, amount or limit, deadline, exception, scope, person, action), on a 0–1 rubric.",
+    "why_this_weight": "0.40: closest to the research question about legally applicable change, so the largest single weight; kept below 0.50 so no single component decides the score alone."
+   },
+   "rule_structure": {
+    "measures": "The share of the clause's rule elements that were inserted, deleted or substituted.",
+    "why_this_weight": "0.10: a coarse count that repeats some of what legal effect sees, so it gets the least weight."
+   }
+  },
+  "bands": [
+   [
+    0,
+    "Very low"
+   ],
+   [
+    10,
+    "Low"
+   ],
+   [
+    30,
+    "Moderate"
+   ],
+   [
+    50,
+    "High"
+   ],
+   [
+    75,
+    "Very high"
+   ]
+  ],
+  "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+  "missing": "A component that cannot be computed is null with a reason, never 0. The score is COMPLETE only when all four exist; otherwise INCOMPLETE with value null and a separately named partial_value = 100 × Σ_available w_i·x_i ÷ Σ_available w_i that must not be compared with complete scores.",
+  "disagreement_spread": 0.6,
+  "note": "An indicator of change between two versions of one clause, not the percentage of a statute that changed, not legal correctness, not a probability, not materiality and not risk. Read legal-effect drift beside it: a small wording change can carry a large legal effect.",
+  "sensitivity": {
+   "source": "reports/fingerprint/tlds_heldout.v1.json",
+   "transitions": 86,
+   "complete": 59,
+   "weightings": {
+    "default": {
+     "weights": {
+      "textual": 0.2,
+      "semantic": 0.3,
+      "legal_effect": 0.4,
+      "rule_structure": 0.1
+     },
+     "bands": {
+      "High": 1,
+      "Low": 42,
+      "Moderate": 16
+     },
+     "legal_effect_material_but_band_low": 42,
+     "spearman_vs_default": 1.0
+    },
+    "equal": {
+     "weights": {
+      "textual": 0.25,
+      "semantic": 0.25,
+      "legal_effect": 0.25,
+      "rule_structure": 0.25
+     },
+     "bands": {
+      "Low": 53,
+      "Moderate": 6
+     },
+     "legal_effect_material_but_band_low": 53,
+     "spearman_vs_default": 0.984
+    },
+    "legal_heavy": {
+     "weights": {
+      "textual": 0.1,
+      "semantic": 0.1,
+      "legal_effect": 0.6,
+      "rule_structure": 0.2
+     },
+     "bands": {
+      "High": 7,
+      "Moderate": 52
+     },
+     "legal_effect_material_but_band_low": 0,
+     "spearman_vs_default": 0.982
+    },
+    "wording_heavy": {
+     "weights": {
+      "textual": 0.4,
+      "semantic": 0.4,
+      "legal_effect": 0.1,
+      "rule_structure": 0.1
+     },
+     "bands": {
+      "Low": 22,
+      "Moderate": 1,
+      "Very low": 36
+     },
+     "legal_effect_material_but_band_low": 58,
+     "spearman_vs_default": 0.976
+    }
+   },
+   "finding": "On 59 held-out changes with a complete score, the default weights put 42 changes with a material legal effect (0.5 or more) in the Low band. Other weightings move many changes between bands while barely changing their order, so the band depends on the weight choice. There are no expert labels to say which weighting is right."
+  }
+ },
+ "notifications": {
+  "version": "source-notifications-v1",
+  "generated_at": "2026-10-20T07:32:58.110311Z",
+  "items": [
+   {
+    "id": "CG-DL-E-12102026-277080",
+    "title": "Appointment of the date 15th October 2026 for MSMED Amendment Act 2026",
+    "source_key": "egazette",
+    "source": "e-Gazette of India",
+    "published": null,
+    "discovered_at": "2026-10-12T16:42:42.895148Z",
+    "last_checked_at": "2026-10-13T17:17:13.845358Z",
+    "official_url": "https://egazette.gov.in/WriteReadData/2026/277080.pdf",
+    "status": "AWAITING_REVIEW",
+    "status_label": "New document awaiting review",
+    "queue_id": "mreview_63ed7d9503e9573300f4",
+    "candidate_events": 0,
+    "candidate_targets": [],
+    "legal_effect_claimed": false
+   },
+   {
+    "id": "61b31f4d-e122-4b81-b014-d9305de27901",
+    "title": "The Representation of the People (Amendment) Ordinance, 1999",
+    "source_key": "india_code",
+    "source": "India Code",
+    "published": "1999",
+    "discovered_at": "2026-10-12T14:21:16.973942Z",
+    "last_checked_at": "2026-10-12T14:22:46.172383Z",
+    "official_url": "https://indiacode.gov.in/items/61b31f4d-e122-4b81-b014-d9305de27901",
+    "status": "CANDIDATE_UNVERIFIED",
+    "status_label": "Possible amendment text found by machine extraction; not verified",
+    "queue_id": "mreview_1516baf95aac60debc9b",
+    "candidate_events": 1,
+    "candidate_targets": [
+     "Representation of the People Act, 1951"
+    ],
+    "legal_effect_claimed": false
+   },
+   {
+    "id": "5ff5c04d-01c3-423a-ae50-b00b48a13731",
+    "title": "The Life Insurance Corporation (Amendment) Ordinance 1981.",
+    "source_key": "india_code",
+    "source": "India Code",
+    "published": "1981",
+    "discovered_at": "2026-10-12T14:21:14.723783Z",
+    "last_checked_at": "2026-10-12T14:22:43.722968Z",
+    "official_url": "https://indiacode.gov.in/items/5ff5c04d-01c3-423a-ae50-b00b48a13731",
+    "status": "CANDIDATE_UNVERIFIED",
+    "status_label": "Possible amendment text found by machine extraction; not verified",
+    "queue_id": "mreview_7b64408fb97f2fe36f59",
+    "candidate_events": 3,
+    "candidate_targets": [
+     "Life Insurance Corporation Act, 1956"
+    ],
+    "legal_effect_claimed": false
+   },
+   {
+    "id": "f24f0f80-aee9-4939-9822-c6616061bf98",
+    "title": "The Delhi University (Amendment) Ordinance, 1981.",
+    "source_key": "india_code",
+    "source": "India Code",
+    "published": "1981",
+    "discovered_at": "2026-10-12T14:21:12.461899Z",
+    "last_checked_at": "2026-10-12T14:22:41.282565Z",
+    "official_url": "https://indiacode.gov.in/items/f24f0f80-aee9-4939-9822-c6616061bf98",
+    "status": "CANDIDATE_UNVERIFIED",
+    "status_label": "Possible amendment text found by machine extraction; not verified",
+    "queue_id": "mreview_bd264fdcede219697e0b",
+    "candidate_events": 2,
+    "candidate_targets": [
+     "Delhi University Act, 1922"
+    ],
+    "legal_effect_claimed": false
+   }
+  ],
+  "total": 4,
+  "listed": [
+   {
+    "id": "CG-MH-E-12102026-277088",
+    "title": "Publication of notification of extraordinary gazette under Part II section 3 Sub Section (I) Notification under clause 20A of the Railway Act 1989 (24 of 1989) for land to be acquired in connection with Special Railway Project namely Vadodara Ratlam Quadrupling Project in District Dahod in the State of Madhya Pradesh",
+    "source_key": "egazette",
+    "source": "e-Gazette of India",
+    "published": "2026-10-12",
+    "discovered_at": "2026-10-13T17:17:11.397101Z",
+    "last_checked_at": "2026-10-13T17:17:11.397101Z",
+    "official_url": "https://egazette.gov.in/WriteReadData/2026/277088.pdf",
+    "status": "LISTED_NOT_DOWNLOADED",
+    "status_label": "Listed by the source; document not downloaded",
+    "queue_id": null,
+    "candidate_events": 0,
+    "candidate_targets": [],
+    "legal_effect_claimed": false
+   },
+   {
+    "id": "CG-MH-E-12102026-277092",
+    "title": "Publication of notification of extraordinary gazette under Part II section 3 Sub Section (II) Notification under clause 20E of the Railway Act 1989 (24 of 1989) for land to be acquired in connection with Special Railway Project namely Miyagam Karjan Lakodra Fly Over Project in District Vadodara in the State of Gujarat",
+    "source_key": "egazette",
+    "source": "e-Gazette of India",
+    "published": "2026-10-12",
+    "discovered_at": "2026-10-13T17:17:11.396511Z",
+    "last_checked_at": "2026-10-13T17:17:11.396511Z",
+    "official_url": "https://egazette.gov.in/WriteReadData/2026/277092.pdf",
+    "status": "LISTED_NOT_DOWNLOADED",
+    "status_label": "Listed by the source; document not downloaded",
+    "queue_id": null,
+    "candidate_events": 0,
+    "candidate_targets": [],
+    "legal_effect_claimed": false
+   },
+   {
+    "id": "CG-MH-E-06102026-276820",
+    "title": "Publication of notification of extraordinary gazette Part II section 3 Sub Section (I) Notification under clause 20A of the Railway Act 1989 (24 of 1989) for land to be acquired in connection with Special Railway Project namely 4TH LINE BETWEEN BAREJADI NANDEJ GERATPUR SANAND (38.20 KM) IN THE DISTRICT OF AHMEDABAD in the State of Gujarat",
+    "source_key": "egazette",
+    "source": "e-Gazette of India",
+    "published": "2026-10-06",
+    "discovered_at": "2026-10-12T16:42:42.899007Z",
+    "last_checked_at": "2026-10-12T16:42:42.899007Z",
+    "official_url": "https://egazette.gov.in/WriteReadData/2026/276820.pdf",
+    "status": "LISTED_NOT_DOWNLOADED",
+    "status_label": "Listed by the source; document not downloaded",
+    "queue_id": null,
+    "candidate_events": 0,
+    "candidate_targets": [],
+    "legal_effect_claimed": false
+   },
+   {
+    "id": "CG-DL-E-06102026-276833",
+    "title": "Declaration of Shri Rengith George Deputy Collector (LR) as Competent Authority under Section 2(a) of the Petroleum and Minerals Pipelines (Acquisition of Right of User in Land) Act 1962 for Kochi Koottanad Bangalore Mangalore Pipeline (KKBMPL) Project of Ms GAIL (India) Limited in the State of Kerala",
+    "source_key": "egazette",
+    "source": "e-Gazette of India",
+    "published": "2026-10-06",
+    "discovered_at": "2026-10-12T16:42:42.898862Z",
+    "last_checked_at": "2026-10-12T16:42:42.898862Z",
+    "official_url": "https://egazette.gov.in/WriteReadData/2026/276833.pdf",
+    "status": "LISTED_NOT_DOWNLOADED",
+    "status_label": "Listed by the source; document not downloaded",
+    "queue_id": null,
+    "candidate_events": 0,
+    "candidate_targets": [],
+    "legal_effect_claimed": false
+   },
+   {
+    "id": "CG-KA-E-06102026-276837",
+    "title": "Publication of Notification in respect of construction of ROB in lieu of LC No 10 in terms of clause 20E of Railway Act 1989",
+    "source_key": "egazette",
+    "source": "e-Gazette of India",
+    "published": "2026-10-06",
+    "discovered_at": "2026-10-12T16:42:42.898725Z",
+    "last_checked_at": "2026-10-12T16:42:42.898725Z",
+    "official_url": "https://egazette.gov.in/WriteReadData/2026/276837.pdf",
+    "status": "LISTED_NOT_DOWNLOADED",
+    "status_label": "Listed by the source; document not downloaded",
+    "queue_id": null,
+    "candidate_events": 0,
+    "candidate_targets": [],
+    "legal_effect_claimed": false
+   },
+   {
+    "id": "CG-UP-E-06102026-276849",
+    "title": "For publication in the Gazette of India under section 20A of Railways amendment Act 2008 for ROB NO 2 for the Special Railway Project namely Khalilabad to Baharaich New Railway Line Project",
+    "source_key": "egazette",
+    "source": "e-Gazette of India",
+    "published": "2026-10-06",
+    "discovered_at": "2026-10-12T16:42:42.898600Z",
+    "last_checked_at": "2026-10-12T16:42:42.898600Z",
+    "official_url": "https://egazette.gov.in/WriteReadData/2026/276849.pdf",
+    "status": "LISTED_NOT_DOWNLOADED",
+    "status_label": "Listed by the source; document not downloaded",
+    "queue_id": null,
+    "candidate_events": 0,
+    "candidate_targets": [],
+    "legal_effect_claimed": false
+   },
+   {
+    "id": "CG-DL-E-06102026-276865",
+    "title": "Publication of notification in the Extra Ordinary Gazette of India under Section 3(1) and 6(1) of the PMP Act 1962",
+    "source_key": "egazette",
+    "source": "e-Gazette of India",
+    "published": "2026-10-06",
+    "discovered_at": "2026-10-12T16:42:42.898474Z",
+    "last_checked_at": "2026-10-12T16:42:42.898474Z",
+    "official_url": "https://egazette.gov.in/WriteReadData/2026/276865.pdf",
+    "status": "LISTED_NOT_DOWNLOADED",
+    "status_label": "Listed by the source; document not downloaded",
+    "queue_id": null,
+    "candidate_events": 0,
+    "candidate_targets": [],
+    "legal_effect_claimed": false
+   },
+   {
+    "id": "CG-DL-E-06102026-276866",
+    "title": "Publication of notification in the Extra Ordinary Gazette of India under Section 3(1) and 6(1) of the PMP Act 1962",
+    "source_key": "egazette",
+    "source": "e-Gazette of India",
+    "published": "2026-10-06",
+    "discovered_at": "2026-10-12T16:42:42.898317Z",
+    "last_checked_at": "2026-10-12T16:42:42.898317Z",
+    "official_url": "https://egazette.gov.in/WriteReadData/2026/276866.pdf",
+    "status": "LISTED_NOT_DOWNLOADED",
+    "status_label": "Listed by the source; document not downloaded",
+    "queue_id": null,
+    "candidate_events": 0,
+    "candidate_targets": [],
+    "legal_effect_claimed": false
+   },
+   {
+    "id": "CG-DL-E-07102026-276880",
+    "title": "Publication of a Notification in the Extraordinary Gazette of India under Section 3(1) of the PMP Act 1962 regarding declaration of intention to acquire the Right of User in Land for laying of a spur line for Last Mile Connectivity (LMC) to Ms Hindalco Industries Limited Kansariguda Rayagada in the State of Odisha",
+    "source_key": "egazette",
+    "source": "e-Gazette of India",
+    "published": "2026-10-07",
+    "discovered_at": "2026-10-12T16:42:42.898186Z",
+    "last_checked_at": "2026-10-12T16:42:42.898186Z",
+    "official_url": "https://egazette.gov.in/WriteReadData/2026/276880.pdf",
+    "status": "LISTED_NOT_DOWNLOADED",
+    "status_label": "Listed by the source; document not downloaded",
+    "queue_id": null,
+    "candidate_events": 0,
+    "candidate_targets": [],
+    "legal_effect_claimed": false
+   },
+   {
+    "id": "CG-DL-E-07102026-276881",
+    "title": "Publication of a Notification in the Extraordinary Gazette of India under Section 3(1) of the Petroleum and Minerals Pipelines (Acquisition of Right of User in Land) Act 1962 regarding declaration of intention to acquire Right of User (RoU) in land for Last Mile Connectivity (LMC) to Ms JSW Steel Limited Raigarh Chhattisgarh from SV 39 on GAILs Mumbai Nagpur Jharsuguda Pipeline (MNJPL) network",
+    "source_key": "egazette",
+    "source": "e-Gazette of India",
+    "published": "2026-10-07",
+    "discovered_at": "2026-10-12T16:42:42.898045Z",
+    "last_checked_at": "2026-10-12T16:42:42.898045Z",
+    "official_url": "https://egazette.gov.in/WriteReadData/2026/276881.pdf",
+    "status": "LISTED_NOT_DOWNLOADED",
+    "status_label": "Listed by the source; document not downloaded",
+    "queue_id": null,
+    "candidate_events": 0,
+    "candidate_targets": [],
+    "legal_effect_claimed": false
+   },
+   {
+    "id": "CG-UP-E-07102026-276887",
+    "title": "For publication in the Gazette of India under section 20E of Railways Amendment Act 2008 for the Special Railway Project namely Khalilabad to Bahraich New Railway Line Project within the District Siddharthnagar in the State of Uttar Pradesh",
+    "source_key": "egazette",
+    "source": "e-Gazette of India",
+    "published": "2026-10-07",
+    "discovered_at": "2026-10-12T16:42:42.897882Z",
+    "last_checked_at": "2026-10-12T16:42:42.897882Z",
+    "official_url": "https://egazette.gov.in/WriteReadData/2026/276887.pdf",
+    "status": "LISTED_NOT_DOWNLOADED",
+    "status_label": "Listed by the source; document not downloaded",
+    "queue_id": null,
+    "candidate_events": 0,
+    "candidate_targets": [],
+    "legal_effect_claimed": false
+   },
+   {
+    "id": "CG-KA-E-07102026-276890",
+    "title": "Publication of Notification in respect of Bangarpet Jolarpettai in terms of clause 7A and 20F6 of Railway Act 1989",
+    "source_key": "egazette",
+    "source": "e-Gazette of India",
+    "published": "2026-10-07",
+    "discovered_at": "2026-10-12T16:42:42.897755Z",
+    "last_checked_at": "2026-10-12T16:42:42.897755Z",
+    "official_url": "https://egazette.gov.in/WriteReadData/2026/276890.pdf",
+    "status": "LISTED_NOT_DOWNLOADED",
+    "status_label": "Listed by the source; document not downloaded",
+    "queue_id": null,
+    "candidate_events": 0,
+    "candidate_targets": [],
+    "legal_effect_claimed": false
+   },
+   {
+    "id": "CG-DL-E-07102026-276903",
+    "title": "Publication of a Notification under Section 3(1) of the Petroleum and Minerals Pipelines (ARUL) Act 1962 regarding declaration of intention to acquire the Right of User in Land for laying of a Spur line from HVJ GREP DVPL Natural Gas Pipeline at Vijaipur to Bina in the State of Madhya Pradesh",
+    "source_key": "egazette",
+    "source": "e-Gazette of India",
+    "published": "2026-10-07",
+    "discovered_at": "2026-10-12T16:42:42.897627Z",
+    "last_checked_at": "2026-10-12T16:42:42.897627Z",
+    "official_url": "https://egazette.gov.in/WriteReadData/2026/276903.pdf",
+    "status": "LISTED_NOT_DOWNLOADED",
+    "status_label": "Listed by the source; document not downloaded",
+    "queue_id": null,
+    "candidate_events": 0,
+    "candidate_targets": [],
+    "legal_effect_claimed": false
+   },
+   {
+    "id": "CG-UP-E-07102026-276905",
+    "title": "For publication in the Gazette of India under section 20A of Railways Amendment Act 2008 for Burhwal to Sitapur 3rd and 4th line",
+    "source_key": "egazette",
+    "source": "e-Gazette of India",
+    "published": "2026-10-07",
+    "discovered_at": "2026-10-12T16:42:42.897491Z",
+    "last_checked_at": "2026-10-12T16:42:42.897491Z",
+    "official_url": "https://egazette.gov.in/WriteReadData/2026/276905.pdf",
+    "status": "LISTED_NOT_DOWNLOADED",
+    "status_label": "Listed by the source; document not downloaded",
+    "queue_id": null,
+    "candidate_events": 0,
+    "candidate_targets": [],
+    "legal_effect_claimed": false
+   },
+   {
+    "id": "CG-UP-E-08102026-276926",
+    "title": "For publication in the Gazette of India under section 20A of Railways Amendment Act 2008 of SWA to DIT NL 8 villages",
+    "source_key": "egazette",
+    "source": "e-Gazette of India",
+    "published": "2026-10-08",
+    "discovered_at": "2026-10-12T16:42:42.897314Z",
+    "last_checked_at": "2026-10-12T16:42:42.897314Z",
+    "official_url": "https://egazette.gov.in/WriteReadData/2026/276926.pdf",
+    "status": "LISTED_NOT_DOWNLOADED",
+    "status_label": "Listed by the source; document not downloaded",
+    "queue_id": null,
+    "candidate_events": 0,
+    "candidate_targets": [],
+    "legal_effect_claimed": false
+   },
+   {
+    "id": "CG-MH-E-08102026-276944",
+    "title": "Publication of notification of extraordinary gazette under Part II section 3 Sub Section (I) Notification under clause 20A of the Railway Act 1989 (24 of 1989) for Land to be acquired in connection with Special Railway Project namely Doubling of Sabarmati D Cabin Sarkhej Section (21 KM) on Bhavnagar Division of Western Railway in District of Ahmedabad State of Gujarat",
+    "source_key": "egazette",
+    "source": "e-Gazette of India",
+    "published": "2026-10-08",
+    "discovered_at": "2026-10-12T16:42:42.897172Z",
+    "last_checked_at": "2026-10-12T16:42:42.897172Z",
+    "official_url": "https://egazette.gov.in/WriteReadData/2026/276944.pdf",
+    "status": "LISTED_NOT_DOWNLOADED",
+    "status_label": "Listed by the source; document not downloaded",
+    "queue_id": null,
+    "candidate_events": 0,
+    "candidate_targets": [],
+    "legal_effect_claimed": false
+   },
+   {
+    "id": "CG-MH-E-08102026-276945",
+    "title": "Publication of notification of extraordinary gazette under Part II section 3 Sub Section (I) Notification under clause 20A of the Railway Act 1989 (24 of 1989) for Land to be acquired in connection with Special Railway Project namely 3rd and 4th line between Vadodara Ratlam (258.94 km) in District Vadodara in the State of Gujarat",
+    "source_key": "egazette",
+    "source": "e-Gazette of India",
+    "published": "2026-10-08",
+    "discovered_at": "2026-10-12T16:42:42.897000Z",
+    "last_checked_at": "2026-10-12T16:42:42.897000Z",
+    "official_url": "https://egazette.gov.in/WriteReadData/2026/276945.pdf",
+    "status": "LISTED_NOT_DOWNLOADED",
+    "status_label": "Listed by the source; document not downloaded",
+    "queue_id": null,
+    "candidate_events": 0,
+    "candidate_targets": [],
+    "legal_effect_claimed": false
+   },
+   {
+    "id": "CG-OR-E-08102026-276951",
+    "title": "Request for Publication of Gazette Notification for the below mentioned Land Schedule under Subsection 1 of section 20A of the Railways Amendment Act 2008 for ROB No167A",
+    "source_key": "egazette",
+    "source": "e-Gazette of India",
+    "published": "2026-10-08",
+    "discovered_at": "2026-10-12T16:42:42.896807Z",
+    "last_checked_at": "2026-10-12T16:42:42.896807Z",
+    "official_url": "https://egazette.gov.in/WriteReadData/2026/276951.pdf",
+    "status": "LISTED_NOT_DOWNLOADED",
+    "status_label": "Listed by the source; document not downloaded",
+    "queue_id": null,
+    "candidate_events": 0,
+    "candidate_targets": [],
+    "legal_effect_claimed": false
+   },
+   {
+    "id": "CG-OR-E-09102026-276974",
+    "title": "Request for Publication of Gazette Notification for the below mentioned Land Schedule under Subsection 1 of section 20A of the Railways Amendment Act 2008 for ROB No167A",
+    "source_key": "egazette",
+    "source": "e-Gazette of India",
+    "published": "2026-10-09",
+    "discovered_at": "2026-10-12T16:42:42.896663Z",
+    "last_checked_at": "2026-10-12T16:42:42.896663Z",
+    "official_url": "https://egazette.gov.in/WriteReadData/2026/276974.pdf",
+    "status": "LISTED_NOT_DOWNLOADED",
+    "status_label": "Listed by the source; document not downloaded",
+    "queue_id": null,
+    "candidate_events": 0,
+    "candidate_targets": [],
+    "legal_effect_claimed": false
+   },
+   {
+    "id": "CG-KA-E-09102026-276981",
+    "title": "Publication of Notification in respect of construction of ROB in lieu of LC No 56 in terms of clause 20E of Railway Act 1989",
+    "source_key": "egazette",
+    "source": "e-Gazette of India",
+    "published": "2026-10-09",
+    "discovered_at": "2026-10-12T16:42:42.896480Z",
+    "last_checked_at": "2026-10-12T16:42:42.896480Z",
+    "official_url": "https://egazette.gov.in/WriteReadData/2026/276981.pdf",
+    "status": "LISTED_NOT_DOWNLOADED",
+    "status_label": "Listed by the source; document not downloaded",
+    "queue_id": null,
+    "candidate_events": 0,
+    "candidate_targets": [],
+    "legal_effect_claimed": false
+   },
+   {
+    "id": "CG-DL-E-10102026-277026",
+    "title": "Publication of Notification in the official Gazette Extraordinary Part 2 section 3 Sub section 2 under 7 A and 20 F 6 of Railway Act 1989 amendment 2008 for acquisation of Construction of limited Height Subway of size 5 meter X 5 Meter by Pushing method in lieu of manned Level crossing no S 79 and S 80 onn Sanehal Jalandhar city under Senior Section Engineer Phagwara",
+    "source_key": "egazette",
+    "source": "e-Gazette of India",
+    "published": "2026-10-10",
+    "discovered_at": "2026-10-12T16:42:42.896196Z",
+    "last_checked_at": "2026-10-12T16:42:42.896196Z",
+    "official_url": "https://egazette.gov.in/WriteReadData/2026/277026.pdf",
+    "status": "LISTED_NOT_DOWNLOADED",
+    "status_label": "Listed by the source; document not downloaded",
+    "queue_id": null,
+    "candidate_events": 0,
+    "candidate_targets": [],
+    "legal_effect_claimed": false
+   }
+  ],
+  "listed_total": 21,
+  "sources": [
+   {
+    "source_key": "egazette",
+    "source": "e-Gazette of India",
+    "state": "STALE",
+    "detail": "No successful check for 158 hours; new items may be missing.",
+    "last_success_at": "2026-10-13T17:17:13.845601Z",
+    "last_attempt_at": "2026-10-13T17:17:00.475902+00:00",
+    "next_eligible_at": "2026-10-14T17:17:00.475902+00:00"
+   },
+   {
+    "source_key": "india_code",
+    "source": "India Code",
+    "state": "FAILED",
+    "detail": "The last check ended with source unavailable; showing items from the last successful check. No successful check for 185 hours.",
+    "last_success_at": "2026-10-12T14:21:16.975193Z",
+    "last_attempt_at": "2026-10-13T14:22:01.503797+00:00",
+    "next_eligible_at": "2026-10-14T14:22:01.503797+00:00"
+   }
+  ],
+  "scope": "Latest discovered in monitored sources (India Code and the e-Gazette), checked at most once every 24 hours. Not a complete list of Indian amendments.",
+  "note": "A discovered or downloaded document is not a confirmed change to law, and nothing listed here changes the answers until it is reviewed and added to the corpus.",
+  "legal_effect_claimed": false
+ }
+}

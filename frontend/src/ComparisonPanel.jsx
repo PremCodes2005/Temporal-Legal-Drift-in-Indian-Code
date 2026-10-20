@@ -60,10 +60,10 @@ function Pane({ side, data, spans, comparison }) {
   </section>;
 }
 
-export default function ComparisonPanel({ comparison }) {
+export default function ComparisonPanel({ comparison, full = false }) {
   if (!comparison || comparison.support_class === "NOT_A_COMPARISON") return null;
   const spans = comparison.changed_spans || [];
-  return <article className="panel comparison-panel" aria-labelledby="comparison-heading">
+  return <article className={`panel comparison-panel ${full ? "full" : ""}`} aria-labelledby="comparison-heading">
     <span className="section-kicker">What was compared</span>
     <h3 id="comparison-heading">{comparison.support_class === "UNALIGNED_EXCERPTS" ? "Excerpts only — no aligned versions" : "Clause comparison"}</h3>
     <p>{SUPPORT_TEXT[comparison.support_class]}</p>

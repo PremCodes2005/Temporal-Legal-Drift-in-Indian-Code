@@ -51,6 +51,8 @@ function ChangePath({ scored, combined, analysis, onPage }) {
       {combined && <li><span>Combined indicator</span><strong>{combined.label}</strong></li>}
     </ul> : <p>No change score: {analysis.fingerprint?.wording_drift?.reason || analysis.comparison?.support_reason || "no supported before/after versions."}</p>}
     <p className="panel-note">{DIAGNOSTIC_NOTE}</p>
+    {["GRAPH_TRANSITION_FRAGMENTS", "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION"].includes(analysis.comparison?.support_class) &&
+      <button className="explain-drift-button" type="button" onClick={() => onPage("comparison")}>View detailed clause comparison <span aria-hidden="true">→</span></button>}
     <button className="explain-drift-button" type="button" onClick={() => onPage("drift")}>Explain the change with the cited clauses <span aria-hidden="true">→</span></button>
     <button className="explain-drift-button" type="button" onClick={() => onPage("calculation")}>See how the scores are calculated <span aria-hidden="true">→</span></button>
   </article>;
