@@ -186,3 +186,12 @@ Not achieved in the sprint:
 | Scoring | tlds-v1.1 (contributions, disagreement; values unchanged); weights kept, rationale and sensitivity shown | ADR 0022, `docs/methodology/tlds.v1.md` |
 | UI | `#comparison/<id>` page, question jump control, readability and reduced motion | `analysis_workspace.test.jsx`, `reports/analysis_workspace/report.v5.md` |
 | Release | See `docs/verification.md` | — |
+
+## Discoveries v2, evidence cards, rule weights, review retired (2026-10-20)
+
+| Phase | Result | Evidence |
+| --- | --- | --- |
+| Monitoring | source-notifications-v2: latest five by record identity, categories, read-only refresh | `tests/unit/test_notifications.py` |
+| Scoring | Rule-field weight rationale and held-out sensitivity; weights unchanged | `tests/unit/test_rule_weights.py`, `reports/fingerprint/rule_weights_sensitivity.v1.json` |
+| UI | Evidence cards, trimmed Score calculation, review screen retired (API kept) | ADR 0023, `reports/analysis_workspace/report.v6.md` |
+| Release | See `docs/verification.md` | — |

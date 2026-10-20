@@ -301,3 +301,15 @@ Remote GitHub Actions has still not been observed. See [../reports/phase3/tempor
   - the discoveries panel covered the page on desktop.
 - **Process note:** the fixture generator lived in a temporary folder that was cleared, so it is now committed as `frontend/scripts/generate_answer_fixture.py`.
 - **Not verified:** a screen-reader listening pass; completeness of the monitored sources; any legal or statistical claim about the weights.
+
+## Discoveries v2, evidence cards, rule weights and retired review screen addendum (2026-10-20)
+
+- **Executed:**
+  - Python: 332 tests under 3.14 and 3.11, including 5 new notification tests (five-item order, fewer than five, repeat check versus revised PDF, identical bytes under two ids, categories), 4 rule-weight tests and a static check that the review routes remain. Before the release only the expected Phase 11 checksum gate failed. `validate-contract` passed.
+  - Frontend: 77 vitest tests, run 3 times.
+  - Real Chrome and `browser-a11y-check.mjs`: see `reports/analysis_workspace/report.v6.md`.
+- **Defects found and fixed during this work:**
+  - the collapsed legacy diagnostic on Score calculation still printed both full clauses;
+  - a single-field weight tier read "25 each";
+  - a test of mine pinned the notifications version I had just bumped, and it was committed before the suite was rerun; it was fixed in the next commit.
+- **Not verified:** a screen-reader listening pass; an alert caused by a genuinely new source record (none arrived; the alert was exercised by making the browser forget one known record); legal accuracy.

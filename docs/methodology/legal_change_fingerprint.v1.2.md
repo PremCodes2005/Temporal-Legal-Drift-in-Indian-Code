@@ -50,3 +50,17 @@ On-the-fly triage converts number words to digits before applying the frozen rul
 - Detections were spot-checked by the developer, not reviewed by a lawyer.
 
 Legal validation: UNVERIFIED.
+
+## Why the rule-field weights are 25 / 15 / 15 / 15 / 10 / 10 / 5 / 5 (2026-10-20)
+
+These are the **rule-drift field weights** (a 0–100 rule score). They are not the 0.2 / 0.3 / 0.4 / 0.1 weights of the combined indicator (TLDS); those are explained in `tlds.v1.md`.
+
+- **Stated rationale (v1 methodology):** "the weights rank legal function". That is the only recorded reasoning. The exact numbers inside the tier order were not justified anywhere, so the text below is a **proposed rationale** for the existing tiers. The weights were not learned from data, not optimised, and not reviewed or approved by a legal expert.
+- **Tiers:**
+  1. Duty, permission or prohibition, 25: whether conduct is required, allowed or forbidden.
+  2. Penalty, amount or numeric limit, and deadline, 15 each: the consequence, the trigger and the timing.
+  3. Exception and scope, 10 each: coverage.
+  4. Actor and action, 5 each: also legally relevant, but detected heuristically (a phrase list and a verb list), so a low weight limits the effect of extraction errors.
+- **Total 100:** a score reads as the share of the fields' combined weight that changed. It is not a percentage of legal importance.
+- **Counting:** each changed field counts once. Fields marked uncertain are excluded, so the score is then a lower bound. A change outside every field is Not scored, never 0.
+- **Sensitivity** (`reports/fingerprint/rule_weights_sensitivity.v1.json`, 59 scored held-out changes): tiered alternatives keep the order (Spearman ≥ 0.952; ≥ 99.9% of strictly ordered pairs keep their order). Equal weights mostly change ties (614 pairs; Spearman 0.812). Actor is the most often changed field (31 of 59), which supports keeping the heuristic fields low. This checks stability only; no weighting is shown to be more correct.

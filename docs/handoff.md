@@ -180,3 +180,21 @@ The legal/research gate is unchanged: UNVERIFIED.
   - a screen-reader listening pass.
 
 The legal/research gate is unchanged: UNVERIFIED.
+
+## Discoveries v2, evidence cards, rule weights and the retired review screen (2026-10-20, ADR 0023)
+
+- **Case trace & review screen retired from the interface:**
+  - Removed: the "Case trace & review" sidebar entry, `frontend/src/CaseReviewPanel.jsx`, its CSS, and the "Open case trace & review" link in answers.
+  - Old `#review` and `#review/<run_id>` links open a page that explains the change and links to the assistant.
+- **Backend kept, deliberately:** `GET /api/runs`, `GET /api/runs/<id>`, `POST /api/runs`, `GET /api/reviewers` and `POST /api/reviews` are no longer linked but still served. They are not exclusive to the removed screen:
+  - `tests/integration/test_review_api.py` exercises them;
+  - `POST /api/reviews` is the only HTTP way to append to the hash-chained review ledger (`data/reviews/ledger.v1.jsonl`), which the latest-discoveries view reads;
+  - the run records under `data/runs/` back the research gates and reproducibility releases.
+
+  Nothing was deleted from the run records, review ledger, monitoring review queue or provenance. A static test checks that the routes remain.
+- **Latest discoveries (source-notifications-v2):**
+  - The newest five downloaded records, keyed by official id plus content hash. The same bytes under several ids count once.
+  - Older records, failed downloads and never-downloaded listings are kept separately.
+  - Records fall into three categories. "Verified amendment" is always empty, because the review ledger has no action that can produce it.
+  - The browser re-reads the ledger every 5 minutes and on focus. It never starts a source check, which stays at most once per 24 hours.
+- **Rule-field weights (25 / 15 / 15 / 15 / 10 / 10 / 5 / 5):** the stated tier rationale is now in `configs/metrics/rule_drift.v1.2.json` (`weights_rationale`). It is shown on Score calculation, separately from the TLDS weights, with a held-out sensitivity check (`reports/fingerprint/rule_weights_sensitivity.v1.json`). The active weights and the rule-drift contract are unchanged.

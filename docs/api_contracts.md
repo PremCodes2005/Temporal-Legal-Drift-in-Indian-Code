@@ -122,3 +122,12 @@ Stored tlds-v1 analyses are unchanged and still open; the page says their points
 ### Frontend address
 
 `#comparison/<analysis_id>` is the clause comparison of a stored analysis; plain `#comparison` reopens the last one shown.
+
+## Additions (2026-10-20, ADR 0023)
+
+- **`GET /api/sources/notifications` is now `source-notifications-v2`.** A record is one downloaded version, `key = "<official_id>:<sha256>"`, so a repeat check is never a new record and a revised PDF is. Identical bytes under several official ids are one record (`same_document_ids`). Its `discovered_at` is the first observation of that version.
+  - **Lists:** `latest` holds the newest five; `older` holds the rest. `items` (`latest` + `older`) is kept for v1 readers, and `failed` lists download failures.
+  - **Record fields:** each record adds `key`, `sha256`, `version`, `category` (`NEW_DOCUMENT` | `POSSIBLE_AMENDMENT`) and `category_label`.
+  - **`categories`:** `[{category, label, count, note}]` for `NEW_DOCUMENT`, `POSSIBLE_AMENDMENT` and `VERIFIED_AMENDMENT`. The last is always 0, because the review ledger has no verifying action.
+- **`GET /api/methods/rule-drift`:** the rule-drift field weights from `configs/metrics/rule_drift.v1.2.json`, with `fields` (`field`, `label`, `weight`, `why`), `rationale` (`status`, `total`, `tiers`, `counting`, `not_the_combined_weights`) and `sensitivity` (from `reports/fingerprint/rule_weights_sensitivity.v1.json`). It is separate from `GET /api/methods/tlds`.
+- **Retired screen:** the routes behind the Case trace & review screen (`/api/runs*`, `/api/reviewers`, `/api/reviews`) remain available but are no longer linked from the interface.
