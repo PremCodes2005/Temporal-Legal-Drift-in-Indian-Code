@@ -58,6 +58,8 @@ class DashboardRequestHandler(BaseHTTPRequestHandler):
             "/api/runs": self.dashboard_service.list_runs,
             "/api/reviewers": self.dashboard_service.reviewers,
             "/api/sources/health": self.dashboard_service.source_health,
+            "/api/sources/notifications": self.dashboard_service.source_notifications,
+            "/api/methods/tlds": self.dashboard_service.tlds_method,
         }
         try:
             if path in api_routes:

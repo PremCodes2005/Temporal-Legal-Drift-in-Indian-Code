@@ -63,7 +63,7 @@ class FingerprintTests(unittest.TestCase):
         # Real corpus: CPC s.32, "five hundred" -> "five thousand" rupees. Legal effect stays visible although the composite is Low.
         result = self.ask(CPC)
         f, t = result["fingerprint"], result["fingerprint"]["tlds"]
-        self.assertEqual((t["version"], t["state"], t["components"]["legal_effect"]["value"]), ("tlds-v1", "COMPLETE", 0.5))
+        self.assertEqual((t["version"], t["state"], t["components"]["legal_effect"]["value"]), ("tlds-v1.1", "COMPLETE", 0.5))
         self.assertEqual(f["rule_drift"]["value"], 15.0)  # the v1.2 measures are unchanged
         self.assertEqual(t["components"]["textual"]["details"]["edit_distance"], 1)
         general = self.ask("What does the Consumer Protection Act say about mediation?")["fingerprint"]["tlds"]

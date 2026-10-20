@@ -58,6 +58,17 @@ class DashboardServiceTests(unittest.TestCase):
             self.assertEqual(result["status"], "evidence_review_queue_not_corpus")
             self.assertEqual(result["byte_length"], len(payload))
 
+    def test_method_and_notification_endpoints_read_versioned_files_only(self) -> None:
+        service = DashboardService(ROOT)
+        method = service.tlds_method()
+        self.assertEqual(method["version"], "tlds-v1.1")
+        self.assertEqual(method["sensitivity"]["weightings"]["default"]["legal_effect_material_but_band_low"], 42)
+        self.assertIn("no expert labels", method["sensitivity"]["finding"])
+        notes = service.source_notifications()
+        self.assertEqual(notes["version"], "source-notifications-v1")
+        self.assertIn("Not a complete list of Indian amendments", notes["scope"])
+        self.assertTrue(all(row["legal_effect_claimed"] is False for row in notes["items"] + notes["listed"]))
+
     def test_query_api_accepts_a_chosen_section_and_rejects_unknown_fields(self) -> None:
         env = {"TLD_LIVE_INDIA_CODE": "0", "TLD_RAG_PROVIDER": "openai_compatible", "TLD_RAG_API_KEY": "", "OPENAI_API_KEY": ""}
         with patch.dict(os.environ, env), patch("temporal_legal_drift.rag.analysis.store", side_effect=lambda root, response: response):

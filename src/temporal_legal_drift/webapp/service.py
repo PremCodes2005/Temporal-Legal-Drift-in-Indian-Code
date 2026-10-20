@@ -85,6 +85,34 @@ class DashboardService:
         record = run_case(self.root, dict(value))
         return self.get_run(str(record["correlation_id"]))
 
+    def tlds_method(self) -> dict[str, object]:
+        """The combined-score method as configured, with the held-out weight-sensitivity findings, from the versioned files."""
+        from temporal_legal_drift.rag.fingerprint import DISAGREEMENT_SPREAD, TLDS_VERSION
+
+        config = load_json(self.root / "configs/metrics/tlds.v1.json")
+        report = load_json(self.root / "reports/fingerprint/tlds_heldout.v1.json")
+        default = report["weightings"]["default"]
+        return {"version": TLDS_VERSION, "config": "configs/metrics/tlds.v1.json", "formula": config["formula"], "weights": config["weights"],
+                "weights_status": config["weights_status"], "components": config["component_rationale"], "bands": config["bands"],
+                "bands_note": config["bands_note"], "missing": config["missing"], "disagreement_spread": DISAGREEMENT_SPREAD, "note": config["note"],
+                "sensitivity": {
+                    "source": "reports/fingerprint/tlds_heldout.v1.json", "transitions": sum(report["states"].values()),
+                    "complete": report["states"].get("COMPLETE", 0),
+                    "weightings": {name: {key: row[key] for key in ("weights", "bands", "legal_effect_material_but_band_low", "spearman_vs_default")}
+                                   for name, row in report["weightings"].items()},
+                    "finding": (f"On {report['states'].get('COMPLETE', 0)} held-out changes with a complete score, the default weights put "
+                                f"{default['legal_effect_material_but_band_low']} changes with a material legal effect (0.5 or more) in the Low band. "
+                                "Other weightings move many changes between bands while barely changing their order, so the band depends on the "
+                                "weight choice. There are no expert labels to say which weighting is right.")}}
+
+    def source_notifications(self) -> dict[str, object]:
+        """Latest items discovered by the scheduled monitoring, read from its ledger; never fetches anything."""
+        from temporal_legal_drift.monitoring import EGazetteConnector, IndiaCodeConnector, MonitoringService
+        from temporal_legal_drift.monitoring.service import notifications
+
+        service = MonitoringService(self.root, {"india_code": IndiaCodeConnector(), "egazette": EGazetteConnector()})
+        return notifications(service, ReviewLedger(self.root))
+
     def source_health(self) -> dict[str, object]:
         from temporal_legal_drift.monitoring import EGazetteConnector, IndiaCodeConnector, MonitoringService
         from temporal_legal_drift.versioning.consumer import GraphConsumer, IncompatibleGraphError

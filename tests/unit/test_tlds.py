@@ -151,5 +151,39 @@ class TldsTests(unittest.TestCase):
         self.assertTrue(result["label"].startswith(f"{expected:.1f}/100"))
 
 
+    # ---------- tlds-v1.1: contributions, disagreement, unchanged values ----------
+    def test_contributions_add_up_to_the_score_and_missing_ones_stay_empty(self) -> None:
+        result = score("Every company shall file the return within ten days.", "Every company shall file the return within fifteen days.")
+        self.assertAlmostEqual(sum(result["contributions"].values()), result["value"])
+        for name, points in result["contributions"].items():
+            self.assertAlmostEqual(points, 100 * CONFIG["weights"][name] * values(result)[name])
+        partial = fp.composite({"textual": 0.5, "semantic": None, "legal_effect": 1.0, "rule_structure": 0.0})
+        self.assertIsNone(partial["contributions"]["semantic"])  # never 0
+        self.assertEqual(partial["contributions"]["legal_effect"], 40.0)
+
+    def test_one_component_at_0_and_another_at_100_is_flagged_not_hidden(self) -> None:
+        legal_only = fp.composite({"textual": 0.0, "semantic": 0.0, "legal_effect": 1.0, "rule_structure": 0.0})
+        self.assertEqual((legal_only["value"], legal_only["band"]), (40.0, "Moderate"))
+        self.assertEqual((legal_only["disagreement"]["strong"], legal_only["disagreement"]["highest"]), (True, "legal_effect"))
+        wording_only = fp.composite({"textual": 1.0, "semantic": 1.0, "legal_effect": 0.0, "rule_structure": 0.0})
+        self.assertEqual((wording_only["value"], wording_only["disagreement"]["lowest"]), (50.0, "legal_effect"))
+        agree = fp.composite(dict.fromkeys(fp.TLDS_COMPONENTS, 0.5))
+        self.assertEqual((agree["disagreement"]["spread"], agree["disagreement"]["strong"]), (0.0, False))
+        self.assertIsNone(fp.composite(dict.fromkeys(fp.TLDS_COMPONENTS))["disagreement"])
+
+    def test_v1_1_reproduces_every_held_out_v1_score(self) -> None:
+        report = json.loads((ROOT / "reports/fingerprint/tlds_heldout.v1.json").read_text())
+        complete = [row for row in report["rows"] if row["state"] == "COMPLETE"]
+        self.assertEqual(len(complete), 59)
+        for row in complete:
+            self.assertAlmostEqual(fp.composite(row["components"])["value"], row["by_weighting"]["default"], places=9)
+
+    def test_every_weight_has_a_stated_rationale_and_honest_status(self) -> None:
+        self.assertEqual(set(CONFIG["component_rationale"]), set(fp.TLDS_COMPONENTS))
+        for name, text in CONFIG["component_rationale"].items():
+            self.assertTrue(text["why_this_weight"].startswith(f"{CONFIG['weights'][name]:.2f}"), name)
+        self.assertRegex(CONFIG["weights_status"], r"not learned from data, not optimised and not legally validated")
+
+
 if __name__ == "__main__":
     unittest.main()

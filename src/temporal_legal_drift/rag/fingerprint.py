@@ -677,7 +677,7 @@ def reading(wording: dict[str, Any], rules: dict[str, Any], outcome: dict[str, A
 
 
 # ---------------- hybrid temporal legal drift score (TLDS) ----------------
-TLDS_VERSION = "tlds-v1"
+TLDS_VERSION = "tlds-v1.1"  # v1.1: per-component contributions and a disagreement flag; formula, weights and values as tlds-v1
 TLDS_CONFIG = "tlds.v1.json"
 TLDS_COMPONENTS = ("textual", "semantic", "legal_effect", "rule_structure")
 DEFAULT_EMBED_MODEL = "stable_feature_hashing-256 (retriever.embed_text; word-overlap stand-in, not a pretrained semantic model)"
@@ -800,6 +800,9 @@ def _band(value: float, bands: list[list[Any]]) -> str:
     return [label for lower, label in bands if round(value, 1) >= lower][-1]
 
 
+DISAGREEMENT_SPREAD = 0.6  # the same 60-point threshold the legacy drift-metrics-v3 used for component disagreement
+
+
 def composite(values: dict[str, float | None], weights: dict[str, float] | None = None) -> dict[str, Any]:
     """D = 100 Σ w_i x_i when every component exists; otherwise INCOMPLETE with a separately named partial value."""
     config = _config(TLDS_CONFIG)
@@ -812,7 +815,15 @@ def composite(values: dict[str, float | None], weights: dict[str, float] | None 
     missing = [name for name in TLDS_COMPONENTS if values.get(name) is None]
     available = [name for name in TLDS_COMPONENTS if name not in missing]
     terms = " + ".join(f"{weights[n]:g} × {values[n]:.4f}" for n in available)
-    out = {"weights": weights, "missing_components": missing, "formula": config["formula"], "bands": config["bands"], "bands_note": config["bands_note"]}
+    # Each component's points (100 × weight × value), so a reader sees what drives the total without the browser computing it.
+    contributions = {n: (100.0 * weights[n] * values[n] if n in available else None) for n in TLDS_COMPONENTS}
+    spread = (max(values[n] for n in available) - min(values[n] for n in available)) if available else None
+    disagreement = None if spread is None else {
+        "spread": spread, "highest": max(available, key=lambda n: values[n]), "lowest": min(available, key=lambda n: values[n]),
+        "strong": spread >= DISAGREEMENT_SPREAD,
+        "rule": f"components disagree strongly when their values differ by {DISAGREEMENT_SPREAD:g} or more on the 0–1 scale"}
+    out = {"weights": weights, "missing_components": missing, "formula": config["formula"], "bands": config["bands"], "bands_note": config["bands_note"],
+           "contributions": contributions, "disagreement": disagreement}
     if not missing:
         value = min(100.0, max(0.0, 100.0 * sum(weights[n] * values[n] for n in TLDS_COMPONENTS)))  # the clamp only absorbs float rounding
         band = _band(value, config["bands"])

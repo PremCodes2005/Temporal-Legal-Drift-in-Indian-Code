@@ -3,7 +3,12 @@
  "contract": "tlds-v1",
  "name": "Hybrid Temporal Legal Drift Score (TLDS); TLDP is the same value read as a percentage",
  "formula": "D = 100 × (w_T·T + w_S·S + w_L·L + w_R·R), every component in [0, 1]",
- "weights": {"textual": 0.20, "semantic": 0.30, "legal_effect": 0.40, "rule_structure": 0.10},
+ "weights": {
+  "textual": 0.2,
+  "semantic": 0.3,
+  "legal_effect": 0.4,
+  "rule_structure": 0.1
+ },
  "weights_rationale": "Research parameters, not established constants. Legal effect carries the most weight because the research question is about legally applicable change; T and S both measure wording (S is a word-overlap stand-in, see semantic), so together they are capped at half; rule structure is a coarse count and gets the least. Alternative weights can be passed to tlds() and are compared in reports/fingerprint/tlds_heldout.v1.json.",
  "components": {
   "textual": "token-level Levenshtein distance between the normalised clauses ÷ the longer clause's token count",
@@ -12,24 +17,101 @@
   "rule_structure": "share of the clause's distinct rule elements (field values, list items keyed by content, Explanations, cross-references) inserted, deleted or substituted; a removed and an added element of the same kind count as one substitution: (only-before + only-after − substitutions) ÷ (all distinct − substitutions)"
  },
  "legal_effect_rubric": {
-  "levels": {"0.00": "No detected legal-effect change", "0.25": "Limited change", "0.50": "Material change to a condition, procedure or scope",
-             "0.75": "Substantial change to an obligation, entitlement or restriction", "1.00": "Fundamental change or reversal"},
+  "levels": {
+   "0.00": "No detected legal-effect change",
+   "0.25": "Limited change",
+   "0.50": "Material change to a condition, procedure or scope",
+   "0.75": "Substantial change to an obligation, entitlement or restriction",
+   "1.00": "Fundamental change or reversal"
+  },
   "modality_reversal": 1.0,
   "by_field": {
-   "modality": {"ADDED": 0.75, "REMOVED": 0.75, "CHANGED": 0.75},
-   "penalty": {"ADDED": 0.75, "REMOVED": 0.75, "CHANGED": 0.5},
-   "threshold": {"ADDED": 0.5, "REMOVED": 0.5, "CHANGED": 0.5},
-   "deadline": {"ADDED": 0.5, "REMOVED": 0.5, "CHANGED": 0.5},
-   "exception": {"ADDED": 0.5, "REMOVED": 0.5, "CHANGED": 0.5},
-   "scope": {"ADDED": 0.5, "REMOVED": 0.5, "CHANGED": 0.5},
-   "actor": {"ADDED": 0.5, "REMOVED": 0.5, "CHANGED": 0.5},
-   "action": {"ADDED": 0.25, "REMOVED": 0.25, "CHANGED": 0.25}
+   "modality": {
+    "ADDED": 0.75,
+    "REMOVED": 0.75,
+    "CHANGED": 0.75
+   },
+   "penalty": {
+    "ADDED": 0.75,
+    "REMOVED": 0.75,
+    "CHANGED": 0.5
+   },
+   "threshold": {
+    "ADDED": 0.5,
+    "REMOVED": 0.5,
+    "CHANGED": 0.5
+   },
+   "deadline": {
+    "ADDED": 0.5,
+    "REMOVED": 0.5,
+    "CHANGED": 0.5
+   },
+   "exception": {
+    "ADDED": 0.5,
+    "REMOVED": 0.5,
+    "CHANGED": 0.5
+   },
+   "scope": {
+    "ADDED": 0.5,
+    "REMOVED": 0.5,
+    "CHANGED": 0.5
+   },
+   "actor": {
+    "ADDED": 0.5,
+    "REMOVED": 0.5,
+    "CHANGED": 0.5
+   },
+   "action": {
+    "ADDED": 0.25,
+    "REMOVED": 0.25,
+    "CHANGED": 0.25
+   }
   },
   "aggregation": "maximum over detected changes: the composite reflects the most severe change once, and every change is listed with its spans",
   "reversal": "a modality change that removes an obligation or permission and adds a prohibition in the same aligned sentences, or the reverse"
  },
  "missing": "A component that cannot be computed is null with a reason, never 0. The score is COMPLETE only when all four exist; otherwise INCOMPLETE with value null and a separately named partial_value = 100 × Σ_available w_i·x_i ÷ Σ_available w_i that must not be compared with complete scores.",
- "bands": [[0, "Very low"], [10, "Low"], [30, "Moderate"], [50, "High"], [75, "Very high"]],
+ "bands": [
+  [
+   0,
+   "Very low"
+  ],
+  [
+   10,
+   "Low"
+  ],
+  [
+   30,
+   "Moderate"
+  ],
+  [
+   50,
+   "High"
+  ],
+  [
+   75,
+   "Very high"
+  ]
+ ],
  "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
- "note": "An indicator of change between two versions of one clause, not the percentage of a statute that changed, not legal correctness, not a probability, not materiality and not risk. Read legal-effect drift beside it: a small wording change can carry a large legal effect."
+ "note": "An indicator of change between two versions of one clause, not the percentage of a statute that changed, not legal correctness, not a probability, not materiality and not risk. Read legal-effect drift beside it: a small wording change can carry a large legal effect.",
+ "component_rationale": {
+  "textual": {
+   "measures": "How many words were inserted, deleted or substituted, per word of the longer clause.",
+   "why_this_weight": "0.20: a surface measure. One changed word can reverse a duty, so it is kept well below legal effect; S measures similar wording, so T is not given more."
+  },
+  "semantic": {
+   "measures": "How far the two clauses' word-hash vectors moved apart (1 − cosine). It is a word-overlap stand-in, not a pretrained meaning model.",
+   "why_this_weight": "0.30: the weight intended for meaning-level change. Because the current vector reflects shared words, T and S together give surface wording 0.50 of the score."
+  },
+  "legal_effect": {
+   "measures": "The most severe change found in the rule fields (duty, penalty, amount or limit, deadline, exception, scope, person, action), on a 0–1 rubric.",
+   "why_this_weight": "0.40: closest to the research question about legally applicable change, so the largest single weight; kept below 0.50 so no single component decides the score alone."
+  },
+  "rule_structure": {
+   "measures": "The share of the clause's rule elements that were inserted, deleted or substituted.",
+   "why_this_weight": "0.10: a coarse count that repeats some of what legal effect sees, so it gets the least weight."
+  }
+ },
+ "weights_status": "Chosen by the project as provisional research parameters before evaluation. They were not learned from data, not optimised and not legally validated."
 }
