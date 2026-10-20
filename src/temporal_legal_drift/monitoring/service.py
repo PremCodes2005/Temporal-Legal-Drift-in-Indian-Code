@@ -26,6 +26,7 @@ from datetime import datetime, timedelta
 from hashlib import sha256
 from pathlib import Path
 from typing import Any, Callable, Iterator
+from urllib.parse import urlparse
 from uuid import uuid4
 
 from temporal_legal_drift.acquisition.models import utc_now_iso
@@ -480,6 +481,106 @@ class MonitoringService:
                 "failed_documents": states.count("FAILED"),
                 "commencement_pending_review": sum(r["status"] != "REVIEWED" for r in self.commencement_records()),
                 "time_base": "UTC", "coverage_claim": "partial; see docs/sprint/s1_source_access_decision.v2.md"}
+
+
+NOTIFICATIONS_VERSION = "source-notifications-v1"
+SOURCE_LABELS = {"india_code": "India Code", "egazette": "e-Gazette of India"}
+OFFICIAL_HOSTS = {"india_code": {"indiacode.gov.in", "www.indiacode.gov.in"}, "egazette": {"egazette.gov.in"}}
+# Precise wording per ledger state. Nothing here says a law changed: discovery and download are not amendment or commencement.
+ITEM_STATUS = {
+    "AWAITING_REVIEW": "New document awaiting review",
+    "REVISED_AWAITING_REVIEW": "Revised document awaiting review",
+    "CANDIDATE_UNVERIFIED": "Possible amendment text found by machine extraction; not verified",
+    "LISTED_NOT_DOWNLOADED": "Listed by the source; document not downloaded",
+    "DOWNLOAD_FAILED": "Download or processing failed",
+    "REVIEW_ACKNOWLEDGED": "Review acknowledged; not a legal decision",
+    "ESCALATED_FOR_QUALIFIED_REVIEW": "Escalated for qualified legal review",
+    "CHANGES_REQUESTED": "Reviewer requested changes",
+    "OPINION_RECORDED": "Reviewer opinion recorded; not a legal decision",
+}
+
+
+def notifications(service: "MonitoringService", review_ledger: Any | None = None, limit: int = 25) -> dict[str, Any]:
+    """Latest items discovered in the monitored sources, read only from the persisted ledger (no network access).
+
+    One item per official record: its first observation is the discovery time and the most advanced ledger record gives the
+    status. Review-ledger actions are reported as they are; no ledger state means a verified change to law."""
+    health = service.health()
+    now = _parse_time(service.clock())
+    folder = service.base / "review_queue"
+    queue = {item["official_id"]: item for item in (load_json(p) for p in sorted(folder.glob("*.json")))} if folder.is_dir() else {}
+    documents = {doc["official_id"]: doc for doc in service.documents()}
+    candidates: dict[str, list[dict[str, Any]]] = {}
+    for path in sorted((service.base / "candidates").glob("*.json")) if (service.base / "candidates").is_dir() else []:
+        record = load_json(path)
+        for event in record.get("events") or ([record["event"]] if record.get("event") else []):
+            for official_id in [record.get("official_id")] + [p.get("official_id") for p in record.get("provenance", [])]:
+                if official_id:
+                    candidates.setdefault(official_id, []).append(event)
+    seen: dict[str, dict[str, Any]] = {}
+    for observation in service.observations():
+        entry = seen.setdefault(observation["official_id"], {"first": observation, "last": observation})
+        if observation["observed_at"] < entry["first"]["observed_at"]:
+            entry["first"] = observation
+        if observation["observed_at"] >= entry["last"]["observed_at"]:
+            entry["last"] = observation
+    items = []
+    for official_id, entry in seen.items():
+        first, last = entry["first"], entry["last"]
+        item, doc = queue.get(official_id), documents.get(official_id)
+        source = last.get("source_key") or (item or {}).get("source_key")
+        state = doc["versions"][-1]["state"] if doc and doc.get("versions") else None
+        if item:
+            code = "REVISED_AWAITING_REVIEW" if item.get("change") == "REVISED" else "AWAITING_REVIEW"
+            if candidates.get(official_id):
+                code = "CANDIDATE_UNVERIFIED"
+            reviewed = review_ledger.current_state(item["queue_id"], item["status"]) if review_ledger else item["status"]
+            code = reviewed if reviewed in ITEM_STATUS else code
+        elif state == "FAILED" or last["status"] in {"FAILED", "CHECKSUM_MISMATCH"} and not doc:
+            code = "DOWNLOAD_FAILED"
+        elif last["status"] == "METADATA_ONLY":
+            code = "LISTED_NOT_DOWNLOADED"
+        else:
+            continue  # seen before and unchanged: nothing new to report
+        url = (item or {}).get("canonical_url") or last.get("canonical_url")
+        host = urlparse(str(url or "")).hostname
+        dates = (item or {}).get("stated_dates") or last.get("stated_dates") or {}
+        targets = sorted({str(e.get("target_act") or e.get("principal_act") or "").strip() for e in candidates.get(official_id, [])} - {""})
+        items.append({
+            "id": official_id, "title": " ".join(str((item or {}).get("title") or last.get("title") or "Untitled record").split()),
+            "source_key": source, "source": SOURCE_LABELS.get(source, source),
+            "published": dates.get("published") or dates.get("issued") or dates.get("enactment"),
+            "discovered_at": first["observed_at"], "last_checked_at": last["observed_at"],
+            "official_url": url if urlparse(str(url or "")).scheme == "https" and host in OFFICIAL_HOSTS.get(source, set()) else None,
+            "status": code, "status_label": ITEM_STATUS[code], "queue_id": (item or {}).get("queue_id"),
+            "candidate_events": len(candidates.get(official_id, [])), "candidate_targets": targets,
+            "legal_effect_claimed": False,
+        })
+    items.sort(key=lambda row: (row["discovered_at"], row["id"]), reverse=True)
+    # Source listings that were never downloaded (most gazette notices) are kept apart so they cannot bury documents under review.
+    listed = [row for row in items if row["status"] == "LISTED_NOT_DOWNLOADED"]
+    items = [row for row in items if row["status"] != "LISTED_NOT_DOWNLOADED"]
+    sources = []
+    for row in health["sources"]:
+        lag = row["lag_hours"]
+        state = ("NEVER_SUCCEEDED" if row["last_success_at"] is None else "FAILED" if row["last_status"] not in {"OK", "PARTIAL_FAILURE"}
+                 else "STALE" if not row["scheduled_ingestion_healthy"] else "OK")
+        detail = ("Checked within the last 48 hours." if state == "OK"
+                  else f"The last check ({row['last_attempt_at']}) ended with {str(row['last_status']).lower().replace('_', ' ')}; "
+                       "showing items from the last successful check." if state == "FAILED"
+                  else f"No successful check for {round(lag)} hours; new items may be missing." if state == "STALE"
+                  else "No successful check is recorded; nothing from this source can be listed.")
+        if state == "FAILED" and lag is not None and lag > STALE_AFTER_HOURS:
+            detail += f" No successful check for {round(lag)} hours."
+        sources.append({"source_key": row["source_key"], "source": SOURCE_LABELS.get(row["source_key"], row["source_key"]), "state": state,
+                        "detail": detail, "last_success_at": row["last_success_at"], "last_attempt_at": row["last_attempt_at"],
+                        "next_eligible_at": row["next_eligible_at"]})
+    return {"version": NOTIFICATIONS_VERSION, "generated_at": now.isoformat().replace("+00:00", "Z"), "items": items[:limit], "total": len(items),
+            "listed": listed[:limit], "listed_total": len(listed),
+            "sources": sources, "scope": "Latest discovered in monitored sources (India Code and the e-Gazette), checked at most once every "
+                                          "24 hours. Not a complete list of Indian amendments.",
+            "note": "A discovered or downloaded document is not a confirmed change to law, and nothing listed here changes the answers "
+                    "until it is reviewed and added to the corpus.", "legal_effect_claimed": False}
 
 
 def _text_fidelity(document: dict[str, Any]) -> dict[str, Any]:
