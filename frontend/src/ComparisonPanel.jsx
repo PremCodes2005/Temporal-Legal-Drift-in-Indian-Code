@@ -22,7 +22,7 @@ const REASON_TEXT = {
 const TOKEN = /([A-Za-z]+|\d+(?:\.\d+)?)/;
 
 // Mark the tokens named by changed_spans, in order, without inserting any HTML.
-function markedTokens(text, spans, side) {
+export function markedTokens(text, spans, side) {
   const parts = String(text || "").split(TOKEN);
   const tokenIndexes = parts.map((part, index) => (index % 2 === 1 ? index : -1)).filter((index) => index >= 0);
   const marked = new Set();

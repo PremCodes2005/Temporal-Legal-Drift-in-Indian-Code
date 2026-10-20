@@ -27,7 +27,7 @@ class FrontendContractTests(unittest.TestCase):
 
     def test_comparison_view_is_safe_honest_and_not_colour_only(self) -> None:
         panel = (ROOT / "frontend/src/ComparisonPanel.jsx").read_text(encoding="utf-8")
-        sources = APP + panel + (ROOT / "frontend/src/CaseReviewPanel.jsx").read_text(encoding="utf-8")
+        sources = APP + panel
         self.assertNotIn("dangerouslySetInnerHTML", sources)
         self.assertIn("<del", panel)
         self.assertIn("<ins", panel)
@@ -40,6 +40,14 @@ class FrontendContractTests(unittest.TestCase):
         self.assertNotIn("legacyCalculationTrace", APP)
         self.assertIn("evidence_alignment_quality_percent", APP)
         self.assertIn("Scheduled ingestion (stored in UTC):", APP)
+
+    def test_case_trace_review_is_retired_from_the_interface_but_its_api_stays(self) -> None:
+        self.assertFalse((ROOT / "frontend/src/CaseReviewPanel.jsx").exists())
+        self.assertNotIn('label: "Case trace & review"', APP)
+        self.assertIn("Case trace & review is no longer part of this app", APP)  # old #review links explain the change
+        server = (ROOT / "src/temporal_legal_drift/webapp/server.py").read_text(encoding="utf-8")
+        for route in ('"/api/runs"', '"/api/reviewers"', '"/api/reviews"', '"/api/runs/"'):
+            self.assertIn(route, server)  # run records and the review ledger remain reachable for research and tests
 
     def test_built_index_references_existing_assets(self) -> None:
         index = (ROOT / "web/index.html").read_text(encoding="utf-8")

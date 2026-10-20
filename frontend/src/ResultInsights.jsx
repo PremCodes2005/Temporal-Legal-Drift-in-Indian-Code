@@ -50,7 +50,7 @@ export function IndicatorStrip({ metrics, comparison }) {
     <div className="indicator" key={label}><span>{label}</span><strong>{value}</strong><small>{help}</small></div>)}</section>;
 }
 
-export function ScoreExplanation({ metrics }) {
+export function ScoreExplanation({ metrics, excerpts = true }) {
   if (!metrics?.calculation_trace || metrics.overall_drift_percent == null) return null;
   const trace = metrics.calculation_trace;
   const basis = metrics.score_basis || {};
@@ -61,13 +61,13 @@ export function ScoreExplanation({ metrics }) {
   ];
   return <details className="score-explanation">
     <summary>How this score was calculated</summary>
-    <p className="panel-note">Contract {metrics.metrics_contract_version}. Computed from the exact excerpts below for this response only.</p>
+    <p className="panel-note">Contract {metrics.metrics_contract_version}. Computed from the exact excerpts {excerpts ? "below" : "of the stored analysis (shown on the clause comparison page)"} for this response only.</p>
     <table><caption className="sr-only">Score components</caption><thead><tr><th scope="col">Component</th><th scope="col">Score</th><th scope="col">Inputs and formula</th><th scope="col">Weighted square</th></tr></thead>
       <tbody>{rows.map(([name, value, detail, contribution]) => <tr key={name}><th scope="row">{name}</th><td>{value}%</td><td>{detail}</td><td>{contribution}</td></tr>)}</tbody></table>
     <p><strong>Overall:</strong> {trace.overall.formula} = √{trace.overall.sum_of_weighted_squares} = {metrics.overall_drift_percent}%.</p>
     {metrics.component_disagreement && <p className="calculation-warning" role="alert">The components disagree by {metrics.component_spread_percent} points; read each one separately rather than the overall figure.</p>}
     {metrics.reliability && <p><strong>Reliability (not part of the score):</strong> pairing {metrics.reliability.pairing}; evidence {metrics.reliability.evidence_coverage}; date {metrics.reliability.temporal_certainty?.status}; retrieval relevance {metrics.reliability.retrieval_relevance}.</p>}
     {metrics.question_relevance && <p><strong>Does this answer your question?</strong> {metrics.question_relevance.status.replaceAll("_", " ").toLowerCase()}. {metrics.question_relevance.explanation}</p>}
-    <div className="excerpt-pair"><blockquote><strong>Before (as compared)</strong><span>{basis.pre_excerpt}</span></blockquote><blockquote><strong>After (as compared)</strong><span>{basis.post_excerpt}</span></blockquote></div>
+    {excerpts && <div className="excerpt-pair"><blockquote><strong>Before (as compared)</strong><span>{basis.pre_excerpt}</span></blockquote><blockquote><strong>After (as compared)</strong><span>{basis.post_excerpt}</span></blockquote></div>}
   </details>;
 }

@@ -11,6 +11,7 @@ import { DriftExplanationPage, ScoreCalculationPage } from "../ExplanationPages"
 import { followUps, readHistory, remember } from "../App";
 import FAQ from "../faq.json";
 import { ComparisonPage } from "../ExplanationPages";
+import { REFRESH_MS } from "../Notifications";
 const recorded = JSON.parse(readFileSync("src/__tests__/fixtures/methods_and_discoveries.json", "utf8"));
 
 const { responses } = JSON.parse(readFileSync("src/__tests__/fixtures/rag_answer_v5.json", "utf8"));
@@ -30,7 +31,8 @@ function stubApi() {
     const body = sent ? Object.values(responses).find((r) => r.query === sent.query && r.mode === sent.mode && !r.scenario && (r.selection?.section || null) === (sent.section || null))
       : id ? Object.values(responses).find((r) => r.analysis_id === id)
       : String(url).includes("/api/corpus") ? { entries: [] } : String(url).includes("/api/sources/health") ? { sources: [] }
-      : String(url).includes("/api/sources/notifications") ? recorded.notifications : String(url).includes("/api/methods/tlds") ? recorded.method : { ready: true };
+      : String(url).includes("/api/sources/notifications") ? recorded.notifications : String(url).includes("/api/methods/tlds") ? recorded.method
+      : String(url).includes("/api/methods/rule-drift") ? recorded.rule_method : { ready: true };
     return { ok: Boolean(body), status: body ? 200 : 404, json: async () => body || { error: "not found" } };
   }));
 }
@@ -209,7 +211,7 @@ describe("standalone Drift explanation and Score calculation pages", () => {
     const user = userEvent.setup();
     const onEvidence = vi.fn(), onField = vi.fn();
     calc(responses.ibc99, { onEvidence, onField });
-    await user.click(within(screen.getByRole("article", { name: "Compared before clause" })).getByRole("button", { name: "Show evidence E3" }));
+    await user.click(within(screen.getByRole("region", { name: "Scored texts" })).getByRole("button", { name: "Show evidence E3" }));
     expect(onEvidence).toHaveBeenCalledWith("E3");
     await user.click(screen.getByRole("button", { name: "Show the words for Deadline or period" }));
     expect(onField.mock.calls[0][0].field).toBe("deadline");
@@ -560,63 +562,258 @@ describe("FAQ, recent questions and follow-ups", () => {
 describe("latest discoveries from the monitored sources", () => {
   beforeEach(stubApi);
   const open = async (user) => user.click(await screen.findByRole("button", { name: /Latest discoveries/ }));
+  const panel = () => screen.getByRole("complementary", { name: "Latest discovered in monitored sources" });
+  const data = recorded.notifications;
+  const serve = (value) => { const base = fetch.getMockImplementation(); fetch.mockImplementation(async (url, init) => (String(url).includes("/api/sources/notifications") ? { ok: true, status: 200, json: async () => value } : base(url, init))); };
+  const record = (n) => ({ ...data.latest[0], id: `doc-${n}`, key: `doc-${n}:hash${n}`, title: `Synthetic record ${n}`, discovered_at: `2026-10-1${n}T00:00:00Z` });
 
-  it("lists discovered documents with source, dates, status and official link, and states each source's condition", async () => {
+  it("shows the latest records with source, dates, category, status and official link, and each source's last successful check", async () => {
     const user = userEvent.setup();
-    const data = recorded.notifications;
     render(<App />);
     const toggle = await screen.findByRole("button", { name: /Latest discoveries/ });
-    await waitFor(() => expect(toggle.textContent).toContain(String(data.total)));  // unread count
+    await waitFor(() => expect(toggle.getAttribute("aria-label")).toBe(`Latest discoveries, ${data.total} unread`));
     await open(user);
-    const panel = screen.getByRole("complementary", { name: "Latest discovered in monitored sources" });
-    expect(toggle.getAttribute("aria-expanded")).toBe("true");
-    expect(panel.textContent).toContain("Not a complete list of Indian amendments");
-    const states = within(panel).getByRole("list", { name: "Source status" }).textContent;
-    expect(states).toContain("Last check failed");
+    expect(panel().textContent).toContain("Not a complete list of Indian amendments");
+    expect(panel().textContent).toContain("it never starts a new source check");
+    const states = within(panel()).getByRole("list", { name: "Source status" }).textContent;
+    expect(states).toMatch(/Last check failed.*Last successful check: /s);
     expect(states).toContain("Not checked recently");
-    const items = panel.querySelectorAll(".discovery-list > li");
-    expect(items).toHaveLength(data.items.length);
-    data.items.forEach((row, index) => {
-      expect(items[index].textContent).toContain(row.title);
-      expect(items[index].textContent).toContain(row.status_label);
-      expect(items[index].textContent).toContain(row.source);
-      expect(within(items[index]).getByRole("link", { name: /Official record/ }).getAttribute("href")).toBe(row.official_url);
+    const latest = within(panel()).getByRole("list", { name: /The latest 4 records \(all that exist\)/ }).querySelectorAll(":scope > li");
+    expect(latest).toHaveLength(data.latest.length);  // fewer than five: nothing is added
+    data.latest.forEach((row, index) => {
+      expect(latest[index].textContent).toContain(row.title);
+      expect(latest[index].textContent).toContain(row.category_label);
+      expect(latest[index].textContent).toContain(row.status_label);
+      expect(within(latest[index]).getByRole("link", { name: /Official record/ }).getAttribute("href")).toBe(row.official_url);
     });
-    expect(panel.textContent).toMatch(/Machine extraction names .*; this relationship is not verified\./);
-    for (const item of items) expect(item.querySelector(".status-tag").textContent).not.toMatch(/confirmed|in force|commenced|amended/i);
-    expect(panel.textContent).toContain("is not a confirmed change to law");
-    expect(panel.textContent).toContain(`${data.listed_total} other listings seen but not downloaded`);
+    const legend = panel().querySelector(".category-legend").textContent;
+    expect(legend).toMatch(/Newly discovered document 1.*Possible amendment awaiting review 3.*Verified amendment 0/s);
+    expect(legend).toContain("nothing is in this category");
+    for (const item of latest) expect(item.querySelector(".record-status").textContent).not.toMatch(/confirmed|in force|commenced|amended/i);
+    expect(panel().textContent).toContain("is not a confirmed change to law");
   });
 
-  it("keeps read marks in this browser and closes with Escape, returning focus", async () => {
+  it("lists five, keeps older records behind a disclosure, and never pads a short list", async () => {
+    const user = userEvent.setup();
+    const seven = [6, 5, 4, 3, 2, 1, 0].map(record);
+    serve({ ...data, latest: seven.slice(0, 5), older: seven.slice(5), items: seven, total: 7 });
+    render(<App />);
+    await open(user);
+    const latest = await within(panel()).findByRole("list", { name: "The latest 5 records" });
+    expect([...latest.querySelectorAll(":scope > li strong")].map((el) => el.textContent)).toEqual([6, 5, 4, 3, 2].map((n) => `Synthetic record ${n}`));
+    const older = within(panel()).getByText("2 older records").closest("details");
+    expect(older.open).toBe(false);
+    expect([...older.querySelectorAll("li strong")].map((el) => el.textContent)).toEqual(["Synthetic record 1", "Synthetic record 0"]);
+  });
+
+  it("re-reads the ledger on focus, alerts once for a genuinely new record, and counts it as unread", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    const toggle = await screen.findByRole("button", { name: /Latest discoveries/ });
+    await waitFor(() => expect(toggle.getAttribute("aria-label")).toBe(`Latest discoveries, ${data.total} unread`));
+    expect(screen.queryByText(/New in the monitored sources/)).toBeNull();  // the first visit records what exists silently
+    const added = record(9);
+    serve({ ...data, latest: [added, ...data.latest].slice(0, 5), older: [], items: [added, ...data.latest], total: data.total + 1 });
+    window.dispatchEvent(new Event("focus"));
+    expect(await screen.findByText(`New in the monitored sources: ${added.title}. Not yet reviewed.`)).toBeTruthy();
+    await waitFor(() => expect(toggle.getAttribute("aria-label")).toBe(`Latest discoveries, ${data.total + 1} unread`));
+    await user.click(screen.getByRole("button", { name: "Dismiss the new-document message" }));
+    window.dispatchEvent(new Event("focus"));  // the same records again: no second alert
+    await waitFor(() => expect(fetch.mock.calls.filter(([url]) => String(url).includes("/api/sources/notifications")).length).toBeGreaterThanOrEqual(3));
+    expect(screen.queryByText(/New in the monitored sources/)).toBeNull();
+    expect(fetch.mock.calls.every(([url, init]) => !String(url).includes("/api/sources") || !init || init.method !== "POST")).toBe(true);  // reading only
+  });
+
+  it("refreshes on a timer that only reads the stored record", async () => {
+    const timers = vi.spyOn(window, "setInterval");
+    render(<App />);
+    await screen.findByRole("button", { name: /Latest discoveries/ });
+    expect(timers.mock.calls.some(([, ms]) => ms === REFRESH_MS)).toBe(true);
+    expect(REFRESH_MS).toBe(300000);
+    timers.mockRestore();
+  });
+
+  it("keeps read marks across a page refresh, keyed by record and content hash", async () => {
     const user = userEvent.setup();
     render(<App />);
     await open(user);
-    const panel = screen.getByRole("complementary", { name: "Latest discovered in monitored sources" });
-    await waitFor(() => expect(within(panel).getAllByText("New").length).toBe(recorded.notifications.total));
-    await user.click(within(panel).getAllByRole("button", { name: "Mark as read" })[0]);
-    expect(within(panel).getAllByText("New")).toHaveLength(recorded.notifications.total - 1);
-    await user.click(within(panel).getByRole("button", { name: "Mark all as read" }));
-    expect(within(panel).queryAllByText("New")).toHaveLength(0);
-    expect(JSON.parse(window.localStorage.getItem("tldrift:seen-discoveries"))).toHaveLength(recorded.notifications.total);
-    await user.keyboard("{Escape}");
-    expect(screen.queryByRole("complementary", { name: "Latest discovered in monitored sources" })).toBeNull();
-    expect(document.activeElement.textContent).toMatch(/^Latest discoveries/);
+    await within(panel()).findAllByText("New");
+    await user.click(within(panel()).getByRole("button", { name: "Mark all as read" }));
+    expect(JSON.parse(window.localStorage.getItem("tldrift:seen-discoveries"))).toEqual(data.latest.map((row) => row.key));
+    cleanup();
+    render(<App />);
+    await waitFor(() => expect(screen.getByRole("button", { name: /Latest discoveries/ }).getAttribute("aria-label")).toBe("Latest discoveries"));
+  });
+
+  it("keeps the last list when a refresh fails or the browser is offline, and says so", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await open(user);
+    await within(panel()).findByRole("list", { name: /The latest 4 records/ });
+    const online = vi.spyOn(window.navigator, "onLine", "get").mockReturnValue(false);
+    fetch.mockImplementation(async () => { throw new TypeError("Failed to fetch"); });
+    window.dispatchEvent(new Event("focus"));
+    expect(await within(panel()).findByText(/You appear to be offline\. Showing the list loaded at/)).toBeTruthy();
+    expect(within(panel()).getByRole("list", { name: /The latest 4 records/ })).toBeTruthy();
+    online.mockRestore();
   });
 
   it("shows empty and unavailable states honestly", async () => {
     const user = userEvent.setup();
-    const empty = { ...recorded.notifications, items: [], total: 0, listed: [], listed_total: 0 };
-    const base = fetch.getMockImplementation();
-    fetch.mockImplementation(async (url, init) => (String(url).includes("/api/sources/notifications") ? { ok: true, status: 200, json: async () => empty } : base(url, init)));
+    serve({ ...data, latest: [], older: [], items: [], total: 0, listed: [], listed_total: 0 });
     render(<App />);
     await open(user);
-    expect(await screen.findByText("No new documents are recorded from the monitored sources.")).toBeTruthy();
+    expect(await screen.findByText("No downloaded documents are recorded from the monitored sources.")).toBeTruthy();
     cleanup();
-    fetch.mockImplementation(async (url, init) => (String(url).includes("/api/sources/notifications") ? { ok: false, status: 500, json: async () => ({ error: "x" }) } : base(url, init)));
+    fetch.mockImplementation(async (url) => (String(url).includes("/api/sources/notifications") ? { ok: false, status: 500, json: async () => ({ error: "x" }) } : { ok: true, status: 200, json: async () => ({ ready: true, sources: [], entries: [] }) }));
     render(<App />);
     await open(user);
     expect(await screen.findByText(/The discovery list could not be loaded/)).toBeTruthy();
+  });
+});
+
+describe("evidence cards on the Drift explanation page", () => {
+  const drift = (analysis) => render(<DriftExplanationPage analysis={analysis} onEvidence={vi.fn()} onField={vi.fn()} onAssistant={vi.fn()} onCalculation={vi.fn()} />);
+
+  it("shows one card per stored evidence item with instrument, role, page, verbatim status and links", () => {
+    const analysis = responses.ibc99;
+    drift(analysis);
+    const cards = document.querySelectorAll(".evidence-card");
+    expect(cards).toHaveLength(analysis.evidence.length);
+    for (const item of analysis.evidence) {
+      const card = document.getElementById(`evidence-${item.evidence_id}`);
+      expect(card.querySelector(".evidence-id").textContent).toBe(item.evidence_id);
+      expect(card.textContent).toContain(item.act_name);
+      expect(card.textContent).toContain(`${item.page}, line ${item.line}`);
+      expect(card.textContent).toContain(item.verbatim === false ? "Derived, not a verbatim quote" : "Verbatim from the source");
+      expect(within(card).getByRole("link", { name: `Open PDF for ${item.evidence_id} at page ${item.page}` }).getAttribute("href")).toBe(item.pdf_url);
+      expect(within(card).getByRole("link", { name: `Official record for ${item.evidence_id}` }).getAttribute("href")).toBe(item.official_url);
+      expect(card.textContent).toContain("a highlighted region on the page is not available");
+    }
+  });
+
+  it("marks the changed words in context on the compared sides only, and expands without losing the source", async () => {
+    const user = userEvent.setup();
+    drift(responses.ibc99);
+    const before = document.getElementById("evidence-E3"), after = document.getElementById("evidence-E1"), footnote = document.getElementById("evidence-E2");
+    expect([...before.querySelectorAll("del")].map((el) => el.textContent)).toContain("ten");
+    expect([...after.querySelectorAll("ins")].map((el) => el.textContent)).toContain("twenty");
+    expect(footnote.querySelector("del, ins")).toBeNull();
+    const toggle = within(after).getByRole("button", { name: "Show the full text" });
+    expect(toggle.getAttribute("aria-expanded")).toBe("false");
+    await user.click(toggle);
+    expect(toggle.getAttribute("aria-expanded")).toBe("true");
+    expect(after.querySelector(".evidence-excerpt-text").textContent).toContain("Adjudicating Authority.");
+    expect(within(after).getByRole("link", { name: /Open PDF for E1/ })).toBeTruthy();
+  });
+
+  it("shows a text-quality warning for an unreliable source", () => {
+    const base = responses.ibc99;
+    drift({ ...base, evidence: base.evidence.map((item) => (item.evidence_id === "E1" ? { ...item, text_reliability: "UNRELIABLE_TEXT_LAYER" } : item)) });
+    expect(within(document.getElementById("evidence-E1")).getByRole("note").textContent).toMatch(/^Text-quality warning: this source's text layer is unreliable/);
+    expect(within(document.getElementById("evidence-E2")).queryByRole("note")).toBeNull();
+  });
+
+  it("takes an evidence ID from the explanation to its card and focuses it", async () => {
+    stubApi();
+    const user = userEvent.setup();
+    window.history.replaceState(null, "", `#drift/${responses.ibc99.analysis_id}`);
+    render(<App />);
+    const after = await screen.findByRole("region", { name: "Clause after" });
+    await user.click(within(after).getByRole("button", { name: "Show evidence E1" }));
+    await waitFor(() => expect(document.activeElement.id).toBe("evidence-E1"));
+    expect(document.activeElement.classList.contains("evidence-card")).toBe(true);
+  });
+
+  it("stacks on phones with readable, focus-visible cards", () => {
+    const css = readFileSync("src/styles.css", "utf8");
+    expect(css).toMatch(/\.evidence-card:focus\{outline:3px solid var\(--primary\)/);
+    expect(css).toMatch(/\.evidence-facts\{display:grid;grid-template-columns:repeat\(auto-fit,minmax\(150px,1fr\)\)/);
+    expect(css).toMatch(/@media \(max-width:620px\)\{\.discovery-alert\{left:16px;right:16px;bottom:16px\}\.evidence-cards\{padding:16px\}\}/);
+  });
+});
+
+describe("Score calculation without duplicate clauses, and the rule-field weights", () => {
+  const request = vi.fn(async (path) => (path === "/api/methods/tlds" ? recorded.method : path === "/api/methods/rule-drift" ? recorded.rule_method : null));
+  const calcPage = (analysis, onPage = vi.fn()) => render(<ScoreCalculationPage analysis={analysis} onEvidence={vi.fn()} onField={vi.fn()} onAssistant={vi.fn()} onPage={onPage} request={request} />);
+
+  it("has no full-clause cards but keeps the sources, hashes, worked calculation and a comparison link", async () => {
+    const user = userEvent.setup();
+    const onPage = vi.fn();
+    const analysis = responses.ibc99;
+    calcPage(analysis, onPage);
+    const page = document.querySelector(".calculation-page");
+    expect(page.textContent).not.toMatch(/Before clause compared|After clause compared/);
+    expect(page.querySelector(".calculation-sources, .clause-text")).toBeNull();
+    expect(page.textContent).not.toContain("compared the two clauses below");
+    expect(page.textContent).not.toContain(analysis.fingerprint.wording_drift.details.before_clause.slice(0, 120));  // the full text is not repeated
+    const sources = screen.getByRole("region", { name: "Scored texts" });
+    expect(sources.textContent).toContain(analysis.fingerprint.wording_drift.details.clause_sha256.before.slice(0, 16));
+    expect(within(sources).getByRole("button", { name: "Show evidence E1" })).toBeTruthy();
+    expect(page.textContent).toContain(analysis.fingerprint.rule_drift.details.calculation);
+    expect(page.textContent).toContain(analysis.fingerprint.tlds.calculation);
+    expect(screen.getByRole("table", { name: /Each rule field/ }).textContent).toContain("“within ten days”");  // the small values that explain the points stay
+    await user.click(screen.getByRole("button", { name: /View detailed clause comparison/ }));
+    expect(onPage).toHaveBeenCalledWith("comparison");
+  });
+
+  it("links to the comparison of the same stored analysis", async () => {
+    stubApi();
+    const user = userEvent.setup();
+    const analysis = responses.ibc99;
+    window.history.replaceState(null, "", `#calculation/${analysis.analysis_id}`);
+    render(<App />);
+    await user.click(await screen.findByRole("button", { name: /View detailed clause comparison/ }));
+    expect(window.location.hash).toBe(`#comparison/${analysis.analysis_id}`);
+  });
+
+  it("explains why the rule fields weigh 25, 15, 10 and 5, apart from the combined-indicator weights", async () => {
+    const user = userEvent.setup();
+    calcPage(responses.ibc99);
+    const fold = (await screen.findByText("Why we chose these rule-field weights", { selector: "summary" })).closest("details");
+    await user.click(fold.querySelector("summary"));
+    const text = fold.textContent;
+    expect(text).toContain("Duty, permission or prohibition: 25.");
+    expect(text).toContain("Penalty, Amount or numeric limit, Deadline or period: 15 each.");
+    expect(text).toContain("Exception or proviso, Scope (what the rule covers): 10 each.");
+    expect(text).toContain("Person or body named, What must be done: 5 each.");
+    expect(text).toContain("not learned from data, not optimised and not reviewed or approved by a legal expert");
+    expect(text).toContain("so the score is then a lower bound");
+    expect(text).toContain("separate from the 0.2 / 0.3 / 0.4 / 0.1 weights of the combined indicator");
+    expect(within(fold).getByRole("table", { name: /scored held-out changes under alternative rule weights/ })).toBeTruthy();
+    expect(text).not.toMatch(/Legal effect \(L\)|0\.4 ×/);  // the combined-indicator components are not part of this explanation
+    expect(screen.getByText(/Why the combined-indicator weights are 0\.2, 0\.3, 0\.4 and 0\.1 \(a different score from the rule fields\)/)).toBeTruthy();
+  });
+
+  it("adds each changed field's weight once, from the rule-drift weights", () => {
+    const rule = responses.sra.fingerprint.rule_drift;
+    calcPage(responses.sra);
+    const rows = within(screen.getByRole("table", { name: /Each rule field/ })).getAllByRole("row").slice(1);
+    const weights = Object.fromEntries(recorded.rule_method.fields.map((row) => [row.field, row.weight]));
+    const added = rows.map((row) => Number(row.cells[5].textContent));
+    expect(added.reduce((a, b) => a + b, 0)).toBe(rule.value);
+    rule.details.fields.forEach((field, index) => expect(added[index]).toBe(field.contribution ? weights[field.field] : 0));
+  });
+});
+
+describe("retired Case trace & review", () => {
+  beforeEach(stubApi);
+
+  it("is gone from the navigation and the answer, and an old #review link explains the change", async () => {
+    window.history.replaceState(null, "", `#assistant/${responses.ibc99.analysis_id}`);
+    render(<App />);
+    await screen.findByRole("article", { name: "Answer" });
+    expect(within(screen.getByRole("navigation")).queryByRole("button", { name: /Case trace/ })).toBeNull();
+    expect(screen.queryByRole("button", { name: /case trace/i })).toBeNull();
+    cleanup();
+    for (const hash of ["#review", "#review/run_0123456789abcdef01234567"]) {
+      window.history.replaceState(null, "", hash);
+      render(<App />);
+      expect(screen.getByRole("heading", { name: "Case trace & review is no longer part of this app" })).toBeTruthy();
+      expect(screen.getByText(/review history and the review ledger are kept unchanged/)).toBeTruthy();
+      expect(screen.getByRole("button", { name: /Open legal drift assistant/ })).toBeTruthy();
+      cleanup();
+    }
   });
 });
 

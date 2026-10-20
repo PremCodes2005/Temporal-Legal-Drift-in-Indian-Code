@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import ComparisonPanel from "./ComparisonPanel";
+import ComparisonPanel, { markedTokens } from "./ComparisonPanel";
 import { EvidenceList } from "./Determinations";
 import { ClausePair } from "./Fingerprint";
 import { ScoreExplanation } from "./ResultInsights";
@@ -134,7 +134,62 @@ export function DriftExplanationPage({ analysis, highlight, onField, onEvidence,
         : outcome?.limit?.kind === "facts" ? <>it depends on your facts. <button type="button" className="link-button" onClick={() => onAssistant("scenario")}>Check your situation</button></> : outcome?.reason}</p>
     </article>
     <ProvisionDetails analysis={analysis} />
-    <EvidenceList evidence={analysis.evidence} />
+    <EvidenceCards analysis={analysis} />
+  </section>;
+}
+
+const ROLE_LABEL = {
+  current_consolidated_text: "Current consolidated text", substitution_footnote: "India Code footnote", reconstructed_earlier_wording: "Reconstructed earlier wording",
+  amendment_instruction: "Amendment instruction", before_fragment: "Before fragment", after_fragment: "After fragment", act_text_excerpt: "Act text excerpt",
+};
+const SHORT = 360;
+
+// The changed words of one compared side, in a window of the evidence text, marked from the stored comparison spans.
+function inContext(text, spans, side) {
+  const words = spans.flatMap((span) => String(span[side] || "").split(/\s+/)).filter(Boolean);
+  const at = words.length ? text.toLowerCase().search(new RegExp(`\\b${words[0].replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i")) : -1;
+  if (at < 0) return null;
+  const start = Math.max(0, text.lastIndexOf(" ", Math.max(0, at - 140)) + 1), end = Math.min(text.length, text.indexOf(" ", at + 180) < 0 ? text.length : text.indexOf(" ", at + 180));
+  return { prefix: start > 0, suffix: end < text.length, nodes: markedTokens(text.slice(start, end), spans, side) };
+}
+
+function EvidenceCard({ item, side, spans, provision }) {
+  const [open, setOpen] = useState(false);
+  const text = item.text || "";
+  const context = side && spans.length ? inContext(text, spans, side) : null;
+  const long = text.length > SHORT;
+  const body = open ? (side && spans.length ? markedTokens(text, spans, side) : text) : context
+    ? <>{context.prefix && "… "}{context.nodes}{context.suffix && " …"}</> : long ? `${text.slice(0, SHORT).replace(/\s+\S*$/, "")} …` : text;
+  return <li id={`evidence-${item.evidence_id}`} tabIndex={-1} className={`evidence-card ${item.verbatim === false ? "derived" : ""}`} aria-labelledby={`evidence-${item.evidence_id}-title`}>
+    <header><span className="evidence-id">{item.evidence_id}</span>
+      <h4 id={`evidence-${item.evidence_id}-title`}>{ROLE_LABEL[item.role] || item.role?.replaceAll("_", " ")} <span className="sr-only">({item.evidence_id})</span></h4></header>
+    <dl className="evidence-facts">
+      <div><dt>Instrument</dt><dd>{item.act_name}</dd></div>
+      {provision && side && <div><dt>Provision</dt><dd>{provision}</dd></div>}
+      <div><dt>Page</dt><dd>{item.page ?? "not recorded"}{item.line ? `, line ${item.line}` : ""}</dd></div>
+      <div><dt>Text</dt><dd>{item.verbatim === false ? <span className="kind-badge">Derived, not a verbatim quote</span> : "Verbatim from the source"}</dd></div>
+    </dl>
+    {item.text_reliability === "UNRELIABLE_TEXT_LAYER" && <p className="evidence-warning" role="note">Text-quality warning: this source's text layer is unreliable (for example OCR errors). Check the PDF before relying on the wording.</p>}
+    {context && !open && <p className="panel-note">Changed words in context, marked from the stored comparison ({side === "before" ? "removed or replaced" : "inserted or replacing"} words).</p>}
+    <blockquote className="evidence-excerpt-text" id={`evidence-${item.evidence_id}-text`}>{body}</blockquote>
+    {(long || context) && <button type="button" className="link-button" aria-expanded={open} aria-controls={`evidence-${item.evidence_id}-text`} onClick={() => setOpen(!open)}>
+      {open ? "Show less" : "Show the full text"}</button>}
+    <p className="evidence-links">{item.pdf_url && <a href={item.pdf_url} target="_blank" rel="noreferrer" aria-label={`Open PDF for ${item.evidence_id} at page ${item.page}`}>Open PDF{item.page ? ` (page ${item.page})` : ""} ↗</a>}
+      {item.official_url && <a href={item.official_url} target="_blank" rel="noreferrer" aria-label={`Official record for ${item.evidence_id}`}>Official record ↗</a>}</p>
+    <p className="panel-note">The PDF opens at the cited page; a highlighted region on the page is not available.</p>
+  </li>;
+}
+
+// Readable source cards for the stored evidence; nothing is cited here that the analysis did not store.
+export function EvidenceCards({ analysis }) {
+  const evidence = analysis.evidence || [];
+  if (!evidence.length) return null;
+  const comparison = analysis.comparison || {};
+  const sides = { [comparison.before?.evidence_id]: "before", [comparison.after?.evidence_id]: "after" };
+  const provision = (analysis.version_evidence?.provision_path || comparison.provision_path || "").replace("section:", "Section ");
+  return <section className="evidence-cards" aria-labelledby="evidence-cards-heading"><span className="section-kicker">Sources</span>
+    <h3 id="evidence-cards-heading">Evidence cited in this explanation</h3>
+    <ol>{evidence.map((item) => <EvidenceCard key={item.evidence_id} item={item} side={sides[item.evidence_id]} spans={comparison.changed_spans || []} provision={provision} />)}</ol>
   </section>;
 }
 
@@ -177,7 +232,7 @@ function CombinedWeights({ tlds, wording, rule, method, onEvidence, onField }) {
     {!tlds.contributions && <p className="panel-note">This stored analysis predates tlds-v1.1, so its points per component were not recorded; the total and each value above are as stored.</p>}
     {tlds.value == null && <p className="limit-note"><strong>Incomplete: no combined score.</strong> Missing: {tlds.missing_components.map((m) => NAME[m] || m).join(", ")}.
       A missing component is never counted as 0, so the total is withheld; any partial value is shown separately and must not be compared with complete scores.</p>}
-    <details className="fold" open={false}><summary>Why the weights are 0.2, 0.3, 0.4 and 0.1</summary>
+    <details className="fold" open={false}><summary>Why the combined-indicator weights are 0.2, 0.3, 0.4 and 0.1 (a different score from the rule fields)</summary>
       {method?.components ? <><p>{method.weights_status}</p>
         <ul>{PARTS.map(([key, label]) => <li key={key}><strong>{label}:</strong> {method.components[key]?.why_this_weight}</li>)}</ul></>
         : <p className="panel-note">{method === false ? "The method description could not be loaded." : "Loading the method description…"}</p>}
@@ -202,22 +257,53 @@ function Row({ name, inputs, formula, calculation, value, children }) {
     {calculation && <code>Worked: {calculation}</code>}{children}</div><b>{value}</b></div>;
 }
 
-function Clause({ analysis, side, details, onEvidence }) {
-  return <article aria-label={`Compared ${side} clause`}><strong>{side === "before" ? "Before clause compared" : "After clause compared"}</strong>
-    <h3>{details[`${side}_kind`]}</h3>
-    <p className="clause-text">{details[`${side}_clause`]}</p>
-    <SideSource analysis={analysis} side={side} onEvidence={onEvidence} />
-    {details.clause_sha256?.[side] && <p className="panel-note">SHA-256 of the scored text: <code>{details.clause_sha256[side].slice(0, 16)}…</code></p>}
+// Which stored texts were scored, compactly; the full side-by-side text lives on the clause comparison page.
+function SourceSummary({ analysis, details, onEvidence, onPage }) {
+  return <article className="calculation-card" aria-labelledby="calc-sources"><span className="section-kicker">Scored texts</span>
+    <h3 id="calc-sources">What was compared</h3>
+    <div className="table-scroll" role="region" aria-label="Scored texts" tabIndex={0}><table className="fp-table"><caption className="sr-only">The two scored clauses and their sources</caption>
+      <thead><tr><th scope="col">Side</th><th scope="col">Text</th><th scope="col">Source</th><th scope="col">SHA-256 of scored text</th></tr></thead>
+      <tbody>{["before", "after"].map((side) => <tr key={side}><th scope="row">{side === "before" ? "Before" : "After"}</th><td>{details[`${side}_kind`]}</td>
+        <td><SideSource analysis={analysis} side={side} onEvidence={onEvidence} /></td>
+        <td>{details.clause_sha256?.[side] ? <code>{details.clause_sha256[side].slice(0, 16)}…</code> : "—"}</td></tr>)}</tbody></table></div>
+    {onPage && <button className="explain-drift-button" type="button" onClick={() => onPage("comparison")}>View detailed clause comparison <span aria-hidden="true">→</span></button>}
   </article>;
 }
 
-export function ScoreCalculationPage({ analysis, onField, onEvidence, onAssistant, request }) {
-  const [method, setMethod] = useState(null);  // the method as configured, with the held-out sensitivity (GET /api/methods/tlds)
-  useEffect(() => { request?.("/api/methods/tlds").then(setMethod).catch(() => setMethod(false)); }, [request]);
+// Why the rule-drift field weights are 25 / 15 / 15 / 15 / 10 / 10 / 5 / 5 (GET /api/methods/rule-drift). Not the TLDS weights.
+function RuleWeightsRationale({ method }) {
+  if (method === false) return <p className="panel-note">The rule-weight explanation could not be loaded.</p>;
+  if (!method?.rationale) return null;
+  const r = method.rationale, sens = method.sensitivity;
+  const label = Object.fromEntries(method.fields.map((row) => [row.field, row.label]));
+  return <details className="fold rule-weights"><summary>Why we chose these rule-field weights</summary>
+    <p>{r.status}</p>
+    <ul>{r.tiers.map((tier) => <li key={tier.weight}><strong>{tier.fields.map((f) => label[f] || f).join(", ")}: {tier.weight}{tier.fields.length > 1 ? " each" : ""}.</strong> {tier.reason}</li>)}</ul>
+    <p><strong>Why they add up to 100.</strong> {r.total}</p>
+    <p><strong>How fields count.</strong> {r.counting}</p>
+    <p className="panel-note">{r.not_the_combined_weights}</p>
+    {sens && <><p><strong>How much the choice matters.</strong> {sens.finding}</p>
+      <div className="table-scroll" role="region" aria-label="Rule-weight sensitivity on held-out changes" tabIndex={0}><table className="fp-table">
+        <caption>{sens.transitions} scored held-out changes under alternative rule weights</caption>
+        <thead><tr><th scope="col">Weighting</th><th scope="col">Order vs current (Spearman)</th><th scope="col">Ordered pairs kept</th><th scope="col">Pairs whose tie changed</th><th scope="col">Median / largest score change</th></tr></thead>
+        <tbody>{Object.entries(sens.weightings).map(([name, row]) => <tr key={name}><th scope="row">{name.replaceAll("_", " ")}</th><td>{row.spearman_vs_current}</td>
+          <td>{row.ordered_pairs_kept_percent}%</td><td>{row.pairs_whose_tie_status_changed}</td><td>{row.median_abs_change} / {row.max_abs_change}</td></tr>)}</tbody></table></div>
+      <p className="panel-note">{sens.note} Source: <code>{sens.source}</code>. The active weights were not changed.</p></>}
+  </details>;
+}
+
+export function ScoreCalculationPage({ analysis, onField, onEvidence, onAssistant, onPage, request }) {
+  const [method, setMethod] = useState(null);  // the combined indicator as configured, with its sensitivity (GET /api/methods/tlds)
+  const [ruleMethod, setRuleMethod] = useState(null);  // the rule-drift field weights and their rationale (GET /api/methods/rule-drift)
+  useEffect(() => {
+    request?.("/api/methods/tlds").then(setMethod).catch(() => setMethod(false));
+    request?.("/api/methods/rule-drift").then(setRuleMethod).catch(() => setRuleMethod(false));
+  }, [request]);
   const fp = analysis.fingerprint || {};
   const wording = fp.wording_drift, rule = fp.rule_drift, outcome = fp.outcome_drift, tlds = fp.tlds;
   const header = <PageHeader analysis={analysis} kicker="Score calculation" title="How these percentages were calculated" onAssistant={onAssistant}>
-    <p>You supplied only this question. The backend selected the provision by Act and section identity and compared the two clauses below; no before/after passage was typed in.
+    <p>You supplied only this question. The backend selected the provision by Act and section identity and compared two whole clauses, summarised below
+      with their sources; the full side-by-side text is on the clause comparison page. No before/after passage was typed in.
       Every number is read from the stored analysis ({fp.version}{tlds ? `, ${tlds.version}` : ""}); this page computes nothing.</p></PageHeader>;
   if (!analysis.question_frame?.asks_about_versions || wording?.value == null) {
     return <section className="page-section calculation-page">{header}<NoChangeScores analysis={analysis} /></section>;
@@ -227,10 +313,7 @@ export function ScoreCalculationPage({ analysis, onField, onEvidence, onAssistan
   const controlled = outcome?.details?.controlled_scenarios;
   return <section className="page-section calculation-page">
     {header}
-    <div className="calculation-sources">
-      <Clause analysis={analysis} side="before" details={w} onEvidence={onEvidence} />
-      <Clause analysis={analysis} side="after" details={w} onEvidence={onEvidence} />
-    </div>
+    <SourceSummary analysis={analysis} details={w} onEvidence={onEvidence} onPage={onPage} />
     <article className="calculation-card"><span className="section-kicker">Why these clauses</span>
       <h3>Question → Act and section → {analysis.comparison?.support_class === "CONSOLIDATED_FOOTNOTE_RECONSTRUCTION" ? "footnote reconstruction" : "corroborated amendment"}</h3>
       <p>{analysis.comparison?.support_reason}</p>
@@ -251,6 +334,7 @@ export function ScoreCalculationPage({ analysis, onField, onEvidence, onAssistan
           <td>{(row.before_spans?.length || row.after_spans?.length) ? <button type="button" className="link-button" onClick={() => onField(row)} aria-label={`Show the words for ${fieldLabel(row)}`}>Show</button> : null}</td></tr>)}</tbody>
       </table></div>
       <p className="panel-note">Weights: <code>{rule?.details?.weights_config}</code>.{rule?.details?.lower_bound ? " Uncertain fields are excluded, so the total is a lower bound." : ""}</p>
+      <RuleWeightsRationale method={ruleMethod} />
       <EvidenceButtons ids={wording.evidence_ids} onEvidence={onEvidence} label="Scored from" />
     </article>
     {tlds && tlds.state !== "NOT_APPLICABLE" && <CombinedWeights tlds={tlds} wording={wording} rule={rule} method={method} onEvidence={onEvidence} onField={onField} />}
@@ -267,7 +351,7 @@ export function ScoreCalculationPage({ analysis, onField, onEvidence, onAssistan
     </article>
     {analysis.metrics && <details className="legacy-diagnostic"><summary>Legacy diagnostic (drift-metrics-v3): superseded, not the combined indicator</summary>
       <p className="panel-note">{analysis.metrics.legacy_diagnostic?.note} It is computed on amendment fragments and kept only for comparison with earlier releases.</p>
-      <DriftPanel metrics={analysis.metrics} legacy /><ScoreExplanation metrics={analysis.metrics} /></details>}
+      <DriftPanel metrics={analysis.metrics} legacy /><ScoreExplanation metrics={analysis.metrics} excerpts={false} /></details>}
     <p className="research-note">These calculations measure text and rule-field movement between two versions. They are not probabilities, legal correctness scores or legal advice. Legal validation: UNVERIFIED.</p>
   </section>;
 }

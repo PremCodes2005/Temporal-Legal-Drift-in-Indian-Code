@@ -7,7 +7,7 @@ import { VerificationPanel } from "./SharedPanels";
 // The assistant page's answer for one stored analysis (rag-answer-v4/v5), in the single-page order of v0.13.0 (commit 6db1c49):
 // answer, path to the explanation pages, pre/post evidence, citations. Personal-situation and review details are folded away.
 // Every value is read from the stored analysis; nothing is recomputed here.
-export default function AssistantResult({ analysis, onPage = () => {}, onScenario = () => {}, onSection = () => {}, busy = false, onReview, situationOpen = false }) {
+export default function AssistantResult({ analysis, onPage = () => {}, onScenario = () => {}, onSection = () => {}, busy = false, situationOpen = false }) {
   const fp = analysis.fingerprint || {};
   const versions = analysis.question_frame?.asks_about_versions;
   const scored = versions ? [["Wording drift", fp.wording_drift], ["Rule drift", fp.rule_drift]].filter(([, item]) => item?.value != null) : [];
@@ -35,7 +35,7 @@ export default function AssistantResult({ analysis, onPage = () => {}, onScenari
     {(analysis.source_fidelity_warnings || []).map((item) => <div className="warning-note" role="alert" key={item.entry_id || item.warning}>
       <strong>Source text unreliable: {item.entry_id}</strong><span>{item.detail || item.warning} Treat quoted wording from this source as unverified.</span></div>)}
     <Situation analysis={analysis} onScenario={onScenario} busy={busy} open={situationOpen} />
-    <Review analysis={analysis} onReview={onReview} />
+    <Review analysis={analysis} />
     {analysis.source_guidance && <article className="source-guidance"><div><span className="section-kicker">Authoritative source</span><h3>Verify the complete legal text</h3>
       <p>{analysis.source_guidance.message}</p></div><a href={analysis.source_guidance.url} target="_blank" rel="noreferrer">{analysis.source_guidance.label} ↗</a></article>}
   </section>;
@@ -112,7 +112,7 @@ function Situation({ analysis, onScenario, busy, open }) {
   </details>;
 }
 
-function Review({ analysis, onReview }) {
+function Review({ analysis }) {
   const evidence = analysis.evidence || [];
   const derived = evidence.filter((item) => item.verbatim === false).length;
   const unreliable = evidence.filter((item) => item.text_reliability === "UNRELIABLE_TEXT_LAYER").length;
@@ -132,6 +132,5 @@ function Review({ analysis, onReview }) {
     {limits.length > 0 && <ul>{limits.map((item) => <li key={item}>{item}</li>)}</ul>}
     {uncertainty.length > 0 && <p className="panel-note"><strong>Flagged uncertainty:</strong> {uncertainty.join("; ")}.</p>}
     <p><strong>Review state:</strong> not reviewed by a qualified legal expert. Legal validation: UNVERIFIED.</p>
-    {onReview && <button type="button" className="link-button" onClick={onReview}>Open case trace & review</button>}
   </details>;
 }

@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import CaseReviewPanel from "./CaseReviewPanel";
 import ComparisonPanel from "./ComparisonPanel";
 import { GenerationNotice, IndicatorStrip, ScoreExplanation, VersionStatus } from "./ResultInsights";
 import { DeterminationCards, DirectAnswer, EvidenceList, ScenarioForm } from "./Determinations";
@@ -9,7 +8,7 @@ import ComplianceRiskPanel from "./ComplianceRiskPanel";
 import { DriftPanel, VerificationPanel, percent } from "./SharedPanels";
 import AssistantResult from "./AssistantResult";
 import { ComparisonPage, DriftExplanationPage, ScoreCalculationPage } from "./ExplanationPages";
-import Notifications, { readSeen, saveSeen, useDiscoveries } from "./Notifications";
+import Notifications, { DiscoveryAlert, readSeen, saveSeen, useDiscoveries } from "./Notifications";
 import FAQ from "./faq.json";
 
 // Addresses of one stored analysis: #assistant/<id>, #drift/<id>, #calculation/<id>, #comparison/<id>. Plain #assistant, #drift,
@@ -30,7 +29,8 @@ function parseRoute(hash) {
 }
 const pageHash = (page, id) => (ANALYSIS_PAGES.includes(page) && id ? `#${page}/${id}` : `#${page}`);
 
-const PAGE_TITLES = { comparison: "Clause comparison" };  // pages reached from an answer, not from the sidebar
+// Pages reached from an answer or an old link, not from the sidebar. "review" is the retired Case trace & review screen.
+const PAGE_TITLES = { comparison: "Clause comparison", review: "Case trace & review (retired)" };
 const sections = [
   { id: "assistant", number: "01", label: "Legal drift assistant" },
   { id: "drift", number: "02", label: "Drift explanation" },
@@ -39,7 +39,6 @@ const sections = [
   { id: "method", number: "05", label: "How it works" },
   { id: "faq", number: "06", label: "Recent changes FAQ" },
   { id: "risk", number: "07", label: "Compliance risk" },
-  { id: "review", number: "08", label: "Case trace & review" },
 ];
 const KNOWN = new Set([...sections.map((item) => item.id), ...Object.keys(PAGE_TITLES)]);
 
@@ -69,8 +68,6 @@ export function followUps(result) {
 }
 
 export default function App() {
-  // Deep links: #review or #review/run_<id> (validated) so a case can be shared with a reviewer.
-  const initialHash = window.location.hash.slice(1).split("?")[0].split("/");
   const route = useMemo(() => parseRoute(window.location.hash), []);
   // Shareable question link: #assistant?q=<question> asks once on load.
   // Read once: the link is replaced by #assistant after loading, and must not then look like "no question".
@@ -80,7 +77,6 @@ export default function App() {
   const [analysisError, setAnalysisError] = useState("");
   const [loadingAnalysis, setLoadingAnalysis] = useState(false);
   const [highlight, setHighlight] = useState(null);
-  const initialRunId = /^run_[0-9a-f]{24}$/.test(initialHash[1] || "") ? initialHash[1] : null;
   const [menuOpen, setMenuOpen] = useState(false);
   const [corpus, setCorpus] = useState(null);
   const [status, setStatus] = useState(null);
@@ -158,7 +154,7 @@ export default function App() {
   const [seen, setSeen] = useState(readSeen);
   const [panelOpen, setPanelOpen] = useState(false);
   const toggle = useRef(null);
-  const unread = (discoveries.data?.items || []).filter((row) => !seen.includes(row.id)).length;
+  const unread = [...(discoveries.data?.latest || []), ...(discoveries.data?.older || [])].filter((row) => !seen.includes(row.key)).length;
   const markSeen = (ids) => { saveSeen(ids); setSeen(ids); };
   const closePanel = () => { setPanelOpen(false); toggle.current?.focus(); };
 
@@ -189,9 +185,10 @@ export default function App() {
           aria-label={`Latest discoveries${unread > 0 ? `, ${unread} unread` : ""}`}>
           <span className="long">Latest discoveries</span><span className="short" aria-hidden="true">Discoveries</span>{unread > 0 && <span className="count" aria-hidden="true">{unread}</span>}</button></header>
       <Notifications {...discoveries} open={panelOpen} onClose={closePanel} seen={seen} onSeen={markSeen} />
+      <DiscoveryAlert fresh={discoveries.fresh} onOpen={() => { discoveries.dismiss(); setPanelOpen(true); }} onDismiss={discoveries.dismiss} />
       <main id="main-content">
         {section === "assistant" && <AssistantWorkspace status={status} error={loadError || analysisError} starter={starter}
-          result={lastResult} onResult={showResult} situationOpen={situation} onPage={navigate} onReview={() => navigate("review")}
+          result={lastResult} onResult={showResult} situationOpen={situation} onPage={navigate}
           history={history} onAsked={recordQuestion} onClearHistory={clearHistory} />}
         {VIEW_PAGES.includes(section) && (lastResult?.analysis_id
           ? section === "drift" ? <DriftExplanationPage {...pageProps} highlight={highlight} onCalculation={() => navigate("calculation")} />
@@ -206,13 +203,17 @@ export default function App() {
         {section === "method" && <Method />}
         {section === "faq" && <RecentChangesFaq onAsk={askFromFaq} />}
         {section === "risk" && <ComplianceRiskPanel request={api} />}
-        {section === "review" && <CaseReviewPanel request={api} initialRunId={initialRunId} />}
+        {section === "review" && <section className="page-section"><div className="section-header"><span className="section-kicker">Retired page</span>
+          <h2>Case trace & review is no longer part of this app</h2>
+          <p>Case runs, their review history and the review ledger are kept unchanged for research and reproducibility; they are no longer shown here.
+            New documents from the monitored sources are listed under Latest discoveries, and every answer shows its own sources and review state.</p></div>
+          <button className="send-button" type="button" onClick={() => navigate("assistant")}>Open legal drift assistant <span>→</span></button></section>}
       </main>
     </div>
   </div>;
 }
 
-function AssistantWorkspace({ status, error: statusError, starter, result, onResult, situationOpen, onPage, onReview, history = [], onAsked = () => {}, onClearHistory }) {
+function AssistantWorkspace({ status, error: statusError, starter, result, onResult, situationOpen, onPage, history = [], onAsked = () => {}, onClearHistory }) {
   const [query, setQuery] = useState(starter?.text || result?.query || "");
   const [mode, setMode] = useState("specific");
   const [busy, setBusy] = useState(false);
@@ -270,7 +271,7 @@ function AssistantWorkspace({ status, error: statusError, starter, result, onRes
     </div>
     {busy && <div className="loading-panel"><span className="spinner"/><div><strong>Retrieving versioned legal evidence…</strong><p>Classifying the question, matching documents and validating the response context.</p></div></div>}
     {result && (result.analysis_id
-      ? <AssistantResult analysis={result} onPage={onPage} busy={busy} onReview={onReview} situationOpen={situationOpen}
+      ? <AssistantResult analysis={result} onPage={onPage} busy={busy} situationOpen={situationOpen}
           onScenario={(scenario) => submit(null, result.query, scenario, result.mode)}
           onSection={(section) => submit(null, result.query, null, result.mode, section)} />
       : <RagResult result={result} onExplain={() => onPage?.("calculation")} busy={busy} onScenario={(scenario) => submit(null, result.query, scenario)} />)}
