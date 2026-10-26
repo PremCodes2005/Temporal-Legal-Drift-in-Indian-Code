@@ -299,8 +299,8 @@ function QuestionChips({ history, followUps: next, onPick, onClear }) {
 function RepositoryStatus({ status, error }) {
   return <div className={`repository-status ${error ? "error" : ""}`}>
     <span className="status-dot" />
-    <div><strong>{error ? "Repository unavailable" : status?.ready ? "India Code connection ready" : "Preparing legal repository"}</strong><small>{error || (status ? `Live India Code lookup · ${formatNumber(status.document_count)} cached documents · ${formatNumber(status.chunk_count)} searchable chunks` : "Connecting to India Code and the local evidence cache…")}</small></div>
-    {status && <span className="status-badge">Live + cached</span>}
+    <div><strong>{error ? "Repository unavailable" : status?.ready ? (status.live_repository_enabled ? "India Code connection ready" : "Local repository ready") : "Preparing legal repository"}</strong><small>{error || (status ? `${status.live_repository_enabled ? "Live India Code lookup" : "Live India Code lookup off"} · ${formatNumber(status.document_count)} cached documents · ${formatNumber(status.chunk_count)} searchable chunks` : "Connecting to India Code and the local evidence cache…")}</small></div>
+    {status && <span className="status-badge">{status.live_repository_enabled ? "Live + cached" : "Cached only"}</span>}
   </div>;
 }
 
@@ -383,7 +383,7 @@ function Method() { return <section className="page-section"><div className="sec
   ["4", "Compare", "Calculate vector (feature-hash), lexical and conceptual movement on the retrieved excerpts."],
   ["5", "Generate", "Produce a specific clause view or generic overview using only supplied evidence."],
   ["6", "Verify", "Check coverage, version pairing, citation anchors and response alignment."],
-].map(([number, title, body]) => <article className="method-card" key={number}><span>{number}</span><h3>{title}</h3><p>{body}</p></article>)}</div><article className="source-guidance"><div><span className="section-kicker">Always verify</span><h3>Local retrieval is not the final legal authority</h3><p>If evidence is missing or incomplete, the assistant still directs the user to India Code for the complete text and further information.</p></div><a href="https://indiacode.gov.in/" target="_blank" rel="noreferrer">Visit India Code ↗</a></article></section>; }
+].map(([number, title, body]) => <article className="method-card" key={number}><span>{number}</span><h3>{title}</h3><p>{body}</p></article>)}</div><article className="source-guidance"><div><span className="section-kicker">Always verify</span><h3>Local retrieval is not the final legal authority</h3><p>Check the complete, official text on India Code, especially when evidence here is missing or incomplete.</p></div><a href="https://indiacode.gov.in/" target="_blank" rel="noreferrer">Visit India Code ↗</a></article></section>; }
 
 
 function RecentChangesFaq({ onAsk }) {

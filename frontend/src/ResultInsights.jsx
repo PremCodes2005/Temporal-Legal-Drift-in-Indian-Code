@@ -3,7 +3,7 @@
 
 const PAIRING_TEXT = {
   GRAPH_TRANSITION_FRAGMENTS: "Amendment fragments from a machine-checked transition (not complete sections).",
-  CONSOLIDATED_FOOTNOTE_RECONSTRUCTION: "Earlier wording reconstructed from India Code's footnote; current consolidated text on the right.",
+  CONSOLIDATED_FOOTNOTE_RECONSTRUCTION: "Earlier wording reconstructed from India Code's footnote.",
   UNALIGNED_EXCERPTS: "Only excerpts: the two texts are not shown to be the same provision.",
   AMBIGUOUS_CANDIDATES: "Several amendments could match; none is chosen.",
 };
@@ -12,6 +12,8 @@ const TEMPORAL_TEXT = {
   FOOTNOTE_STATED_DATE_UNVERIFIED: "Date printed in the India Code footnote (unverified)",
   UNRESOLVED: "Effective date unresolved",
 };
+
+export const SCOPE_NOTE = "Whether this applies to a particular date or situation, and its legal consequence, is not determined here. Not legally validated.";
 
 export function GenerationNotice({ method, warning }) {
   const text = method === "grounded_composition"
@@ -26,7 +28,7 @@ export function GenerationNotice({ method, warning }) {
   return <p className="generation-method" role="status">{text}{warning ? ` ${warning}; this answer was produced without it.` : ""}</p>;
 }
 
-export function VersionStatus({ comparison, metrics }) {
+export function VersionStatus({ comparison, metrics, scope = false }) {
   if (!comparison || comparison.support_class === "NOT_A_COMPARISON") {
     return <p className="version-status" role="note"><strong>Legal-version status:</strong> not a version comparison. The answer summarises the retrieved document; no before/after versions were identified.</p>;
   }
@@ -38,6 +40,7 @@ export function VersionStatus({ comparison, metrics }) {
   return <div className="version-status" role="note">
     <p><strong>Legal-version status:</strong> {PAIRING_TEXT[comparison.support_class] || comparison.support_class}{temporal ? ` ${TEMPORAL_TEXT[temporal.status] || temporal.status}${temporal.date ? `: ${temporal.date}` : ""}.` : ""}</p>
     {warnings.map((text) => <p className="version-warning" key={text}>{text}</p>)}
+    {scope && <p>{SCOPE_NOTE}</p>}
   </div>;
 }
 

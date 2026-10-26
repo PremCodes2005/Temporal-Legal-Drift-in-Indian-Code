@@ -53,7 +53,7 @@ export default function ComplianceRiskPanel({ request }) {
       <h3>Assumptions and missing information</h3><ul>{result.uncertainty.map((reason) => <li key={reason}>{reason.replaceAll("_", " ")}</li>)}</ul>
       {result.evidence.map((item) => <details key={item.evidence_id}><summary>{item.role} evidence · {item.locator}</summary><blockquote>{item.quote}</blockquote><small>Source: {item.source_id}</small></details>)}
       <p>Conditional research assessment; legal interpretation has not been independently validated.</p>
-      <a href="https://indiacode.gov.in/" target="_blank" rel="noreferrer">Visit India Code for further information ↗</a>
+      <a href="https://indiacode.gov.in/" target="_blank" rel="noreferrer">Check the official text on India Code ↗</a>
     </div>}
   </section>;
 }

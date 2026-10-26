@@ -158,7 +158,7 @@ describe("standalone Drift explanation and Score calculation pages", () => {
     const before = screen.getByRole("region", { name: "Clause before" }), after = screen.getByRole("region", { name: "Clause after" });
     expect(after.querySelector(".compare-text").textContent).toBe(analysis.fingerprint.wording_drift.details.after_clause);
     expect(before.textContent).toMatch(/Insolvency Bankruptcy Code 2016 · page 98, line 11 · earlier wording reconstructed from the footnote · Derived, not verbatim/);
-    expect(after.textContent).toMatch(/page 98, line 11 · current consolidated text · verbatim/);
+    expect(after.textContent).toMatch(/page 98, line 11 · current consolidated text · Verbatim/);
     expect(within(after).getByRole("link", { name: /PDF p\. 98/ }).getAttribute("href")).toBe("/corpus/insolvency-bankruptcy-code-2016.pdf#page=98");
     const changes = screen.getByRole("article", { name: "How the two clauses differ" });
     expect(changes.textContent).toContain("“within ten days” → “within twenty-one days”");
@@ -680,8 +680,10 @@ describe("evidence cards on the Drift explanation page", () => {
       expect(card.textContent).toContain(item.verbatim === false ? "Derived, not a verbatim quote" : "Verbatim from the source");
       expect(within(card).getByRole("link", { name: `Open PDF for ${item.evidence_id} at page ${item.page}` }).getAttribute("href")).toBe(item.pdf_url);
       expect(within(card).getByRole("link", { name: `Official record for ${item.evidence_id}` }).getAttribute("href")).toBe(item.official_url);
-      expect(card.textContent).toContain("a highlighted region on the page is not available");
     }
+    // The PDF-highlight limit is stated once for the whole list, not on every card.
+    const section = document.querySelector(".evidence-cards");
+    expect(section.textContent.split("a highlighted region on the page is not available")).toHaveLength(2);
   });
 
   it("marks the changed words in context on the compared sides only, and expands without losing the source", async () => {

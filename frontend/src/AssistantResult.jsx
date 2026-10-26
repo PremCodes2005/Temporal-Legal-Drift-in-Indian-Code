@@ -24,13 +24,13 @@ export default function AssistantResult({ analysis, onPage = () => {}, onEvidenc
       <h2 id="result-title">{HEADINGS[routing?.response_type] || (versions ? "Version comparison" : "Answer")}</h2></div>
       <div className="mode-badge">{analysis.mode === "generic" ? "Generic" : "Specific"} mode</div></div>
     <InterpretedAs routing={routing} acts={acts} onAct={onAct} busy={busy} />
-    <GenerationNotice method={analysis.answer.generation_method} warning={analysis.answer.generation_warning} />
-    {versions && <VersionStatus comparison={analysis.comparison} metrics={analysis.metrics} />}
     {analysis.selection?.section && <p className="selection-note">Section chosen from the list: <strong>section {analysis.selection.section}</strong> of the {analysis.selection.act_name}.
       Your question is kept as you asked it.</p>}
     {/* With the chooser shown, the answer's plain-text list of the same sections would repeat it. */}
     <DirectAnswer answer={found ? { ...analysis.answer, sections: (analysis.answer.sections || []).filter((part) => part.id !== "candidates") } : analysis.answer}
-      onEvidence={onEvidence} showLimits={false} />
+      onEvidence={onEvidence} showLimits={false}
+      note={versions && <VersionStatus comparison={analysis.comparison} metrics={analysis.metrics} scope={analysis.comparison?.support_class !== "NOT_A_COMPARISON"} />}
+      footer={<GenerationNotice method={analysis.answer.generation_method} warning={analysis.answer.generation_warning} />} />
     {found && <SectionChooser found={found} onSection={onSection} busy={busy} />}
     <ActChoices routing={routing} onAct={onAct} busy={busy} />
     <NotFoundSources routing={routing} />
@@ -39,7 +39,7 @@ export default function AssistantResult({ analysis, onPage = () => {}, onEvidenc
       .filter(([key, value]) => key !== "facts" && value !== null && value !== "")
       .map(([key, value]) => `${key.replaceAll("_", " ")}: ${value === true ? "yes" : value === false ? "no" : String(value).replaceAll("_", " ")}`).join("; ")}.</p>}
     {versions && !found && <ChangePath scored={scored} combined={combined} analysis={analysis} onPage={onPage} />}
-    <ComparisonPanel comparison={analysis.comparison} />
+    <ComparisonPanel comparison={analysis.comparison} scope={!versions} />
     {(analysis.source_fidelity_warnings || []).map((item) => <div className="warning-note" role="alert" key={item.entry_id || item.warning}>
       <strong>Source text unreliable: {item.entry_id}</strong><span>{item.detail || item.warning} Treat quoted wording from this source as unverified.</span></div>)}
     <Review analysis={analysis} />

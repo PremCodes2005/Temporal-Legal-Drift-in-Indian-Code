@@ -25,19 +25,27 @@ const ROLE_TEXT = {
   act_text_excerpt: "Act text excerpt (verbatim)",
 };
 
-export function DirectAnswer({ answer, onEvidence, showLimits = true }) {
+// The heading already says Before/After; with the version note shown above, the After label need not repeat its caveat.
+const partLabel = (label, noted) => {
+  const text = label.replace(/^(?:Before|After) — (.)/, (_, c) => c.toUpperCase());
+  return noted ? text.replace("; not proven to be the text in force on a past date)", ")") : text;
+};
+
+export function DirectAnswer({ answer, onEvidence, showLimits = true, note = null, footer = null }) {
   return <article className="answer-card v2" aria-labelledby="direct-answer-heading">
     <span className="section-kicker" id="direct-answer-heading">Answer</span>
     <p className="direct-answer">{answer.direct_answer}</p>
-    {(answer.sections || []).map((section) => <section className={`answer-part ${section.kind}`} key={section.id} aria-label={section.title}>
+    {note}
+    {(answer.sections || []).map((section) => <section className={`answer-part ${section.kind} part-${section.id}`} key={section.id} aria-label={section.title}>
       <h3>{section.title}{KIND_TEXT[section.kind] && <span className="kind-badge">{KIND_TEXT[section.kind]}</span>}</h3>
-      {section.label && <p className="part-label">{section.label}</p>}
+      {section.label && <p className="part-label">{partLabel(section.label, Boolean(note))}</p>}
       <p>{section.text}</p>
       {section.evidence_ids?.length > 0 && <p className="evidence-chips">Evidence: {section.evidence_ids.map((id) => onEvidence
         ? <button key={id} type="button" onClick={() => onEvidence(id)} aria-label={`Show evidence ${id}`}>{id}</button>
         : <a key={id} href={`#evidence-${id}`} aria-label={`Evidence ${id}`}>{id}</a>)}</p>}
     </section>)}
     {showLimits && answer.answer_limitations?.length > 0 && <ul className="answer-limits">{answer.answer_limitations.map((item) => <li key={item}>{item}</li>)}</ul>}
+    {footer}
   </article>;
 }
 

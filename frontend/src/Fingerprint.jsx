@@ -1,5 +1,8 @@
 import { Fragment } from "react";
 
+// Stored kinds read "derived: …" / "verbatim: …"; shown with the same capitalised label everywhere.
+export const kindLabel = (text) => String(text || "").replace(/^(derived|verbatim): /, (_, kind) => (kind === "derived" ? "Derived — " : "Verbatim — "));
+
 // Legal Change Fingerprint (legal-change-fingerprint-v1): three separate measures, shown together and never averaged.
 // Every number comes from the API response; the browser only displays it.
 
@@ -54,7 +57,7 @@ function WordingDetails({ details, legacy, open }) {
     {details.formula && <p><strong>Formula:</strong> {details.formula}{details.calculation ? ` = ${details.calculation.split(" = ").pop()}%` : ""}</p>}
     {details.calculation && <p><strong>Calculation:</strong> {details.calculation}</p>}
     {details.flag && <p><strong>Result:</strong> {details.flag === "IDENTICAL" ? "identical text" : "formatting, punctuation or spelling only"}</p>}
-    <p><strong>Before clause:</strong> {details.before_kind}. <strong>After clause:</strong> {details.after_kind}.</p>
+    <p><strong>Before clause:</strong> {kindLabel(details.before_kind)}. <strong>After clause:</strong> {kindLabel(details.after_kind)}.</p>
     <p className="panel-note">Feature-vector drift uses deterministic token hashes, not a pretrained semantic model. Normalised before scoring: {(details.normalisation || []).join("; ")}.</p>
     {details.spans.length > 0 && <table className="fp-table"><caption>Exact changed spans</caption>
       <thead><tr><th scope="col">Change</th><th scope="col">Before</th><th scope="col">After</th></tr></thead>
@@ -117,8 +120,8 @@ export function ClausePair({ details, highlight, sources }) {
     <span className="section-kicker">Scored text</span><h3 id="clause-pair-heading" tabIndex={-1}>Whole clauses compared, changed words marked</h3>
     {highlight?.label && <p className="highlight-note" role="status">Highlighted: the words behind <strong>{highlight.label}</strong>.</p>}
     <div className="compare-grid">
-      <section aria-label="Clause before"><h4>Before</h4><p className="panel-note">{details.before_kind}</p><p className="compare-text">{render(details.before_clause, "before")}</p>{sources?.before}</section>
-      <section aria-label="Clause after"><h4>After</h4><p className="panel-note">{details.after_kind}</p><p className="compare-text">{render(details.after_clause, "after")}</p>{sources?.after}</section>
+      <section aria-label="Clause before"><h4>Before</h4><p className="panel-note">{kindLabel(details.before_kind)}</p><p className="compare-text">{render(details.before_clause, "before")}</p>{sources?.before}</section>
+      <section aria-label="Clause after"><h4>After</h4><p className="panel-note">{kindLabel(details.after_kind)}</p><p className="compare-text">{render(details.after_clause, "after")}</p>{sources?.after}</section>
     </div>
   </article>;
 }

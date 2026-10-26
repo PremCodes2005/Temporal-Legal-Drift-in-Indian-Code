@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import ComparisonPanel, { markedTokens } from "./ComparisonPanel";
 import { EvidenceList } from "./Determinations";
-import { ClausePair } from "./Fingerprint";
+import { ClausePair, kindLabel } from "./Fingerprint";
 import { ScoreExplanation } from "./ResultInsights";
 import { DriftPanel } from "./SharedPanels";
 
@@ -9,7 +9,7 @@ import { DriftPanel } from "./SharedPanels";
 // (commit 6db1c49). Both read the SAME stored analysis as the assistant; every number comes from the API, nothing is
 // recomputed here. Scores shown: legal-change-fingerprint-v1.2 (wording and rule drift) and the tlds-v1 combined indicator.
 export const OPERATION = { ADDED: "added", REMOVED: "removed", CHANGED: "changed", UNCHANGED: "unchanged", ABSENT: "not present", UNCERTAIN: "uncertain" };
-export const DIAGNOSTIC_NOTE = "Change diagnostics; wording, rule and situation change are measured separately: not legal correctness, not a confidence probability, not materiality and not risk.";
+export const DIAGNOSTIC_NOTE = "Wording, rule and situation changes are measured separately. None of these scores shows legal correctness, materiality, risk or a confidence probability.";
 export const fieldLabel = (row) => row.label || row.field.replaceAll("_", " ");
 export const quoted = (values) => (values?.length ? values.map((value) => `“${value}”`).join(" / ") : "—");
 const ROLE = {
@@ -63,7 +63,7 @@ function SideSource({ analysis, side, onEvidence }) {
   if (!item) return <p className="panel-note">Source: not recorded for this side.</p>;
   return <p className="side-source">
     <strong>{item.act_name}</strong>{item.page ? ` · page ${item.page}` : ""}{item.line ? `, line ${item.line}` : ""} · {ROLE[item.role] || item.role?.replaceAll("_", " ")}
-    {" · "}{item.verbatim === false ? <span className="kind-badge">Derived, not verbatim</span> : "verbatim"}
+    {" · "}{item.verbatim === false ? <span className="kind-badge">Derived, not verbatim</span> : "Verbatim"}
     {item.text_reliability === "UNRELIABLE_TEXT_LAYER" && <span className="evidence-warning"> Unreliable text layer: check the PDF.</span>}
     {" "}<button type="button" className="link-button" onClick={() => onEvidence(item.evidence_id)} aria-label={`Show evidence ${item.evidence_id}`}>{item.evidence_id}</button>
     {item.pdf_url && <> · <a href={item.pdf_url} target="_blank" rel="noreferrer">PDF{item.page ? ` p. ${item.page}` : ""} ↗</a></>}
@@ -81,7 +81,7 @@ export function DriftExplanationPage({ analysis, highlight, onField, onEvidence,
   const fp = analysis.fingerprint || {};
   const wording = fp.wording_drift, rule = fp.rule_drift, outcome = fp.outcome_drift, tlds = fp.tlds;
   const header = <PageHeader analysis={analysis} kicker="Drift explanation" title="What the drift score means" onAssistant={onAssistant}>
-    <p>These measures describe movement between two versions of one clause. They do not by themselves prove legal materiality or correctness.</p></PageHeader>;
+    <p>These measures describe movement between two versions of one clause. {DIAGNOSTIC_NOTE}</p></PageHeader>;
   if (!analysis.question_frame?.asks_about_versions || wording?.value == null) {
     return <section className="page-section drift-page">{header}<NoChangeScores analysis={analysis} /><EvidenceList evidence={analysis.evidence} /></section>;
   }
@@ -97,8 +97,9 @@ export function DriftExplanationPage({ analysis, highlight, onField, onEvidence,
   };
   const tiles = [
     ["Wording drift", wording.label, "How much of the clause's surface wording moved (lexical and feature-hash measures)."],
-    ["Rule drift", rule?.label || "Not scored", rule?.value != null ? "Weighted sum of the legal-rule fields that changed." : rule?.reason],
-    ...(legal ? [["Legal-effect drift", legal.value != null ? legal.value.toFixed(2) : "Missing", legal.details?.level || legal.reason]] : []),
+    ["Rule drift", rule?.label || "Not scored", rule?.value != null ? "Weighted sum of the legal-rule fields that changed." : changed.length ? rule?.reason : "Not scored; the reason is under “How the two clauses differ” below."],
+    ...(legal ? [["Legal-effect drift", legal.value != null ? legal.value.toFixed(2) : "Missing", legal.details?.level
+      || (rule?.value == null && rule?.reason && legal.reason?.includes(rule.reason) ? "Not scored, because rule drift was not scored." : legal.reason)]] : []),
     ...(tlds && tlds.state !== "NOT_APPLICABLE" ? [["Combined indicator (TLDS)", tlds.value != null ? tlds.value.toFixed(1) : "Incomplete",
       tlds.value != null ? "0.2 × textual + 0.3 × semantic + 0.4 × legal effect + 0.1 × rule structure, on a 0–100 scale." : `Missing: ${tlds.missing_components.join(", ").replaceAll("_", " ")}.`, tlds.band]] : []),
   ];
@@ -115,7 +116,7 @@ export function DriftExplanationPage({ analysis, highlight, onField, onEvidence,
         {band && <b className={`level-pill ${LEVELS.find(([, , members]) => members.includes(band))?.[0] || "low"}`}>{band}</b>}<p>{detail}</p></div>)}</div>
       {hidden && <p className="warning-note" role="note"><strong>Read legal effect on its own.</strong><span>The combined score is {tlds.band.toLowerCase()}, but legal-effect drift is {legal.value.toFixed(2)}. {legal.reason}</span></p>}
       {(fp.reading || []).filter((item) => item.kind === "disagreement").map((item) => <p key={item.text} className="warning-note" role="note"><strong>Wording and rule disagree.</strong><span>{item.text}</span></p>)}
-      <p className="panel-note">{DIAGNOSTIC_NOTE} <button type="button" className="link-button" onClick={onCalculation}>See the worked calculation →</button>
+      <p className="link-row"><button type="button" className="link-button" onClick={onCalculation}>See the worked calculation →</button>
         {onPage && <button type="button" className="link-button" onClick={() => onPage("comparison")}>View detailed clause comparison →</button>}</p>
     </article>
     <ClausePair details={wording.details} highlight={highlight}
@@ -176,7 +177,6 @@ function EvidenceCard({ item, side, spans, provision }) {
       {open ? "Show less" : "Show the full text"}</button>}
     <p className="evidence-links">{item.pdf_url && <a href={item.pdf_url} target="_blank" rel="noreferrer" aria-label={`Open PDF for ${item.evidence_id} at page ${item.page}`}>Open PDF{item.page ? ` (page ${item.page})` : ""} ↗</a>}
       {item.official_url && <a href={item.official_url} target="_blank" rel="noreferrer" aria-label={`Official record for ${item.evidence_id}`}>Official record ↗</a>}</p>
-    <p className="panel-note">The PDF opens at the cited page; a highlighted region on the page is not available.</p>
   </li>;
 }
 
@@ -189,6 +189,7 @@ export function EvidenceCards({ analysis }) {
   const provision = (analysis.version_evidence?.provision_path || comparison.provision_path || "").replace("section:", "Section ");
   return <section className="evidence-cards" aria-labelledby="evidence-cards-heading"><span className="section-kicker">Sources</span>
     <h3 id="evidence-cards-heading">Evidence cited in this explanation</h3>
+    <p className="panel-note">PDF links open at the cited page; a highlighted region on the page is not available.</p>
     <ol>{evidence.map((item) => <EvidenceCard key={item.evidence_id} item={item} side={sides[item.evidence_id]} spans={comparison.changed_spans || []} provision={provision} />)}</ol>
   </section>;
 }
@@ -263,7 +264,7 @@ function SourceSummary({ analysis, details, onEvidence, onPage }) {
     <h3 id="calc-sources">What was compared</h3>
     <div className="table-scroll" role="region" aria-label="Scored texts" tabIndex={0}><table className="fp-table"><caption className="sr-only">The two scored clauses and their sources</caption>
       <thead><tr><th scope="col">Side</th><th scope="col">Text</th><th scope="col">Source</th><th scope="col">SHA-256 of scored text</th></tr></thead>
-      <tbody>{["before", "after"].map((side) => <tr key={side}><th scope="row">{side === "before" ? "Before" : "After"}</th><td>{details[`${side}_kind`]}</td>
+      <tbody>{["before", "after"].map((side) => <tr key={side}><th scope="row">{side === "before" ? "Before" : "After"}</th><td>{kindLabel(details[`${side}_kind`])}</td>
         <td><SideSource analysis={analysis} side={side} onEvidence={onEvidence} /></td>
         <td>{details.clause_sha256?.[side] ? <code>{details.clause_sha256[side].slice(0, 16)}…</code> : "—"}</td></tr>)}</tbody></table></div>
     {onPage && <button className="explain-drift-button" type="button" onClick={() => onPage("comparison")}>View detailed clause comparison <span aria-hidden="true">→</span></button>}
@@ -388,7 +389,7 @@ export function ComparisonPage({ analysis, onField, onEvidence, onAssistant, onP
     <PageHeader analysis={analysis} kicker="Clause comparison" title="Before and after, side by side" onAssistant={onAssistant}>{links}</PageHeader>
     <ProvisionDetails analysis={analysis} />
     <p className="selection-note"><strong>Evidence status:</strong> {SUPPORT_STATUS[comparison.support_class]}
-      {analysis.version_evidence?.relation_verification ? ` · amendment relation: ${analysis.version_evidence.relation_verification.replaceAll("_", " ").toLowerCase()}` : ""} · legal validation: unverified.</p>
+.</p>
     <ComparisonPanel comparison={comparison} full />
     <article className="calculation-card" aria-labelledby="rule-changes"><span className="section-kicker">Legal-rule fields</span><h3 id="rule-changes">What changed in the legal instruction</h3>
       {changed.length > 0 ? <ul className="field-list">{changed.map((row) => <li key={row.field}>
