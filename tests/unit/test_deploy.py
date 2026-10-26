@@ -83,20 +83,33 @@ class SystemdUnitTests(unittest.TestCase):
     def test_timers_are_persistent_so_downtime_does_not_silently_skip_a_run(self) -> None:
         for name in ("tldrift-monitor.timer", "tldrift-health.timer"):
             self.assertEqual(_unit(name)["Timer"]["Persistent"], "true", name)
-        self.assertEqual(_unit("tldrift-monitor.timer")["Timer"]["OnCalendar"], "hourly")
+        # Hourly on the hour UTC (:30 IST): the 01:00 UTC (06:30 IST) trigger is the daily slot, the others catch up a missed one.
+        self.assertEqual(_unit("tldrift-monitor.timer")["Timer"]["OnCalendar"], "*-*-* *:00:00 UTC")
 
     def test_both_jobs_alert_on_failure_and_call_real_cli_commands(self) -> None:
         parser = build_parser()
-        for name, expected in (("tldrift-monitor.service", ["monitor-run", "--owner", "%H"]),
-                               ("tldrift-health.service", ["monitor-health", "--check"])):
+        for name, expected in (("tldrift-monitor.service", ["monitor-run", "--owner", "systemd@%H", "--daily-at", "06:30",
+                                                             "--timezone", "Asia/Kolkata", "--notify"]),
+                               ("tldrift-health.service", ["monitor-notify", "--check"])):
             unit = _unit(name)
             self.assertEqual(unit["Unit"]["OnFailure"], "tldrift-alert@%n.service")
             command = shlex.split(unit["Service"]["ExecStart"])
             self.assertTrue(command[0].endswith("/.venv/bin/tldrift"))
             self.assertEqual(command[1:], expected)
-            parser.parse_args(["host" if part == "%H" else part for part in command[1:]])  # the command exists
+            parser.parse_args([part.replace("%H", "host") for part in command[1:]])  # the command exists
         self.assertTrue((ROOT / shlex.split(_unit("tldrift-alert@.service")["Service"]["ExecStart"])[0]
                          .replace("/srv/temporal-legal-drift/", "")).is_file())
+
+    def test_launchd_wrapper_runs_the_same_daily_slot_with_real_cli_commands(self) -> None:
+        script = (ROOT / "deploy/launchd/run.sh").read_text()
+        installer = (ROOT / "deploy/launchd/install.sh").read_text()
+        self.assertIn("<key>Minute</key><integer>30</integer>", installer)  # hourly at :30, as on systemd
+        self.assertIn('TLDRIFT_DAILY_AT:-06:30', script)
+        self.assertIn('TLDRIFT_TIMEZONE:-Asia/Kolkata', script)
+        parser = build_parser()
+        parser.parse_args(["monitor-run", "--owner", "launchd@host", "--daily-at", "06:30", "--timezone", "Asia/Kolkata", "--notify"])
+        parser.parse_args(["monitor-notify", "--check"])
+        self.assertEqual(subprocess.run(["sh", "-n", str(ROOT / "deploy/launchd/run.sh")]).returncode, 0)
 
     def test_no_secret_is_committed_in_the_environment_example(self) -> None:
         text = (UNITS / "tldrift.env.example").read_text()

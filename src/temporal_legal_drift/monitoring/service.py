@@ -20,14 +20,16 @@ import fcntl
 import json
 import os
 import re
+import time
 from contextlib import contextmanager
 from dataclasses import asdict
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from hashlib import sha256
 from pathlib import Path
 from typing import Any, Callable, Iterator
 from urllib.parse import urlparse
 from uuid import uuid4
+from zoneinfo import ZoneInfo
 
 from temporal_legal_drift.acquisition.models import utc_now_iso
 from temporal_legal_drift.amendment_extraction.extractor import GeneralisedAmendmentExtractor
@@ -46,6 +48,44 @@ MAX_STAGE_ATTEMPTS = 3
 ROOT = "data/monitoring"
 PIPELINE_VERSION = "source-monitoring-v2"
 TERMINAL = {"PROCESSED", "REVIEW_REQUIRED"}
+# A start due this soon waits for it, so a few seconds of start-up jitter never pushes the daily run to the next trigger.
+SLOT_TOLERANCE = timedelta(minutes=10)
+ON_TIME = timedelta(hours=1)  # a start within one trigger period after its slot is on time, even if the trigger is offset
+ALERTS_LEDGER = "alerts_sent.v1.jsonl"
+QUARANTINE_REASONS = ("SOURCE_TEXT", "PARSER_UNAVAILABLE", "not a PDF", "listed size")
+
+
+def next_eligible(start: datetime, schedule: tuple[int, int, str] | None = None) -> datetime:
+    """24 h after this start. With a daily slot, a start more than an hour after its slot (a catch-up) moves the next
+    start to the first slot at least 24 h later, so the run returns to its slot instead of staying late."""
+    earliest = start + WINDOW
+    if schedule is None:
+        return earliest
+    hour, minute, zone = schedule
+    started = start.astimezone(ZoneInfo(zone))
+    own_slot = started.replace(hour=hour, minute=minute, second=0, microsecond=0)
+    if own_slot > started + SLOT_TOLERANCE:
+        own_slot = (own_slot - timedelta(days=1)).replace(hour=hour, minute=minute)
+    if started < own_slot + ON_TIME:
+        return earliest
+    local = (earliest - SLOT_TOLERANCE).astimezone(ZoneInfo(zone))
+    slot = local.replace(hour=hour, minute=minute, second=0, microsecond=0)
+    if slot < local:
+        slot = (slot + timedelta(days=1)).replace(hour=hour, minute=minute)
+    return max(earliest, slot.astimezone(timezone.utc))
+
+
+def machine_state(version: dict[str, Any]) -> str:
+    """The explicit machine state of one document version; no state here needs or implies a human decision."""
+    state = version.get("state")
+    if state == "PROCESSED":
+        return "CANDIDATE_AMENDMENT" if ((version.get("stages") or {}).get("extract") or {}).get("events") else "PROCESSED"
+    if state == "REVIEW_REQUIRED":
+        reason = str(version.get("review_reason") or "")
+        return "QUARANTINED" if any(code in reason for code in QUARANTINE_REASONS) else "UNRESOLVED"
+    if state == "FAILED":
+        return "FAILED_RETRYING"
+    return "DISCOVERED"
 
 
 def _parse_time(value: str) -> datetime:
@@ -60,7 +100,8 @@ class MonitoringService:
     def __init__(self, root: Path, connectors: dict[str, Any], *, clock: Callable[[], str] = utc_now_iso,
                  parser: Any | None = None,
                  index_updater: Callable[[Path, list[dict[str, Any]]], dict[str, Any]] | None = None,
-                 graph_mapper: Callable[[dict[str, Any]], dict[str, Any]] | None = None) -> None:
+                 graph_mapper: Callable[[dict[str, Any]], dict[str, Any]] | None = None,
+                 schedule: tuple[int, int, str] | None = None, sleep: Callable[[float], None] = time.sleep) -> None:
         self.root = root.resolve()
         self.base = self.root / ROOT
         self.connectors = connectors
@@ -68,6 +109,8 @@ class MonitoringService:
         self.parser = parser
         self.index_updater = index_updater
         self.graph_mapper = graph_mapper
+        self.schedule = schedule  # (hour, minute, IANA zone) of the daily run, or None for "24 h after the last start"
+        self.sleep = sleep
 
     # ---------- scheduling ----------
     def run_due(self, owner: str, *, manual_reason: str | None = None) -> list[dict[str, Any]]:
@@ -87,6 +130,13 @@ class MonitoringService:
         now = _parse_time(self.clock())
         if manual_reason is not None and len(manual_reason.strip()) < 10:
             raise ValueError("a manual retry requires a reason")
+        if manual_reason is None and self.schedule is not None:
+            with self._locked_state() as state:
+                eligible = state.get(key, {}).get("next_eligible_at")
+            wait = (_parse_time(eligible) - now).total_seconds() if eligible else 0
+            if 0 < wait <= SLOT_TOLERANCE.total_seconds():
+                self.sleep(wait)
+                now = _parse_time(self.clock())
         with self._locked_state() as state:
             entry = state.setdefault(key, {"source_key": key})
             eligible = entry.get("next_eligible_at")
@@ -98,13 +148,16 @@ class MonitoringService:
             # The window is anchored to this attempt's start and persisted before any network call.
             entry.update(lease_owner=owner, lease_expires_at=(now + LEASE).isoformat(), last_attempt_at=now.isoformat())
             if manual_reason is None:
-                entry["next_eligible_at"] = (now + WINDOW).isoformat()
+                entry["next_eligible_at"] = next_eligible(now, self.schedule).isoformat()
+                entry["schedule"] = f"{self.schedule[0]:02d}:{self.schedule[1]:02d} {self.schedule[2]}" if self.schedule else None
             since = entry.get("cursor")
         mode = "MANUAL_RETRY" if manual_reason else "SCHEDULED"
         result = self._execute(key, owner, mode=mode, since=since, max_pages=5 if since else 1, reason=manual_reason)
         with self._locked_state() as state:
             entry = state[key]
-            entry.update(lease_owner=None, lease_expires_at=None, last_run_id=result["run_id"], last_status=result["status"])
+            entry.update(lease_owner=None, lease_expires_at=None, last_run_id=result["run_id"], last_status=result["status"],
+                         last_completed_at=result["completed_at"],
+                         last_run_counts={"listed": result["listed"], "retried": result["retried"], **result["counts"]})
             if result["status"] in {"OK", "PARTIAL_FAILURE"}:
                 entry["last_success_at"] = result["completed_at"]
                 if result.get("cursor"):
@@ -128,6 +181,23 @@ class MonitoringService:
             discovered, manifest["status"], manifest["error"] = [], "SOURCE_UNAVAILABLE", f"{type(error).__name__}: {error}"
         for record in discovered:
             manifest["records"].append(self._ingest(record, connector, run_id))
+        manifest["listed"], manifest["retried"] = len(discovered), 0
+        if manifest["status"] == "OK":
+            listed = {record.official_id for record in discovered}
+            for doc in self.documents():
+                version = doc["versions"][-1] if doc["versions"] else None
+                if (doc["source_key"] != key or doc["official_id"] in listed or not version or version["state"] in TERMINAL
+                        or version.get("sha256")):
+                    continue  # fetched versions resume from their stored artifact instead
+                record = DiscoveredRecord(**version["record"])
+                if not record.bitstream_url:
+                    self._settle_without_pdf(doc, version, record, run_id)
+                    continue
+                retried = self._advance(doc, version, record, connector, run_id)
+                self._observe(record, run_id, version.get("sha256"), retried["status"], version.get("error"), version.get("previous_sha256"))
+                manifest["records"].append({"doc_id": doc["doc_id"], "official_id": record.official_id, "title": record.title,
+                                            "retried": True, **retried})
+                manifest["retried"] += 1
         statuses = [item["status"] for item in manifest["records"]]
         manifest["counts"] = {name: statuses.count(name) for name in sorted(set(statuses))}
         manifest["cursor"] = max((r.accessioned_at for r in discovered), default=None)
@@ -145,7 +215,7 @@ class MonitoringService:
         base = {"doc_id": doc_id, "official_id": record.official_id, "title": record.title}
         fingerprint = record.metadata_fingerprint()
         latest = doc["versions"][-1] if doc["versions"] else None
-        if not record.download_eligible:
+        if not record.download_eligible or not record.bitstream_url:
             self._observe(record, run_id, None, "METADATA_ONLY")
             return {**base, "status": "METADATA_ONLY"}
         if latest and latest["metadata_fingerprint"] == fingerprint and latest["state"] in TERMINAL:
@@ -217,11 +287,21 @@ class MonitoringService:
         resumed = []
         for doc in self.documents():
             version = doc["versions"][-1] if doc["versions"] else None
-            if not version or version["state"] in TERMINAL or not version.get("sha256"):
-                continue  # complete, or never fetched (waits for its source's next scheduled discovery)
+            if not version or version["state"] in TERMINAL:
+                continue
             record = DiscoveredRecord(**version["record"])
+            if not version.get("sha256"):
+                if not record.bitstream_url:
+                    self._settle_without_pdf(doc, version, record, f"resume_{uuid4().hex[:16]}")
+                continue  # never fetched: retried by its source's next scheduled run
             resumed.append({"doc_id": doc["doc_id"], **self._advance(doc, version, record, None, f"resume_{uuid4().hex[:16]}")})
         return resumed
+
+    def _settle_without_pdf(self, doc: dict, version: dict, record: DiscoveredRecord, run_id: str) -> None:
+        """A ledger entry from before items without a single PDF were listed only: abstain; there is nothing to fetch."""
+        version.update(review_reason="NO_SINGLE_PDF_LISTED", first_error=version.pop("error", None))
+        self._transition(doc, version, "REVIEW_REQUIRED", run_id)
+        self._observe(record, run_id, None, "METADATA_ONLY")
 
     @staticmethod
     def _verify(payload: bytes, record: DiscoveredRecord) -> str | None:
@@ -346,7 +426,7 @@ class MonitoringService:
             "schema_version": "2.0.0", "queue_id": queue_id, "status": "HUMAN_REVIEW_PENDING", "doc_id": doc["doc_id"],
             "official_id": record.official_id, "source_key": record.source_key, "version": version["version"],
             "sha256": version.get("sha256"), "previous_sha256": version.get("previous_sha256"), "change": change,
-            "outcome": outcome, "review_reason": version.get("review_reason"), "title": record.title,
+            "outcome": outcome, "machine_state": machine_state(version), "review_reason": version.get("review_reason"), "title": record.title,
             "canonical_url": record.canonical_url, "stated_dates": record.stated_dates, "stages": version.get("stages"),
             "legal_effect_claimed": False,
             "note": "Discovery or a changed PDF is not an amendment, a commenced change or a changed scenario answer.",
@@ -354,7 +434,7 @@ class MonitoringService:
         atomic_write_new(self.base / "review_queue" / f"{queue_id}.json", canonical_json_bytes(item))
         version["queue_id"] = queue_id
         self._save_document(doc)
-        return {"status": change, "outcome": outcome, "version": version["version"], "sha256": version.get("sha256"),
+        return {"status": change, "outcome": outcome, "machine_state": machine_state(version), "version": version["version"], "sha256": version.get("sha256"),
                 "previous_sha256": version.get("previous_sha256"), "queue_id": queue_id, "stages": version.get("stages"),
                 "review_reason": version.get("review_reason"),
                 "same_bytes_as_official_ids": version.get("same_bytes_as_official_ids", [])}
@@ -457,7 +537,9 @@ class MonitoringService:
         now = _parse_time(self.clock())
         folder = self.base / "review_queue"
         queue = [load_json(p) for p in sorted(folder.glob("*.json"))] if folder.is_dir() else []
-        states = [doc["versions"][-1]["state"] for doc in self.documents() if doc["versions"]]
+        latest = [doc["versions"][-1] for doc in self.documents() if doc["versions"]]
+        states = [version["state"] for version in latest]
+        machine = [machine_state(version) for version in latest]
         sources, alerts = [], []
         for key in sorted(set(self.connectors) | set(state)):
             entry = state.get(key, {})
@@ -475,9 +557,15 @@ class MonitoringService:
                 "next_eligible_at": entry.get("next_eligible_at"), "last_status": entry.get("last_status"),
                 "lag_hours": round(lag, 1) if lag is not None else None,
                 "scheduled_ingestion_healthy": lag is not None and lag <= STALE_AFTER_HOURS,
+                "freshness": "NEVER_SUCCEEDED" if lag is None else "FRESH" if lag <= STALE_AFTER_HOURS else "STALE",
+                "stage": (f"RUNNING (lease held by {entry.get('lease_owner')} until {entry.get('lease_expires_at')})"
+                          if entry.get("lease_expires_at") and _parse_time(entry["lease_expires_at"]) > now else "IDLE"),
+                "schedule": entry.get("schedule"), "last_completed_at": entry.get("last_completed_at"),
+                "last_run_counts": entry.get("last_run_counts"),
             })
         return {"sources": sources, "alerts": alerts, "review_queue_pending": sum(item["status"] == "HUMAN_REVIEW_PENDING" for item in queue),
                 "document_states": {name: states.count(name) for name in sorted(set(states))},
+                "machine_states": {name: machine.count(name) for name in sorted(set(machine))},
                 "failed_documents": states.count("FAILED"),
                 "commencement_pending_review": sum(r["status"] != "REVIEWED" for r in self.commencement_records()),
                 "time_base": "UTC", "coverage_claim": "partial; see docs/sprint/s1_source_access_decision.v2.md"}
@@ -563,7 +651,9 @@ def notifications(service: "MonitoringService", review_ledger: Any | None = None
         reviewed = review_ledger.current_state(item["queue_id"], item["status"]) if review_ledger else item["status"]
         code = reviewed if reviewed in ITEM_STATUS else code
         targets = sorted({str(e.get("target_act") or e.get("principal_act") or "").strip() for e in candidates.get(official_id, [])} - {""})
+        version = next((v for v in (documents.get(official_id) or {}).get("versions", []) if v.get("sha256") == sha), None)
         records[row["key"]] = {**row, "status": code, "status_label": ITEM_STATUS[code], "queue_id": item["queue_id"],
+                               "machine_state": machine_state(version) if version else item.get("machine_state"),
                                "category": "POSSIBLE_AMENDMENT" if candidates.get(official_id) else "NEW_DOCUMENT",
                                "candidate_events": len(candidates.get(official_id, [])), "candidate_targets": targets}
         if sha:
@@ -609,6 +699,67 @@ def notifications(service: "MonitoringService", review_ledger: Any | None = None
                                           "24 hours. Not a complete list of Indian amendments.",
             "note": "A discovered or downloaded document is not a confirmed change to law, and nothing listed here changes the answers "
                     "until it is reviewed and added to the corpus.", "legal_effect_claimed": False}
+
+
+def pending_alerts(service: "MonitoringService") -> list[dict[str, Any]]:
+    """Alerts not yet delivered, each under a stable key: a record version (official id + content hash), a failed version,
+    or a source condition tied to the attempt that caused it. Read from the ledger only; nothing is fetched."""
+    feed = notifications(service, limit=10**6)
+    alerts = [{"key": f"record:{row['key']}", "kind": "NEW_RECORD",
+               "text": f"{row['source']}: {row['title']} [{row.get('machine_state') or row['status']}] {row.get('official_url') or ''}".strip()}
+              for row in feed["items"]]
+    for doc in service.documents():
+        version = doc["versions"][-1] if doc["versions"] else None
+        # Only exhausted attempts are actionable; a FAILED version is retried automatically at its source's next run.
+        if version and version["state"] == "REVIEW_REQUIRED" and version.get("error"):
+            alerts.append({"key": f"failure:{doc['doc_id']}:v{version['version']}:{version['state']}", "kind": "DOCUMENT_FAILURE",
+                           "text": f"{doc['source_key']} {doc['official_id']}: {version['state']} after {version.get('attempts', 0)} "
+                                   f"attempt(s): {version.get('error')}"})
+    path = service.base / "state.v1.json"
+    state = json.loads(path.read_text(encoding="utf-8"))["sources"] if path.is_file() else {}
+    for alert in service.health()["alerts"]:
+        entry = state.get(alert["source_key"], {})
+        anchor = entry.get("next_eligible_at") if alert["code"] == "SCHEDULER_MISSED_RUN" else entry.get("last_attempt_at")
+        alerts.append({"key": f"source:{alert['source_key']}:{alert['code']}:{anchor}", "kind": alert["code"],
+                       "text": f"{alert['source_key']}: {alert['code']}: {alert['detail']}"})
+    sent = {row["key"] for row in _read_jsonl(service.base / ALERTS_LEDGER)}
+    return [alert for alert in alerts if alert["key"] not in sent]
+
+
+def deliver_alerts(service: "MonitoringService", send: Callable[[str], bool] | None) -> dict[str, Any]:
+    """Send every pending alert once, as one message. A key is recorded only after delivery succeeds, so a failed or missing
+    channel is retried next time and a delivered key is never sent again. On the first use, records already in the ledger
+    are recorded as a baseline instead of being announced as new."""
+    ledger = service.base / ALERTS_LEDGER
+    pending = pending_alerts(service)
+    now = service.clock()
+    if not ledger.is_file():
+        for alert in [a for a in pending if a["kind"] == "NEW_RECORD"]:
+            service._append(ALERTS_LEDGER, {"key": alert["key"], "kind": alert["kind"], "at": now, "delivery": "BASELINE"})
+        pending = [a for a in pending if a["kind"] != "NEW_RECORD"]
+        ledger.parent.mkdir(parents=True, exist_ok=True)
+        ledger.touch()
+    if not pending:
+        return {"status": "NOTHING_NEW", "pending": 0}
+    records = [a for a in pending if a["kind"] == "NEW_RECORD"]
+    problems = [a for a in pending if a["kind"] != "NEW_RECORD"]
+    lines = [f"Temporal Legal Drift source monitoring ({now} UTC)"]
+    if records:
+        lines += [f"{len(records)} newly discovered official record(s). Machine states only: nothing here is a verified "
+                  "amendment, a commencement or legal advice, and the monitored sources are not all Indian legal changes."]
+        lines += [f"- {a['text']}" for a in records]
+    if problems:
+        lines += [f"{len(problems)} problem(s) needing attention:"] + [f"- {a['text']}" for a in problems]
+    if send is None or not send("\n".join(lines) + "\n"):
+        return {"status": "UNDELIVERED" if send else "NO_ALERT_CHANNEL", "pending": len(pending),
+                "keys": [a["key"] for a in pending]}
+    for alert in pending:
+        service._append(ALERTS_LEDGER, {"key": alert["key"], "kind": alert["kind"], "at": now, "delivery": "SENT"})
+    return {"status": "SENT", "pending": 0, "sent": len(pending), "new_records": len(records), "problems": len(problems)}
+
+
+def _read_jsonl(path: Path) -> list[dict[str, Any]]:
+    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()] if path.is_file() else []
 
 
 def _text_fidelity(document: dict[str, Any]) -> dict[str, Any]:

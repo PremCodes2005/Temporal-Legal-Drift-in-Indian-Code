@@ -1,9 +1,9 @@
 [Unit]
-Description=Hourly trigger for Temporal Legal Drift source monitoring
+Description=Hourly trigger for Temporal Legal Drift source monitoring (daily slot 06:30 Asia/Kolkata = 01:00 UTC)
 
 [Timer]
-OnCalendar=hourly
-RandomizedDelaySec=10m
+# Every hour on the hour UTC (= :30 IST); the 01:00 UTC (06:30 IST) trigger is the daily run, the others only catch up a missed slot.
+OnCalendar=*-*-* *:00:00 UTC
 Persistent=true
 
 [Install]

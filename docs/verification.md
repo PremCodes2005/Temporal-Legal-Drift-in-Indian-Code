@@ -322,3 +322,31 @@ Remote GitHub Actions has still not been observed. See [../reports/phase3/tempor
   - Old `#analysis/<id>/scenario` links open the plain answer.
   - The backend `scenario` field and stored analyses are unchanged.
 - **Executed:** 76 vitest tests (run 3 times); the Python suite (static frontend checks included); `browser-a11y-check.mjs` against port 8765 (its keyboard check now opens "Sources, quality and review"); a real-Chrome check that an evidence id in the answer opens `#drift/<id>` with its card focused.
+
+## Unattended daily monitoring addendum (2026-10-26, ADR 0025)
+
+- **Tests (no network, mocked sources):** `tests/unit/test_unattended_monitoring.py`, 14 tests. They cover:
+  - first run, unchanged second run, revised file;
+  - a partial failure retried after the listing moved past it, bounded attempts, an item without a single PDF;
+  - a crashed run and restart;
+  - start-up jitter, an offset trigger, a missed slot with catch-up and return to the slot;
+  - four worker processes;
+  - a stale source, alerts sent once per key, a failed alert channel;
+  - reading never contacting a source.
+  `tests/unit/test_deploy.py` also checks the launchd wrapper.
+- **Container check** (`deploy/container-check/run.sh`): PASS with the hourly :30 UTC timer, then the timer moved to :00 UTC
+  (06:30 IST). Docker was no longer running, so the final unit was **not** re-run in the container.
+- **Live smoke check** (one bounded `monitor-run`, owner `manual-smoke@…`, both sources eligible under the 24 h rule),
+  2026-10-26 14:27–14:48 UTC:
+  - **e-Gazette:** OK. 20 rows listed (railway land-acquisition notices), all metadata only by the existing
+    instrument filter.
+  - **India Code:** PARTIAL_FAILURE. 64 listed and 41 downloaded and processed (31 `CANDIDATE_AMENDMENT`, 10
+    `PROCESSED`).
+    - 19 downloads failed on host DNS (`nodename nor servname provided`) and are retried at the next run.
+    - 4 items had no single PDF. They are now settled as listed-only (`UNRESOLVED`, `NO_SINGLE_PDF_LISTED`), with no
+      download and no failure alert.
+  - This was a manual run. It is **not** evidence that the scheduler works.
+- **Not verified:**
+  - **A scheduled run.** The launchd agent was not installed by this change, and no scheduled run has been observed.
+  - **Always-on host:** none is named. A laptop runs the job only while awake.
+  - **Alert delivery to a person:** no channel was configured during the smoke check.

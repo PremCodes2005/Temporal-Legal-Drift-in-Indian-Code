@@ -113,6 +113,7 @@ class IndiaCodeConnector:
             stated_dates={"issued": value("dc.date.issued"), "enactment": value("dc.date.enactment")},
             bitstream_name=bitstream.get("name"), bitstream_url=bitstream.get("url"),
             bitstream_md5=bitstream.get("md5"), bitstream_bytes=bitstream.get("bytes"),
+            download_eligible=bool(bitstream.get("url")),  # no single PDF: listed only, never guessed
         )
 
     def _original_bitstream(self, uuid: str) -> dict:

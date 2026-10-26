@@ -1,4 +1,6 @@
 # Missed-run and stale-ingestion check; runs on its own timer so a stalled monitor job is still detected.
+# Each alert key (source condition per attempt, failed document version, new record hash) is sent once via
+# TLDRIFT_ALERT_COMMAND; the unit fails, and OnFailure= raises the fallback alert, only when delivery fails.
 [Unit]
 Description=Temporal Legal Drift monitoring health check
 OnFailure=tldrift-alert@%n.service
@@ -8,7 +10,7 @@ Type=oneshot
 User=tldrift
 WorkingDirectory=/srv/temporal-legal-drift
 EnvironmentFile=-/etc/tldrift/tldrift.env
-ExecStart=/srv/temporal-legal-drift/.venv/bin/tldrift monitor-health --check
+ExecStart=/srv/temporal-legal-drift/.venv/bin/tldrift monitor-notify --check
 ExecStartPost=/srv/temporal-legal-drift/deploy/heartbeat.sh
 NoNewPrivileges=yes
 ProtectSystem=strict

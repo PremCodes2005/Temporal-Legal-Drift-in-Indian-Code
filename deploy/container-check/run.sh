@@ -19,7 +19,12 @@ d sh -c "systemd-analyze verify /etc/systemd/system/tldrift-*.service /etc/syste
 d systemctl start tldrift-monitor.service
 d systemctl start tldrift-monitor.service                       # inside the window: must start no source run
 test "$(d sh -c 'ls /srv/temporal-legal-drift/data/monitoring/runs | wc -l')" -eq 2
-d systemctl start tldrift-health.service && { echo "expected the health check to fail (sources unreachable)"; exit 1; } || true
-sleep 3
-d grep -q "tldrift-health.service failed" /var/tmp/tldrift-alerts.log
-echo "PASS: units verify, monitor ran once per source, repeat suppressed, health check failed and alert delivered"
+d systemctl list-timers tldrift-monitor.timer --no-pager | grep -q ":00:00"   # hourly on the hour UTC; the daily slot is 01:00 UTC
+d grep -q "INGESTION_STALE" /srv/temporal-legal-drift/data/tldrift-alerts.log                   # sent by the monitor job (sources unreachable)
+sent="$(d grep -c "INGESTION_STALE" /srv/temporal-legal-drift/data/tldrift-alerts.log)"
+d systemctl start tldrift-health.service                                   # delivered alerts are not repeated
+test "$(d grep -c "INGESTION_STALE" /srv/temporal-legal-drift/data/tldrift-alerts.log)" -eq "$sent"
+d systemctl start tldrift-alert@manual-test.service || true               # OnFailure fallback path
+sleep 2
+d grep -q "manual-test failed" /srv/temporal-legal-drift/data/tldrift-alerts.log
+echo "PASS: units verify, monitor ran once per source, repeat suppressed, stale alert sent once, fallback alert delivered"

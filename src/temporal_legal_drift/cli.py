@@ -99,6 +99,9 @@ def build_parser() -> argparse.ArgumentParser:
     monitor_run.add_argument("--page-size", type=int, default=20)
     monitor_run.add_argument("--manual-reason", help="audited manual retry outside the 24 h window (requires --source)")
     monitor_run.add_argument("--source", choices=["india_code", "egazette"], help="limit the run to one source")
+    monitor_run.add_argument("--daily-at", help="daily run time HH:MM; the next start snaps to this time, never sooner than 24 h")
+    monitor_run.add_argument("--timezone", default="Asia/Kolkata", help="IANA zone of --daily-at (state is stored in UTC)")
+    monitor_run.add_argument("--notify", action="store_true", help="afterwards, send new-record and failure alerts once each")
     monitor_backfill = subparsers.add_parser("monitor-backfill")
     monitor_backfill.add_argument("--owner", required=True)
     monitor_backfill.add_argument("--pages", type=int, required=True)
@@ -107,6 +110,8 @@ def build_parser() -> argparse.ArgumentParser:
     monitor_health = subparsers.add_parser("monitor-health")
     monitor_health.add_argument("--check", action="store_true", help="exit 3 when a missed run or stale ingestion is detected (for alerting)")
     subparsers.add_parser("monitor-resume", help="finish interrupted document processing from stored artifacts")
+    monitor_notify = subparsers.add_parser("monitor-notify", help="send pending alerts once each via $TLDRIFT_ALERT_COMMAND (no network to sources)")
+    monitor_notify.add_argument("--check", action="store_true", help="exit 3 when alerts are pending but could not be delivered")
     run_case_parser = subparsers.add_parser("run-case")
     run_case_parser.add_argument("--case", type=Path, required=True, help="JSON case file, e.g. configs/cases/arbitration-s7-2016.json")
     ocr_candidate = subparsers.add_parser("build-ocr-candidate")
@@ -609,7 +614,7 @@ def run(args: argparse.Namespace) -> int:
         print(json.dumps({key: record[key] for key in ("correlation_id", "review_state", "unresolved_stages")}, indent=2))
         return 0
 
-    if args.command in {"monitor-run", "monitor-backfill", "monitor-health", "monitor-resume"}:
+    if args.command in {"monitor-run", "monitor-backfill", "monitor-health", "monitor-resume", "monitor-notify"}:
         from .monitoring import EGazetteConnector, IndiaCodeConnector, MonitoringService
         from .parsing.pdf import PdfParser
         from .rag.retriever import update_monitored_overlay
@@ -624,12 +629,38 @@ def run(args: argparse.Namespace) -> int:
         elif getattr(args, "manual_reason", None):
             raise ValueError("--manual-reason requires --source, so a retry never bypasses another source's window")
         # The health check reads state only; it must not fail because processing inputs (graph v4) are unavailable.
-        processing = {} if args.command == "monitor-health" else {
+        processing = {} if args.command in {"monitor-health", "monitor-notify"} else {
             "parser": PdfParser(), "index_updater": update_monitored_overlay,
             "graph_mapper": GraphConsumer(root, "v4").candidate_target}
+        if getattr(args, "daily_at", None):
+            from zoneinfo import ZoneInfo
+
+            hour, minute = (int(part) for part in args.daily_at.split(":"))
+            if not (0 <= hour < 24 and 0 <= minute < 60):
+                raise ValueError("--daily-at must be HH:MM")
+            ZoneInfo(args.timezone)  # fail on an unknown zone before any source is contacted
+            processing["schedule"] = (hour, minute, args.timezone)
         service = MonitoringService(root, connectors, **processing)
+        if args.command == "monitor-notify" or getattr(args, "notify", False):
+            import os
+            import subprocess
+
+            from .monitoring.service import deliver_alerts
+
+            command = os.environ.get("TLDRIFT_ALERT_COMMAND", "").strip()
+
+            def send(message: str) -> bool:
+                return subprocess.run(["sh", "-c", command], input=message, text=True, timeout=120).returncode == 0
+
+            channel = send if command else None
+        if args.command == "monitor-notify":
+            result = deliver_alerts(service, channel)
+            print(json.dumps(result, indent=2, ensure_ascii=False))
+            return 3 if args.check and result["pending"] else 0
         if args.command == "monitor-run":
             result = service.run_due(args.owner, manual_reason=args.manual_reason)
+            if args.notify:
+                result = {"runs": result, "alerts": deliver_alerts(service, channel)}
         elif args.command == "monitor-backfill":
             result = service.backfill("india_code", args.owner, pages=args.pages, reason=args.reason)
         elif args.command == "monitor-resume":

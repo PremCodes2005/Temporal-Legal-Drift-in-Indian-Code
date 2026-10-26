@@ -28,5 +28,6 @@ These ADRs are **retrospective descriptions of decisions visible in the current 
 | [0022](0022-discoveries-weights-and-comparison-page.md) | Latest discoveries, transparent weights and a clause comparison page (2026-10-20) |
 | [0023](0023-discoveries-v2-evidence-cards-rule-weights-review-retired.md) | Latest five discoveries, evidence cards, rule-weight rationale, review screen retired (2026-10-20) |
 | [0024](0024-question-routing-and-act-scope.md) | Question routing before retrieval, the Act-scope citation gate and latest records (2026-10-26) |
+| [0025](0025-unattended-daily-monitoring.md) | Unattended daily monitoring: 06:30 IST slot, retries past the cursor, machine states, alerts once per key, launchd (2026-10-26) |
 
 Audit base: commit `68030875a719aa626fb05f294880de2953084781`, 2026-10-12. Verification limits: [../verification.md](../verification.md).

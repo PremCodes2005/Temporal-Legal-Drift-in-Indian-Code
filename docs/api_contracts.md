@@ -106,7 +106,7 @@ Top level: `sources, alerts, document_states, failed_documents, review_queue_pen
 
 `source_fidelity_warnings` in `/api/rag/query` may include `{"warning": "source text partly withheld"}`: lines on the cited page were withheld by `text-quality-v1`.
 
-Each entry in `sources` has: `source_key` (`india_code` or `egazette`), `last_attempt_at`, `last_success_at`, `last_status`, `next_eligible_at`, `lag_hours`, `scheduled_ingestion_healthy`. Times are UTC.
+Each entry in `sources` has: `source_key` (`india_code` or `egazette`), `last_attempt_at`, `last_success_at`, `last_status`, `next_eligible_at`, `lag_hours`, `scheduled_ingestion_healthy`, and (ADR 0025) `last_completed_at`, `last_run_counts`, `stage` (`IDLE` or `RUNNING …`), `freshness` (`FRESH`, `STALE`, `NEVER_SUCCEEDED`) and `schedule`. Times are UTC. The top level adds `machine_states` (counts of `DISCOVERED`, `PROCESSED`, `CANDIDATE_AMENDMENT`, `QUARANTINED`, `UNRESOLVED`, `FAILED_RETRYING`).
 
 ## Additions (2026-10-20, ADR 0022)
 

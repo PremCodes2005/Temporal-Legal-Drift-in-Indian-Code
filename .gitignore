@@ -25,3 +25,5 @@ data/runtime/**
 !data/runtime/.gitkeep
 data/monitoring/**
 !data/monitoring/.gitkeep
+# Scheduler output (deploy/launchd/run.sh)
+logs/
