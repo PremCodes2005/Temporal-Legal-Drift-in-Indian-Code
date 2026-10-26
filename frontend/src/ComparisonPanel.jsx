@@ -75,7 +75,7 @@ export default function ComparisonPanel({ comparison, full = false, scope = true
     <p>{SUPPORT_TEXT[comparison.support_class]}</p>
     {spans.length > 0 && <p className="compare-legend"><del>struck through</del> = removed · <ins>underlined</ins> = inserted · a struck word paired with an underlined word = changed · <span className="derived-badge">dashed border</span> = derived or uncertain text</p>}
     <div className="compare-grid"><Pane side="before" data={comparison.before} spans={spans} comparison={comparison} /><Pane side="after" data={comparison.after} spans={spans} comparison={comparison} /></div>
-    <p className="panel-note">PDF links open at the cited page; a highlighted region on the page is not available (no verified PDF text coordinates).</p>
+    <p className="panel-note">Page-region highlight unavailable: no verified PDF text coordinates. The PDF links open the cited page only.</p>
     {comparison.abstention_reasons?.length > 0 && <ul className="reason-list">{comparison.abstention_reasons.map((code) => <li key={code}>{REASON_TEXT[code] || code}</li>)}</ul>}
     {scope && <p className="panel-note">{SCOPE_NOTE}</p>}
   </article>;
