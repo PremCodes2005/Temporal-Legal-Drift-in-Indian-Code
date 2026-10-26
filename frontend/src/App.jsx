@@ -184,7 +184,7 @@ export default function App() {
       <Notifications {...discoveries} open={panelOpen} onClose={closePanel} seen={seen} onSeen={markSeen} />
       <DiscoveryAlert fresh={discoveries.fresh} onOpen={() => { discoveries.dismiss(); setPanelOpen(true); }} onDismiss={discoveries.dismiss} />
       <main id="main-content">
-        {section === "assistant" && <AssistantWorkspace status={status} error={loadError || analysisError} starter={starter}
+        {section === "assistant" && <AssistantWorkspace status={status} error={loadError || analysisError} starter={starter} corpus={corpus}
           result={lastResult} onResult={showResult} onPage={navigate} onEvidence={openEvidence}
           history={history} onAsked={recordQuestion} onClearHistory={clearHistory} />}
         {VIEW_PAGES.includes(section) && (lastResult?.analysis_id
@@ -210,7 +210,9 @@ export default function App() {
   </div>;
 }
 
-function AssistantWorkspace({ status, error: statusError, starter, result, onResult, onPage, onEvidence, history = [], onAsked = () => {}, onClearHistory }) {
+function AssistantWorkspace({ status, error: statusError, starter, corpus, result, onResult, onPage, onEvidence, history = [], onAsked = () => {}, onClearHistory }) {
+  const acts = useMemo(() => (corpus?.entries || []).map((item) => ({ entry_id: item.entry_id, name: titleCase(item.entry_id) }))
+    .sort((a, b) => a.name.localeCompare(b.name)), [corpus]);
   const [query, setQuery] = useState(starter?.text || result?.query || "");
   const [mode, setMode] = useState("specific");
   const [busy, setBusy] = useState(false);
@@ -230,14 +232,15 @@ function AssistantWorkspace({ status, error: statusError, starter, result, onRes
   }, [starter]);  // eslint-disable-line react-hooks/exhaustive-deps
 
   const prefill = (text) => { setQuery(text); input.current?.focus(); };
-  const submit = async (event, text = query, scenario = null, runMode = mode, section = null) => {
+  // act: a corpus entry the user chose for this question (from a choice, or "Not this Act?").
+  const submit = async (event, text = query, scenario = null, runMode = mode, section = null, act = null) => {
     event?.preventDefault(); setError(""); dictation.cancel();
     if (!text.trim()) return setError("Enter a question about the indexed Indian legal documents.");
     setBusy(true);
     try {
-      const value = await api("/api/rag/query", { method: "POST", body: { query: text.trim(), mode: runMode, ...(scenario ? { scenario } : {}), ...(section ? { section } : {}) } });
+      const value = await api("/api/rag/query", { method: "POST", body: { query: text.trim(), mode: runMode, ...(scenario ? { scenario } : {}), ...(section ? { section } : {}), ...(act ? { act } : {}) } });
       onResult(value);
-      if (!scenario) onAsked(value, section);
+      if (!scenario) onAsked(value, section || act);
       window.setTimeout(() => document.getElementById("rag-result")?.scrollIntoView?.({ behavior: scrollBehavior(), block: "start" }), 0);
     } catch (requestError) { setError(requestError.message); }
     finally { setBusy(false); }
@@ -248,7 +251,7 @@ function AssistantWorkspace({ status, error: statusError, starter, result, onRes
     <div className="hero">
       <span className="section-kicker">Single-prompt legal research</span>
       <h2>Ask what changed in Indian law.</h2>
-      <p>The assistant checks the live India Code repository and uses the local evidence cache for reproducible amendment comparisons and traceable source anchors.</p>
+      <p>The assistant first identifies the Act you ask about and answers only from that Act's indexed text, with source anchors. Questions about the latest changes are answered from the monitored India Code and e-Gazette records.</p>
       <RepositoryStatus status={status} error={statusError} />
       <SourceHealth request={api} />
       <form className="prompt-panel" onSubmit={submit}>
@@ -273,8 +276,9 @@ function AssistantWorkspace({ status, error: statusError, starter, result, onRes
     </div>
     {busy && <div className="loading-panel"><span className="spinner"/><div><strong>Retrieving versioned legal evidence…</strong><p>Classifying the question, matching documents and validating the response context.</p></div></div>}
     {result && (result.analysis_id
-      ? <AssistantResult analysis={result} onPage={onPage} onEvidence={onEvidence} busy={busy}
-          onSection={(section) => submit(null, result.query, null, result.mode, section)} />
+      ? <AssistantResult analysis={result} onPage={onPage} onEvidence={onEvidence} busy={busy} acts={acts}
+          onSection={(section) => submit(null, result.query, null, result.mode, section, result.routing?.reason_code === "USER_SELECTED_ACT" ? result.selection?.act_entry_id : null)}
+          onAct={(act) => submit(null, result.query, null, result.mode, null, act)} />
       : <RagResult result={result} onExplain={() => onPage?.("calculation")} busy={busy} onScenario={(scenario) => submit(null, result.query, scenario)} />)}
   </section>;
 }

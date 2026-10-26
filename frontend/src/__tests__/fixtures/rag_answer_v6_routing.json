@@ -1,0 +1,5032 @@
+{
+ "_note": "Generated offline from the backend (rag-answer-v6) by frontend/scripts/generate_routing_fixture.py.",
+ "responses": {
+  "overview": {
+   "schema_version": "6.0.0",
+   "query": "What does the Motor Vehicles Act generally cover?",
+   "mode": "specific",
+   "intent": "statutory_lookup",
+   "answer": {
+    "answer_type": "single_document_summary",
+    "short_answer": "The Motor Vehicles Act 1988 describes itself as “An Act to consolidate and amend the law relating to motor vehicles.” [E1] This is an overview of the Act as indexed, with no change score; ask about a section to compare versions.",
+    "pre_amendment_baseline": "No sufficiently relevant evidence was found in the indexed local corpus.",
+    "post_amendment_revision": "No sufficiently relevant evidence was found in the indexed local corpus.",
+    "key_differences": [
+     "No sufficiently relevant evidence was found in the indexed local corpus."
+    ],
+    "markdown": "The Motor Vehicles Act 1988 describes itself as “An Act to consolidate and amend the law relating to motor vehicles.” [E1] This is an overview of the Act as indexed, with no change score; ask about a section to compare versions.",
+    "generation_method": "routed_extractive",
+    "generation_warning": null,
+    "direct_answer": "The Motor Vehicles Act 1988 describes itself as “An Act to consolidate and amend the law relating to motor vehicles.” [E1] This is an overview of the Act as indexed, with no change score; ask about a section to compare versions.",
+    "sections": [
+     {
+      "id": "key_points",
+      "title": "Chapters of the Act",
+      "text": "Preliminary; Licensing of drivers of motor vehicles; Licensing of conductors of stage carriages; Registration of motor vehicles; Control of transport vehicles; Special provisions relating to state transport undertakings; Construction, equipment and maintenance of motor vehicles; Control of traffic; Motor vehicles temporarily leaving or visiting india; Insurance of motor vehicles against third party risks; Claims tribunals; Offences, penalties and procedure; Miscellaneous. [E2]",
+      "evidence_ids": [
+       "E2"
+      ],
+      "kind": "evidence"
+     }
+    ],
+    "answer_limitations": [
+     "No answer is generated from an Act the question did not identify.",
+     "Not legal advice; verify on India Code."
+    ]
+   },
+   "metrics": null,
+   "retrieval": {
+    "pair_status": "no_relevant_evidence",
+    "candidate_count": 0,
+    "relation": null,
+    "pre": null,
+    "post": null
+   },
+   "citations": [
+    {
+     "label": "overview",
+     "chunk_id": "rag_ca720a9263494dd254a834ba",
+     "entry_id": "motor-vehicles-act-1988",
+     "act_name": "Motor Vehicles Act 1988",
+     "source_anchor": "pdf:page:10",
+     "source_url": "https://indiacode.gov.in/items/2bbbcc40-38f1-4b15-ae94-646b85db4ee7",
+     "evidence_id": "E1",
+     "page": 10,
+     "pdf_url": "/corpus/motor-vehicles-act-1988.pdf#page=10"
+    },
+    {
+     "label": "overview",
+     "chunk_id": "rag_3d6c2977de45663b60737037",
+     "entry_id": "motor-vehicles-act-1988",
+     "act_name": "Motor Vehicles Act 1988",
+     "source_anchor": "pdf:page:3",
+     "source_url": "https://indiacode.gov.in/items/2bbbcc40-38f1-4b15-ae94-646b85db4ee7",
+     "evidence_id": "E2",
+     "page": 3,
+     "pdf_url": "/corpus/motor-vehicles-act-1988.pdf#page=3"
+    }
+   ],
+   "verification": {
+    "passed": false,
+    "checks": [
+     {
+      "id": "evidence",
+      "label": "Relevant evidence found",
+      "passed": false
+     },
+     {
+      "id": "act_scope",
+      "label": "Every citation comes from the interpreted Act or its recorded amending instruments",
+      "passed": true
+     }
+    ],
+    "note": "Verify directly on India Code."
+   },
+   "source_guidance": {
+    "message": "The retrieved excerpts may be incomplete. Visit the official India Code website for the complete legislation, commencement details and further information.",
+    "label": "Visit India Code for further information",
+    "url": "https://indiacode.gov.in/"
+   },
+   "repository": {
+    "ready": true,
+    "document_count": 100,
+    "chunk_count": 15998,
+    "embedding_dimensions": 256,
+    "vector_backend": "local_persistent_cosine",
+    "hybrid_search": true,
+    "index_fingerprint": "cfcbc384dd15bb0d3c39145915147210896c19c378406d1da2d1b7333d3bcdf4",
+    "dataset_version": "v0.1",
+    "graph_version": "v0.1",
+    "rag_index_version": "v0.1",
+    "graph_fingerprint": "73b8f9c50738329022b75a5840821e2c9ae89db7835817706628f9e6fe3497c1",
+    "index_identity": "5e8be5c684fef9a3b7f4497aeb45e06680704aefdda33dba21c54d090c6a3aa1",
+    "monitored_overlay": {
+     "status": "ACTIVE",
+     "overlay_sha256": "90eae154379b4b738b32ec10bb8158b7a48ac47f70fbd2ae57ad377a5bbebccc",
+     "documents": 1,
+     "chunks": 2,
+     "review_status": "HUMAN_REVIEW_PENDING"
+    },
+    "official_repository": "https://indiacode.gov.in/",
+    "metadata_fields": [
+     "document_type",
+     "version",
+     "act_name",
+     "date"
+    ],
+    "generation": {
+     "provider": "extractive_fallback",
+     "temperature": 0.0,
+     "model": null,
+     "grounded_output_required": true
+    },
+    "notice": "The local index is a research aid. India Code remains the authoritative source.",
+    "repository_mode": "live_indiacode_with_local_evidence_cache",
+    "live_repository_enabled": false
+   },
+   "limitations": [
+    "No local evidence supported the query."
+   ],
+   "contract_version": "rag-answer-v6",
+   "question_frame": {
+    "query": "What does the Motor Vehicles Act generally cover?",
+    "version": "question-frame-v2",
+    "question_type": "general",
+    "asks_about_versions": false,
+    "principal": {
+     "entry_id": "motor-vehicles-act-1988",
+     "name": "Motor Vehicles Act 1988",
+     "kind": "principal",
+     "year": "1988"
+    },
+    "amending": null,
+    "amendment_year": null,
+    "sections": [],
+    "reference_date": null,
+    "focus_terms": [
+     "generally",
+     "cover"
+    ],
+    "unresolved_act_phrases": [],
+    "relation_error": null,
+    "ambiguities": [],
+    "other_acts": [],
+    "act_choices": []
+   },
+   "scenario": null,
+   "evidence": [
+    {
+     "evidence_id": "E1",
+     "role": "act_text_excerpt",
+     "entry_id": "motor-vehicles-act-1988",
+     "act_name": "Motor Vehicles Act 1988",
+     "page": 10,
+     "pdf_url": "/corpus/motor-vehicles-act-1988.pdf#page=10",
+     "verbatim": true,
+     "official_url": "https://indiacode.gov.in/items/2bbbcc40-38f1-4b15-ae94-646b85db4ee7"
+    },
+    {
+     "evidence_id": "E2",
+     "role": "act_text_excerpt",
+     "entry_id": "motor-vehicles-act-1988",
+     "act_name": "Motor Vehicles Act 1988",
+     "page": 3,
+     "pdf_url": "/corpus/motor-vehicles-act-1988.pdf#page=3",
+     "verbatim": true,
+     "official_url": "https://indiacode.gov.in/items/2bbbcc40-38f1-4b15-ae94-646b85db4ee7"
+    }
+   ],
+   "comparison": null,
+   "source_fidelity_warnings": [],
+   "fingerprint": {
+    "version": "legal-change-fingerprint-v1.2",
+    "wording_drift": {
+     "state": "OUT_OF_SCOPE",
+     "value": null,
+     "label": null,
+     "summary": "Not a question about a change.",
+     "reason": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+     "next_action": null,
+     "method": "wording-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [],
+     "limit": {
+      "kind": "not_applicable",
+      "message": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "rule_drift": {
+     "state": "OUT_OF_SCOPE",
+     "value": null,
+     "label": null,
+     "summary": "Not a question about a change.",
+     "reason": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+     "next_action": null,
+     "method": "rule-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [],
+     "limit": {
+      "kind": "not_applicable",
+      "message": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "outcome_drift": {
+     "state": "OUT_OF_SCOPE",
+     "value": null,
+     "label": null,
+     "summary": "Not a question about a change.",
+     "reason": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+     "next_action": null,
+     "method": "outcome-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [],
+     "limit": {
+      "kind": "not_applicable",
+      "message": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "reading": [],
+    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
+    "tlds": {
+     "version": "tlds-v1.1",
+     "weights": {
+      "textual": 0.2,
+      "semantic": 0.3,
+      "legal_effect": 0.4,
+      "rule_structure": 0.1
+     },
+     "missing_components": [
+      "textual",
+      "semantic",
+      "legal_effect",
+      "rule_structure"
+     ],
+     "formula": "D = 100 × (w_T·T + w_S·S + w_L·L + w_R·R), every component in [0, 1]",
+     "bands": [
+      [
+       0,
+       "Very low"
+      ],
+      [
+       10,
+       "Low"
+      ],
+      [
+       30,
+       "Moderate"
+      ],
+      [
+       50,
+       "High"
+      ],
+      [
+       75,
+       "Very high"
+      ]
+     ],
+     "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "contributions": {
+      "textual": null,
+      "semantic": null,
+      "legal_effect": null,
+      "rule_structure": null
+     },
+     "disagreement": null,
+     "state": "NOT_APPLICABLE",
+     "value": null,
+     "tldp_percent": null,
+     "band": null,
+     "label": "Not applicable",
+     "partial_value": null,
+     "partial_label": null,
+     "calculation": null,
+     "components": {
+      "textual": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      },
+      "semantic": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      },
+      "legal_effect": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      },
+      "rule_structure": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      }
+     },
+     "config": "configs/metrics/tlds.v1.json",
+     "note": "An indicator of change between two versions of one clause, not the percentage of a statute that changed, not legal correctness, not a probability, not materiality and not risk. Read legal-effect drift beside it: a small wording change can carry a large legal effect.",
+     "evidence_ids": [],
+     "legal_validation": "UNVERIFIED"
+    }
+   },
+   "determinations": {
+    "version": "determinations-v4",
+    "textual_drift": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "Not applicable to this question.",
+     "method": null,
+     "evidence_ids": [],
+     "reason": "Nothing to assess: the question was not answered from versions of one Act.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "No versions of one Act were compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED"
+    },
+    "materiality": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "Not applicable to this question.",
+     "method": null,
+     "evidence_ids": [],
+     "reason": "Nothing to assess: the question was not answered from versions of one Act.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "No versions of one Act were compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED"
+    },
+    "applicability": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "Not applicable to this question.",
+     "method": null,
+     "evidence_ids": [],
+     "reason": "Nothing to assess: the question was not answered from versions of one Act.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "No versions of one Act were compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED"
+    },
+    "answer_change": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "Not applicable to this question.",
+     "method": null,
+     "evidence_ids": [],
+     "reason": "Nothing to assess: the question was not answered from versions of one Act.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "No versions of one Act were compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED"
+    },
+    "risk": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "Not applicable to this question.",
+     "method": null,
+     "evidence_ids": [],
+     "reason": "Nothing to assess: the question was not answered from versions of one Act.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "No versions of one Act were compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED"
+    }
+   },
+   "scenario_request": {
+    "fields": [],
+    "facts_in_use": {},
+    "blocked_by_evidence": [],
+    "explanation": "No facts are needed for this question."
+   },
+   "selection": null,
+   "routing": {
+    "version": "question-route-v1",
+    "route": "act_identified",
+    "response_type": "act_answer",
+    "reason_code": "ACT_NAMED_IN_QUESTION",
+    "interpreted_acts": [
+     {
+      "entry_id": "motor-vehicles-act-1988",
+      "name": "Motor Vehicles Act 1988",
+      "year": "1988",
+      "kind": "principal"
+     }
+    ],
+    "choices": [],
+    "allowed_entry_ids": [
+     "motor-vehicles-act-1988",
+     "motor-vehicles-amendment-act-2001",
+     "motor-vehicles-amendment-act-2019"
+    ],
+    "rejected_candidates": [],
+    "overview": true,
+    "citation_check": {
+     "passed": true,
+     "outside_entry_ids": []
+    }
+   },
+   "analysis_id": "an_d00a7d5a6fb1856955a19c78"
+  },
+  "named": {
+   "schema_version": "6.0.0",
+   "query": "What does the IT Act say about data protection?",
+   "mode": "specific",
+   "intent": "statutory_lookup",
+   "answer": {
+    "answer_type": "single_document_summary",
+    "short_answer": "Clause-focused evidence: Access to computers and data .—(1) Without prejudice to the provisions of sub -section (1) of section 69, the Controller or any person authorised by him shall, if he has reasonable cause to suspect that 2[any contravention of the provisions of this Chapter] has been committed, have access to any computer system, any apparatus, data or any other material connected with such system, for the purpose of searching or causing a search to be made for obtaining any information or data contained in or available to such computer system. (2) For the purposes of sub-section (1), the Controller or any person authorised by him may, by order, direct any person in charge of, or otherwise concerned with the operation of, the computer system, data apparatus or material, to provide him with such reasonable tec hnical and other assistance as he may consider necessary. 29.",
+    "pre_amendment_baseline": "No pre-amendment comparison was requested.",
+    "post_amendment_revision": "Clause-focused evidence: Access to computers and data .—(1) Without prejudice to the provisions of sub -section (1) of section 69, the Controller or any person authorised by him shall, if he has reasonable cause to suspect that 2[any contravention of the provisions of this Chapter] has been committed, have access to any computer system, any apparatus, data or any other material connected with such system, for the purpose of searching or causing a search to be made for obtaining any information or data contained in or available to such computer system. (2) For the purposes of sub-section (1), the Controller or any person authorised by him may, by order, direct any person in charge of, or otherwise concerned with the operation of, the computer system, data apparatus or material, to provide him with such reasonable tec hnical and other assistance as he may consider necessary. 29.",
+    "key_differences": [
+     "–If any person, dishonestly or fraudulently, does any act referred to in section 43, he shall be punishable with imprisonment for a term which may extend to three years or with fine which may extend to five lakh rupees or with both.",
+     "–Whoever knowingly or intentionally conceals, destroys or alters or intentionally or knowingly causes another to conceal, destroy, or alter any computer source code used for a computer, computer programme, computer system or computer network, when the computer source code is required to be kept or maintained by law for the time being in force, shall be punishable with imprisonment up to three years, or with fine whi…",
+     "–Any person who sends, by means of a computer resource or a communication device,– (a) any information that is grossly offensive or has menacing character; or (b) any information which he knows to be false, but for the purpose of causing annoyance, inconvenience, danger, obstruction, insult, injury, criminal intimidation, enmity, hatred or ill will, persistently by making use of such computer resource or a communica…",
+     "(7) Any service provider, intermediaries, data centres, body corporate or person who fails to provide the information called for or comply with the direc tion under sub -section (6), shall be punishable with imprisonment for a term which may extend to one year or with fine which may extend to one lakh rupees or with both.",
+     "(3) It shall come into force on such date1 as the Central Government may, by notification, appoint and different dates may be appointed for different provisions of this Act and any reference in any such provision to the commencement of this Act shall be construed as a reference to the commencement of that provision."
+    ],
+    "markdown": "## Short Answer\nClause-focused evidence: Access to computers and data .—(1) Without prejudice to the provisions of sub -section (1) of section 69, the Controller or any person authorised by him shall, if he has reasonable cause to suspect that 2[any contravention of the provisions of this Chapter] has been committed, have access to any computer system, any apparatus, data or any other material connected with such system, for the purpose of searching or causing a search to be made for obtaining any information or data contained in or available to such computer system. (2) For the purposes of sub-section (1), the Controller or any person authorised by him may, by order, direct any person in charge of, or otherwise concerned with the operation of, the computer system, data apparatus or material, to provide him with such reasonable tec hnical and other assistance as he may consider necessary. 29.\n\n## Key Points\n- –If any person, dishonestly or fraudulently, does any act referred to in section 43, he shall be punishable with imprisonment for a term which may extend to three years or with fine which may extend to five lakh rupees or with both.\n- –Whoever knowingly or intentionally conceals, destroys or alters or intentionally or knowingly causes another to conceal, destroy, or alter any computer source code used for a computer, computer programme, computer system or computer network, when the computer source code is required to be kept or maintained by law for the time being in force, shall be punishable with imprisonment up to three years, or with fine whi…\n- –Any person who sends, by means of a computer resource or a communication device,– (a) any information that is grossly offensive or has menacing character; or (b) any information which he knows to be false, but for the purpose of causing annoyance, inconvenience, danger, obstruction, insult, injury, criminal intimidation, enmity, hatred or ill will, persistently by making use of such computer resource or a communica…\n- (7) Any service provider, intermediaries, data centres, body corporate or person who fails to provide the information called for or comply with the direc tion under sub -section (6), shall be punishable with imprisonment for a term which may extend to one year or with fine which may extend to one lakh rupees or with both.\n- (3) It shall come into force on such date1 as the Central Government may, by notification, appoint and different dates may be appointed for different provisions of this Act and any reference in any such provision to the commencement of this Act shall be construed as a reference to the commencement of that provision.\n\n## Evidence\n- IT Act 2000 · pdf:page:15:line:23 · IndiaCode:123456789/13116\n\n[Visit India Code for further information](https://indiacode.gov.in/)",
+    "generation_method": "extractive_summary",
+    "generation_warning": null,
+    "direct_answer": "Section 29 (Access to computers and data) of the IT Act 2000 says: “(1) Without prejudice to the provisions of sub -section (1) of section 69, the Controller or any person authorised by him shall, if he has reasonable cause to suspect that 2[any contravention of the provisions of this Chapter] has been committed, have access to any computer system, any apparatus, data or any other material connected with such system, for the purpose of searching or causing a search to be made for obtaining any information or data contained in or available to such computer system. (2) For the purpo…”",
+    "sections": [
+     {
+      "id": "key_points",
+      "title": "Key points",
+      "text": "• –If any person, dishonestly or fraudulently, does any act referred to in section 43, he shall be punishable with imprisonment for a term which may extend to three years or with fine which may extend to five lakh rupees or with both. • –Whoever knowingly or intentionally conceals, destroys or alters or intentionally or knowingly causes another to conceal, destroy, or alter any computer source code used for a computer, computer programme, computer system or computer network, when the computer source code is required to be kept or… • –Any person who sends, by means of a computer resource or a communication device,– (a) any information that is grossly offensive or has menacing character; or (b) any information which he knows to be false, but for the purpose of causing annoyance, inconvenience, danger, obstruction, insult, injury… • (7) Any service provider, intermediaries, data centres, body corporate or person who fails to provide the information called for or comply with the direc tion under sub -section (6), shall be punishable with imprisonment for a term which may extend to one year or with fine which may extend to one l… • (3) It shall come into force on such date1 as the Central Government may, by notification, appoint and different dates may be appointed for different provisions of this Act and any reference in any such provision to the commencement of this Act shall be construed as a reference to the commencement…",
+      "evidence_ids": [
+       "E1"
+      ],
+      "kind": "evidence"
+     }
+    ],
+    "answer_limitations": [
+     "Summarises the cited excerpts only, not the whole Act.",
+     "Not legal advice; verify on India Code."
+    ]
+   },
+   "metrics": null,
+   "source_fidelity_warnings": [],
+   "comparison": {
+    "contract_version": "comparison-record-v1",
+    "query_id": "q_eb4d38ca145e3b2d",
+    "support_class": "NOT_A_COMPARISON",
+    "before": null,
+    "after": null,
+    "graph_transition_id": null,
+    "amendment_event_id": null,
+    "operation": null,
+    "provision_path": null,
+    "competing_transition_ids": [],
+    "requested_date": null,
+    "reliability": null,
+    "question_relevance": null,
+    "supported_effective_date": null,
+    "changed_spans": [],
+    "scoring_contract_version": null,
+    "materiality_status": "NOT_ASSESSED_IN_QUERY_FLOW",
+    "applicability_status": "NOT_DETERMINED_REQUIRES_SCENARIO_FACTS_AND_REVIEW",
+    "consequence_status": "NOT_DETERMINED",
+    "abstention_reasons": [],
+    "legal_validation": "UNVERIFIED"
+   },
+   "retrieval": {
+    "pair_status": "single_relevant_document_no_version_pair",
+    "candidate_count": 41,
+    "relation": null,
+    "pre": null,
+    "post": {
+     "chunk_id": "rag_18bf88ec6d08d8b5f6e3228e",
+     "text": "29. Access to computers and data .—(1) Without prejudice to the provisions of sub -section (1) of section 69, the Controller or any person authorised by him shall, if he has reasonable cause to suspect that 2[any contravention of the provisions of this Chapter] has been committed, have access to any computer system, any apparatus, data or any other material connected with such system, for the purpose of searching or causing a search to be made for obtaining any information or data contained in or available to such computer system. (2) For the purposes of sub-section (1), the Controller or any person authorised by him may, by order, direct any person in charge of, or otherwise concerned with the operation of, the computer system, data apparatus or material, to provide him with such reasonable tec hnical and other assistance as he may consider necessary.",
+     "score": 1.0,
+     "semantic_score": 1.0,
+     "lexical_score": 1.0,
+     "metadata": {
+      "act_name": "IT Act 2000",
+      "block_id": "blk_4423191d550dc2fa6234b228",
+      "date": "2000",
+      "date_precision": "year_from_document_title",
+      "document_type": "consolidated_act",
+      "entry_id": "it-act-2000-consolidated",
+      "filename": "it-act-2000-consolidated.pdf",
+      "official_identifier": "IndiaCode:123456789/13116",
+      "official_portal_url": "https://indiacode.gov.in/",
+      "primary_sections": [
+       "29"
+      ],
+      "provision_path": "section:29",
+      "sections": [
+       "29"
+      ],
+      "source_anchor": "pdf:page:15:line:23",
+      "source_artifact_id": "src_ac34e30e3da4e32b49b5b274",
+      "source_is_india_code": true,
+      "source_kind": "provision_version",
+      "source_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/13116",
+      "version": "consolidated",
+      "version_id": "ver_599684d6601bf339134102ed"
+     }
+    },
+    "live_indiacode": {
+     "attempted": false,
+     "candidate_count": 0,
+     "amendment_count": 0,
+     "amendments": [],
+     "error": null,
+     "role": "current-law and amendment-history supplement; not automatically a historical pre/post pair"
+    }
+   },
+   "citations": [
+    {
+     "label": "post",
+     "chunk_id": "rag_18bf88ec6d08d8b5f6e3228e",
+     "entry_id": "it-act-2000-consolidated",
+     "act_name": "IT Act 2000",
+     "version": "consolidated",
+     "document_type": "consolidated_act",
+     "date": "2000",
+     "source_anchor": "pdf:page:15:line:23",
+     "official_identifier": "IndiaCode:123456789/13116",
+     "source_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/13116",
+     "official_portal_url": "https://indiacode.gov.in/",
+     "evidence_id": "E1",
+     "page": 15,
+     "pdf_url": "/corpus/it-act-2000-consolidated.pdf#page=15"
+    }
+   ],
+   "verification": {
+    "passed": false,
+    "checks": [
+     {
+      "id": "intent_classified",
+      "label": "Query intent classified",
+      "passed": true
+     },
+     {
+      "id": "clause_coverage",
+      "label": "Relevant clause coverage",
+      "passed": true
+     },
+     {
+      "id": "paired_context",
+      "label": "Aligned pre/post versions of the same provision",
+      "passed": false
+     },
+     {
+      "id": "citation_anchors",
+      "label": "Evidence anchors attached",
+      "passed": true
+     },
+     {
+      "id": "alignment",
+      "label": "Post-generation alignment check",
+      "passed": false
+     },
+     {
+      "id": "act_scope",
+      "label": "Every citation comes from the interpreted Act or its recorded amending instruments",
+      "passed": true
+     }
+    ],
+    "pair_status": "single_relevant_document_no_version_pair",
+    "note": "A failed check means the answer should be treated as incomplete and verified on India Code."
+   },
+   "source_guidance": {
+    "message": "The retrieved excerpts may be incomplete. Visit the official India Code website for the complete legislation, commencement details and further information.",
+    "label": "Visit India Code for further information",
+    "url": "https://indiacode.gov.in/"
+   },
+   "repository": {
+    "ready": true,
+    "document_count": 100,
+    "chunk_count": 15998,
+    "embedding_dimensions": 256,
+    "vector_backend": "local_persistent_cosine",
+    "hybrid_search": true,
+    "index_fingerprint": "cfcbc384dd15bb0d3c39145915147210896c19c378406d1da2d1b7333d3bcdf4",
+    "dataset_version": "v0.1",
+    "graph_version": "v0.1",
+    "rag_index_version": "v0.1",
+    "graph_fingerprint": "73b8f9c50738329022b75a5840821e2c9ae89db7835817706628f9e6fe3497c1",
+    "index_identity": "5e8be5c684fef9a3b7f4497aeb45e06680704aefdda33dba21c54d090c6a3aa1",
+    "monitored_overlay": {
+     "status": "ACTIVE",
+     "overlay_sha256": "90eae154379b4b738b32ec10bb8158b7a48ac47f70fbd2ae57ad377a5bbebccc",
+     "documents": 1,
+     "chunks": 2,
+     "review_status": "HUMAN_REVIEW_PENDING"
+    },
+    "official_repository": "https://indiacode.gov.in/",
+    "metadata_fields": [
+     "document_type",
+     "version",
+     "act_name",
+     "date"
+    ],
+    "generation": {
+     "provider": "extractive_fallback",
+     "temperature": 0.0,
+     "model": null,
+     "grounded_output_required": true
+    },
+    "notice": "The local index is a research aid. India Code remains the authoritative source.",
+    "repository_mode": "live_indiacode_with_local_evidence_cache",
+    "live_repository_enabled": false
+   },
+   "limitations": [
+    "Drift scores measure differences between retrieved excerpts, not legal correctness.",
+    "Alignment accuracy is retrieval and evidence coverage, not expert-validated answer accuracy.",
+    "Confirm the complete provision, commencement and applicability on India Code before relying on the answer."
+   ],
+   "contract_version": "rag-answer-v6",
+   "question_frame": {
+    "query": "What does the IT Act say about data protection?",
+    "version": "question-frame-v2",
+    "question_type": "general",
+    "asks_about_versions": false,
+    "principal": {
+     "entry_id": "it-act-2000-consolidated",
+     "name": "IT Act 2000",
+     "kind": "principal",
+     "year": "2000"
+    },
+    "amending": null,
+    "amendment_year": null,
+    "sections": [],
+    "reference_date": null,
+    "focus_terms": [
+     "data",
+     "protection"
+    ],
+    "unresolved_act_phrases": [],
+    "relation_error": null,
+    "ambiguities": [],
+    "other_acts": [],
+    "act_choices": []
+   },
+   "scenario": null,
+   "evidence": [
+    {
+     "evidence_id": "E1",
+     "role": "act_text_excerpt",
+     "entry_id": "it-act-2000-consolidated",
+     "act_name": "IT Act 2000",
+     "page": 15,
+     "pdf_url": "/corpus/it-act-2000-consolidated.pdf#page=15",
+     "official_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/13116",
+     "verbatim": true
+    }
+   ],
+   "determinations": {
+    "version": "determinations-v4",
+    "textual_drift": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "method": null,
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED",
+     "summary": "Not applicable to this question.",
+     "reason": "This question does not ask how a provision changed, so no versions are compared.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "This question does not ask how a provision changed, so no versions are compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     }
+    },
+    "applicability": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "method": null,
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED",
+     "summary": "Not applicable to this question.",
+     "reason": "Which version applies matters only when two versions are compared.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "Which version applies matters only when two versions are compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     }
+    },
+    "materiality": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "method": null,
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED",
+     "summary": "Not applicable to this question.",
+     "reason": "Materiality is assessed for a specific amendment; none was asked about.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "Materiality is assessed for a specific amendment; none was asked about.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     }
+    },
+    "answer_change": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "method": null,
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED",
+     "summary": "Not applicable to this question.",
+     "reason": "The question is about the law as written, not a change over time.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "The question is about the law as written, not a change over time.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     }
+    },
+    "risk": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "method": null,
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED",
+     "summary": "Not applicable to this question.",
+     "reason": "Risk is assessed only for a named provision with a modelled obligation and your facts.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "Risk is assessed only for a named provision with a modelled obligation and your facts.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     }
+    }
+   },
+   "fingerprint": {
+    "version": "legal-change-fingerprint-v1.2",
+    "wording_drift": {
+     "state": "OUT_OF_SCOPE",
+     "value": null,
+     "label": null,
+     "summary": "Not a question about a change.",
+     "reason": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+     "next_action": null,
+     "method": "wording-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [],
+     "limit": {
+      "kind": "not_applicable",
+      "message": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "rule_drift": {
+     "state": "OUT_OF_SCOPE",
+     "value": null,
+     "label": null,
+     "summary": "Not a question about a change.",
+     "reason": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+     "next_action": null,
+     "method": "rule-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [],
+     "limit": {
+      "kind": "not_applicable",
+      "message": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "outcome_drift": {
+     "state": "OUT_OF_SCOPE",
+     "value": null,
+     "label": null,
+     "summary": "Not a question about a change.",
+     "reason": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+     "next_action": null,
+     "method": "outcome-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [],
+     "limit": {
+      "kind": "not_applicable",
+      "message": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "reading": [],
+    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
+    "tlds": {
+     "version": "tlds-v1.1",
+     "weights": {
+      "textual": 0.2,
+      "semantic": 0.3,
+      "legal_effect": 0.4,
+      "rule_structure": 0.1
+     },
+     "missing_components": [
+      "textual",
+      "semantic",
+      "legal_effect",
+      "rule_structure"
+     ],
+     "formula": "D = 100 × (w_T·T + w_S·S + w_L·L + w_R·R), every component in [0, 1]",
+     "bands": [
+      [
+       0,
+       "Very low"
+      ],
+      [
+       10,
+       "Low"
+      ],
+      [
+       30,
+       "Moderate"
+      ],
+      [
+       50,
+       "High"
+      ],
+      [
+       75,
+       "Very high"
+      ]
+     ],
+     "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "contributions": {
+      "textual": null,
+      "semantic": null,
+      "legal_effect": null,
+      "rule_structure": null
+     },
+     "disagreement": null,
+     "state": "NOT_APPLICABLE",
+     "value": null,
+     "tldp_percent": null,
+     "band": null,
+     "label": "Not applicable",
+     "partial_value": null,
+     "partial_label": null,
+     "calculation": null,
+     "components": {
+      "textual": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      },
+      "semantic": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      },
+      "legal_effect": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      },
+      "rule_structure": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      }
+     },
+     "config": "configs/metrics/tlds.v1.json",
+     "note": "An indicator of change between two versions of one clause, not the percentage of a statute that changed, not legal correctness, not a probability, not materiality and not risk. Read legal-effect drift beside it: a small wording change can carry a large legal effect.",
+     "evidence_ids": [],
+     "legal_validation": "UNVERIFIED"
+    }
+   },
+   "scenario_request": {
+    "fields": [],
+    "facts_in_use": {},
+    "blocked_by_evidence": [],
+    "explanation": "No facts are needed for this question."
+   },
+   "selection": null,
+   "routing": {
+    "version": "question-route-v1",
+    "route": "act_identified",
+    "response_type": "act_answer",
+    "reason_code": "ACT_NAMED_IN_QUESTION",
+    "interpreted_acts": [
+     {
+      "entry_id": "it-act-2000-consolidated",
+      "name": "IT Act 2000",
+      "year": "2000",
+      "kind": "principal"
+     }
+    ],
+    "choices": [],
+    "allowed_entry_ids": [
+     "it-act-2000-consolidated",
+     "it-amendment-act-2008"
+    ],
+    "rejected_candidates": [
+     {
+      "entry_id": "digital-personal-data-protection-act-2023",
+      "act_name": "Digital Personal Data Protection Act 2023",
+      "reason": "NOT_THE_INTERPRETED_ACT"
+     }
+    ],
+    "overview": false,
+    "citation_check": {
+     "passed": true,
+     "outside_entry_ids": []
+    }
+   },
+   "analysis_id": "an_76429a46cd7f592d0155dcc7"
+  },
+  "ambiguous": {
+   "schema_version": "6.0.0",
+   "query": "What does the Representation of the People Act say about disqualification?",
+   "mode": "specific",
+   "intent": "statutory_lookup",
+   "answer": {
+    "answer_type": "out_of_scope",
+    "short_answer": "More than one Act in the corpus has this name. Choose the one you mean. Acts: Representation Of The People Act 1950; Representation Of The People Act 1951.",
+    "pre_amendment_baseline": "No sufficiently relevant evidence was found in the indexed local corpus.",
+    "post_amendment_revision": "No sufficiently relevant evidence was found in the indexed local corpus.",
+    "key_differences": [
+     "No sufficiently relevant evidence was found in the indexed local corpus."
+    ],
+    "markdown": "More than one Act in the corpus has this name. Choose the one you mean. Acts: Representation Of The People Act 1950; Representation Of The People Act 1951.",
+    "generation_method": "routed_no_generation",
+    "generation_warning": null,
+    "direct_answer": "More than one Act in the corpus has this name. Choose the one you mean. Acts: Representation Of The People Act 1950; Representation Of The People Act 1951.",
+    "sections": [],
+    "answer_limitations": [
+     "No answer is generated from an Act the question did not identify.",
+     "Not legal advice; verify on India Code."
+    ]
+   },
+   "metrics": null,
+   "retrieval": {
+    "pair_status": "no_relevant_evidence",
+    "candidate_count": 0,
+    "relation": null,
+    "pre": null,
+    "post": null
+   },
+   "citations": [],
+   "verification": {
+    "passed": false,
+    "checks": [
+     {
+      "id": "evidence",
+      "label": "Relevant evidence found",
+      "passed": false
+     },
+     {
+      "id": "act_scope",
+      "label": "Every citation comes from the interpreted Act or its recorded amending instruments",
+      "passed": true
+     }
+    ],
+    "note": "Verify directly on India Code."
+   },
+   "source_guidance": {
+    "message": "The retrieved excerpts may be incomplete. Visit the official India Code website for the complete legislation, commencement details and further information.",
+    "label": "Visit India Code for further information",
+    "url": "https://indiacode.gov.in/"
+   },
+   "repository": {
+    "ready": true,
+    "document_count": 100,
+    "chunk_count": 15998,
+    "embedding_dimensions": 256,
+    "vector_backend": "local_persistent_cosine",
+    "hybrid_search": true,
+    "index_fingerprint": "cfcbc384dd15bb0d3c39145915147210896c19c378406d1da2d1b7333d3bcdf4",
+    "dataset_version": "v0.1",
+    "graph_version": "v0.1",
+    "rag_index_version": "v0.1",
+    "graph_fingerprint": "73b8f9c50738329022b75a5840821e2c9ae89db7835817706628f9e6fe3497c1",
+    "index_identity": "5e8be5c684fef9a3b7f4497aeb45e06680704aefdda33dba21c54d090c6a3aa1",
+    "monitored_overlay": {
+     "status": "ACTIVE",
+     "overlay_sha256": "90eae154379b4b738b32ec10bb8158b7a48ac47f70fbd2ae57ad377a5bbebccc",
+     "documents": 1,
+     "chunks": 2,
+     "review_status": "HUMAN_REVIEW_PENDING"
+    },
+    "official_repository": "https://indiacode.gov.in/",
+    "metadata_fields": [
+     "document_type",
+     "version",
+     "act_name",
+     "date"
+    ],
+    "generation": {
+     "provider": "extractive_fallback",
+     "temperature": 0.0,
+     "model": null,
+     "grounded_output_required": true
+    },
+    "notice": "The local index is a research aid. India Code remains the authoritative source.",
+    "repository_mode": "live_indiacode_with_local_evidence_cache",
+    "live_repository_enabled": false
+   },
+   "limitations": [
+    "No local evidence supported the query."
+   ],
+   "contract_version": "rag-answer-v6",
+   "question_frame": {
+    "query": "What does the Representation of the People Act say about disqualification?",
+    "version": "question-frame-v2",
+    "question_type": "general",
+    "asks_about_versions": false,
+    "principal": null,
+    "amending": null,
+    "amendment_year": null,
+    "sections": [],
+    "reference_date": null,
+    "focus_terms": [
+     "representation",
+     "people",
+     "disqualification"
+    ],
+    "unresolved_act_phrases": [],
+    "relation_error": null,
+    "ambiguities": [
+     "several Acts match the name used: representation-of-the-people-act-1950, representation-of-the-people-act-1951"
+    ],
+    "other_acts": [],
+    "act_choices": [
+     {
+      "entry_id": "representation-of-the-people-act-1950",
+      "name": "Representation Of The People Act 1950",
+      "kind": "principal",
+      "year": "1950"
+     },
+     {
+      "entry_id": "representation-of-the-people-act-1951",
+      "name": "Representation Of The People Act 1951",
+      "kind": "principal",
+      "year": "1951"
+     }
+    ]
+   },
+   "scenario": null,
+   "evidence": [],
+   "comparison": null,
+   "source_fidelity_warnings": [],
+   "fingerprint": {
+    "version": "legal-change-fingerprint-v1.2",
+    "wording_drift": {
+     "state": "OUT_OF_SCOPE",
+     "value": null,
+     "label": null,
+     "summary": "Not a question about a change.",
+     "reason": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+     "next_action": null,
+     "method": "wording-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [],
+     "limit": {
+      "kind": "not_applicable",
+      "message": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "rule_drift": {
+     "state": "OUT_OF_SCOPE",
+     "value": null,
+     "label": null,
+     "summary": "Not a question about a change.",
+     "reason": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+     "next_action": null,
+     "method": "rule-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [],
+     "limit": {
+      "kind": "not_applicable",
+      "message": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "outcome_drift": {
+     "state": "OUT_OF_SCOPE",
+     "value": null,
+     "label": null,
+     "summary": "Not a question about a change.",
+     "reason": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+     "next_action": null,
+     "method": "outcome-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [],
+     "limit": {
+      "kind": "not_applicable",
+      "message": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "reading": [],
+    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
+    "tlds": {
+     "version": "tlds-v1.1",
+     "weights": {
+      "textual": 0.2,
+      "semantic": 0.3,
+      "legal_effect": 0.4,
+      "rule_structure": 0.1
+     },
+     "missing_components": [
+      "textual",
+      "semantic",
+      "legal_effect",
+      "rule_structure"
+     ],
+     "formula": "D = 100 × (w_T·T + w_S·S + w_L·L + w_R·R), every component in [0, 1]",
+     "bands": [
+      [
+       0,
+       "Very low"
+      ],
+      [
+       10,
+       "Low"
+      ],
+      [
+       30,
+       "Moderate"
+      ],
+      [
+       50,
+       "High"
+      ],
+      [
+       75,
+       "Very high"
+      ]
+     ],
+     "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "contributions": {
+      "textual": null,
+      "semantic": null,
+      "legal_effect": null,
+      "rule_structure": null
+     },
+     "disagreement": null,
+     "state": "NOT_APPLICABLE",
+     "value": null,
+     "tldp_percent": null,
+     "band": null,
+     "label": "Not applicable",
+     "partial_value": null,
+     "partial_label": null,
+     "calculation": null,
+     "components": {
+      "textual": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      },
+      "semantic": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      },
+      "legal_effect": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      },
+      "rule_structure": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      }
+     },
+     "config": "configs/metrics/tlds.v1.json",
+     "note": "An indicator of change between two versions of one clause, not the percentage of a statute that changed, not legal correctness, not a probability, not materiality and not risk. Read legal-effect drift beside it: a small wording change can carry a large legal effect.",
+     "evidence_ids": [],
+     "legal_validation": "UNVERIFIED"
+    }
+   },
+   "determinations": {
+    "version": "determinations-v4",
+    "textual_drift": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "Not applicable to this question.",
+     "method": null,
+     "evidence_ids": [],
+     "reason": "Nothing to assess: the question was not answered from versions of one Act.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "No versions of one Act were compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED"
+    },
+    "materiality": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "Not applicable to this question.",
+     "method": null,
+     "evidence_ids": [],
+     "reason": "Nothing to assess: the question was not answered from versions of one Act.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "No versions of one Act were compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED"
+    },
+    "applicability": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "Not applicable to this question.",
+     "method": null,
+     "evidence_ids": [],
+     "reason": "Nothing to assess: the question was not answered from versions of one Act.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "No versions of one Act were compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED"
+    },
+    "answer_change": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "Not applicable to this question.",
+     "method": null,
+     "evidence_ids": [],
+     "reason": "Nothing to assess: the question was not answered from versions of one Act.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "No versions of one Act were compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED"
+    },
+    "risk": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "Not applicable to this question.",
+     "method": null,
+     "evidence_ids": [],
+     "reason": "Nothing to assess: the question was not answered from versions of one Act.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "No versions of one Act were compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED"
+    }
+   },
+   "scenario_request": {
+    "fields": [],
+    "facts_in_use": {},
+    "blocked_by_evidence": [],
+    "explanation": "No facts are needed for this question."
+   },
+   "selection": null,
+   "routing": {
+    "version": "question-route-v1",
+    "route": "act_ambiguous",
+    "response_type": "act_choice",
+    "reason_code": "SEVERAL_ACTS_SHARE_THE_NAME",
+    "interpreted_acts": [],
+    "choices": [
+     {
+      "entry_id": "representation-of-the-people-act-1950",
+      "name": "Representation Of The People Act 1950",
+      "year": "1950",
+      "kind": "principal"
+     },
+     {
+      "entry_id": "representation-of-the-people-act-1951",
+      "name": "Representation Of The People Act 1951",
+      "year": "1951",
+      "kind": "principal"
+     }
+    ],
+    "allowed_entry_ids": [],
+    "rejected_candidates": [],
+    "message": "More than one Act in the corpus has this name. Choose the one you mean.",
+    "citation_check": {
+     "passed": true,
+     "outside_entry_ids": []
+    }
+   },
+   "analysis_id": "an_fad906b4bb556d5729af438b"
+  },
+  "chosen": {
+   "schema_version": "6.0.0",
+   "query": "What does the Representation of the People Act say about disqualification?",
+   "mode": "specific",
+   "intent": "statutory_lookup",
+   "answer": {
+    "answer_type": "single_document_summary",
+    "short_answer": "Clause-focused evidence: (2) Any person who stands disqualified under section 8A of this Act as it stood immediately before the commencement of the Election Laws (Amendment) Act, 1975 (40 of 1975), may, if the period of such disqualification has not expired, submit a petition to the President for the removal of such disqualification for the unexpired portion of the said period. or (c) section 11 (offence of importing or exporting prohibited goods) o f the Customs Act, 1962 (52 of 1962); or (n) the Prevention of Terrorism Act, 2002 (15 of 2002),] 5[shall be disqualified, where the convicted person is sentenced to— (i) only fine, for a period of six years from the date of such conviction;",
+    "pre_amendment_baseline": "No pre-amendment comparison was requested.",
+    "post_amendment_revision": "Clause-focused evidence: (2) Any person who stands disqualified under section 8A of this Act as it stood immediately before the commencement of the Election Laws (Amendment) Act, 1975 (40 of 1975), may, if the period of such disqualification has not expired, submit a petition to the President for the removal of such disqualification for the unexpired portion of the said period. or (c) section 11 (offence of importing or exporting prohibited goods) o f the Customs Act, 1962 (52 of 1962); or (n) the Prevention of Terrorism Act, 2002 (15 of 2002),] 5[shall be disqualified, where the convicted person is sentenced to— (i) only fine, for a period of six years from the date of such conviction;",
+    "key_differences": [
+     "A candidate who himself or through his proposer, with intent to be elected in an election,— (i) fails to furnish information relating to sub-section (1) of section 33A; or (ii) give false information which he knows or has reason to believe to be false; or (iii) conceals any information, in his nomination paper delivered under sub -section ( 1) of section 33 or in his affidavit which is required to be delivered under…",
+     "(1) A candidate shall, apart from any information which he is required to furnish, under this Act or the rules made thereunder, in his nomination paper delivered under sub-section (1) of section 33, also furnish the information as to whether— (i) he is accused of any offence punishable with imprisonment for two years or more in a pending case in which a charge has been framed by the court of competent jurisdiction",
+     "(1) Any person who at a public meeting to which this section applies acts, or incites others to act, in a disorderly manner for the purpose of preventing the transaction of the business for which the meeting was called together, 1[shall be punishable with 1.",
+     "(4) Any person who contravenes any of the provisions of sub -section (1) or sub -section (2) shall be punishable with imprisonment for a term which may extend to six months, or with fine which may extend to two thousand rupees, or with both.]",
+     "(2) Any person who contravenes the provisions of sub -section ( 1) shall be punishable with imprisonment for a term which may extend to two years, or with fine, or with both."
+    ],
+    "markdown": "## Short Answer\nClause-focused evidence: (2) Any person who stands disqualified under section 8A of this Act as it stood immediately before the commencement of the Election Laws (Amendment) Act, 1975 (40 of 1975), may, if the period of such disqualification has not expired, submit a petition to the President for the removal of such disqualification for the unexpired portion of the said period. or (c) section 11 (offence of importing or exporting prohibited goods) o f the Customs Act, 1962 (52 of 1962); or (n) the Prevention of Terrorism Act, 2002 (15 of 2002),] 5[shall be disqualified, where the convicted person is sentenced to— (i) only fine, for a period of six years from the date of such conviction;\n\n## Key Points\n- A candidate who himself or through his proposer, with intent to be elected in an election,— (i) fails to furnish information relating to sub-section (1) of section 33A; or (ii) give false information which he knows or has reason to believe to be false; or (iii) conceals any information, in his nomination paper delivered under sub -section ( 1) of section 33 or in his affidavit which is required to be delivered under…\n- (1) A candidate shall, apart from any information which he is required to furnish, under this Act or the rules made thereunder, in his nomination paper delivered under sub-section (1) of section 33, also furnish the information as to whether— (i) he is accused of any offence punishable with imprisonment for two years or more in a pending case in which a charge has been framed by the court of competent jurisdiction\n- (1) Any person who at a public meeting to which this section applies acts, or incites others to act, in a disorderly manner for the purpose of preventing the transaction of the business for which the meeting was called together, 1[shall be punishable with 1.\n- (4) Any person who contravenes any of the provisions of sub -section (1) or sub -section (2) shall be punishable with imprisonment for a term which may extend to six months, or with fine which may extend to two thousand rupees, or with both.]\n- (2) Any person who contravenes the provisions of sub -section ( 1) shall be punishable with imprisonment for a term which may extend to two years, or with fine, or with both.\n\n## Evidence\n- Representation Of The People Act 1951 · pdf:page:15:line:28 · IndiaCode:123456789/496502\n\n[Visit India Code for further information](https://indiacode.gov.in/)",
+    "generation_method": "extractive_summary",
+    "generation_warning": null,
+    "direct_answer": "Section 8 (Disqualification on conviction for certain offences) of the Representation Of The People Act 1951 says: “5[(1) A person convicted of an offence punishable under— (a) section 153A (offence of promoting enmity between different groups on ground of religion, race, place of birth, residence, language, etc., and doing acts prejudicial to maintenance of harmony) or section 171E (offence of bribery) or section 171F (offence of undue influence or personation at an election) or sub -section ( 1) or sub -section ( 2) of section 376 or section 376A or section 376B or section 376C or section 3…",
+    "sections": [
+     {
+      "id": "key_points",
+      "title": "Key points",
+      "text": "• A candidate who himself or through his proposer, with intent to be elected in an election,— (i) fails to furnish information relating to sub-section (1) of section 33A; or (ii) give false information which he knows or has reason to believe to be false; or (iii) conceals any information, in his nomi… • (1) A candidate shall, apart from any information which he is required to furnish, under this Act or the rules made thereunder, in his nomination paper delivered under sub-section (1) of section 33, also furnish the information as to whether— (i) he is accused of any offence punishable with impriso… • (1) Any person who at a public meeting to which this section applies acts, or incites others to act, in a disorderly manner for the purpose of preventing the transaction of the business for which the meeting was called together, 1[shall be punishable with 1. • (4) Any person who contravenes any of the provisions of sub -section (1) or sub -section (2) shall be punishable with imprisonment for a term which may extend to six months, or with fine which may extend to two thousand rupees, or with both.] • (2) Any person who contravenes the provisions of sub -section ( 1) shall be punishable with imprisonment for a term which may extend to two years, or with fine, or with both.",
+      "evidence_ids": [
+       "E1"
+      ],
+      "kind": "evidence"
+     }
+    ],
+    "answer_limitations": [
+     "Summarises the cited excerpts only, not the whole Act.",
+     "Not legal advice; verify on India Code."
+    ]
+   },
+   "metrics": null,
+   "source_fidelity_warnings": [],
+   "comparison": {
+    "contract_version": "comparison-record-v1",
+    "query_id": "q_ae7eb08fdc8dcf01",
+    "support_class": "NOT_A_COMPARISON",
+    "before": null,
+    "after": null,
+    "graph_transition_id": null,
+    "amendment_event_id": null,
+    "operation": null,
+    "provision_path": null,
+    "competing_transition_ids": [],
+    "requested_date": null,
+    "reliability": null,
+    "question_relevance": null,
+    "supported_effective_date": null,
+    "changed_spans": [],
+    "scoring_contract_version": null,
+    "materiality_status": "NOT_ASSESSED_IN_QUERY_FLOW",
+    "applicability_status": "NOT_DETERMINED_REQUIRES_SCENARIO_FACTS_AND_REVIEW",
+    "consequence_status": "NOT_DETERMINED",
+    "abstention_reasons": [],
+    "legal_validation": "UNVERIFIED"
+   },
+   "retrieval": {
+    "pair_status": "single_relevant_document_no_version_pair",
+    "candidate_count": 41,
+    "relation": null,
+    "pre": null,
+    "post": {
+     "chunk_id": "rag_80527c210bb3a147ba9c62ea",
+     "text": "8. Disqualification on conviction for certain offences .—5[(1) A person convicted of an offence punishable under— (a) section 153A (offence of promoting enmity between different groups on ground of religion, race, place of birth, residence, language, etc., and doing acts prejudicial to maintenance of harmony) or section 171E (offence of bribery) or section 171F (offence of undue influence or personation at an election) or sub -section ( 1) or sub -section ( 2) of section 376 or section 376A or section 376B or section 376C or section 376D (offences relating to rape) or section 498A (offence of cruelty towards a woman by husband or relative of a husband) or sub -section (2) or sub -section (3) of section 505 (offence of making statement creating or promoting enmity, hatred or ill -will between classes or offence relating to such statement in any place of worship or in any assembly engaged in the performance of religious worship or religious ceremonies) or the Indian Penal Code (45 of 1860); or (b) the Protection of Civil Rights Act, 1955 (22 of 1955), which provides for punishment for the preaching and practice of “untouchability”, and for the enforcement of any disability arising therefrom; or (c) section 11 (offence of importing or exporting prohibited goods) o f the Customs Act, 1962 (52 of 1962); or 1. Ins. by Act 8 of 1980, s. 3 (w.e.f. 1-9-1979). 2. The words “or the Rajpramukh, as the case may be” omitted by the Adaptation of Laws (No. 2) Order, 1956 (w.e.f. 1-11-1956). 3. Subs. by Act 47 of 1966, s. 20, for CHAPTER III (w.e.f. 14-12-1966). 4. Ins. by Act 29 of 2013, s. 2 (w.e.f. 10-7-2013). 5. Subs. by Act 1 of 1989, s. 4, for sub-sections (1) and (2) (w.e.f. 15-3-1989). IndiaCode 16 (d) sections 10 to 12 (offence of being a member of an association declared unlawful, offence relating to dealing with funds of an unlawful association or offence relating to contravention of an order made in respect of a notified place) of the Unlawful Activities (Prevention) Act, 1967 (37 of 1967); or (e) the Foreign Exchange (Regulation) Act, 1973 (46 of 1973); or (f) the Narcotic Drugs and Psychotropic Substances Act, 1985 (61 of 1985); or (g) section 3 (offence of committing terrorist acts) or section 4 (offence of committing disruptive activities) of the Terrorist and Disruptive Activities (Prevention) Act, 1987 (28 of 1987); or (h) section 7 (offence of contravention of the provisions of section 3 to 6) of the Religious Institutions (Prevention of Misuse) Act, 1988 (41 of 1988); or (i) section 125 (offence of promoting enmity between classes in connection with the election) or section 135 (offence of removal of ballot papers from polling stations) or section 135A (offence of booth capturing) or clause ( a) of sub -section (2) of section 136 (offence of Fraudulently defacing or fraudulently destroying any nomination paper) of this Act; 1[or] 1[(j) section 6 (offence of conversion of a place or worship) of the Places of Worship (Special Provisions) Act 1991]; 2[or] 3[(k) section 2 (offence of insulting the Indian National Flag or the Constitution of India) or section 3 (offence of preventing singing of National Anthem) of the Prevention of Insults to National Honour Act, 1971 (69 of 1971) ; 4[or]] 4[(l) the Commission of Sati (Prevention) Act, 1987 (3 of 1988); or (m) the Prevention of Corruption Act, 1988 (49 of 1988); or (n) the Prevention of Terrorism Act, 2002 (15 of 2002),] 5[shall be disqualified, where the convicted person is sentenced to— (i) only fine, for a period of six years from the date of such conviction; (ii) imprisonment, from the date of such conviction and shall continue to be disqualified for a further period of six years since his release.] (2) A person convicted for the contravention of— (a) any law providing for the prevention of hoarding or profiteering; or (b) any law relating to the adulteration of food or drugs; or (c) any provisions of the Dowry Prohibition Act, 6[1961 (28 of 1961);], 7* * * * * and sentenced to imprisonment for not less than six months, shall be disqualified from the date of such conviction and shall continue to be disqualified for a further period of six years since his release. (3) A person convicted of any offence and sentenced to imprisonment for not less than two years [other than any offence referred to in sub-section (1) or sub-section (2)] shall be disqualified from the date of such conviction and shall continue to be disqualified for a further period of six years since his release.] 1. Ins. by Act 42 of 1991, s. 8 (w.e.f. 18-9-1991). 2. Added by Act 21 of 1996, s. 3 (w.e.f. 1-8-1996). 3. Ins. by s. 3, ibid. (w.e.f. 1-8-1996). 4. Ins. by Act 9 of 2003, s. 2 (w.e.f. 7-1-2003). 5. Subs. by s. 2, ibid., for “shall be disqualified” and ending with the words “such conviction” (w.e.f. 7-1-2003). 6. Subs. by s. 2, ibid., for “1961 (28 of 1961); or” (w.e.f. 7-1-2003). 7. Cl. (d) omitted by s. 2, ibid. (w.e.f. 7-1-2003). IndiaCode 17 1*[(4)] Notwithstanding anything 2[in sub -section ( 1), sub -section 2 and sub -section ( 3)] a disqualification under either sub -section shall not, in the case of a person who on the date of the conviction is a member of Parliament or the Legislature of a State, take effect until three months have elapsed from that date or, if within that period an appeal or application for revision is brought in respect of the conviction or the sentence, until that appeal or application is disposed of by the court. Explanation.—In this section— (a) “law providing for the prevention of hoarding or profiteering ” means any law, or any order, rule or notification having the force of law, providing for— (i) the regulation of production or manufacture of any essential commodity; (ii) the control of price at which any essential commodity may be brought or sold; (iii) the regulation of acquisition, possession, storage, transport, distribution, disposal, use or consumption of any essential commodity; (iv) the prohibition of the withholding from sale of any essential commodity ordinarily kept for sale; (b) “drug” has the meaning assigned to it in the Drugs and Cosmetics Act, 1940 (23 of 1940); (c) “essential commodity ” has the meaning assigned to it in the Essential Commodities Act, 1955 (10 of 1955); (d) “food” has the meaning assigned to it in the Prevention of Food Adulteration Act, 1954 (37 of 1954). 3[8A. Disqualification on ground of corrupt practices. —(1) The case of every person found guilty of a corrupt practice by an order under section 99 shall be submitted, 4[as soon as may be within a period of three months from the date such order takes effect], by such authority as the Central Government may specify in this behalf, to the President for determination of the question as to whether such person shall be disqualified and if so, for what period: Provided that the period for which any person may be disqualified under this sub -section shall in no case exceed six years from the date on which the order made in relation to him under section 99 takes effect. (2) Any person who stands disqualified under section 8A of this Act as it stood immediately before the commencement of the Election Laws (Amendment) Act, 1975 (40 of 1975), may, if the period of such disqualification has not expired, submit a petition to the President for the removal of such disqualification for the unexpired portion of the said period. (3) Before giving his decision on any question mentioned in sub -section ( 1) or on any petition submitted under sub -section (2), the President shall obtain the opinion of the Election Commission on such question or petition and shall act according to such opinion.]",
+     "score": 1.0,
+     "semantic_score": 1.0,
+     "lexical_score": 1.0,
+     "metadata": {
+      "act_name": "Representation Of The People Act 1951",
+      "block_id": "blk_b913353486452abb413275f1",
+      "date": "1951",
+      "date_precision": "year_from_document_title",
+      "document_type": "act_or_code",
+      "entry_id": "representation-of-the-people-act-1951",
+      "filename": "representation-of-the-people-act-1951.pdf",
+      "official_identifier": "IndiaCode:123456789/496502",
+      "official_portal_url": "https://indiacode.gov.in/",
+      "primary_sections": [
+       "8"
+      ],
+      "provision_path": "section:8",
+      "sections": [
+       "8"
+      ],
+      "source_anchor": "pdf:page:15:line:28",
+      "source_artifact_id": "src_8fb480ffb0d600eeb6c9697b",
+      "source_is_india_code": true,
+      "source_kind": "provision_version",
+      "source_url": "https://indiacode.gov.in/items/c6952b2d-766b-49df-8217-41b17a026fd5",
+      "version": "published_1951",
+      "version_id": "ver_519e2673f54bf91f216a5ecd"
+     }
+    },
+    "live_indiacode": {
+     "attempted": false,
+     "candidate_count": 0,
+     "amendment_count": 31,
+     "amendments": [
+      {
+       "title": "The Government of Part C State Act, 1951 (49 of 1951).",
+       "target_act": "Representation Of The People Act 1951",
+       "year": "1951",
+       "official_identifier": "IndiaCode:123456789/496502",
+       "source_url": "https://indiacode.gov.in/items/c6952b2d-766b-49df-8217-41b17a026fd5",
+       "record_type": "listed_in_current_consolidated_act"
+      },
+      {
+       "title": "The Representation of the People (Second Amendment) Act, 1951 (67 of 1951).",
+       "target_act": "Representation Of The People Act 1951",
+       "year": "1951",
+       "official_identifier": "IndiaCode:123456789/496502",
+       "source_url": "https://indiacode.gov.in/items/c6952b2d-766b-49df-8217-41b17a026fd5",
+       "record_type": "listed_in_current_consolidated_act"
+      },
+      {
+       "title": "The Representation of the People (Second Amendment) Act, 1956 (27 of 1956).",
+       "target_act": "Representation Of The People Act 1951",
+       "year": "1956",
+       "official_identifier": "IndiaCode:123456789/496502",
+       "source_url": "https://indiacode.gov.in/items/c6952b2d-766b-49df-8217-41b17a026fd5",
+       "record_type": "listed_in_current_consolidated_act"
+      },
+      {
+       "title": "The Representation of People (Miscellaneous Provisions) Act, 1956 (88 of 1956).",
+       "target_act": "Representation Of The People Act 1951",
+       "year": "1956",
+       "official_identifier": "IndiaCode:123456789/496502",
+       "source_url": "https://indiacode.gov.in/items/c6952b2d-766b-49df-8217-41b17a026fd5",
+       "record_type": "listed_in_current_consolidated_act"
+      },
+      {
+       "title": "The Territorial Council Act, 1956 (103 of 1956).",
+       "target_act": "Representation Of The People Act 1951",
+       "year": "1956",
+       "official_identifier": "IndiaCode:123456789/496502",
+       "source_url": "https://indiacode.gov.in/items/c6952b2d-766b-49df-8217-41b17a026fd5",
+       "record_type": "listed_in_current_consolidated_act"
+      },
+      {
+       "title": "The Legislative Councils Act, 1957 (37 of 1957).",
+       "target_act": "Representation Of The People Act 1951",
+       "year": "1957",
+       "official_identifier": "IndiaCode:123456789/496502",
+       "source_url": "https://indiacode.gov.in/items/c6952b2d-766b-49df-8217-41b17a026fd5",
+       "record_type": "listed_in_current_consolidated_act"
+      },
+      {
+       "title": "The Representation of the People (Amendment) Act, 1958 (58 of 1958).",
+       "target_act": "Representation Of The People Act 1951",
+       "year": "1958",
+       "official_identifier": "IndiaCode:123456789/496502",
+       "source_url": "https://indiacode.gov.in/items/c6952b2d-766b-49df-8217-41b17a026fd5",
+       "record_type": "listed_in_current_consolidated_act"
+      },
+      {
+       "title": "The Dadra and Nagar Haveli Act, 1961 (35 of 1961).",
+       "target_act": "Representation Of The People Act 1951",
+       "year": "1961",
+       "official_identifier": "IndiaCode:123456789/496502",
+       "source_url": "https://indiacode.gov.in/items/c6952b2d-766b-49df-8217-41b17a026fd5",
+       "record_type": "listed_in_current_consolidated_act"
+      },
+      {
+       "title": "The Representation of the People (Amendment) Act, 1961 (40 of 1961).",
+       "target_act": "Representation Of The People Act 1951",
+       "year": "1961",
+       "official_identifier": "IndiaCode:123456789/496502",
+       "source_url": "https://indiacode.gov.in/items/c6952b2d-766b-49df-8217-41b17a026fd5",
+       "record_type": "listed_in_current_consolidated_act"
+      },
+      {
+       "title": "The Goa, Daman and Diu (Amendment) Act, 1962 (1 of 1962).",
+       "target_act": "Representation Of The People Act 1951",
+       "year": "1962",
+       "official_identifier": "IndiaCode:123456789/496502",
+       "source_url": "https://indiacode.gov.in/items/c6952b2d-766b-49df-8217-41b17a026fd5",
+       "record_type": "listed_in_current_consolidated_act"
+      },
+      {
+       "title": "The State of Nagaland Act, 1962 (27 of 1962).",
+       "target_act": "Representation Of The People Act 1951",
+       "year": "1962",
+       "official_identifier": "IndiaCode:123456789/496502",
+       "source_url": "https://indiacode.gov.in/items/c6952b2d-766b-49df-8217-41b17a026fd5",
+       "record_type": "listed_in_current_consolidated_act"
+      },
+      {
+       "title": "The Government of Union Territories Act, 1963 (20 of 1963).",
+       "target_act": "Representation Of The People Act 1951",
+       "year": "1963",
+       "official_identifier": "IndiaCode:123456789/496502",
+       "source_url": "https://indiacode.gov.in/items/c6952b2d-766b-49df-8217-41b17a026fd5",
+       "record_type": "listed_in_current_consolidated_act"
+      },
+      {
+       "title": "The Representation of the People (Amendment) Act, 1964 (33 of 1964).",
+       "target_act": "Representation Of The People Act 1951",
+       "year": "1964",
+       "official_identifier": "IndiaCode:123456789/496502",
+       "source_url": "https://indiacode.gov.in/items/c6952b2d-766b-49df-8217-41b17a026fd5",
+       "record_type": "listed_in_current_consolidated_act"
+      },
+      {
+       "title": "The Representation of the People (Second Amendment) Act, 1964 (17 of 1965).",
+       "target_act": "Representation Of The People Act 1951",
+       "year": "1965",
+       "official_identifier": "IndiaCode:123456789/496502",
+       "source_url": "https://indiacode.gov.in/items/c6952b2d-766b-49df-8217-41b17a026fd5",
+       "record_type": "listed_in_current_consolidated_act"
+      },
+      {
+       "title": "The Union Territories (Direct Election to the House of the People Act, 1965 (49 of 1965).",
+       "target_act": "Representation Of The People Act 1951",
+       "year": "1965",
+       "official_identifier": "IndiaCode:123456789/496502",
+       "source_url": "https://indiacode.gov.in/items/c6952b2d-766b-49df-8217-41b17a026fd5",
+       "record_type": "listed_in_current_consolidated_act"
+      },
+      {
+       "title": "The Representation of the People (Amendment) Act, 1966 (47 of 1966).",
+       "target_act": "Representation Of The People Act 1951",
+       "year": "1966",
+       "official_identifier": "IndiaCode:123456789/496502",
+       "source_url": "https://indiacode.gov.in/items/c6952b2d-766b-49df-8217-41b17a026fd5",
+       "record_type": "listed_in_current_consolidated_act"
+      },
+      {
+       "title": "The Representation of the People (Amendment) Act, 1967 (10 of 1967).",
+       "target_act": "Representation Of The People Act 1951",
+       "year": "1967",
+       "official_identifier": "IndiaCode:123456789/496502",
+       "source_url": "https://indiacode.gov.in/items/c6952b2d-766b-49df-8217-41b17a026fd5",
+       "record_type": "listed_in_current_consolidated_act"
+      },
+      {
+       "title": "The Criminal and Election Laws Amendment Act, 1969 (35 of 1969).",
+       "target_act": "Representation Of The People Act 1951",
+       "year": "1969",
+       "official_identifier": "IndiaCode:123456789/496502",
+       "source_url": "https://indiacode.gov.in/items/c6952b2d-766b-49df-8217-41b17a026fd5",
+       "record_type": "listed_in_current_consolidated_act"
+      },
+      {
+       "title": "The Rulers of Indian States (Abolition of Privileges) Act, 1972 (54 of 1972).",
+       "target_act": "Representation Of The People Act 1951",
+       "year": "1972",
+       "official_identifier": "IndiaCode:123456789/496502",
+       "source_url": "https://indiacode.gov.in/items/c6952b2d-766b-49df-8217-41b17a026fd5",
+       "record_type": "listed_in_current_consolidated_act"
+      },
+      {
+       "title": "The Representation of the People (Amendment) Act, 1974 (58 of 1974)",
+       "target_act": "Representation Of The People Act 1951",
+       "year": "1974",
+       "official_identifier": "IndiaCode:123456789/496502",
+       "source_url": "https://indiacode.gov.in/items/c6952b2d-766b-49df-8217-41b17a026fd5",
+       "record_type": "listed_in_current_consolidated_act"
+      },
+      {
+       "title": "The Government of Union Territories (Amendment) Act, 1975 (29 of 1975).",
+       "target_act": "Representation Of The People Act 1951",
+       "year": "1975",
+       "official_identifier": "IndiaCode:123456789/496502",
+       "source_url": "https://indiacode.gov.in/items/c6952b2d-766b-49df-8217-41b17a026fd5",
+       "record_type": "listed_in_current_consolidated_act"
+      },
+      {
+       "title": "The Election Laws (Amendment) Act, 1975 (40 of 1975).",
+       "target_act": "Representation Of The People Act 1951",
+       "year": "1975",
+       "official_identifier": "IndiaCode:123456789/496502",
+       "source_url": "https://indiacode.gov.in/items/c6952b2d-766b-49df-8217-41b17a026fd5",
+       "record_type": "listed_in_current_consolidated_act"
+      },
+      {
+       "title": "The Election Laws (Extension to Sikkim) Act, 1976 (10 of 1976).",
+       "target_act": "Representation Of The People Act 1951",
+       "year": "1976",
+       "official_identifier": "IndiaCode:123456789/496502",
+       "source_url": "https://indiacode.gov.in/items/c6952b2d-766b-49df-8217-41b17a026fd5",
+       "record_type": "listed_in_current_consolidated_act"
+      },
+      {
+       "title": "The Untouchability (Offences) Amendment and Miscellaneous Provisions Act, 1976 (106 of 1976).",
+       "target_act": "Representation Of The People Act 1951",
+       "year": "1976",
+       "official_identifier": "IndiaCode:123456789/496502",
+       "source_url": "https://indiacode.gov.in/items/c6952b2d-766b-49df-8217-41b17a026fd5",
+       "record_type": "listed_in_current_consolidated_act"
+      },
+      {
+       "title": "The Repealing and Amending Act, 1978 (38 of 1978).",
+       "target_act": "Representation Of The People Act 1951",
+       "year": "1978",
+       "official_identifier": "IndiaCode:123456789/496502",
+       "source_url": "https://indiacode.gov.in/items/c6952b2d-766b-49df-8217-41b17a026fd5",
+       "record_type": "listed_in_current_consolidated_act"
+      },
+      {
+       "title": "The Representation of the People (Amendment) Act, 1980 (8 of 1980).",
+       "target_act": "Representation Of The People Act 1951",
+       "year": "1980",
+       "official_identifier": "IndiaCode:123456789/496502",
+       "source_url": "https://indiacode.gov.in/items/c6952b2d-766b-49df-8217-41b17a026fd5",
+       "record_type": "listed_in_current_consolidated_act"
+      },
+      {
+       "title": "The Representation of the People (Amendment) Act, 1985 (9 of 1985).",
+       "target_act": "Representation Of The People Act 1951",
+       "year": "1985",
+       "official_identifier": "IndiaCode:123456789/496502",
+       "source_url": "https://indiacode.gov.in/items/c6952b2d-766b-49df-8217-41b17a026fd5",
+       "record_type": "listed_in_current_consolidated_act"
+      },
+      {
+       "title": "The Delegated Legislation Provisions (Amendment) Act, 1985 (4 of 1986).",
+       "target_act": "Representation Of The People Act 1951",
+       "year": "1986",
+       "official_identifier": "IndiaCode:123456789/496502",
+       "source_url": "https://indiacode.gov.in/items/c6952b2d-766b-49df-8217-41b17a026fd5",
+       "record_type": "listed_in_current_consolidated_act"
+      },
+      {
+       "title": "The Commission of Sati. (Prevention) Act, 1987 (3 of 1988).",
+       "target_act": "Representation Of The People Act 1951",
+       "year": "1988",
+       "official_identifier": "IndiaCode:123456789/496502",
+       "source_url": "https://indiacode.gov.in/items/c6952b2d-766b-49df-8217-41b17a026fd5",
+       "record_type": "listed_in_current_consolidated_act"
+      },
+      {
+       "title": "The Representation of the People (Amendment) Act, 1988 (1 of 1989).",
+       "target_act": "Representation Of The People Act 1951",
+       "year": "1989",
+       "official_identifier": "IndiaCode:123456789/496502",
+       "source_url": "https://indiacode.gov.in/items/c6952b2d-766b-49df-8217-41b17a026fd5",
+       "record_type": "listed_in_current_consolidated_act"
+      },
+      {
+       "title": "The Representation of the People (Amendment) Act, 1990 (2 of 1990).",
+       "target_act": "Representation Of The People Act 1951",
+       "year": "1990",
+       "official_identifier": "IndiaCode:123456789/496502",
+       "source_url": "https://indiacode.gov.in/items/c6952b2d-766b-49df-8217-41b17a026fd5",
+       "record_type": "listed_in_current_consolidated_act"
+      }
+     ],
+     "error": null,
+     "role": "current-law and amendment-history supplement; not automatically a historical pre/post pair"
+    }
+   },
+   "citations": [
+    {
+     "label": "post",
+     "chunk_id": "rag_80527c210bb3a147ba9c62ea",
+     "entry_id": "representation-of-the-people-act-1951",
+     "act_name": "Representation Of The People Act 1951",
+     "version": "published_1951",
+     "document_type": "act_or_code",
+     "date": "1951",
+     "source_anchor": "pdf:page:15:line:28",
+     "official_identifier": "IndiaCode:123456789/496502",
+     "source_url": "https://indiacode.gov.in/items/c6952b2d-766b-49df-8217-41b17a026fd5",
+     "official_portal_url": "https://indiacode.gov.in/",
+     "evidence_id": "E1",
+     "page": 15,
+     "pdf_url": "/corpus/representation-of-the-people-act-1951.pdf#page=15"
+    }
+   ],
+   "verification": {
+    "passed": false,
+    "checks": [
+     {
+      "id": "intent_classified",
+      "label": "Query intent classified",
+      "passed": true
+     },
+     {
+      "id": "clause_coverage",
+      "label": "Relevant clause coverage",
+      "passed": true
+     },
+     {
+      "id": "paired_context",
+      "label": "Aligned pre/post versions of the same provision",
+      "passed": false
+     },
+     {
+      "id": "citation_anchors",
+      "label": "Evidence anchors attached",
+      "passed": true
+     },
+     {
+      "id": "alignment",
+      "label": "Post-generation alignment check",
+      "passed": false
+     },
+     {
+      "id": "act_scope",
+      "label": "Every citation comes from the interpreted Act or its recorded amending instruments",
+      "passed": true
+     }
+    ],
+    "pair_status": "single_relevant_document_no_version_pair",
+    "note": "A failed check means the answer should be treated as incomplete and verified on India Code."
+   },
+   "source_guidance": {
+    "message": "The retrieved excerpts may be incomplete. Visit the official India Code website for the complete legislation, commencement details and further information.",
+    "label": "Visit India Code for further information",
+    "url": "https://indiacode.gov.in/"
+   },
+   "repository": {
+    "ready": true,
+    "document_count": 100,
+    "chunk_count": 15998,
+    "embedding_dimensions": 256,
+    "vector_backend": "local_persistent_cosine",
+    "hybrid_search": true,
+    "index_fingerprint": "cfcbc384dd15bb0d3c39145915147210896c19c378406d1da2d1b7333d3bcdf4",
+    "dataset_version": "v0.1",
+    "graph_version": "v0.1",
+    "rag_index_version": "v0.1",
+    "graph_fingerprint": "73b8f9c50738329022b75a5840821e2c9ae89db7835817706628f9e6fe3497c1",
+    "index_identity": "5e8be5c684fef9a3b7f4497aeb45e06680704aefdda33dba21c54d090c6a3aa1",
+    "monitored_overlay": {
+     "status": "ACTIVE",
+     "overlay_sha256": "90eae154379b4b738b32ec10bb8158b7a48ac47f70fbd2ae57ad377a5bbebccc",
+     "documents": 1,
+     "chunks": 2,
+     "review_status": "HUMAN_REVIEW_PENDING"
+    },
+    "official_repository": "https://indiacode.gov.in/",
+    "metadata_fields": [
+     "document_type",
+     "version",
+     "act_name",
+     "date"
+    ],
+    "generation": {
+     "provider": "extractive_fallback",
+     "temperature": 0.0,
+     "model": null,
+     "grounded_output_required": true
+    },
+    "notice": "The local index is a research aid. India Code remains the authoritative source.",
+    "repository_mode": "live_indiacode_with_local_evidence_cache",
+    "live_repository_enabled": false
+   },
+   "limitations": [
+    "Drift scores measure differences between retrieved excerpts, not legal correctness.",
+    "Alignment accuracy is retrieval and evidence coverage, not expert-validated answer accuracy.",
+    "Confirm the complete provision, commencement and applicability on India Code before relying on the answer."
+   ],
+   "contract_version": "rag-answer-v6",
+   "question_frame": {
+    "query": "What does the Representation of the People Act say about disqualification?",
+    "version": "question-frame-v2",
+    "question_type": "general",
+    "asks_about_versions": false,
+    "principal": {
+     "entry_id": "representation-of-the-people-act-1951",
+     "name": "Representation Of The People Act 1951",
+     "kind": "principal",
+     "year": "1951"
+    },
+    "amending": null,
+    "amendment_year": null,
+    "sections": [],
+    "reference_date": null,
+    "focus_terms": [
+     "disqualification"
+    ],
+    "unresolved_act_phrases": [],
+    "relation_error": null,
+    "ambiguities": [],
+    "other_acts": [],
+    "act_choices": []
+   },
+   "scenario": null,
+   "evidence": [
+    {
+     "evidence_id": "E1",
+     "role": "act_text_excerpt",
+     "entry_id": "representation-of-the-people-act-1951",
+     "act_name": "Representation Of The People Act 1951",
+     "page": 15,
+     "pdf_url": "/corpus/representation-of-the-people-act-1951.pdf#page=15",
+     "official_url": "https://indiacode.gov.in/items/c6952b2d-766b-49df-8217-41b17a026fd5",
+     "verbatim": true
+    }
+   ],
+   "determinations": {
+    "version": "determinations-v4",
+    "textual_drift": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "method": null,
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED",
+     "summary": "Not applicable to this question.",
+     "reason": "This question does not ask how a provision changed, so no versions are compared.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "This question does not ask how a provision changed, so no versions are compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     }
+    },
+    "applicability": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "method": null,
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED",
+     "summary": "Not applicable to this question.",
+     "reason": "Which version applies matters only when two versions are compared.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "Which version applies matters only when two versions are compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     }
+    },
+    "materiality": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "method": null,
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED",
+     "summary": "Not applicable to this question.",
+     "reason": "Materiality is assessed for a specific amendment; none was asked about.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "Materiality is assessed for a specific amendment; none was asked about.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     }
+    },
+    "answer_change": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "method": null,
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED",
+     "summary": "Not applicable to this question.",
+     "reason": "The question is about the law as written, not a change over time.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "The question is about the law as written, not a change over time.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     }
+    },
+    "risk": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "method": null,
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED",
+     "summary": "Not applicable to this question.",
+     "reason": "Risk is assessed only for a named provision with a modelled obligation and your facts.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "Risk is assessed only for a named provision with a modelled obligation and your facts.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     }
+    }
+   },
+   "fingerprint": {
+    "version": "legal-change-fingerprint-v1.2",
+    "wording_drift": {
+     "state": "OUT_OF_SCOPE",
+     "value": null,
+     "label": null,
+     "summary": "Not a question about a change.",
+     "reason": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+     "next_action": null,
+     "method": "wording-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [],
+     "limit": {
+      "kind": "not_applicable",
+      "message": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "rule_drift": {
+     "state": "OUT_OF_SCOPE",
+     "value": null,
+     "label": null,
+     "summary": "Not a question about a change.",
+     "reason": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+     "next_action": null,
+     "method": "rule-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [],
+     "limit": {
+      "kind": "not_applicable",
+      "message": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "outcome_drift": {
+     "state": "OUT_OF_SCOPE",
+     "value": null,
+     "label": null,
+     "summary": "Not a question about a change.",
+     "reason": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+     "next_action": null,
+     "method": "outcome-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [],
+     "limit": {
+      "kind": "not_applicable",
+      "message": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "reading": [],
+    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
+    "tlds": {
+     "version": "tlds-v1.1",
+     "weights": {
+      "textual": 0.2,
+      "semantic": 0.3,
+      "legal_effect": 0.4,
+      "rule_structure": 0.1
+     },
+     "missing_components": [
+      "textual",
+      "semantic",
+      "legal_effect",
+      "rule_structure"
+     ],
+     "formula": "D = 100 × (w_T·T + w_S·S + w_L·L + w_R·R), every component in [0, 1]",
+     "bands": [
+      [
+       0,
+       "Very low"
+      ],
+      [
+       10,
+       "Low"
+      ],
+      [
+       30,
+       "Moderate"
+      ],
+      [
+       50,
+       "High"
+      ],
+      [
+       75,
+       "Very high"
+      ]
+     ],
+     "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "contributions": {
+      "textual": null,
+      "semantic": null,
+      "legal_effect": null,
+      "rule_structure": null
+     },
+     "disagreement": null,
+     "state": "NOT_APPLICABLE",
+     "value": null,
+     "tldp_percent": null,
+     "band": null,
+     "label": "Not applicable",
+     "partial_value": null,
+     "partial_label": null,
+     "calculation": null,
+     "components": {
+      "textual": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      },
+      "semantic": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      },
+      "legal_effect": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      },
+      "rule_structure": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      }
+     },
+     "config": "configs/metrics/tlds.v1.json",
+     "note": "An indicator of change between two versions of one clause, not the percentage of a statute that changed, not legal correctness, not a probability, not materiality and not risk. Read legal-effect drift beside it: a small wording change can carry a large legal effect.",
+     "evidence_ids": [],
+     "legal_validation": "UNVERIFIED"
+    }
+   },
+   "scenario_request": {
+    "fields": [],
+    "facts_in_use": {},
+    "blocked_by_evidence": [],
+    "explanation": "No facts are needed for this question."
+   },
+   "selection": {
+    "act_entry_id": "representation-of-the-people-act-1951",
+    "act_name": "Representation Of The People Act 1951",
+    "chosen_from": "act_choices"
+   },
+   "routing": {
+    "version": "question-route-v1",
+    "route": "act_identified",
+    "response_type": "act_answer",
+    "reason_code": "USER_SELECTED_ACT",
+    "interpreted_acts": [
+     {
+      "entry_id": "representation-of-the-people-act-1951",
+      "name": "Representation Of The People Act 1951",
+      "year": "1951",
+      "kind": "principal"
+     }
+    ],
+    "choices": [],
+    "allowed_entry_ids": [
+     "representation-of-the-people-act-1951"
+    ],
+    "rejected_candidates": [
+     {
+      "entry_id": "representation-of-the-people-act-1950",
+      "act_name": "Representation Of The People Act 1950",
+      "reason": "NOT_THE_INTERPRETED_ACT"
+     }
+    ],
+    "overview": false,
+    "citation_check": {
+     "passed": true,
+     "outside_entry_ids": []
+    }
+   },
+   "analysis_id": "an_9c6eb52fa8b20cc9eeb78874"
+  },
+  "not-found": {
+   "schema_version": "6.0.0",
+   "query": "What does the Compnies Act say about directors?",
+   "mode": "specific",
+   "intent": "statutory_lookup",
+   "answer": {
+    "answer_type": "out_of_scope",
+    "short_answer": "I could not find “Compnies Act” in this assistant's corpus (65 principal Acts and 35 amending instruments). I checked the name as written, known short forms and close spellings. This does not mean no such Act exists: search India Code and the e-Gazette for it. Close matches in the corpus: Companies Act 2013. Choose one below if it is the Act you mean.",
+    "pre_amendment_baseline": "No sufficiently relevant evidence was found in the indexed local corpus.",
+    "post_amendment_revision": "No sufficiently relevant evidence was found in the indexed local corpus.",
+    "key_differences": [
+     "No sufficiently relevant evidence was found in the indexed local corpus."
+    ],
+    "markdown": "I could not find “Compnies Act” in this assistant's corpus (65 principal Acts and 35 amending instruments). I checked the name as written, known short forms and close spellings. This does not mean no such Act exists: search India Code and the e-Gazette for it. Close matches in the corpus: Companies Act 2013. Choose one below if it is the Act you mean.",
+    "generation_method": "routed_no_generation",
+    "generation_warning": null,
+    "direct_answer": "I could not find “Compnies Act” in this assistant's corpus (65 principal Acts and 35 amending instruments). I checked the name as written, known short forms and close spellings. This does not mean no such Act exists: search India Code and the e-Gazette for it. Close matches in the corpus: Companies Act 2013. Choose one below if it is the Act you mean.",
+    "sections": [],
+    "answer_limitations": [
+     "No answer is generated from an Act the question did not identify.",
+     "Not legal advice; verify on India Code."
+    ]
+   },
+   "metrics": null,
+   "retrieval": {
+    "pair_status": "no_relevant_evidence",
+    "candidate_count": 0,
+    "relation": null,
+    "pre": null,
+    "post": null
+   },
+   "citations": [],
+   "verification": {
+    "passed": false,
+    "checks": [
+     {
+      "id": "evidence",
+      "label": "Relevant evidence found",
+      "passed": false
+     },
+     {
+      "id": "act_scope",
+      "label": "Every citation comes from the interpreted Act or its recorded amending instruments",
+      "passed": true
+     }
+    ],
+    "note": "Verify directly on India Code."
+   },
+   "source_guidance": {
+    "message": "The retrieved excerpts may be incomplete. Visit the official India Code website for the complete legislation, commencement details and further information.",
+    "label": "Visit India Code for further information",
+    "url": "https://indiacode.gov.in/"
+   },
+   "repository": {
+    "ready": true,
+    "document_count": 100,
+    "chunk_count": 15998,
+    "embedding_dimensions": 256,
+    "vector_backend": "local_persistent_cosine",
+    "hybrid_search": true,
+    "index_fingerprint": "cfcbc384dd15bb0d3c39145915147210896c19c378406d1da2d1b7333d3bcdf4",
+    "dataset_version": "v0.1",
+    "graph_version": "v0.1",
+    "rag_index_version": "v0.1",
+    "graph_fingerprint": "73b8f9c50738329022b75a5840821e2c9ae89db7835817706628f9e6fe3497c1",
+    "index_identity": "5e8be5c684fef9a3b7f4497aeb45e06680704aefdda33dba21c54d090c6a3aa1",
+    "monitored_overlay": {
+     "status": "ACTIVE",
+     "overlay_sha256": "90eae154379b4b738b32ec10bb8158b7a48ac47f70fbd2ae57ad377a5bbebccc",
+     "documents": 1,
+     "chunks": 2,
+     "review_status": "HUMAN_REVIEW_PENDING"
+    },
+    "official_repository": "https://indiacode.gov.in/",
+    "metadata_fields": [
+     "document_type",
+     "version",
+     "act_name",
+     "date"
+    ],
+    "generation": {
+     "provider": "extractive_fallback",
+     "temperature": 0.0,
+     "model": null,
+     "grounded_output_required": true
+    },
+    "notice": "The local index is a research aid. India Code remains the authoritative source.",
+    "repository_mode": "live_indiacode_with_local_evidence_cache",
+    "live_repository_enabled": false
+   },
+   "limitations": [
+    "No local evidence supported the query."
+   ],
+   "contract_version": "rag-answer-v6",
+   "question_frame": {
+    "query": "What does the Compnies Act say about directors?",
+    "version": "question-frame-v2",
+    "question_type": "general",
+    "asks_about_versions": false,
+    "principal": null,
+    "amending": null,
+    "amendment_year": null,
+    "sections": [],
+    "reference_date": null,
+    "focus_terms": [
+     "compnies",
+     "directors"
+    ],
+    "unresolved_act_phrases": [
+     "Compnies Act"
+    ],
+    "relation_error": null,
+    "ambiguities": [],
+    "other_acts": [],
+    "act_choices": []
+   },
+   "scenario": null,
+   "evidence": [],
+   "comparison": null,
+   "source_fidelity_warnings": [],
+   "fingerprint": {
+    "version": "legal-change-fingerprint-v1.2",
+    "wording_drift": {
+     "state": "OUT_OF_SCOPE",
+     "value": null,
+     "label": null,
+     "summary": "Not a question about a change.",
+     "reason": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+     "next_action": null,
+     "method": "wording-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [],
+     "limit": {
+      "kind": "not_applicable",
+      "message": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "rule_drift": {
+     "state": "OUT_OF_SCOPE",
+     "value": null,
+     "label": null,
+     "summary": "Not a question about a change.",
+     "reason": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+     "next_action": null,
+     "method": "rule-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [],
+     "limit": {
+      "kind": "not_applicable",
+      "message": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "outcome_drift": {
+     "state": "OUT_OF_SCOPE",
+     "value": null,
+     "label": null,
+     "summary": "Not a question about a change.",
+     "reason": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+     "next_action": null,
+     "method": "outcome-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [],
+     "limit": {
+      "kind": "not_applicable",
+      "message": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "reading": [],
+    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
+    "tlds": {
+     "version": "tlds-v1.1",
+     "weights": {
+      "textual": 0.2,
+      "semantic": 0.3,
+      "legal_effect": 0.4,
+      "rule_structure": 0.1
+     },
+     "missing_components": [
+      "textual",
+      "semantic",
+      "legal_effect",
+      "rule_structure"
+     ],
+     "formula": "D = 100 × (w_T·T + w_S·S + w_L·L + w_R·R), every component in [0, 1]",
+     "bands": [
+      [
+       0,
+       "Very low"
+      ],
+      [
+       10,
+       "Low"
+      ],
+      [
+       30,
+       "Moderate"
+      ],
+      [
+       50,
+       "High"
+      ],
+      [
+       75,
+       "Very high"
+      ]
+     ],
+     "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "contributions": {
+      "textual": null,
+      "semantic": null,
+      "legal_effect": null,
+      "rule_structure": null
+     },
+     "disagreement": null,
+     "state": "NOT_APPLICABLE",
+     "value": null,
+     "tldp_percent": null,
+     "band": null,
+     "label": "Not applicable",
+     "partial_value": null,
+     "partial_label": null,
+     "calculation": null,
+     "components": {
+      "textual": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      },
+      "semantic": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      },
+      "legal_effect": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      },
+      "rule_structure": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      }
+     },
+     "config": "configs/metrics/tlds.v1.json",
+     "note": "An indicator of change between two versions of one clause, not the percentage of a statute that changed, not legal correctness, not a probability, not materiality and not risk. Read legal-effect drift beside it: a small wording change can carry a large legal effect.",
+     "evidence_ids": [],
+     "legal_validation": "UNVERIFIED"
+    }
+   },
+   "determinations": {
+    "version": "determinations-v4",
+    "textual_drift": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "Not applicable to this question.",
+     "method": null,
+     "evidence_ids": [],
+     "reason": "Nothing to assess: the question was not answered from versions of one Act.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "No versions of one Act were compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED"
+    },
+    "materiality": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "Not applicable to this question.",
+     "method": null,
+     "evidence_ids": [],
+     "reason": "Nothing to assess: the question was not answered from versions of one Act.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "No versions of one Act were compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED"
+    },
+    "applicability": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "Not applicable to this question.",
+     "method": null,
+     "evidence_ids": [],
+     "reason": "Nothing to assess: the question was not answered from versions of one Act.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "No versions of one Act were compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED"
+    },
+    "answer_change": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "Not applicable to this question.",
+     "method": null,
+     "evidence_ids": [],
+     "reason": "Nothing to assess: the question was not answered from versions of one Act.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "No versions of one Act were compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED"
+    },
+    "risk": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "Not applicable to this question.",
+     "method": null,
+     "evidence_ids": [],
+     "reason": "Nothing to assess: the question was not answered from versions of one Act.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "No versions of one Act were compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED"
+    }
+   },
+   "scenario_request": {
+    "fields": [],
+    "facts_in_use": {},
+    "blocked_by_evidence": [],
+    "explanation": "No facts are needed for this question."
+   },
+   "selection": null,
+   "routing": {
+    "version": "question-route-v1",
+    "route": "act_not_found",
+    "response_type": "act_not_found",
+    "reason_code": "ACT_NOT_IN_CORPUS",
+    "interpreted_acts": [],
+    "choices": [
+     {
+      "entry_id": "companies-act-2013",
+      "name": "Companies Act 2013",
+      "year": "2013",
+      "kind": "principal"
+     }
+    ],
+    "allowed_entry_ids": [],
+    "rejected_candidates": [],
+    "unresolved": [
+     "Compnies Act"
+    ],
+    "suggestions_by_phrase": {
+     "Compnies Act": [
+      {
+       "entry_id": "companies-act-2013",
+       "name": "Companies Act 2013",
+       "year": "2013",
+       "kind": "principal"
+      }
+     ]
+    },
+    "links": [
+     {
+      "label": "Search India Code",
+      "url": "https://indiacode.gov.in/"
+     },
+     {
+      "label": "Search the e-Gazette",
+      "url": "https://egazette.gov.in/"
+     }
+    ],
+    "live_discoveries": [],
+    "citation_check": {
+     "passed": true,
+     "outside_entry_ids": []
+    }
+   },
+   "analysis_id": "an_e0acd0807221e0cead8386e8"
+  },
+  "comparison": {
+   "schema_version": "6.0.0",
+   "query": "Compare the Aadhaar Act and the IT Act on data protection.",
+   "mode": "specific",
+   "intent": "diff_analysis",
+   "answer": {
+    "answer_type": "act_comparison",
+    "short_answer": "Each Act's most relevant indexed passage for your question is shown below, side by side. These are different Acts, not versions of one Act, so no drift score is calculated.",
+    "pre_amendment_baseline": "No sufficiently relevant evidence was found in the indexed local corpus.",
+    "post_amendment_revision": "No sufficiently relevant evidence was found in the indexed local corpus.",
+    "key_differences": [
+     "No sufficiently relevant evidence was found in the indexed local corpus."
+    ],
+    "markdown": "Each Act's most relevant indexed passage for your question is shown below, side by side. These are different Acts, not versions of one Act, so no drift score is calculated.",
+    "generation_method": "routed_extractive",
+    "generation_warning": null,
+    "direct_answer": "Each Act's most relevant indexed passage for your question is shown below, side by side. These are different Acts, not versions of one Act, so no drift score is calculated.",
+    "sections": [
+     {
+      "id": "key_points",
+      "title": "What each Act says",
+      "text": "• Aadhaar Act 2016: Powers and functions of Authority .—(1) The Authority shall develop the policy, procedure and systems for issuing Aadhaar numbers to individuals and perform authentication thereof under this Act. (4) The Authority may engage such consultants, advisors and other persons as may be required for efficient discharge of its functions under th is Act on such allowances or remuneration and terms and conditions as may be specified by contract. —(1) The Authority may for the discharge of its functions under this Act, or any rules or regulations made the re under, by order, issue such directions from time to time to any entity in the Aadhaar ecosystem, as it may consider necessary. [E1] • IT Act 2000: (3) It shall come into force on such date1 as the Central Government may, by notification, appoint and different dates may be appointed for different provisions of this Act and any reference in any such provision to the commencement of this Act shall be construed as a reference to the commencement of that provision. 21 OF 2000 [9th June, 2000.] An Act to provide legal recognition for transactions carried out by means of electronic data interchange and other means of electronic communication, commonly referred to as ―electronic commerce ‖, which involve the use of alternatives to paper -based methods of communication and storage of information, to facilitate electronic filing of documents with the Government agencies and further to amend the Indian Penal Code, the Indian Evidence Act, 1872, the Banker’s Books Evidence Act, 1891 and the Reserve Bank of India Act, 1934 and for matters connected therewith or incidental thereto. (2) It shall extend to the whole of India and, save as otherwise provided in this Act, it applies also to any offence or contravention thereunder committed outside India by any person. [E2]",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ],
+      "kind": "evidence"
+     }
+    ],
+    "answer_limitations": [
+     "No answer is generated from an Act the question did not identify.",
+     "Not legal advice; verify on India Code."
+    ]
+   },
+   "metrics": null,
+   "retrieval": {
+    "pair_status": "no_relevant_evidence",
+    "candidate_count": 0,
+    "relation": null,
+    "pre": null,
+    "post": null
+   },
+   "citations": [
+    {
+     "label": "act_1",
+     "chunk_id": "rag_e5a93629d00a62c953162017",
+     "entry_id": "aadhaar-act-2016",
+     "act_name": "Aadhaar Act 2016",
+     "source_anchor": "pdf:page:12:line:27",
+     "source_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/21418?view_type=browse",
+     "evidence_id": "E1",
+     "page": 12,
+     "pdf_url": "/corpus/aadhaar-act-2016.pdf#page=12"
+    },
+    {
+     "label": "act_2",
+     "chunk_id": "rag_6cb52eb1bec46f33af151041",
+     "entry_id": "it-act-2000-consolidated",
+     "act_name": "IT Act 2000",
+     "source_anchor": "pdf:page:5",
+     "source_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/13116",
+     "evidence_id": "E2",
+     "page": 5,
+     "pdf_url": "/corpus/it-act-2000-consolidated.pdf#page=5"
+    }
+   ],
+   "verification": {
+    "passed": false,
+    "checks": [
+     {
+      "id": "evidence",
+      "label": "Relevant evidence found",
+      "passed": false
+     },
+     {
+      "id": "act_scope",
+      "label": "Every citation comes from the interpreted Act or its recorded amending instruments",
+      "passed": true
+     }
+    ],
+    "note": "Verify directly on India Code."
+   },
+   "source_guidance": {
+    "message": "The retrieved excerpts may be incomplete. Visit the official India Code website for the complete legislation, commencement details and further information.",
+    "label": "Visit India Code for further information",
+    "url": "https://indiacode.gov.in/"
+   },
+   "repository": {
+    "ready": true,
+    "document_count": 100,
+    "chunk_count": 15998,
+    "embedding_dimensions": 256,
+    "vector_backend": "local_persistent_cosine",
+    "hybrid_search": true,
+    "index_fingerprint": "cfcbc384dd15bb0d3c39145915147210896c19c378406d1da2d1b7333d3bcdf4",
+    "dataset_version": "v0.1",
+    "graph_version": "v0.1",
+    "rag_index_version": "v0.1",
+    "graph_fingerprint": "73b8f9c50738329022b75a5840821e2c9ae89db7835817706628f9e6fe3497c1",
+    "index_identity": "5e8be5c684fef9a3b7f4497aeb45e06680704aefdda33dba21c54d090c6a3aa1",
+    "monitored_overlay": {
+     "status": "ACTIVE",
+     "overlay_sha256": "90eae154379b4b738b32ec10bb8158b7a48ac47f70fbd2ae57ad377a5bbebccc",
+     "documents": 1,
+     "chunks": 2,
+     "review_status": "HUMAN_REVIEW_PENDING"
+    },
+    "official_repository": "https://indiacode.gov.in/",
+    "metadata_fields": [
+     "document_type",
+     "version",
+     "act_name",
+     "date"
+    ],
+    "generation": {
+     "provider": "extractive_fallback",
+     "temperature": 0.0,
+     "model": null,
+     "grounded_output_required": true
+    },
+    "notice": "The local index is a research aid. India Code remains the authoritative source.",
+    "repository_mode": "live_indiacode_with_local_evidence_cache",
+    "live_repository_enabled": false
+   },
+   "limitations": [
+    "No local evidence supported the query."
+   ],
+   "contract_version": "rag-answer-v6",
+   "question_frame": {
+    "query": "Compare the Aadhaar Act and the IT Act on data protection.",
+    "version": "question-frame-v2",
+    "question_type": "what_changed",
+    "asks_about_versions": true,
+    "principal": {
+     "entry_id": "aadhaar-act-2016",
+     "name": "Aadhaar Act 2016",
+     "kind": "principal",
+     "year": "2016"
+    },
+    "amending": null,
+    "amendment_year": null,
+    "sections": [],
+    "reference_date": null,
+    "focus_terms": [
+     "data",
+     "protection"
+    ],
+    "unresolved_act_phrases": [],
+    "relation_error": null,
+    "ambiguities": [],
+    "other_acts": [
+     {
+      "entry_id": "it-act-2000-consolidated",
+      "name": "IT Act 2000",
+      "kind": "principal",
+      "year": "2000"
+     }
+    ],
+    "act_choices": []
+   },
+   "scenario": null,
+   "evidence": [
+    {
+     "evidence_id": "E1",
+     "role": "act_text_excerpt",
+     "entry_id": "aadhaar-act-2016",
+     "act_name": "Aadhaar Act 2016",
+     "page": 12,
+     "pdf_url": "/corpus/aadhaar-act-2016.pdf#page=12",
+     "official_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/21418?view_type=browse",
+     "verbatim": true
+    },
+    {
+     "evidence_id": "E2",
+     "role": "act_text_excerpt",
+     "entry_id": "it-act-2000-consolidated",
+     "act_name": "IT Act 2000",
+     "page": 5,
+     "pdf_url": "/corpus/it-act-2000-consolidated.pdf#page=5",
+     "official_url": "https://www.indiacode.nic.in/indiacode/handle/123456789/13116",
+     "verbatim": true
+    }
+   ],
+   "comparison": null,
+   "source_fidelity_warnings": [],
+   "fingerprint": {
+    "version": "legal-change-fingerprint-v1.2",
+    "wording_drift": {
+     "state": "OUT_OF_SCOPE",
+     "value": null,
+     "label": null,
+     "summary": "Not a question about a change.",
+     "reason": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+     "next_action": null,
+     "method": "wording-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [],
+     "limit": {
+      "kind": "not_applicable",
+      "message": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "rule_drift": {
+     "state": "OUT_OF_SCOPE",
+     "value": null,
+     "label": null,
+     "summary": "Not a question about a change.",
+     "reason": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+     "next_action": null,
+     "method": "rule-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [],
+     "limit": {
+      "kind": "not_applicable",
+      "message": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "outcome_drift": {
+     "state": "OUT_OF_SCOPE",
+     "value": null,
+     "label": null,
+     "summary": "Not a question about a change.",
+     "reason": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+     "next_action": null,
+     "method": "outcome-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [],
+     "limit": {
+      "kind": "not_applicable",
+      "message": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "reading": [],
+    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
+    "tlds": {
+     "version": "tlds-v1.1",
+     "weights": {
+      "textual": 0.2,
+      "semantic": 0.3,
+      "legal_effect": 0.4,
+      "rule_structure": 0.1
+     },
+     "missing_components": [
+      "textual",
+      "semantic",
+      "legal_effect",
+      "rule_structure"
+     ],
+     "formula": "D = 100 × (w_T·T + w_S·S + w_L·L + w_R·R), every component in [0, 1]",
+     "bands": [
+      [
+       0,
+       "Very low"
+      ],
+      [
+       10,
+       "Low"
+      ],
+      [
+       30,
+       "Moderate"
+      ],
+      [
+       50,
+       "High"
+      ],
+      [
+       75,
+       "Very high"
+      ]
+     ],
+     "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "contributions": {
+      "textual": null,
+      "semantic": null,
+      "legal_effect": null,
+      "rule_structure": null
+     },
+     "disagreement": null,
+     "state": "NOT_APPLICABLE",
+     "value": null,
+     "tldp_percent": null,
+     "band": null,
+     "label": "Not applicable",
+     "partial_value": null,
+     "partial_label": null,
+     "calculation": null,
+     "components": {
+      "textual": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      },
+      "semantic": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      },
+      "legal_effect": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      },
+      "rule_structure": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      }
+     },
+     "config": "configs/metrics/tlds.v1.json",
+     "note": "An indicator of change between two versions of one clause, not the percentage of a statute that changed, not legal correctness, not a probability, not materiality and not risk. Read legal-effect drift beside it: a small wording change can carry a large legal effect.",
+     "evidence_ids": [],
+     "legal_validation": "UNVERIFIED"
+    }
+   },
+   "determinations": {
+    "version": "determinations-v4",
+    "textual_drift": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "Not applicable to this question.",
+     "method": null,
+     "evidence_ids": [],
+     "reason": "Nothing to assess: the question was not answered from versions of one Act.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "No versions of one Act were compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED"
+    },
+    "materiality": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "Not applicable to this question.",
+     "method": null,
+     "evidence_ids": [],
+     "reason": "Nothing to assess: the question was not answered from versions of one Act.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "No versions of one Act were compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED"
+    },
+    "applicability": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "Not applicable to this question.",
+     "method": null,
+     "evidence_ids": [],
+     "reason": "Nothing to assess: the question was not answered from versions of one Act.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "No versions of one Act were compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED"
+    },
+    "answer_change": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "Not applicable to this question.",
+     "method": null,
+     "evidence_ids": [],
+     "reason": "Nothing to assess: the question was not answered from versions of one Act.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "No versions of one Act were compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED"
+    },
+    "risk": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "Not applicable to this question.",
+     "method": null,
+     "evidence_ids": [],
+     "reason": "Nothing to assess: the question was not answered from versions of one Act.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "No versions of one Act were compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED"
+    }
+   },
+   "scenario_request": {
+    "fields": [],
+    "facts_in_use": {},
+    "blocked_by_evidence": [],
+    "explanation": "No facts are needed for this question."
+   },
+   "selection": null,
+   "routing": {
+    "version": "question-route-v1",
+    "route": "act_comparison",
+    "response_type": "act_comparison",
+    "reason_code": "COMPARISON_REQUESTED",
+    "interpreted_acts": [
+     {
+      "entry_id": "aadhaar-act-2016",
+      "name": "Aadhaar Act 2016",
+      "year": "2016",
+      "kind": "principal"
+     },
+     {
+      "entry_id": "it-act-2000-consolidated",
+      "name": "IT Act 2000",
+      "year": "2000",
+      "kind": "principal"
+     }
+    ],
+    "choices": [],
+    "allowed_entry_ids": [
+     "aadhaar-act-2016",
+     "it-act-2000-consolidated"
+    ],
+    "rejected_candidates": [
+     {
+      "entry_id": "it-amendment-act-2008",
+      "act_name": "IT Act",
+      "reason": "NOT_THE_INTERPRETED_ACT"
+     }
+    ],
+    "citation_check": {
+     "passed": true,
+     "outside_entry_ids": []
+    }
+   },
+   "analysis_id": "an_4db07b2cd0a9723c5e64f951"
+  },
+  "mismatch": {
+   "schema_version": "6.0.0",
+   "contract_version": "rag-answer-v6",
+   "query": "What did the Jan Vishwas Act change in the Motor Vehicles Act?",
+   "mode": "specific",
+   "intent": "diff_analysis",
+   "question_frame": {
+    "query": "What did the Jan Vishwas Act change in the Motor Vehicles Act?",
+    "version": "question-frame-v2",
+    "question_type": "general",
+    "asks_about_versions": true,
+    "principal": {
+     "entry_id": "motor-vehicles-act-1988",
+     "name": "Motor Vehicles Act 1988",
+     "kind": "principal",
+     "year": "1988"
+    },
+    "amending": {
+     "entry_id": "jan-vishwas-amendment-of-provisions-act-2023",
+     "name": "Jan Vishwas Amendment Of Provisions Act 2023",
+     "kind": "amending",
+     "year": "2023"
+    },
+    "amendment_year": null,
+    "sections": [],
+    "reference_date": null,
+    "focus_terms": [],
+    "unresolved_act_phrases": [],
+    "relation_error": "Jan Vishwas Amendment Of Provisions Act 2023 is not recorded as amending the Motor Vehicles Act 1988 in this corpus.",
+    "ambiguities": [],
+    "other_acts": [],
+    "act_choices": []
+   },
+   "scenario": null,
+   "answer": {
+    "answer_type": "version_abstention",
+    "direct_answer": "I can't compare versions of the provision of the Motor Vehicles Act 1988 using that amendment: Jan Vishwas Amendment Of Provisions Act 2023 is not recorded as amending the Motor Vehicles Act 1988 in this corpus. The Jan Vishwas Amendment Of Provisions Act 2023 is recorded as amending: Environment Protection Act 1986; Legal Metrology Act 2009; Public Liability Insurance Act 1991. Choose one below to ask about it instead.",
+    "sections": [],
+    "answer_limitations": [
+     "No version comparison is shown because its support could not be established."
+    ],
+    "short_answer": "I can't compare versions of the provision of the Motor Vehicles Act 1988 using that amendment: Jan Vishwas Amendment Of Provisions Act 2023 is not recorded as amending the Motor Vehicles Act 1988 in this corpus.",
+    "pre_amendment_baseline": "",
+    "post_amendment_revision": "",
+    "key_differences": [],
+    "markdown": "I can't compare versions of the provision of the Motor Vehicles Act 1988 using that amendment: Jan Vishwas Amendment Of Provisions Act 2023 is not recorded as amending the Motor Vehicles Act 1988 in this corpus.",
+    "generation_method": "grounded_composition",
+    "generation_warning": null
+   },
+   "metrics": null,
+   "fingerprint": {
+    "version": "legal-change-fingerprint-v1.2",
+    "wording_drift": {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "value": null,
+     "label": null,
+     "summary": "Not scored.",
+     "reason": "No supported before/after versions; the answer above explains why.",
+     "next_action": "Name the section and the amendment you mean.",
+     "method": "wording-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [
+      "evidence_gate_failed"
+     ],
+     "limit": {
+      "kind": "evidence",
+      "message": "No supported before/after versions; the answer above explains why.",
+      "action": {
+       "type": "verify_source",
+       "label": "Check the official source on India Code; your facts cannot fill this gap"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "rule_drift": {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "value": null,
+     "label": null,
+     "summary": "Not scored.",
+     "reason": "No supported before/after versions; the answer above explains why.",
+     "next_action": "Name the section and the amendment you mean.",
+     "method": "rule-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [
+      "evidence_gate_failed"
+     ],
+     "limit": {
+      "kind": "evidence",
+      "message": "No supported before/after versions; the answer above explains why.",
+      "action": {
+       "type": "verify_source",
+       "label": "Check the official source on India Code; your facts cannot fill this gap"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "outcome_drift": {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "value": null,
+     "label": "Cannot determine",
+     "summary": "Cannot determine.",
+     "reason": "No supported before/after versions; the answer above explains why.",
+     "next_action": "Name the section and the amendment you mean.",
+     "method": "outcome-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [
+      "evidence_gate_failed"
+     ],
+     "limit": {
+      "kind": "evidence",
+      "message": "No supported before/after versions; the answer above explains why.",
+      "action": {
+       "type": "verify_source",
+       "label": "Check the official source on India Code; your facts cannot fill this gap"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "reading": [],
+    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
+    "tlds": {
+     "version": "tlds-v1.1",
+     "weights": {
+      "textual": 0.2,
+      "semantic": 0.3,
+      "legal_effect": 0.4,
+      "rule_structure": 0.1
+     },
+     "missing_components": [
+      "textual",
+      "semantic",
+      "legal_effect",
+      "rule_structure"
+     ],
+     "formula": "D = 100 × (w_T·T + w_S·S + w_L·L + w_R·R), every component in [0, 1]",
+     "bands": [
+      [
+       0,
+       "Very low"
+      ],
+      [
+       10,
+       "Low"
+      ],
+      [
+       30,
+       "Moderate"
+      ],
+      [
+       50,
+       "High"
+      ],
+      [
+       75,
+       "Very high"
+      ]
+     ],
+     "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "contributions": {
+      "textual": null,
+      "semantic": null,
+      "legal_effect": null,
+      "rule_structure": null
+     },
+     "disagreement": null,
+     "state": "INCOMPLETE",
+     "value": null,
+     "tldp_percent": null,
+     "band": null,
+     "label": "Incomplete",
+     "partial_value": null,
+     "partial_label": null,
+     "calculation": null,
+     "components": {
+      "textual": {
+       "value": null,
+       "method": null,
+       "reason": "No supported before/after versions; the answer above explains why.",
+       "details": {}
+      },
+      "semantic": {
+       "value": null,
+       "method": null,
+       "reason": "No supported before/after versions; the answer above explains why.",
+       "details": {}
+      },
+      "legal_effect": {
+       "value": null,
+       "method": null,
+       "reason": "No supported before/after versions; the answer above explains why.",
+       "details": {}
+      },
+      "rule_structure": {
+       "value": null,
+       "method": null,
+       "reason": "No supported before/after versions; the answer above explains why.",
+       "details": {}
+      }
+     },
+     "config": "configs/metrics/tlds.v1.json",
+     "note": "An indicator of change between two versions of one clause, not the percentage of a statute that changed, not legal correctness, not a probability, not materiality and not risk. Read legal-effect drift beside it: a small wording change can carry a large legal effect.",
+     "evidence_ids": [],
+     "legal_validation": "UNVERIFIED"
+    }
+   },
+   "determinations": {
+    "version": "determinations-v4",
+    "textual_drift": {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "label": null,
+     "summary": "Not scored.",
+     "reason": "No supported before/after versions; the answer above explains why.",
+     "method": "alias of fingerprint.wording_drift (textual_drift is deprecated in determinations-v2)",
+     "evidence_ids": [],
+     "details": {
+      "deprecated": true,
+      "use": "fingerprint.wording_drift"
+     },
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "limit": {
+      "kind": "evidence",
+      "message": "No supported before/after versions; the answer above explains why.",
+      "action": {
+       "type": "verify_source",
+       "label": "Check the official source on India Code; your facts cannot fill this gap"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "materiality": {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "label": null,
+     "summary": "No supported change to assess.",
+     "reason": "No supported before/after versions; the answer above explains why.",
+     "method": null,
+     "evidence_ids": [],
+     "details": {
+      "upstream_reason": "Jan Vishwas Amendment Of Provisions Act 2023 is not recorded as amending the Motor Vehicles Act 1988 in this corpus."
+     },
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "limit": {
+      "kind": "evidence",
+      "message": "No supported before/after versions; the answer above explains why.",
+      "action": {
+       "type": "verify_source",
+       "label": "Check the official source on India Code; your facts cannot fill this gap"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "applicability": {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "label": null,
+     "summary": "No supported versions.",
+     "reason": "No supported before/after versions; the answer above explains why.",
+     "method": null,
+     "evidence_ids": [],
+     "details": {
+      "upstream_reason": "Jan Vishwas Amendment Of Provisions Act 2023 is not recorded as amending the Motor Vehicles Act 1988 in this corpus."
+     },
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "limit": {
+      "kind": "evidence",
+      "message": "No supported before/after versions; the answer above explains why.",
+      "action": {
+       "type": "verify_source",
+       "label": "Check the official source on India Code; your facts cannot fill this gap"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "answer_change": {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "label": null,
+     "summary": "No supported versions to compare.",
+     "reason": "No supported before/after versions; the answer above explains why.",
+     "method": null,
+     "evidence_ids": [],
+     "details": {
+      "upstream_reason": "Jan Vishwas Amendment Of Provisions Act 2023 is not recorded as amending the Motor Vehicles Act 1988 in this corpus."
+     },
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "limit": {
+      "kind": "evidence",
+      "message": "No supported before/after versions; the answer above explains why.",
+      "action": {
+       "type": "verify_source",
+       "label": "Check the official source on India Code; your facts cannot fill this gap"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "risk": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "No provision identified.",
+     "reason": "Risk is assessed only for a named provision with a modelled obligation.",
+     "method": null,
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "Risk is assessed only for a named provision with a modelled obligation.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    }
+   },
+   "evidence": [],
+   "version_evidence": {
+    "version": "version-evidence-v2",
+    "candidates": [],
+    "transition_id": null,
+    "amendment_event_id": null,
+    "operation": null,
+    "provision_path": null,
+    "effective_date": null,
+    "date_basis": null,
+    "relation_verification": null,
+    "before": null,
+    "after": null,
+    "support_class": "RELATION_MISMATCH",
+    "reason_code": "AMENDING_ACT_DOES_NOT_AMEND_PRINCIPAL",
+    "reason": "Jan Vishwas Amendment Of Provisions Act 2023 is not recorded as amending the Motor Vehicles Act 1988 in this corpus."
+   },
+   "source_fidelity_warnings": [],
+   "comparison": {
+    "contract_version": "comparison-record-v2",
+    "query_id": "q_a9afe331ba62f095",
+    "support_class": "RELATION_MISMATCH",
+    "support_reason": "Jan Vishwas Amendment Of Provisions Act 2023 is not recorded as amending the Motor Vehicles Act 1988 in this corpus.",
+    "before": null,
+    "after": null,
+    "graph_transition_id": null,
+    "amendment_event_id": null,
+    "operation": null,
+    "provision_path": null,
+    "competing_transition_ids": [],
+    "requested_date": null,
+    "reliability": null,
+    "question_relevance": null,
+    "supported_effective_date": null,
+    "changed_spans": [],
+    "scoring_contract_version": null,
+    "materiality_status": "INSUFFICIENT_EVIDENCE",
+    "applicability_status": "NOT_DETERMINED_REQUIRES_SCENARIO_FACTS_AND_REVIEW",
+    "consequence_status": "OUT_OF_SCOPE",
+    "abstention_reasons": [
+     "AMENDING_ACT_DOES_NOT_AMEND_PRINCIPAL"
+    ],
+    "legal_validation": "UNVERIFIED",
+    "relation_verification": null
+   },
+   "retrieval": {
+    "pair_status": "relation_mismatch",
+    "candidate_count": 0,
+    "relation": {
+     "amending_entry_id": null,
+     "target_entry_id": "motor-vehicles-act-1988"
+    },
+    "pre": null,
+    "post": null,
+    "selection": "act_and_section_identity",
+    "live_indiacode": {
+     "attempted": false,
+     "candidate_count": 0,
+     "amendment_count": 0,
+     "amendments": [],
+     "error": null,
+     "role": "not used for version comparisons; India Code remains the authoritative source"
+    }
+   },
+   "citations": [],
+   "verification": {
+    "passed": false,
+    "checks": [
+     {
+      "id": "act_identified",
+      "label": "Act identified from the question",
+      "passed": true
+     },
+     {
+      "id": "provision_identified",
+      "label": "Provision identified",
+      "passed": false
+     },
+     {
+      "id": "relation_verified",
+      "label": "Amending Act linked to this Act",
+      "passed": false
+     },
+     {
+      "id": "paired_context",
+      "label": "Supported before/after versions of the same provision",
+      "passed": false
+     },
+     {
+      "id": "citation_anchors",
+      "label": "Page-level evidence attached",
+      "passed": false
+     },
+     {
+      "id": "act_scope",
+      "label": "Every citation comes from the interpreted Act or its recorded amending instruments",
+      "passed": true
+     }
+    ],
+    "pair_status": "relation_mismatch",
+    "note": "A failed check means the answer is partial; the reason is shown with the answer."
+   },
+   "source_guidance": {
+    "message": "The retrieved excerpts may be incomplete. Visit the official India Code website for the complete legislation, commencement details and further information.",
+    "label": "Visit India Code for further information",
+    "url": "https://indiacode.gov.in/"
+   },
+   "repository": {
+    "ready": true,
+    "document_count": 100,
+    "chunk_count": 15998,
+    "embedding_dimensions": 256,
+    "vector_backend": "local_persistent_cosine",
+    "hybrid_search": true,
+    "index_fingerprint": "cfcbc384dd15bb0d3c39145915147210896c19c378406d1da2d1b7333d3bcdf4",
+    "dataset_version": "v0.1",
+    "graph_version": "v0.1",
+    "rag_index_version": "v0.1",
+    "graph_fingerprint": "73b8f9c50738329022b75a5840821e2c9ae89db7835817706628f9e6fe3497c1",
+    "index_identity": "5e8be5c684fef9a3b7f4497aeb45e06680704aefdda33dba21c54d090c6a3aa1",
+    "monitored_overlay": {
+     "status": "ACTIVE",
+     "overlay_sha256": "90eae154379b4b738b32ec10bb8158b7a48ac47f70fbd2ae57ad377a5bbebccc",
+     "documents": 1,
+     "chunks": 2,
+     "review_status": "HUMAN_REVIEW_PENDING"
+    },
+    "official_repository": "https://indiacode.gov.in/",
+    "metadata_fields": [
+     "document_type",
+     "version",
+     "act_name",
+     "date"
+    ],
+    "generation": {
+     "provider": "extractive_fallback",
+     "temperature": 0.0,
+     "model": null,
+     "grounded_output_required": true
+    },
+    "notice": "The local index is a research aid. India Code remains the authoritative source.",
+    "repository_mode": "live_indiacode_with_local_evidence_cache",
+    "live_repository_enabled": false
+   },
+   "limitations": [
+    "No version comparison is shown because its support could not be established."
+   ],
+   "scenario_request": {
+    "fields": [],
+    "facts_in_use": {},
+    "blocked_by_evidence": [
+     "which wording applies on your date",
+     "whether your answer changes"
+    ],
+    "explanation": "No facts are needed for this question. Facts cannot fill missing legal evidence for: which wording applies on your date, whether your answer changes."
+   },
+   "selection": null,
+   "routing": {
+    "version": "question-route-v1",
+    "route": "amendment_mismatch",
+    "response_type": "act_answer",
+    "reason_code": "AMENDMENT_NOT_RECORDED_FOR_ACT",
+    "interpreted_acts": [
+     {
+      "entry_id": "motor-vehicles-act-1988",
+      "name": "Motor Vehicles Act 1988",
+      "year": "1988",
+      "kind": "principal"
+     },
+     {
+      "entry_id": "jan-vishwas-amendment-of-provisions-act-2023",
+      "name": "Jan Vishwas Amendment Of Provisions Act 2023",
+      "year": "2023",
+      "kind": "amending"
+     }
+    ],
+    "choices": [
+     {
+      "entry_id": "environment-protection-act-1986",
+      "name": "Environment Protection Act 1986",
+      "year": "1986",
+      "kind": "principal"
+     },
+     {
+      "entry_id": "legal-metrology-act-2009",
+      "name": "Legal Metrology Act 2009",
+      "year": "2009",
+      "kind": "principal"
+     },
+     {
+      "entry_id": "public-liability-insurance-act-1991",
+      "name": "Public Liability Insurance Act 1991",
+      "year": "1991",
+      "kind": "principal"
+     }
+    ],
+    "allowed_entry_ids": [],
+    "rejected_candidates": [],
+    "citation_check": {
+     "passed": true,
+     "outside_entry_ids": []
+    }
+   },
+   "analysis_id": "an_cd4736d3f7dcfcd6e7309bbc"
+  },
+  "latest-india-code": {
+   "schema_version": "6.0.0",
+   "query": "What are the latest changes in India Code?",
+   "mode": "specific",
+   "intent": "diff_analysis",
+   "answer": {
+    "answer_type": "latest_records",
+    "short_answer": "3 records observed in India Code, the latest within the monitored scope (India Code: last successful check 2026-10-12 14:21 UTC (failed)). Sources are checked at most once every 24 hours; nothing was fetched for this question. A listed record is not a confirmed change to law.",
+    "pre_amendment_baseline": "No sufficiently relevant evidence was found in the indexed local corpus.",
+    "post_amendment_revision": "No sufficiently relevant evidence was found in the indexed local corpus.",
+    "key_differences": [
+     "No sufficiently relevant evidence was found in the indexed local corpus."
+    ],
+    "markdown": "3 records observed in India Code, the latest within the monitored scope (India Code: last successful check 2026-10-12 14:21 UTC (failed)). Sources are checked at most once every 24 hours; nothing was fetched for this question. A listed record is not a confirmed change to law.",
+    "generation_method": "monitoring_ledger",
+    "generation_warning": null,
+    "direct_answer": "3 records observed in India Code, the latest within the monitored scope (India Code: last successful check 2026-10-12 14:21 UTC (failed)). Sources are checked at most once every 24 hours; nothing was fetched for this question. A listed record is not a confirmed change to law.",
+    "sections": [
+     {
+      "id": "suggestions",
+      "title": "Source status",
+      "kind": "limitation",
+      "evidence_ids": [],
+      "text": "India Code: The last check ended with source unavailable; showing items from the last successful check. No successful check for 334 hours."
+     }
+    ],
+    "answer_limitations": [
+     "No answer is generated from an Act the question did not identify.",
+     "Not legal advice; verify on India Code."
+    ]
+   },
+   "metrics": null,
+   "retrieval": {
+    "pair_status": "no_relevant_evidence",
+    "candidate_count": 0,
+    "relation": null,
+    "pre": null,
+    "post": null
+   },
+   "citations": [],
+   "verification": {
+    "passed": false,
+    "checks": [
+     {
+      "id": "evidence",
+      "label": "Relevant evidence found",
+      "passed": false
+     },
+     {
+      "id": "act_scope",
+      "label": "Every citation comes from the interpreted Act or its recorded amending instruments",
+      "passed": true
+     }
+    ],
+    "note": "Verify directly on India Code."
+   },
+   "source_guidance": {
+    "message": "The retrieved excerpts may be incomplete. Visit the official India Code website for the complete legislation, commencement details and further information.",
+    "label": "Visit India Code for further information",
+    "url": "https://indiacode.gov.in/"
+   },
+   "repository": {
+    "ready": true,
+    "document_count": 100,
+    "chunk_count": 15998,
+    "embedding_dimensions": 256,
+    "vector_backend": "local_persistent_cosine",
+    "hybrid_search": true,
+    "index_fingerprint": "cfcbc384dd15bb0d3c39145915147210896c19c378406d1da2d1b7333d3bcdf4",
+    "dataset_version": "v0.1",
+    "graph_version": "v0.1",
+    "rag_index_version": "v0.1",
+    "graph_fingerprint": "73b8f9c50738329022b75a5840821e2c9ae89db7835817706628f9e6fe3497c1",
+    "index_identity": "5e8be5c684fef9a3b7f4497aeb45e06680704aefdda33dba21c54d090c6a3aa1",
+    "monitored_overlay": {
+     "status": "ACTIVE",
+     "overlay_sha256": "90eae154379b4b738b32ec10bb8158b7a48ac47f70fbd2ae57ad377a5bbebccc",
+     "documents": 1,
+     "chunks": 2,
+     "review_status": "HUMAN_REVIEW_PENDING"
+    },
+    "official_repository": "https://indiacode.gov.in/",
+    "metadata_fields": [
+     "document_type",
+     "version",
+     "act_name",
+     "date"
+    ],
+    "generation": {
+     "provider": "extractive_fallback",
+     "temperature": 0.0,
+     "model": null,
+     "grounded_output_required": true
+    },
+    "notice": "The local index is a research aid. India Code remains the authoritative source.",
+    "repository_mode": "live_indiacode_with_local_evidence_cache",
+    "live_repository_enabled": false
+   },
+   "limitations": [
+    "No local evidence supported the query."
+   ],
+   "contract_version": "rag-answer-v6",
+   "question_frame": {
+    "query": "What are the latest changes in India Code?",
+    "version": "question-frame-v2",
+    "question_type": "general",
+    "asks_about_versions": false,
+    "principal": null,
+    "amending": null,
+    "amendment_year": null,
+    "sections": [],
+    "reference_date": null,
+    "focus_terms": [
+     "latest",
+     "changes",
+     "india",
+     "code"
+    ],
+    "unresolved_act_phrases": [],
+    "relation_error": null,
+    "ambiguities": [],
+    "other_acts": [],
+    "act_choices": []
+   },
+   "scenario": null,
+   "evidence": [],
+   "comparison": null,
+   "source_fidelity_warnings": [],
+   "fingerprint": {
+    "version": "legal-change-fingerprint-v1.2",
+    "wording_drift": {
+     "state": "OUT_OF_SCOPE",
+     "value": null,
+     "label": null,
+     "summary": "Not a question about a change.",
+     "reason": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+     "next_action": null,
+     "method": "wording-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [],
+     "limit": {
+      "kind": "not_applicable",
+      "message": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "rule_drift": {
+     "state": "OUT_OF_SCOPE",
+     "value": null,
+     "label": null,
+     "summary": "Not a question about a change.",
+     "reason": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+     "next_action": null,
+     "method": "rule-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [],
+     "limit": {
+      "kind": "not_applicable",
+      "message": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "outcome_drift": {
+     "state": "OUT_OF_SCOPE",
+     "value": null,
+     "label": null,
+     "summary": "Not a question about a change.",
+     "reason": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+     "next_action": null,
+     "method": "outcome-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [],
+     "limit": {
+      "kind": "not_applicable",
+      "message": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "reading": [],
+    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
+    "tlds": {
+     "version": "tlds-v1.1",
+     "weights": {
+      "textual": 0.2,
+      "semantic": 0.3,
+      "legal_effect": 0.4,
+      "rule_structure": 0.1
+     },
+     "missing_components": [
+      "textual",
+      "semantic",
+      "legal_effect",
+      "rule_structure"
+     ],
+     "formula": "D = 100 × (w_T·T + w_S·S + w_L·L + w_R·R), every component in [0, 1]",
+     "bands": [
+      [
+       0,
+       "Very low"
+      ],
+      [
+       10,
+       "Low"
+      ],
+      [
+       30,
+       "Moderate"
+      ],
+      [
+       50,
+       "High"
+      ],
+      [
+       75,
+       "Very high"
+      ]
+     ],
+     "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "contributions": {
+      "textual": null,
+      "semantic": null,
+      "legal_effect": null,
+      "rule_structure": null
+     },
+     "disagreement": null,
+     "state": "NOT_APPLICABLE",
+     "value": null,
+     "tldp_percent": null,
+     "band": null,
+     "label": "Not applicable",
+     "partial_value": null,
+     "partial_label": null,
+     "calculation": null,
+     "components": {
+      "textual": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      },
+      "semantic": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      },
+      "legal_effect": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      },
+      "rule_structure": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      }
+     },
+     "config": "configs/metrics/tlds.v1.json",
+     "note": "An indicator of change between two versions of one clause, not the percentage of a statute that changed, not legal correctness, not a probability, not materiality and not risk. Read legal-effect drift beside it: a small wording change can carry a large legal effect.",
+     "evidence_ids": [],
+     "legal_validation": "UNVERIFIED"
+    }
+   },
+   "determinations": {
+    "version": "determinations-v4",
+    "textual_drift": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "Not applicable to this question.",
+     "method": null,
+     "evidence_ids": [],
+     "reason": "Nothing to assess: the question was not answered from versions of one Act.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "No versions of one Act were compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED"
+    },
+    "materiality": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "Not applicable to this question.",
+     "method": null,
+     "evidence_ids": [],
+     "reason": "Nothing to assess: the question was not answered from versions of one Act.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "No versions of one Act were compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED"
+    },
+    "applicability": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "Not applicable to this question.",
+     "method": null,
+     "evidence_ids": [],
+     "reason": "Nothing to assess: the question was not answered from versions of one Act.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "No versions of one Act were compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED"
+    },
+    "answer_change": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "Not applicable to this question.",
+     "method": null,
+     "evidence_ids": [],
+     "reason": "Nothing to assess: the question was not answered from versions of one Act.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "No versions of one Act were compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED"
+    },
+    "risk": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "Not applicable to this question.",
+     "method": null,
+     "evidence_ids": [],
+     "reason": "Nothing to assess: the question was not answered from versions of one Act.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "No versions of one Act were compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED"
+    }
+   },
+   "latest_records": {
+    "version": "latest-records-v1",
+    "sources_asked": [
+     "india_code"
+    ],
+    "items": [
+     {
+      "title": "The Representation of the People (Amendment) Ordinance, 1999",
+      "source": "India Code",
+      "source_key": "india_code",
+      "published": "1999",
+      "discovered_at": "2026-10-12T14:21:16.973942Z",
+      "last_checked_at": "2026-10-12T14:22:46.172383Z",
+      "official_url": "https://indiacode.gov.in/items/61b31f4d-e122-4b81-b014-d9305de27901",
+      "status": "CANDIDATE_UNVERIFIED",
+      "status_label": "Possible amendment text found by machine extraction; not verified",
+      "category": "POSSIBLE_AMENDMENT",
+      "candidate_targets": [
+       "Representation of the People Act, 1951"
+      ],
+      "record_kind": "unverified_candidate",
+      "record_kind_label": "Possible amendment found by machine extraction (unverified)"
+     },
+     {
+      "title": "The Life Insurance Corporation (Amendment) Ordinance 1981.",
+      "source": "India Code",
+      "source_key": "india_code",
+      "published": "1981",
+      "discovered_at": "2026-10-12T14:21:14.723783Z",
+      "last_checked_at": "2026-10-12T14:22:43.722968Z",
+      "official_url": "https://indiacode.gov.in/items/5ff5c04d-01c3-423a-ae50-b00b48a13731",
+      "status": "CANDIDATE_UNVERIFIED",
+      "status_label": "Possible amendment text found by machine extraction; not verified",
+      "category": "POSSIBLE_AMENDMENT",
+      "candidate_targets": [
+       "Life Insurance Corporation Act, 1956"
+      ],
+      "record_kind": "unverified_candidate",
+      "record_kind_label": "Possible amendment found by machine extraction (unverified)"
+     },
+     {
+      "title": "The Delhi University (Amendment) Ordinance, 1981.",
+      "source": "India Code",
+      "source_key": "india_code",
+      "published": "1981",
+      "discovered_at": "2026-10-12T14:21:12.461899Z",
+      "last_checked_at": "2026-10-12T14:22:41.282565Z",
+      "official_url": "https://indiacode.gov.in/items/f24f0f80-aee9-4939-9822-c6616061bf98",
+      "status": "CANDIDATE_UNVERIFIED",
+      "status_label": "Possible amendment text found by machine extraction; not verified",
+      "category": "POSSIBLE_AMENDMENT",
+      "candidate_targets": [
+       "Delhi University Act, 1922"
+      ],
+      "record_kind": "unverified_candidate",
+      "record_kind_label": "Possible amendment found by machine extraction (unverified)"
+     }
+    ],
+    "sources": [
+     {
+      "source_key": "india_code",
+      "source": "India Code",
+      "state": "FAILED",
+      "detail": "The last check ended with source unavailable; showing items from the last successful check. No successful check for 334 hours.",
+      "last_success_at": "2026-10-12T14:21:16.975193Z",
+      "next_eligible_at": "2026-10-14T14:22:01.503797+00:00"
+     }
+    ],
+    "scope": "Latest discovered in monitored sources (India Code and the e-Gazette), checked at most once every 24 hours. Not a complete list of Indian amendments.",
+    "note": "A discovered or downloaded document is not a confirmed change to law, and nothing listed here changes the answers until it is reviewed and added to the corpus.",
+    "generated_at": "2026-10-26T12:27:36.511512Z",
+    "fetched_for_this_question": false,
+    "legal_effect_claimed": false
+   },
+   "scenario_request": {
+    "fields": [],
+    "facts_in_use": {},
+    "blocked_by_evidence": [],
+    "explanation": "No facts are needed for this question."
+   },
+   "selection": null,
+   "routing": {
+    "version": "question-route-v1",
+    "route": "latest_records",
+    "response_type": "latest_records",
+    "reason_code": "LATEST_FROM_MONITORING",
+    "interpreted_acts": [],
+    "choices": [],
+    "allowed_entry_ids": [],
+    "rejected_candidates": [],
+    "sources": [
+     "india_code"
+    ],
+    "citation_check": {
+     "passed": true,
+     "outside_entry_ids": []
+    }
+   },
+   "analysis_id": "an_672b514183e5bc85b1782b0a"
+  },
+  "latest-egazette": {
+   "schema_version": "6.0.0",
+   "query": "What has appeared recently in the e-Gazette?",
+   "mode": "specific",
+   "intent": "general_qa",
+   "answer": {
+    "answer_type": "latest_records",
+    "short_answer": "1 record observed in e-Gazette of India, the latest within the monitored scope (e-Gazette of India: last successful check 2026-10-13 17:17 UTC (stale)). Sources are checked at most once every 24 hours; nothing was fetched for this question. A listed record is not a confirmed change to law.",
+    "pre_amendment_baseline": "No sufficiently relevant evidence was found in the indexed local corpus.",
+    "post_amendment_revision": "No sufficiently relevant evidence was found in the indexed local corpus.",
+    "key_differences": [
+     "No sufficiently relevant evidence was found in the indexed local corpus."
+    ],
+    "markdown": "1 record observed in e-Gazette of India, the latest within the monitored scope (e-Gazette of India: last successful check 2026-10-13 17:17 UTC (stale)). Sources are checked at most once every 24 hours; nothing was fetched for this question. A listed record is not a confirmed change to law.",
+    "generation_method": "monitoring_ledger",
+    "generation_warning": null,
+    "direct_answer": "1 record observed in e-Gazette of India, the latest within the monitored scope (e-Gazette of India: last successful check 2026-10-13 17:17 UTC (stale)). Sources are checked at most once every 24 hours; nothing was fetched for this question. A listed record is not a confirmed change to law.",
+    "sections": [
+     {
+      "id": "suggestions",
+      "title": "Source status",
+      "kind": "limitation",
+      "evidence_ids": [],
+      "text": "e-Gazette of India: No successful check for 307 hours; new items may be missing."
+     }
+    ],
+    "answer_limitations": [
+     "No answer is generated from an Act the question did not identify.",
+     "Not legal advice; verify on India Code."
+    ]
+   },
+   "metrics": null,
+   "retrieval": {
+    "pair_status": "no_relevant_evidence",
+    "candidate_count": 0,
+    "relation": null,
+    "pre": null,
+    "post": null
+   },
+   "citations": [],
+   "verification": {
+    "passed": false,
+    "checks": [
+     {
+      "id": "evidence",
+      "label": "Relevant evidence found",
+      "passed": false
+     },
+     {
+      "id": "act_scope",
+      "label": "Every citation comes from the interpreted Act or its recorded amending instruments",
+      "passed": true
+     }
+    ],
+    "note": "Verify directly on India Code."
+   },
+   "source_guidance": {
+    "message": "The retrieved excerpts may be incomplete. Visit the official India Code website for the complete legislation, commencement details and further information.",
+    "label": "Visit India Code for further information",
+    "url": "https://indiacode.gov.in/"
+   },
+   "repository": {
+    "ready": true,
+    "document_count": 100,
+    "chunk_count": 15998,
+    "embedding_dimensions": 256,
+    "vector_backend": "local_persistent_cosine",
+    "hybrid_search": true,
+    "index_fingerprint": "cfcbc384dd15bb0d3c39145915147210896c19c378406d1da2d1b7333d3bcdf4",
+    "dataset_version": "v0.1",
+    "graph_version": "v0.1",
+    "rag_index_version": "v0.1",
+    "graph_fingerprint": "73b8f9c50738329022b75a5840821e2c9ae89db7835817706628f9e6fe3497c1",
+    "index_identity": "5e8be5c684fef9a3b7f4497aeb45e06680704aefdda33dba21c54d090c6a3aa1",
+    "monitored_overlay": {
+     "status": "ACTIVE",
+     "overlay_sha256": "90eae154379b4b738b32ec10bb8158b7a48ac47f70fbd2ae57ad377a5bbebccc",
+     "documents": 1,
+     "chunks": 2,
+     "review_status": "HUMAN_REVIEW_PENDING"
+    },
+    "official_repository": "https://indiacode.gov.in/",
+    "metadata_fields": [
+     "document_type",
+     "version",
+     "act_name",
+     "date"
+    ],
+    "generation": {
+     "provider": "extractive_fallback",
+     "temperature": 0.0,
+     "model": null,
+     "grounded_output_required": true
+    },
+    "notice": "The local index is a research aid. India Code remains the authoritative source.",
+    "repository_mode": "live_indiacode_with_local_evidence_cache",
+    "live_repository_enabled": false
+   },
+   "limitations": [
+    "No local evidence supported the query."
+   ],
+   "contract_version": "rag-answer-v6",
+   "question_frame": {
+    "query": "What has appeared recently in the e-Gazette?",
+    "version": "question-frame-v2",
+    "question_type": "general",
+    "asks_about_versions": false,
+    "principal": null,
+    "amending": null,
+    "amendment_year": null,
+    "sections": [],
+    "reference_date": null,
+    "focus_terms": [
+     "appeared",
+     "recently",
+     "gazette"
+    ],
+    "unresolved_act_phrases": [],
+    "relation_error": null,
+    "ambiguities": [],
+    "other_acts": [],
+    "act_choices": []
+   },
+   "scenario": null,
+   "evidence": [],
+   "comparison": null,
+   "source_fidelity_warnings": [],
+   "fingerprint": {
+    "version": "legal-change-fingerprint-v1.2",
+    "wording_drift": {
+     "state": "OUT_OF_SCOPE",
+     "value": null,
+     "label": null,
+     "summary": "Not a question about a change.",
+     "reason": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+     "next_action": null,
+     "method": "wording-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [],
+     "limit": {
+      "kind": "not_applicable",
+      "message": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "rule_drift": {
+     "state": "OUT_OF_SCOPE",
+     "value": null,
+     "label": null,
+     "summary": "Not a question about a change.",
+     "reason": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+     "next_action": null,
+     "method": "rule-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [],
+     "limit": {
+      "kind": "not_applicable",
+      "message": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "outcome_drift": {
+     "state": "OUT_OF_SCOPE",
+     "value": null,
+     "label": null,
+     "summary": "Not a question about a change.",
+     "reason": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+     "next_action": null,
+     "method": "outcome-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [],
+     "limit": {
+      "kind": "not_applicable",
+      "message": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "reading": [],
+    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
+    "tlds": {
+     "version": "tlds-v1.1",
+     "weights": {
+      "textual": 0.2,
+      "semantic": 0.3,
+      "legal_effect": 0.4,
+      "rule_structure": 0.1
+     },
+     "missing_components": [
+      "textual",
+      "semantic",
+      "legal_effect",
+      "rule_structure"
+     ],
+     "formula": "D = 100 × (w_T·T + w_S·S + w_L·L + w_R·R), every component in [0, 1]",
+     "bands": [
+      [
+       0,
+       "Very low"
+      ],
+      [
+       10,
+       "Low"
+      ],
+      [
+       30,
+       "Moderate"
+      ],
+      [
+       50,
+       "High"
+      ],
+      [
+       75,
+       "Very high"
+      ]
+     ],
+     "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "contributions": {
+      "textual": null,
+      "semantic": null,
+      "legal_effect": null,
+      "rule_structure": null
+     },
+     "disagreement": null,
+     "state": "NOT_APPLICABLE",
+     "value": null,
+     "tldp_percent": null,
+     "band": null,
+     "label": "Not applicable",
+     "partial_value": null,
+     "partial_label": null,
+     "calculation": null,
+     "components": {
+      "textual": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      },
+      "semantic": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      },
+      "legal_effect": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      },
+      "rule_structure": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      }
+     },
+     "config": "configs/metrics/tlds.v1.json",
+     "note": "An indicator of change between two versions of one clause, not the percentage of a statute that changed, not legal correctness, not a probability, not materiality and not risk. Read legal-effect drift beside it: a small wording change can carry a large legal effect.",
+     "evidence_ids": [],
+     "legal_validation": "UNVERIFIED"
+    }
+   },
+   "determinations": {
+    "version": "determinations-v4",
+    "textual_drift": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "Not applicable to this question.",
+     "method": null,
+     "evidence_ids": [],
+     "reason": "Nothing to assess: the question was not answered from versions of one Act.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "No versions of one Act were compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED"
+    },
+    "materiality": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "Not applicable to this question.",
+     "method": null,
+     "evidence_ids": [],
+     "reason": "Nothing to assess: the question was not answered from versions of one Act.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "No versions of one Act were compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED"
+    },
+    "applicability": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "Not applicable to this question.",
+     "method": null,
+     "evidence_ids": [],
+     "reason": "Nothing to assess: the question was not answered from versions of one Act.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "No versions of one Act were compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED"
+    },
+    "answer_change": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "Not applicable to this question.",
+     "method": null,
+     "evidence_ids": [],
+     "reason": "Nothing to assess: the question was not answered from versions of one Act.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "No versions of one Act were compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED"
+    },
+    "risk": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "Not applicable to this question.",
+     "method": null,
+     "evidence_ids": [],
+     "reason": "Nothing to assess: the question was not answered from versions of one Act.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "No versions of one Act were compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED"
+    }
+   },
+   "latest_records": {
+    "version": "latest-records-v1",
+    "sources_asked": [
+     "egazette"
+    ],
+    "items": [
+     {
+      "title": "Appointment of the date 15th October 2026 for MSMED Amendment Act 2026",
+      "source": "e-Gazette of India",
+      "source_key": "egazette",
+      "published": null,
+      "discovered_at": "2026-10-12T16:43:10.726380Z",
+      "last_checked_at": "2026-10-13T17:17:13.845358Z",
+      "official_url": "https://egazette.gov.in/WriteReadData/2026/277080.pdf",
+      "status": "AWAITING_REVIEW",
+      "status_label": "New document awaiting review",
+      "category": "NEW_DOCUMENT",
+      "candidate_targets": [],
+      "record_kind": "commencement_notification",
+      "record_kind_label": "Commencement notification"
+     }
+    ],
+    "sources": [
+     {
+      "source_key": "egazette",
+      "source": "e-Gazette of India",
+      "state": "STALE",
+      "detail": "No successful check for 307 hours; new items may be missing.",
+      "last_success_at": "2026-10-13T17:17:13.845601Z",
+      "next_eligible_at": "2026-10-14T17:17:00.475902+00:00"
+     }
+    ],
+    "scope": "Latest discovered in monitored sources (India Code and the e-Gazette), checked at most once every 24 hours. Not a complete list of Indian amendments.",
+    "note": "A discovered or downloaded document is not a confirmed change to law, and nothing listed here changes the answers until it is reviewed and added to the corpus.",
+    "generated_at": "2026-10-26T12:27:36.519924Z",
+    "fetched_for_this_question": false,
+    "legal_effect_claimed": false
+   },
+   "scenario_request": {
+    "fields": [],
+    "facts_in_use": {},
+    "blocked_by_evidence": [],
+    "explanation": "No facts are needed for this question."
+   },
+   "selection": null,
+   "routing": {
+    "version": "question-route-v1",
+    "route": "latest_records",
+    "response_type": "latest_records",
+    "reason_code": "LATEST_FROM_MONITORING",
+    "interpreted_acts": [],
+    "choices": [],
+    "allowed_entry_ids": [],
+    "rejected_candidates": [],
+    "sources": [
+     "egazette"
+    ],
+    "citation_check": {
+     "passed": true,
+     "outside_entry_ids": []
+    }
+   },
+   "analysis_id": "an_21f4a191c92aa45a2e2afc76"
+  },
+  "outside": {
+   "schema_version": "6.0.0",
+   "query": "What is the capital of France?",
+   "mode": "specific",
+   "intent": "general_qa",
+   "answer": {
+    "answer_type": "out_of_scope",
+    "short_answer": "This assistant answers questions about Indian Acts in its corpus and the official sources it monitors. Ask about an Act by name, for example “What does the Companies Act say about directors?”",
+    "pre_amendment_baseline": "No sufficiently relevant evidence was found in the indexed local corpus.",
+    "post_amendment_revision": "No sufficiently relevant evidence was found in the indexed local corpus.",
+    "key_differences": [
+     "No sufficiently relevant evidence was found in the indexed local corpus."
+    ],
+    "markdown": "This assistant answers questions about Indian Acts in its corpus and the official sources it monitors. Ask about an Act by name, for example “What does the Companies Act say about directors?”",
+    "generation_method": "routed_no_generation",
+    "generation_warning": null,
+    "direct_answer": "This assistant answers questions about Indian Acts in its corpus and the official sources it monitors. Ask about an Act by name, for example “What does the Companies Act say about directors?”",
+    "sections": [],
+    "answer_limitations": [
+     "No answer is generated from an Act the question did not identify.",
+     "Not legal advice; verify on India Code."
+    ]
+   },
+   "metrics": null,
+   "retrieval": {
+    "pair_status": "no_relevant_evidence",
+    "candidate_count": 0,
+    "relation": null,
+    "pre": null,
+    "post": null
+   },
+   "citations": [],
+   "verification": {
+    "passed": false,
+    "checks": [
+     {
+      "id": "evidence",
+      "label": "Relevant evidence found",
+      "passed": false
+     },
+     {
+      "id": "act_scope",
+      "label": "Every citation comes from the interpreted Act or its recorded amending instruments",
+      "passed": true
+     }
+    ],
+    "note": "Verify directly on India Code."
+   },
+   "source_guidance": {
+    "message": "The retrieved excerpts may be incomplete. Visit the official India Code website for the complete legislation, commencement details and further information.",
+    "label": "Visit India Code for further information",
+    "url": "https://indiacode.gov.in/"
+   },
+   "repository": {
+    "ready": true,
+    "document_count": 100,
+    "chunk_count": 15998,
+    "embedding_dimensions": 256,
+    "vector_backend": "local_persistent_cosine",
+    "hybrid_search": true,
+    "index_fingerprint": "cfcbc384dd15bb0d3c39145915147210896c19c378406d1da2d1b7333d3bcdf4",
+    "dataset_version": "v0.1",
+    "graph_version": "v0.1",
+    "rag_index_version": "v0.1",
+    "graph_fingerprint": "73b8f9c50738329022b75a5840821e2c9ae89db7835817706628f9e6fe3497c1",
+    "index_identity": "5e8be5c684fef9a3b7f4497aeb45e06680704aefdda33dba21c54d090c6a3aa1",
+    "monitored_overlay": {
+     "status": "ACTIVE",
+     "overlay_sha256": "90eae154379b4b738b32ec10bb8158b7a48ac47f70fbd2ae57ad377a5bbebccc",
+     "documents": 1,
+     "chunks": 2,
+     "review_status": "HUMAN_REVIEW_PENDING"
+    },
+    "official_repository": "https://indiacode.gov.in/",
+    "metadata_fields": [
+     "document_type",
+     "version",
+     "act_name",
+     "date"
+    ],
+    "generation": {
+     "provider": "extractive_fallback",
+     "temperature": 0.0,
+     "model": null,
+     "grounded_output_required": true
+    },
+    "notice": "The local index is a research aid. India Code remains the authoritative source.",
+    "repository_mode": "live_indiacode_with_local_evidence_cache",
+    "live_repository_enabled": false
+   },
+   "limitations": [
+    "No local evidence supported the query."
+   ],
+   "contract_version": "rag-answer-v6",
+   "question_frame": {
+    "query": "What is the capital of France?",
+    "version": "question-frame-v2",
+    "question_type": "general",
+    "asks_about_versions": false,
+    "principal": null,
+    "amending": null,
+    "amendment_year": null,
+    "sections": [],
+    "reference_date": null,
+    "focus_terms": [
+     "capital",
+     "france"
+    ],
+    "unresolved_act_phrases": [],
+    "relation_error": null,
+    "ambiguities": [],
+    "other_acts": [],
+    "act_choices": []
+   },
+   "scenario": null,
+   "evidence": [],
+   "comparison": null,
+   "source_fidelity_warnings": [],
+   "fingerprint": {
+    "version": "legal-change-fingerprint-v1.2",
+    "wording_drift": {
+     "state": "OUT_OF_SCOPE",
+     "value": null,
+     "label": null,
+     "summary": "Not a question about a change.",
+     "reason": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+     "next_action": null,
+     "method": "wording-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [],
+     "limit": {
+      "kind": "not_applicable",
+      "message": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "rule_drift": {
+     "state": "OUT_OF_SCOPE",
+     "value": null,
+     "label": null,
+     "summary": "Not a question about a change.",
+     "reason": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+     "next_action": null,
+     "method": "rule-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [],
+     "limit": {
+      "kind": "not_applicable",
+      "message": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "outcome_drift": {
+     "state": "OUT_OF_SCOPE",
+     "value": null,
+     "label": null,
+     "summary": "Not a question about a change.",
+     "reason": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+     "next_action": null,
+     "method": "outcome-drift-v1",
+     "evidence_ids": [],
+     "details": {},
+     "needs": [],
+     "uncertainty": [],
+     "limit": {
+      "kind": "not_applicable",
+      "message": "The fingerprint compares two versions of one provision; this question asks about the law as written.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "legal_validation": "UNVERIFIED"
+    },
+    "reading": [],
+    "note": "Change diagnostics, reported separately and never averaged: not legal correctness, not a confidence probability, not materiality and not risk.",
+    "tlds": {
+     "version": "tlds-v1.1",
+     "weights": {
+      "textual": 0.2,
+      "semantic": 0.3,
+      "legal_effect": 0.4,
+      "rule_structure": 0.1
+     },
+     "missing_components": [
+      "textual",
+      "semantic",
+      "legal_effect",
+      "rule_structure"
+     ],
+     "formula": "D = 100 × (w_T·T + w_S·S + w_L·L + w_R·R), every component in [0, 1]",
+     "bands": [
+      [
+       0,
+       "Very low"
+      ],
+      [
+       10,
+       "Low"
+      ],
+      [
+       30,
+       "Moderate"
+      ],
+      [
+       50,
+       "High"
+      ],
+      [
+       75,
+       "Very high"
+      ]
+     ],
+     "bands_note": "Provisional lower bounds applied to the score rounded to one decimal; not empirically validated.",
+     "contributions": {
+      "textual": null,
+      "semantic": null,
+      "legal_effect": null,
+      "rule_structure": null
+     },
+     "disagreement": null,
+     "state": "NOT_APPLICABLE",
+     "value": null,
+     "tldp_percent": null,
+     "band": null,
+     "label": "Not applicable",
+     "partial_value": null,
+     "partial_label": null,
+     "calculation": null,
+     "components": {
+      "textual": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      },
+      "semantic": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      },
+      "legal_effect": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      },
+      "rule_structure": {
+       "value": null,
+       "method": null,
+       "reason": "Not a question about a change.",
+       "details": {}
+      }
+     },
+     "config": "configs/metrics/tlds.v1.json",
+     "note": "An indicator of change between two versions of one clause, not the percentage of a statute that changed, not legal correctness, not a probability, not materiality and not risk. Read legal-effect drift beside it: a small wording change can carry a large legal effect.",
+     "evidence_ids": [],
+     "legal_validation": "UNVERIFIED"
+    }
+   },
+   "determinations": {
+    "version": "determinations-v4",
+    "textual_drift": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "Not applicable to this question.",
+     "method": null,
+     "evidence_ids": [],
+     "reason": "Nothing to assess: the question was not answered from versions of one Act.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "No versions of one Act were compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED"
+    },
+    "materiality": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "Not applicable to this question.",
+     "method": null,
+     "evidence_ids": [],
+     "reason": "Nothing to assess: the question was not answered from versions of one Act.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "No versions of one Act were compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED"
+    },
+    "applicability": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "Not applicable to this question.",
+     "method": null,
+     "evidence_ids": [],
+     "reason": "Nothing to assess: the question was not answered from versions of one Act.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "No versions of one Act were compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED"
+    },
+    "answer_change": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "Not applicable to this question.",
+     "method": null,
+     "evidence_ids": [],
+     "reason": "Nothing to assess: the question was not answered from versions of one Act.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "No versions of one Act were compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED"
+    },
+    "risk": {
+     "state": "OUT_OF_SCOPE",
+     "label": null,
+     "summary": "Not applicable to this question.",
+     "method": null,
+     "evidence_ids": [],
+     "reason": "Nothing to assess: the question was not answered from versions of one Act.",
+     "limit": {
+      "kind": "not_applicable",
+      "message": "No versions of one Act were compared.",
+      "action": {
+       "type": "none",
+       "label": "Nothing to do for this question"
+      }
+     },
+     "details": {},
+     "needs": [],
+     "review_status": "UNREVIEWED",
+     "legal_validation": "UNVERIFIED"
+    }
+   },
+   "scenario_request": {
+    "fields": [],
+    "facts_in_use": {},
+    "blocked_by_evidence": [],
+    "explanation": "No facts are needed for this question."
+   },
+   "selection": null,
+   "routing": {
+    "version": "question-route-v1",
+    "route": "outside_domain",
+    "response_type": "scope_guidance",
+    "reason_code": "OUTSIDE_LEGAL_SCOPE",
+    "interpreted_acts": [],
+    "choices": [],
+    "allowed_entry_ids": [],
+    "rejected_candidates": [],
+    "message": "This assistant answers questions about Indian Acts in its corpus and the official sources it monitors.",
+    "citation_check": {
+     "passed": true,
+     "outside_entry_ids": []
+    }
+   },
+   "analysis_id": "an_f4d711572d994c588769d2ac"
+  }
+ }
+}

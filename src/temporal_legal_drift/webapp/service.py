@@ -169,13 +169,13 @@ class DashboardService:
         mode = value.get("mode", "specific")
         if not isinstance(mode, str):
             raise ValueError("mode must be specific or generic")
-        if set(value) - {"query", "mode", "scenario", "section"}:
-            raise ValueError("query accepts only query, mode, scenario and section")
+        if set(value) - {"query", "mode", "scenario", "section", "act"}:
+            raise ValueError("query accepts only query, mode, scenario, section and act")
         from temporal_legal_drift.rag.analysis import store
 
         # Stored once per analysis ID so every view and shared link shows the same result.
-        # scenario and section are validated at the RAG boundary
-        return store(self.root, self.rag.answer(query, mode, scenario=value.get("scenario"), section=value.get("section")))
+        # scenario, section and act (a corpus entry id the user chose) are validated at the RAG boundary
+        return store(self.root, self.rag.answer(query, mode, scenario=value.get("scenario"), section=value.get("section"), act=value.get("act")))
 
     def get_analysis(self, identifier: str) -> dict[str, object]:
         from temporal_legal_drift.rag.analysis import load

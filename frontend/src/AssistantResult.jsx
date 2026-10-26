@@ -3,29 +3,38 @@ import { DeterminationCard, DirectAnswer } from "./Determinations";
 import { DIAGNOSTIC_NOTE } from "./ExplanationPages";
 import { GenerationNotice, VersionStatus } from "./ResultInsights";
 import { VerificationPanel } from "./SharedPanels";
+import { ActChoices, InterpretedAs, LatestRecords, NotFoundSources } from "./Routing";
 
 // The assistant page's answer for one stored analysis (rag-answer-v4/v5), in the single-page order of v0.13.0 (commit 6db1c49):
 // answer, path to the explanation pages, pre/post comparison. Evidence ids open their cards on the Drift explanation page;
 // review details are folded away.
 // Every value is read from the stored analysis; nothing is recomputed here.
-export default function AssistantResult({ analysis, onPage = () => {}, onEvidence = () => {}, onSection = () => {}, busy = false }) {
+const HEADINGS = { act_choice: "Choose an Act", act_not_found: "Act not found in the corpus", latest_records: "Latest records",
+  scope_guidance: "Outside this assistant's scope", act_comparison: "Comparison of Acts" };
+
+export default function AssistantResult({ analysis, onPage = () => {}, onEvidence = () => {}, onSection = () => {}, onAct = () => {}, acts = [], busy = false }) {
   const fp = analysis.fingerprint || {};
-  const versions = analysis.question_frame?.asks_about_versions;
+  const routing = analysis.routing;
+  const versions = analysis.question_frame?.asks_about_versions && routing?.route !== "act_comparison";
   const scored = versions ? [["Wording drift", fp.wording_drift], ["Rule drift", fp.rule_drift]].filter(([, item]) => item?.value != null) : [];
   const combined = versions && fp.tlds?.value != null ? fp.tlds : null;
   const found = analysis.version_evidence?.section_candidates;
   return <section id="rag-result" className="results" aria-labelledby="result-title">
     <div className="result-heading"><div><span className="section-kicker">Grounded response · analysis {analysis.analysis_id}</span>
-      <h2 id="result-title">{versions ? "Version comparison" : "Answer"}</h2></div>
+      <h2 id="result-title">{HEADINGS[routing?.response_type] || (versions ? "Version comparison" : "Answer")}</h2></div>
       <div className="mode-badge">{analysis.mode === "generic" ? "Generic" : "Specific"} mode</div></div>
+    <InterpretedAs routing={routing} acts={acts} onAct={onAct} busy={busy} />
     <GenerationNotice method={analysis.answer.generation_method} warning={analysis.answer.generation_warning} />
     {versions && <VersionStatus comparison={analysis.comparison} metrics={analysis.metrics} />}
-    {analysis.selection && <p className="selection-note">Section chosen from the list: <strong>section {analysis.selection.section}</strong> of the {analysis.selection.act_name}.
+    {analysis.selection?.section && <p className="selection-note">Section chosen from the list: <strong>section {analysis.selection.section}</strong> of the {analysis.selection.act_name}.
       Your question is kept as you asked it.</p>}
     {/* With the chooser shown, the answer's plain-text list of the same sections would repeat it. */}
     <DirectAnswer answer={found ? { ...analysis.answer, sections: (analysis.answer.sections || []).filter((part) => part.id !== "candidates") } : analysis.answer}
       onEvidence={onEvidence} showLimits={false} />
     {found && <SectionChooser found={found} onSection={onSection} busy={busy} />}
+    <ActChoices routing={routing} onAct={onAct} busy={busy} />
+    <NotFoundSources routing={routing} />
+    <LatestRecords feed={analysis.latest_records} />
     {analysis.scenario && <p className="panel-note">Using your facts: {Object.entries({ ...analysis.scenario, ...(analysis.scenario.facts || {}) })
       .filter(([key, value]) => key !== "facts" && value !== null && value !== "")
       .map(([key, value]) => `${key.replaceAll("_", " ")}: ${value === true ? "yes" : value === false ? "no" : String(value).replaceAll("_", " ")}`).join("; ")}.</p>}

@@ -19,6 +19,9 @@ export function GenerationNotice({ method, warning }) {
     : String(method || "").startsWith("extractive")
     ? "Extractive evidence summary: quoted from retrieved sources, not a language-model conclusion."
     : method === "llm_grounded" ? "Language-model answer constrained to the retrieved evidence; verify it against the cited source."
+      : method === "monitoring_ledger" ? "Listed from the saved checks of the monitored sources; no language model was used."
+      : method === "routed_extractive" ? "Quoted from the cited Acts; no language model was used."
+      : method === "routed_no_generation" ? "No answer was generated from any Act: the question needs your choice, or is outside the evidence."
       : "No answer could be generated from the available evidence.";
   return <p className="generation-method" role="status">{text}{warning ? ` ${warning}; this answer was produced without it.` : ""}</p>;
 }

@@ -12,17 +12,18 @@ from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
-from .compose import COMPOSITION_VERSION, compose_general_answer, compose_out_of_scope, compose_version_answer, section_answer
+from .compose import COMPOSITION_VERSION, compose_general_answer, compose_version_answer, section_answer
 from .analysis import analysis_id, facts_from_question, merge_scenario, scenario_request
 from .determinations import DETERMINATIONS_VERSION, limit_for, answer_change, applicability, materiality, risk, textual_drift, validate_scenario
 from .fingerprint import FINGERPRINT_VERSION, TLDS_VERSION, build_fingerprint, clause_pair, text_gate, validate_proposal
-from .indiacode import IndiaCodeLiveRepository, source_guidance
+from .indiacode import IndiaCodeLiveRepository, portal_search_url, source_guidance
 from .metrics import METRICS_CONTRACT_VERSION, calculate_drift_metrics
 from .question import ActCatalog, QuestionFrame, parse_question
+from .routing import latest_records, route_question
 from .retriever import HybridRetriever, RetrievedChunk
 from .versions import VERSION_CLAIMS, VERSION_EVIDENCE_VERSION, VersionSelector
 
-ANSWER_CONTRACT_VERSION = "rag-answer-v5"  # v5: fingerprint v1.2 with reading, determinations-v4, composition v2 (ADR 0017); v4: analysis IDs (ADR 0016)
+ANSWER_CONTRACT_VERSION = "rag-answer-v6"  # v6: question routing before retrieval and the Act-scope citation gate (ADR 0024); v5: fingerprint v1.2 with reading, determinations-v4, composition v2 (ADR 0017); v4: analysis IDs (ADR 0016)
 
 
 INTENT_PATTERNS = {
@@ -94,7 +95,8 @@ class RagPipeline:
             self._selector = VersionSelector(consumer, chunks, risks, amenders)
         return self._catalog, self._selector
 
-    def answer(self, query: str, mode: str, scenario: dict[str, object] | None = None, section: str | None = None) -> dict[str, object]:
+    def answer(self, query: str, mode: str, scenario: dict[str, object] | None = None, section: str | None = None,
+               act: str | None = None) -> dict[str, object]:
         query = " ".join(str(query or "").split())
         if not query:
             raise ValueError("query is required")
@@ -106,36 +108,49 @@ class RagPipeline:
             raise ValueError("section must be a section number such as 99 or 45ZC")
         stated = validate_scenario(scenario)
         catalog, selector = self._components()
-        frame = parse_question(query, catalog, reference_date=(stated or {}).get("reference_date"))
-        selection = None
+        if act is not None and (not isinstance(act, str) or act not in catalog.entries):
+            raise ValueError("act must be the entry id of an Act in the corpus")
+        frame = parse_question(query, catalog, reference_date=(stated or {}).get("reference_date"), chosen=act)
+        route = route_question(query, frame, catalog, chosen=act is not None)
+        selection = {"act_entry_id": frame.principal.entry_id, "act_name": frame.principal.name, "chosen_from": "act_choices"} if act else None
         if section is not None:  # a section chosen from the list for an Act-only question; the question itself is kept as asked
             section = section.strip().upper()
-            if frame.principal is None:
+            if frame.principal is None or route["route"] != "act_identified":
                 raise ValueError("a section can be chosen only for a question that names an Act")
             if frame.sections and frame.sections != [section]:
                 raise ValueError("the question already names a different section")
             frame.sections, frame.asks_about_versions = [section], True
             selection = {"act_entry_id": frame.principal.entry_id, "act_name": frame.principal.name, "section": section,
-                         "chosen_from": "section_candidates"}
+                         "chosen_from": "section_candidates", **({"act_chosen": True} if act else {})}
         # Facts already written in the question are used; anything entered in the form overrides them.
         facts, sources = merge_scenario(stated or {}, facts_from_question(query), frame.reference_date)
         facts = validate_scenario(facts) if facts else None
-        if frame.asks_about_versions:
+        # The route decides which documents may be used; no route reaches an unrestricted search for its answer.
+        if route["route"] in {"act_identified", "amendment_mismatch"} and frame.asks_about_versions:
             response = self._versioned_answer(query, mode, frame, facts, catalog, selector)
-        elif frame.principal is None and frame.unresolved_act_phrases:
-            response = self._out_of_scope_answer(query, mode, frame)
-        else:
-            restrict = {frame.principal.entry_id} if frame.principal else None
-            focus = selector.section_chunk(frame.principal.entry_id, frame.sections[0]) if frame.principal and frame.sections else None
+        elif route["route"] == "act_identified" and route.get("overview"):
+            response = self._routed_answer(query, mode, frame, {**route, "route": "act_overview"}, catalog)
+        elif route["route"] == "act_identified":
+            subject = frame.principal or frame.amending  # an amending Act asked about as the subject itself
+            focus = selector.section_chunk(subject.entry_id, frame.sections[0]) if frame.principal and frame.sections else None
             if focus is None and frame.principal and frame.focus_terms:
                 focus = self._topic_section(query, frame)
-            response = self._attach_general(self._legacy_answer(query, mode, restrict=restrict, focus_chunk=focus), frame, facts, mode, focus)
+            response = self._attach_general(self._legacy_answer(query, mode, restrict={subject.entry_id}, focus_chunk=focus),
+                                            frame, facts, mode, focus)
+        else:
+            response = self._routed_answer(query, mode, frame, route, catalog)
+        if route["route"] == "amendment_mismatch" and route["choices"]:
+            listed = "; ".join(c["name"] for c in route["choices"])
+            response["answer"]["direct_answer"] += f" The {frame.amending.name} is recorded as amending: {listed}. Choose one below to ask about it instead."
+        response = self._enforce_act_scope(response, route, query, mode, frame)
         response["scenario_request"] = scenario_request(response["determinations"], response["fingerprint"], facts, sources)
-        response["contract_version"], response["schema_version"] = ANSWER_CONTRACT_VERSION, "5.0.0"
+        response["contract_version"], response["schema_version"] = ANSWER_CONTRACT_VERSION, "6.0.0"
         response["selection"] = selection
+        response["routing"] = route
         response["analysis_id"] = analysis_id({
             "contract": ANSWER_CONTRACT_VERSION, "methods": [DETERMINATIONS_VERSION, FINGERPRINT_VERSION, TLDS_VERSION, COMPOSITION_VERSION, METRICS_CONTRACT_VERSION],
             "query": query, "mode": mode, "scenario": facts, "selection": selection, "evidence_selection": VERSION_EVIDENCE_VERSION,
+            "route": route["version"], "latest_feed": (response.get("latest_records") or {}).get("generated_at"),
             "generation": response["answer"].get("generation_method"),
             "index": self.retriever.status().get("index_identity"), "graph": getattr(selector.consumer, "graph_sha256", None),
             "release": _active_release(self.root)})
@@ -488,20 +503,178 @@ class RagPipeline:
             "limitations": composed["limitations"],
         }
 
-    def _out_of_scope_answer(self, query: str, mode: str, frame: QuestionFrame) -> dict[str, object]:
-        composed = compose_out_of_scope(frame)
-        out = {"state": "OUT_OF_SCOPE", "label": None, "summary": "Not in the corpus.", "method": None, "evidence_ids": [],
-               "reason": "Nothing to assess: the Act is outside the local corpus.",
-               "limit": limit_for("INSUFFICIENT_EVIDENCE", "The Act is not in the local corpus; check India Code.", "evidence"),
-               "details": {}, "needs": [], "review_status": "UNREVIEWED", "legal_validation": "UNVERIFIED"}
-        response = _insufficient_response(query, mode, _classify_intent(query), source_guidance(query), self.status())
-        response["answer"].update({"answer_type": "out_of_scope", "direct_answer": composed["direct_answer"], "sections": [],
-                                   "answer_limitations": composed["limitations"], "short_answer": composed["direct_answer"]})
+    # ---------------- rag-answer-v6: routes that do not answer from one Act ----------------
+    def _routed_answer(self, query: str, mode: str, frame: QuestionFrame, route: dict[str, object], catalog: ActCatalog) -> dict[str, object]:
+        kind, extra, sections, evidence, citations = route["route"], {}, [], [], []
+        guidance = source_guidance(query)
+        names = lambda refs: "; ".join(f"{r['name']}" + (f" ({r['year']})" if r.get("year") and r["year"] not in r["name"] else "") for r in refs)
+        if kind == "act_not_found":
+            principals = sum(info["kind"] == "principal" for info in catalog.entries.values())
+            phrases = ", ".join(f"“{p}”" for p in route["unresolved"])
+            direct = (f"I could not find {phrases} in this assistant's corpus ({principals} principal Acts and {len(catalog.entries) - principals} "
+                      "amending instruments). I checked the name as written, known short forms and close spellings. This does not mean no such "
+                      "Act exists: search India Code and the e-Gazette for it.")
+            if route["choices"]:
+                direct += f" Close matches in the corpus: {names(route['choices'])}. Choose one below if it is the Act you mean."
+            route["links"] = [{"label": "Search India Code", "url": portal_search_url(route["unresolved"][0])},
+                              {"label": "Search the e-Gazette", "url": "https://egazette.gov.in/"}]
+            route["live_discoveries"] = self._live_title_discoveries(route["unresolved"])
+            if route["live_discoveries"]:
+                direct += (" India Code lists " + "; ".join(f"“{d['title']}”" for d in route["live_discoveries"]) +
+                           ". That record is not in the local corpus, so it is reported as found, not summarised.")
+            guidance = source_guidance(route["unresolved"][0])
+        elif kind in {"act_ambiguous", "several_acts"}:
+            direct = f"{route['message']} Acts: {names(route['choices'])}."
+        elif kind == "general_no_act":
+            seen: list[str] = []
+            for item in self.retriever.search(query, limit=30):
+                entry = str(item.metadata.get("entry_id") or "")
+                if entry in catalog.entries and catalog.entries[entry]["kind"] == "principal" and entry not in seen:
+                    seen.append(entry)
+            route["choices"] = [{"entry_id": e, "name": catalog.entries[e]["name"], "year": catalog.entries[e]["year"], "kind": "principal"} for e in seen[:3]]
+            direct = (route["message"] + (f" Acts in the corpus whose text matches your words: {names(route['choices'])}. Choose one to get an answer "
+                      "from that Act, or name the Act in your question." if route["choices"] else " Name the Act in your question to get an answer from it."))
+        elif kind == "outside_domain":
+            direct = route["message"] + " Ask about an Act by name, for example “What does the Companies Act say about directors?”"
+        elif kind == "amendment_mismatch":
+            direct = f"{frame.relation_error} No answer is given from either Act for this pairing; ask about each Act separately."
+        elif kind == "latest_records":
+            extra["latest_records"] = feed = self._latest_records(route["sources"])
+            direct, sections = _latest_summary(feed)
+        elif kind == "act_overview":
+            direct, sections, evidence, citations = self._overview_of_act(frame)
+        else:  # act_comparison
+            direct, sections, evidence, citations = self._comparison_of_acts(query, mode, route)
+        determination = {"state": "OUT_OF_SCOPE", "label": None, "summary": "Not applicable to this question.", "method": None, "evidence_ids": [],
+                         "reason": "Nothing to assess: the question was not answered from versions of one Act.",
+                         "limit": limit_for("OUT_OF_SCOPE", "No versions of one Act were compared."),
+                         "details": {}, "needs": [], "review_status": "UNREVIEWED", "legal_validation": "UNVERIFIED"}
+        response = _insufficient_response(query, mode, _classify_intent(query), guidance, self.status())
+        answer_type = {"latest_records": "latest_records", "act_comparison": "act_comparison", "act_overview": "single_document_summary"}.get(kind, "out_of_scope")
+        response["answer"].update({"answer_type": answer_type, "direct_answer": direct, "short_answer": direct, "sections": sections,
+                                   "markdown": direct, "generation_method": "monitoring_ledger" if kind == "latest_records" else "routed_extractive" if citations else "routed_no_generation",
+                                   "answer_limitations": ["No answer is generated from an Act the question did not identify.",
+                                                          "Not legal advice; verify on India Code."]})
         response.update({"schema_version": "3.0.0", "contract_version": ANSWER_CONTRACT_VERSION, "question_frame": frame.to_dict(),
-                         "scenario": None, "evidence": [], "comparison": None, "source_fidelity_warnings": [],
+                         "scenario": None, "evidence": evidence, "citations": citations, "comparison": None, "source_fidelity_warnings": [],
                          "fingerprint": build_fingerprint({}, None, self.retriever.embed_text, None, None, asks_about_versions=False),
-                         "determinations": {"version": DETERMINATIONS_VERSION, **{k: dict(out) for k in ("textual_drift", "materiality", "applicability", "answer_change", "risk")}}})
+                         "determinations": {"version": DETERMINATIONS_VERSION, **{k: dict(determination) for k in ("textual_drift", "materiality", "applicability", "answer_change", "risk")}},
+                         **extra})
         return response
+
+    def _latest_records(self, sources: list[str]) -> dict[str, object]:
+        """Read only from the monitoring ledger: asking a question never triggers a check of India Code or the e-Gazette."""
+        from temporal_legal_drift.monitoring import EGazetteConnector, IndiaCodeConnector, MonitoringService
+        from temporal_legal_drift.monitoring.service import notifications
+        from temporal_legal_drift.review import ReviewLedger
+
+        service = MonitoringService(self.root, {"india_code": IndiaCodeConnector(), "egazette": EGazetteConnector()})
+        return latest_records(notifications(service, ReviewLedger(self.root)), sources)
+
+    def _live_title_discoveries(self, phrases: list[str]) -> list[dict[str, object]]:
+        """Act titles India Code returns for a name the corpus lacks; listed as found, never summarised. Off when live lookup is off."""
+        if os.environ.get("TLD_LIVE_INDIA_CODE", "1") == "0":
+            return []
+        found: dict[str, dict[str, object]] = {}
+        for phrase in phrases:
+            words = {t for t in re.findall(r"[a-z0-9]+", phrase.casefold()) if t not in {"the", "of", "act", "and", "amendment"}}
+            for chunk in self.live_repository.search_sections(phrase).chunks:
+                title = str(chunk["metadata"].get("act_name") or "")
+                if words and words <= set(re.findall(r"[a-z0-9]+", title.casefold())):
+                    found.setdefault(title, {"title": title, "year": chunk["metadata"].get("date"), "source": "India Code (live lookup)",
+                                             "url": chunk["metadata"].get("source_url"), "ingested": False})
+        return list(found.values())[:3]
+
+    def _overview_of_act(self, frame: QuestionFrame):
+        """A short overview in the Act's own words: its long title and the chapters in its arrangement of sections."""
+        act = frame.principal or frame.amending
+        chunks = self.retriever.document_chunks(act.entry_id)
+        title = next(((c, m) for c in chunks if (m := LONG_TITLE.search(c.text))), None)
+        chapters, chapter_chunk = [], None
+        for chunk in chunks[:12]:
+            for match in CHAPTER.finditer(chunk.text):
+                heading = " ".join(match.group(2).split()).capitalize()
+                if heading not in chapters:
+                    chapters.append(heading)
+                    chapter_chunk = chapter_chunk or chunk
+        if title is None and not chapters:
+            return (f"No long title or arrangement of sections was found in the indexed text of the {act.name}; "
+                    "ask about a section or a topic of it instead.", [], [], [])
+        used = [c for c in (title[0] if title else None, chapter_chunk) if c is not None]
+        used = [c for i, c in enumerate(used) if c.chunk_id not in {u.chunk_id for u in used[:i]}]
+        evidence, citations = [], []
+        for number, chunk in enumerate(used, start=1):
+            page = re.search(r"page:(\d+)", str(chunk.metadata.get("source_anchor") or ""))
+            filename = chunk.metadata.get("filename")
+            pdf = f"/corpus/{filename}#page={page.group(1)}" if filename and page else None
+            evidence.append({"evidence_id": f"E{number}", "role": "act_text_excerpt", "entry_id": act.entry_id, "act_name": chunk.metadata.get("act_name"),
+                             "page": int(page.group(1)) if page else None, "pdf_url": pdf, "verbatim": True,
+                             "official_url": chunk.metadata.get("source_url") or chunk.metadata.get("official_portal_url")})
+            citations.append({"label": "overview", "chunk_id": chunk.chunk_id, "entry_id": act.entry_id, "act_name": chunk.metadata.get("act_name"),
+                              "source_anchor": chunk.metadata.get("source_anchor"), "source_url": chunk.metadata.get("source_url"),
+                              "evidence_id": f"E{number}", "page": evidence[-1]["page"], "pdf_url": pdf})
+        ref = lambda chunk: next(e["evidence_id"] for e, c in zip(evidence, used) if c is chunk)
+        direct = (f"The {act.name} describes itself as “{' '.join(title[1].group(0).split()).rstrip('.')}.” [{ref(title[0])}]" if title
+                  else f"The {act.name} is organised in the chapters listed below.")
+        sections = [{"id": "key_points", "title": "Chapters of the Act", "text": "; ".join(chapters[:16]) + f". [{ref(chapter_chunk)}]",
+                     "evidence_ids": [ref(chapter_chunk)], "kind": "evidence"}] if chapters else []
+        return direct + " This is an overview of the Act as indexed, with no change score; ask about a section to compare versions.", sections, evidence, citations
+
+    def _comparison_of_acts(self, query: str, mode: str, route: dict[str, object]):
+        """One excerpt from each named Act, side by side. Different Acts are not versions, so nothing is scored."""
+        points, evidence, citations = [], [], []
+        for number, act in enumerate(route["interpreted_acts"], start=1):
+            hits = self.retriever.search(query, limit=1, entry_ids={act["entry_id"]})
+            if not hits:
+                points.append(f"• {act['name']}: no passage in its indexed text matches the question.")
+                continue
+            item = hits[0]
+            page = re.search(r"page:(\d+)", str(item.metadata.get("source_anchor") or ""))
+            filename = item.metadata.get("filename")
+            evidence_id = f"E{len(evidence) + 1}"
+            points.append(f"• {act['name']}: {_best_excerpt(item, query, mode)} [{evidence_id}]")
+            evidence.append({"evidence_id": evidence_id, "role": "act_text_excerpt", "entry_id": act["entry_id"], "act_name": item.metadata.get("act_name"),
+                             "page": int(page.group(1)) if page else None, "pdf_url": f"/corpus/{filename}#page={page.group(1)}" if filename and page else None,
+                             "official_url": item.metadata.get("source_url") or item.metadata.get("official_portal_url"), "verbatim": True})
+            citations.append({"label": f"act_{number}", "chunk_id": item.chunk_id, "entry_id": act["entry_id"], "act_name": item.metadata.get("act_name"),
+                              "source_anchor": item.metadata.get("source_anchor"), "source_url": item.metadata.get("source_url"),
+                              "evidence_id": evidence_id, "page": evidence[-1]["page"], "pdf_url": evidence[-1]["pdf_url"]})
+        direct = ("Each Act's most relevant indexed passage for your question is shown below, side by side. These are different Acts, "
+                  "not versions of one Act, so no drift score is calculated.")
+        return direct, [{"id": "key_points", "title": "What each Act says", "text": " ".join(points),
+                         "evidence_ids": [e["evidence_id"] for e in evidence], "kind": "evidence"}], evidence, citations
+
+    def _enforce_act_scope(self, response: dict[str, object], route: dict[str, object], query: str, mode: str,
+                           frame: QuestionFrame) -> dict[str, object]:
+        """Second gate after generation: every cited or listed document must be one the route allowed. Fails closed."""
+        allowed = set(route["allowed_entry_ids"])
+        cited = {str(item.get("entry_id")) for key in ("citations", "evidence") for item in response.get(key) or [] if item.get("entry_id")}
+        outside = sorted(cited - allowed)
+        if route["route"] in {"act_identified", "act_comparison"}:
+            seen: list[dict[str, object]] = []
+            for item in self.retriever.search(query, limit=10):  # what an unrestricted search would have used: reported, never used
+                entry = str(item.metadata.get("entry_id") or "")
+                if entry and entry not in allowed and all(r["entry_id"] != entry for r in seen):
+                    seen.append({"entry_id": entry, "act_name": item.metadata.get("act_name"), "reason": "NOT_THE_INTERPRETED_ACT"})
+            route["rejected_candidates"] = seen[:5]
+        check = {"id": "act_scope", "label": "Every citation comes from the interpreted Act or its recorded amending instruments", "passed": not outside}
+        verification = response.get("verification") or {"passed": False, "checks": []}
+        verification["checks"] = [*verification.get("checks", []), check]
+        response["verification"] = verification
+        route["citation_check"] = {"passed": not outside, "outside_entry_ids": outside}
+        if not outside:
+            return response
+        # A citation from another Act: the answer is withdrawn, not repaired by hand.
+        limited = _insufficient_response(query, mode, _classify_intent(query), source_guidance(query), self.status())
+        message = (f"The answer was withdrawn because it cited a document outside the Act{'s' if len(route['interpreted_acts']) > 1 else ''} "
+                   f"the question was interpreted as ({', '.join(outside)}). Ask again, or check India Code.")
+        limited["answer"].update({"direct_answer": message, "short_answer": message, "sections": [], "markdown": message,
+                                  "answer_limitations": ["Evidence-limited: no citation outside the interpreted Act is shown."]})
+        limited.update({"schema_version": "3.0.0", "question_frame": frame.to_dict(), "scenario": None, "evidence": [], "comparison": None,
+                        "source_fidelity_warnings": [], "determinations": response["determinations"], "fingerprint": response["fingerprint"],
+                        "verification": {"passed": False, "checks": [check], "note": "Evidence-limited response."}})
+        route["reason_code"] = "CITATION_OUTSIDE_ALLOWED_ACTS"
+        return limited
 
     def _attach_general(self, response: dict[str, object], frame: QuestionFrame, scenario: dict[str, object] | None, mode: str,
                         focus: dict[str, object] | None = None) -> dict[str, object]:
@@ -544,6 +717,24 @@ class RagPipeline:
                          "scenario": scenario, "evidence": evidence, "determinations": determinations,
                          "fingerprint": build_fingerprint({}, None, self.retriever.embed_text, None, None, asks_about_versions=False)})
         return response
+
+
+LONG_TITLE = re.compile(r"\bAn\s+Act\s+(?:further\s+)?to\b.{20,700}?(?:\.(?=\s)|(?=\s*BE\s+it\s+enacted)|(?=\s*WHEREAS))", re.S)
+CHAPTER = re.compile(r"CHAPTER\s+([IVXL]+[A-Z]?)\s+([A-Z][A-Z ,'’-]{3,90}?)(?=\s+(?:\d|CHAPTER|SECTIONS|$))")
+
+
+def _latest_summary(feed: dict[str, object]) -> tuple[str, list[dict[str, object]]]:
+    names = " and ".join(s["source"] for s in feed["sources"]) or "the monitored sources"
+    checks = "; ".join(f"{s['source']}: last successful check {str(s.get('last_success_at') or 'never')[:16].replace('T', ' ')} UTC"
+                       + ("" if s["state"] == "OK" else f" ({s['state'].lower().replace('_', ' ')})") for s in feed["sources"])
+    count = len(feed["items"])
+    direct = (f"{count} record{'s' if count != 1 else ''} observed in {names}, the latest within the monitored scope ({checks}). "
+              if count else f"No records have been observed in {names} within the monitored scope ({checks}). ")
+    direct += "Sources are checked at most once every 24 hours; nothing was fetched for this question. A listed record is not a confirmed change to law."
+    stale = [s for s in feed["sources"] if s["state"] != "OK"]
+    sections = [{"id": "suggestions", "title": "Source status", "kind": "limitation", "evidence_ids": [],
+                 "text": " ".join(f"{s['source']}: {s['detail']}" for s in stale)}] if stale else []
+    return direct, sections
 
 
 def _classify_intent(query: str) -> str:

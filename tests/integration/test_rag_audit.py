@@ -10,7 +10,7 @@ from temporal_legal_drift.rag.audit import offline_extractive, run_audit
 from temporal_legal_drift.rag.rag_pipeline import RagPipeline
 
 ROOT = Path(__file__).resolve().parents[2]
-SCHEMA = json.loads((ROOT / "schemas/rag/rag_answer.v5.schema.json").read_text())
+SCHEMA = json.loads((ROOT / "schemas/rag/rag_answer.v6.schema.json").read_text())
 
 
 class RagAuditRegression(unittest.TestCase):
@@ -34,7 +34,7 @@ class RagAuditRegression(unittest.TestCase):
 class ContractTests(unittest.TestCase):
     """Responses carry every rag-answer-v2 field and use only the declared states and roles."""
 
-    def test_responses_follow_the_v4_contract(self) -> None:
+    def test_responses_follow_the_v6_contract(self) -> None:
         determination = SCHEMA["$defs"]["determination"]
         states = set(determination["properties"]["state"]["enum"])
         roles = set(SCHEMA["properties"]["evidence"]["items"]["properties"]["role"]["enum"])
@@ -49,7 +49,7 @@ class ContractTests(unittest.TestCase):
         for response in responses:
             with self.subTest(query=response["query"]):
                 self.assertLessEqual(set(SCHEMA["required"]), set(response))
-                self.assertEqual((response["schema_version"], response["contract_version"]), ("5.0.0", "rag-answer-v5"))
+                self.assertEqual((response["schema_version"], response["contract_version"]), ("6.0.0", "rag-answer-v6"))
                 self.assertRegex(response["analysis_id"], r"^an_[0-9a-f]{24}$")
                 self.assertLessEqual(set(SCHEMA["properties"]["answer"]["required"]), set(response["answer"]))
                 component = SCHEMA["$defs"]["component"]

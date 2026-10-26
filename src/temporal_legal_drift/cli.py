@@ -551,6 +551,9 @@ def build_parser() -> argparse.ArgumentParser:
     phase11.add_argument("--timeout-seconds", type=int, default=900)
     phase11.add_argument("--release-id", required=True, help="New release ID, e.g. v0.2.0; existing releases are refused")
     subparsers.add_parser("restore-release-inputs")
+    routing_eval = subparsers.add_parser("evaluate-routing", help="routing-eval-v1: Act resolution and source identity (not legal accuracy)")
+    routing_eval.add_argument("--cases", default="configs/routing_eval/questions.v1.json")
+    routing_eval.add_argument("--output", default="reports/routing_eval/routing_eval.v1.json")
 
     dashboard = subparsers.add_parser("serve-dashboard")
     dashboard.add_argument("--host", default="127.0.0.1")
@@ -1098,6 +1101,16 @@ def run(args: argparse.Namespace) -> int:
 
     if args.command == "restore-release-inputs":
         print(json.dumps(restore_release_inputs(root), indent=2, ensure_ascii=False))
+        return 0
+
+    if args.command == "evaluate-routing":
+        from temporal_legal_drift.rag.routing_eval import run_routing_eval
+
+        report = run_routing_eval(root, root / args.cases)
+        output = root / args.output
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(json.dumps(report, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+        print(json.dumps(report["metrics"], indent=2, ensure_ascii=False))
         return 0
 
     if args.command == "serve-dashboard":

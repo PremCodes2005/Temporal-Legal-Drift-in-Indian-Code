@@ -2,7 +2,26 @@
 
 The field lists were read from live responses of this checkout. They are engineering contracts only; no field is a legal conclusion.
 
-## `POST /api/rag/query`  body `{"query": str, "mode": "specific" | "generic", "scenario"?: {...}}`
+## `POST /api/rag/query`  body `{"query": str, "mode": "specific" | "generic", "scenario"?: {...}, "section"?: str, "act"?: str}`
+
+**rag-answer-v6** (`schema_version` 6.0.0; schema `schemas/rag/rag_answer.v6.schema.json`; ADR 0024) adds the following. Every v5 field is retained; stored v5 records stay readable.
+
+- **`act`** (request): a corpus entry id the user chose. Any other value gives 400. The question is kept as asked.
+- **`routing`:** `{version: "question-route-v1", route, response_type, reason_code, interpreted_acts[{entry_id, name, year, kind}], choices[...], allowed_entry_ids[], rejected_candidates[{entry_id, act_name, reason}], citation_check{passed, outside_entry_ids[]}}`.
+  - Some routes add `overview`, `unresolved`, `links[{label, url}]`, `live_discoveries[{title, year, source, url, ingested: false}]` or `sources`.
+- **Routes and response types:**
+  - `act_identified` and `amendment_mismatch`: `act_answer`;
+  - `act_comparison`: `act_comparison`;
+  - `act_ambiguous`, `several_acts` and `general_no_act`: `act_choice`;
+  - `act_not_found`: `act_not_found`;
+  - `latest_records`: `latest_records`;
+  - `outside_domain`: `scope_guidance`.
+- **`latest_records`** (latest route only): `{version: "latest-records-v1", sources_asked, items[{title, source, source_key, published, discovered_at, last_checked_at, official_url, status, status_label, category, candidate_targets, record_kind, record_kind_label}], sources[{source_key, source, state, detail, last_success_at, next_eligible_at}], scope, note, generated_at, fetched_for_this_question: false, legal_effect_claimed: false}`.
+- **`answer.answer_type`** adds `act_comparison` and `latest_records`.
+- **`answer.generation_method`** adds `routed_extractive`, `routed_no_generation` and `monitoring_ledger`.
+- **`question_frame.version`** is `question-frame-v2`. It adds `other_acts` and `act_choices`.
+- **`verification.checks`** gains `act_scope`.
+
 
 **rag-answer-v5** (`schema_version` 5.0.0; schema `schemas/rag/rag_answer.v5.schema.json`; ADR 0017) adds the following. Every v4 field is retained; stored v4 records stay readable at `/api/analyses/<id>`.
 

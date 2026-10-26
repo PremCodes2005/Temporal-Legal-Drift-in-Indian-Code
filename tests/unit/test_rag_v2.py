@@ -40,7 +40,7 @@ class RagV2Tests(unittest.TestCase):
     # ---------- evidence and pairing ----------
     def test_named_act_and_section_select_the_corroborated_transition(self) -> None:
         result = self.ask("What amount must be deposited under section 173 of the Motor Vehicles Act after the 2019 amendment?")
-        self.assertEqual(result["contract_version"], "rag-answer-v5")
+        self.assertEqual(result["contract_version"], "rag-answer-v6")
         self.assertEqual(result["comparison"]["support_class"], "GRAPH_TRANSITION_FRAGMENTS")
         self.assertEqual({e["entry_id"] for e in result["evidence"]}, {"motor-vehicles-act-1988", "motor-vehicles-amendment-act-2019"})
         instruction = next(e for e in result["evidence"] if e["role"] == "amendment_instruction")

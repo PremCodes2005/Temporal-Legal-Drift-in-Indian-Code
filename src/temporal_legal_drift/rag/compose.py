@@ -212,13 +212,5 @@ def section_answer(text: str, terms: list[str], mode: str, act_name: str | None,
     return f"Section {number}{title} of the {act_name or 'Act'} says: “{quote}”"
 
 
-def compose_out_of_scope(frame: QuestionFrame) -> dict[str, Any]:
-    names = ", ".join(frame.unresolved_act_phrases)
-    return {"version": COMPOSITION_VERSION,
-            "direct_answer": f"The {names} is not in the local corpus of 100 documents, so I can't answer from verified evidence. "
-                             "India Code is the authoritative source for it.",
-            "sections": [], "limitations": ["No answer is generated from unrelated documents."]}
-
-
 def lower_first(text: str) -> str:
     return text[:1].lower() + text[1:] if text and not re.match(r"[A-Z]{2}", text) else text

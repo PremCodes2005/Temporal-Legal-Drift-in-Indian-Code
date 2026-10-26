@@ -1,0 +1,211 @@
+{
+ "schema_version": "1.0.0",
+ "case_set": "routing-eval-v1",
+ "created": "2026-10-26",
+ "basis": "Questions are real user-style questions, most from the 2026-10-26 failure reproduction (ADR 0024). Expected routes and Act identities come from the corpus catalog (index metadata, graph v4 and configs/versioning/instrument_relations.v1.json), set by the engineer, not from the assistant's answers. They are routing and source-identity expectations, not legal-accuracy labels.",
+ "answering_routes": [
+  "act_identified",
+  "act_comparison",
+  "latest_records"
+ ],
+ "cases": [
+  {
+   "case_id": "named-companies-directors",
+   "question": "What does the Companies Act say about directors?",
+   "expected_route": "act_identified",
+   "expected_acts": [
+    "companies-act-2013"
+   ]
+  },
+  {
+   "case_id": "named-it-data-protection",
+   "question": "What does the IT Act say about data protection?",
+   "expected_route": "act_identified",
+   "expected_acts": [
+    "it-act-2000-consolidated"
+   ]
+  },
+  {
+   "case_id": "named-dpdp-require",
+   "question": "What does the Digital Personal Data Protection Act require?",
+   "expected_route": "act_identified",
+   "expected_acts": [
+    "digital-personal-data-protection-act-2023"
+   ]
+  },
+  {
+   "case_id": "named-rpa-1951-dated",
+   "question": "What does the Representation of the People Act 1951 say about disqualification?",
+   "expected_route": "act_identified",
+   "expected_acts": [
+    "representation-of-the-people-act-1951"
+   ]
+  },
+  {
+   "case_id": "named-section-companies-149",
+   "question": "What does section 149 of the Companies Act require?",
+   "expected_route": "act_identified",
+   "expected_acts": [
+    "companies-act-2013"
+   ]
+  },
+  {
+   "case_id": "alias-money-laundering",
+   "question": "What does the Money Laundering Act say?",
+   "expected_route": "act_identified",
+   "expected_acts": [
+    "prevention-of-money-laundering-act-2002"
+   ]
+  },
+  {
+   "case_id": "alias-pmla",
+   "question": "What does PMLA say about attachment of property?",
+   "expected_route": "act_identified",
+   "expected_acts": [
+    "prevention-of-money-laundering-act-2002"
+   ]
+  },
+  {
+   "case_id": "alias-information-technology",
+   "question": "What does the Information Technology Act cover?",
+   "expected_route": "act_identified",
+   "expected_acts": [
+    "it-act-2000-consolidated"
+   ]
+  },
+  {
+   "case_id": "alias-lowercase-mv",
+   "question": "what does the mv act say about helmets?",
+   "expected_route": "act_identified",
+   "expected_acts": [
+    "motor-vehicles-act-1988"
+   ]
+  },
+  {
+   "case_id": "overview-mv",
+   "question": "What does the Motor Vehicles Act generally cover?",
+   "expected_route": "act_identified",
+   "expected_acts": [
+    "motor-vehicles-act-1988"
+   ]
+  },
+  {
+   "case_id": "overview-companies-lowercase",
+   "question": "What is the companies act?",
+   "expected_route": "act_identified",
+   "expected_acts": [
+    "companies-act-2013"
+   ]
+  },
+  {
+   "case_id": "act-only-change-mv",
+   "question": "What changed in the Motor Vehicles Act?",
+   "expected_route": "act_identified",
+   "expected_acts": [
+    "motor-vehicles-act-1988"
+   ]
+  },
+  {
+   "case_id": "section-change-it-43",
+   "question": "What did the IT Amendment Act 2008 change in section 43?",
+   "expected_route": "act_identified",
+   "expected_acts": [
+    "it-act-2000-consolidated",
+    "it-amendment-act-2008"
+   ]
+  },
+  {
+   "case_id": "not-found-sir-capital",
+   "question": "What is the SIR Act?",
+   "expected_route": "act_not_found",
+   "expected_acts": []
+  },
+  {
+   "case_id": "not-found-sir-lowercase",
+   "question": "what is the sir act?",
+   "expected_route": "act_not_found",
+   "expected_acts": []
+  },
+  {
+   "case_id": "not-found-fictional",
+   "question": "What does the Fictional Widgets Regulation Act 2031 say about licences?",
+   "expected_route": "act_not_found",
+   "expected_acts": []
+  },
+  {
+   "case_id": "not-found-misspelt-companies",
+   "question": "What does the Compnies Act say about directors?",
+   "expected_route": "act_not_found",
+   "expected_acts": []
+  },
+  {
+   "case_id": "ambiguous-rpa",
+   "question": "What does the Representation of the People Act say about disqualification?",
+   "expected_route": "act_ambiguous",
+   "expected_acts": []
+  },
+  {
+   "case_id": "several-acts-no-comparison",
+   "question": "What does the Aadhaar Act say about the IT Act?",
+   "expected_route": "several_acts",
+   "expected_acts": []
+  },
+  {
+   "case_id": "comparison-aadhaar-it",
+   "question": "Compare the Aadhaar Act and the IT Act on data protection.",
+   "expected_route": "act_comparison",
+   "expected_acts": [
+    "aadhaar-act-2016",
+    "it-act-2000-consolidated"
+   ]
+  },
+  {
+   "case_id": "mismatch-jan-vishwas-mv",
+   "question": "What did the Jan Vishwas Act change in the Motor Vehicles Act?",
+   "expected_route": "amendment_mismatch",
+   "expected_acts": [
+    "motor-vehicles-act-1988",
+    "jan-vishwas-amendment-of-provisions-act-2023"
+   ]
+  },
+  {
+   "case_id": "mismatch-it-amendment-aadhaar",
+   "question": "What changed in the Aadhaar Act by the Information Technology (Amendment) Act 2008?",
+   "expected_route": "amendment_mismatch",
+   "expected_acts": [
+    "aadhaar-act-2016",
+    "it-amendment-act-2008"
+   ]
+  },
+  {
+   "case_id": "latest-india-code",
+   "question": "What are the latest changes in India Code?",
+   "expected_route": "latest_records",
+   "expected_acts": []
+  },
+  {
+   "case_id": "latest-egazette",
+   "question": "What has appeared recently in the e-Gazette?",
+   "expected_route": "latest_records",
+   "expected_acts": []
+  },
+  {
+   "case_id": "latest-indian-law",
+   "question": "What changed recently in Indian law?",
+   "expected_route": "latest_records",
+   "expected_acts": []
+  },
+  {
+   "case_id": "general-theft",
+   "question": "What is the punishment for theft?",
+   "expected_route": "general_no_act",
+   "expected_acts": []
+  },
+  {
+   "case_id": "outside-france",
+   "question": "What is the capital of France?",
+   "expected_route": "outside_domain",
+   "expected_acts": []
+  }
+ ]
+}
