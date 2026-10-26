@@ -10,6 +10,7 @@ import AssistantResult from "./AssistantResult";
 import { ComparisonPage, DriftExplanationPage, ScoreCalculationPage } from "./ExplanationPages";
 import Notifications, { DiscoveryAlert, readSeen, saveSeen, useDiscoveries } from "./Notifications";
 import FAQ from "./faq.json";
+import { DictationButton, DictationStatus, appendText, useDictation } from "./VoiceInput";
 
 // Addresses of one stored analysis: #assistant/<id>, #drift/<id>, #calculation/<id>, #comparison/<id>. Plain #assistant, #drift,
 // #calculation or #comparison reopen the analysis last shown. Older links (#analysis/<id>[/<view>], v0.14–v0.17) open the matching page.
@@ -217,6 +218,7 @@ function AssistantWorkspace({ status, error: statusError, starter, result, onRes
   const handled = useRef(null);  // the starter already placed; survives StrictMode's effect replay, so a question runs once
   const input = useRef(null);
   const pending = starter && handled.current !== starter.id;
+  const dictation = useDictation((words) => setQuery((current) => appendText(current, words)));
 
   // A loaded or linked analysis shows its own question and mode, unless a newer question (FAQ, link) is about to replace it.
   useEffect(() => { if (result?.query && !pending) { setQuery(result.query); if (result.mode) setMode(result.mode); } }, [result]);  // eslint-disable-line react-hooks/exhaustive-deps
@@ -229,7 +231,7 @@ function AssistantWorkspace({ status, error: statusError, starter, result, onRes
 
   const prefill = (text) => { setQuery(text); input.current?.focus(); };
   const submit = async (event, text = query, scenario = null, runMode = mode, section = null) => {
-    event?.preventDefault(); setError("");
+    event?.preventDefault(); setError(""); dictation.cancel();
     if (!text.trim()) return setError("Enter a question about the indexed Indian legal documents.");
     setBusy(true);
     try {
@@ -252,12 +254,16 @@ function AssistantWorkspace({ status, error: statusError, starter, result, onRes
       <form className="prompt-panel" onSubmit={submit}>
         <label htmlFor="legal-query" className="sr-only">Legal research question</label>
         <textarea id="legal-query" ref={input} rows="4" maxLength="4000" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Ask a question, for example: What changed in the IT Act amendment regarding data privacy?" />
+        <DictationStatus dictation={dictation} onTypeInstead={() => input.current?.focus()} />
         <div className="prompt-actions">
           <div className="mode-switch" role="group" aria-label="Analysis mode">
             <button type="button" aria-pressed={mode === "specific"} className={mode === "specific" ? "active" : ""} onClick={() => setMode("specific")}><strong>Specific</strong><small>Clause-level analysis</small></button>
             <button type="button" aria-pressed={mode === "generic"} className={mode === "generic" ? "active" : ""} onClick={() => setMode("generic")}><strong>Generic</strong><small>High-level overview</small></button>
           </div>
-          <button className="send-button" type="submit" disabled={busy || !query.trim()}>{busy ? "Searching…" : "Analyse"}<span aria-hidden="true">→</span></button>
+          <div className="prompt-submit">
+            <DictationButton dictation={dictation} disabled={busy} />
+            <button className="send-button" type="submit" disabled={busy || !query.trim()}>{busy ? "Searching…" : "Analyse"}<span aria-hidden="true">→</span></button>
+          </div>
         </div>
       </form>
       <p className="jump-row"><button type="button" className="link-button" onClick={() => { const area = document.getElementById("question-chips");

@@ -153,3 +153,19 @@ body{font-size:16px;line-height:1.6}
 .status-tag.category-new_document{background:#eef2f5;color:var(--ink)}.status-tag.category-possible_amendment{background:#fff4df;color:#6b4710}.status-tag.category-verified_amendment{background:var(--green-soft);color:var(--green)}
 .list-heading{margin:14px 0 4px;color:var(--ink2);font-size:15px}.record-status{color:var(--muted);font-size:12px}
 @media (max-width:620px){.discovery-alert{left:16px;right:16px;bottom:16px}.evidence-cards{padding:16px}}
+/* Voice input beside Analyse; status under the question */
+.prompt-submit{display:flex;align-items:center;gap:10px}
+.voice-button{display:inline-flex;align-items:center;gap:8px;min-height:45px;padding:10px 16px;border:1px solid #bad3de;border-radius:10px;background:#fff;color:var(--primary2);font-weight:800;cursor:pointer}
+.voice-button:hover{border-color:var(--primary);background:var(--soft)}
+.voice-button:focus-visible,.send-button:focus-visible{outline:3px solid var(--primary);outline-offset:2px}
+.voice-button[aria-disabled=true]{opacity:.55;cursor:not-allowed}
+.voice-button.listening{border-color:var(--red);background:#fcedef;color:#8f3a42}
+.voice-button.listening svg{animation:voice-pulse 1.2s ease-in-out infinite}
+@keyframes voice-pulse{50%{opacity:.35}}
+.voice-status:empty{display:none}.voice-status{padding:0 24px 12px;font-size:14px}
+.voice-message{display:block;color:var(--muted)}.voice-message.listening,.voice-message.processing{color:var(--primary2);font-weight:700}
+.voice-message.denied,.voice-message.no-speech,.voice-message.no-microphone,.voice-message.network,.voice-message.error,.voice-message.unsupported,.voice-message.insecure{color:#8f3a42}
+.voice-consent{display:grid;gap:10px;padding:12px 14px;border-left:4px solid var(--gold);border-radius:9px;background:#fff8ec;color:var(--ink)}
+.voice-consent p{margin:0}.voice-consent>div{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px}
+.voice-interim{margin:0;padding:0 24px 12px;color:var(--muted);font-style:italic;overflow-wrap:anywhere}
+@media (max-width:620px){.prompt-submit .send-button{flex:1}}
